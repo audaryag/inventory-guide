@@ -245,7 +245,7 @@ asks you to colour anything.
 | 2 — Raw materials ₹ Cr | `RM ₹ Cr` | 224 | 12 | 200 | 88 |
 | 3 — Finished goods ₹ Cr | `FG ₹ Cr` | 432 | 12 | 200 | 88 |
 | 4 — Consumables ₹ Cr | `Consumables ₹ Cr` | 640 | 12 | 200 | 88 |
-| 5 — FG days of inventory | `Days of Inventory` | 848 | 12 | 200 | 88 |
+| 5 — Days of inventory | `Days of Inventory` | 848 | 12 | 200 | 88 |
 | 6 — Change vs last month | `Value ₹ Cr % vs LM` | 1056 | 12 | 208 | 88 |
 
 **4.2** 3 **Slicer** visuals (**Insert → Slicer**), each set to
@@ -374,7 +374,7 @@ Position: X 644, Y 480, W 620, H 232.
 
 ## Page — FG
 
-**4.12** **Matrix** — FG per plant in all three units at once — megawatts, crore rupees and days — with the last four months under each. One grid instead of three sheets.
+**4.12** **Matrix** — FG per plant in all three units at once — megawatts, crore rupees and days — with the last four months under each. Days is MW ÷ capacity MW, so 1905 is blank on purpose.
 
 | Well | Field |
 |---|---|
@@ -428,7 +428,7 @@ Position: X 644, Y 356, W 620, H 176.
 | Line y-axis | `Days vs LM` |
 | Filters | `dimCategory[Category]  →  is FG` |
 
-Title: `FG days — click a bar to drill in`
+Title: `Days of inventory by month — click a bar`
 
 Position: X 644, Y 544, W 620, H 168.
 
@@ -518,7 +518,7 @@ Title: `MW`
 
 Position: X 320, Y 16, W 296, H 92.
 
-**4.22** **Card** — Blank unless the slice is FG — that is deliberate.
+**4.22** **Card** — Stock in MW divided by the MW capacity on the Variables sheet. Blank where the plant has no capacity row — 1905.
 
 | Well | Field |
 |---|---|
@@ -1679,14 +1679,32 @@ FG MW = CALCULATE([MW], factInventory[Category] = "FG")
 Capacity MW = SUM(dimCapacity[CapacityMW])
 ```
 
-*Days is FG only: capacity is module capacity, so RM and consumables have no*
+```
+Capacity MW (plant) = CALCULATE(SUM(dimCapacity[CapacityMW]), REMOVEFILTERS(dimNature))
+```
 
-*meaningful denominator. Scoping it here stops a plausible-looking but meaningless*
+The second one exists for a real problem: capacity is keyed by technology, and an RM nature
+(`Glass`, `Wafer`) is not a technology, so plain `Capacity MW` goes blank the moment an RM
+row filters it. Removing the nature filter falls back to the plant's capacity, which is the
+right denominator for RM.
 
-*number appearing if someone drops it on the RM page.*
+*Days works the same way for every category: the stock converted to megawatts, divided by*
+
+*the MW capacity on the Variables workbook's MW sheet. RM converts through the 580 factor,*
+
+*FG through its own MW, so one formula covers the whole report.*
 
 ```
-Days of Inventory = DIVIDE([FG MW], [Capacity MW])
+Days of Inventory =
+VAR Cap = IF(ISBLANK([Capacity MW]), [Capacity MW (plant)], [Capacity MW])
+RETURN DIVIDE([MW], Cap)
+```
+
+So an FG technology row divides by that technology's capacity, and an RM row divides by the
+plant's.
+
+```
+FG Days = DIVIDE([FG MW], [Capacity MW])
 ```
 
 ```
@@ -1783,28 +1801,18 @@ Rows Missing Attr = CALCULATE(COUNTROWS(factInventory), factInventory[AttrMissin
 Unmapped TB ₹ Cr = DIVIDE(SUM(factTB_Unmapped[Amount]), 10000000)
 ```
 
-*days — two different questions, so two different measures*
+*days*
 
-`Days of Inventory` (above) answers "how many days of output is this FG worth", and only FG
-has a capacity denominator. RM and consumables need the other question: "at the rate we are
-consuming this, how long does the stock last." That is issues-based, so it works for every
-category.
+There is only one definition, so there is only one measure. `Days` is an alias of
+`Days of Inventory` so that every visual reads the same word:
 
 ```
-Days of Cover =
-VAR MonthlyIssues = [Issues ₹ Cr]
-RETURN DIVIDE([Value ₹ Cr], DIVIDE(MonthlyIssues, 30))
+Days = [Days of Inventory]
 ```
 
-```
-Days =
-IF(SELECTEDVALUE(dimCategory[Category]) = "FG",
-   [Days of Inventory],
-   [Days of Cover])
-```
-
-`Days` is the one to put on a visual: FG rows get capacity days, RM and consumables rows get
-cover days, and nothing shows a number that has no meaning.
+One consequence worth knowing: 1905 has no module capacity, so its Days cells come out
+blank rather than wrong. That is the correct behaviour — a blank is a question, a made-up
+number is an error nobody catches.
 
 *the switch measures — these are what give a matrix its master columns*
 

@@ -24,7 +24,7 @@ CARDS = [
     ("RM ₹ Cr",           224, 12, 200, 88, "Raw materials ₹ Cr"),
     ("FG ₹ Cr",           432, 12, 200, 88, "Finished goods ₹ Cr"),
     ("Consumables ₹ Cr",  640, 12, 200, 88, "Consumables ₹ Cr"),
-    ("Days of Inventory", 848, 12, 200, 88, "FG days of inventory"),
+    ("Days of Inventory", 848, 12, 200, 88, "Days of inventory"),
     ("Value ₹ Cr % vs LM", 1056, 12, 208, 88, "Change vs last month"),
 ]
 
@@ -123,7 +123,7 @@ VISUALS = [
       ("Filters", ["dimCategory[Category]  →  is FG", "Last 4 Months  →  is 1"])],
      (16, 168, 1248, 176),
      "FG per plant in all three units at once — megawatts, crore rupees and days — with the "
-     "last four months under each. One grid instead of three sheets.",
+     "last four months under each. Days is MW ÷ capacity MW, so 1905 is blank on purpose.",
      ["dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName].",
       "Format pane → Row headers → Stepped layout: Off.",
       "Click a plant row to filter the technology table below it."]),
@@ -146,7 +146,7 @@ VISUALS = [
      (644, 356, 620, 176),
      "Clicking one technology filters both matrices to it; right-click drills through.", []),
 
-    ("FG", "Line and clustered column chart", "FG days — click a bar to drill in",
+    ("FG", "Line and clustered column chart", "Days of inventory by month — click a bar",
      [("X-axis", ["dimDate[MonthName]"]),
       ("Column y-axis", ["Days"]),
       ("Line y-axis", ["Days vs LM"]),
@@ -213,7 +213,8 @@ VISUALS = [
     ("Detail", "Card", "Days of inventory",
      [("Fields", ["Days of Inventory"])],
      (624, 16, 296, 92),
-     "Blank unless the slice is FG — that is deliberate.", []),
+     "Stock in MW divided by the MW capacity on the Variables sheet. Blank where the "
+ "plant has no capacity row — 1905.", []),
 
     ("Detail", "Card", "Share of the total",
      [("Fields", ["Share of Total %"])],

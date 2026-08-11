@@ -136,7 +136,7 @@ const GROUP = {Cell:'Cells & wafers', Wafer:'Cells & wafers',
   'Silver paste':'Process chemicals', Chemicals:'Process chemicals',
   Gases:'Process chemicals', Consumables:'Stores & spares'};
 // monthly module/cell capacity in MW, per plant
-const CAP = {'1900':22, '1902':18, '1905':0};   // MW of module output per month
+const CAP = {'1900':0.55, '1902':0.45, '1905':0};   // MW capacity, off the MW sheet
 
 let seed = 7;
 const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
@@ -174,18 +174,12 @@ const sum = (rs, f) => rs.reduce((a, r) => a + f(r), 0);
 const val = rs => sum(rs, r => r.val);
 const mw  = rs => sum(rs, r => r.mw);
 const tb  = rs => sum(rs, r => r.tb);
-// FG: MW against monthly capacity. Everything else: cover on consumption.
+// one definition for every category: stock in MW divided by the MW capacity
 function days(rs){
   if (!rs.length) return null;
-  const fg = rs.filter(r => r.cat === 'FG');
-  if (fg.length && fg.length === rs.length){
-    const months = new Set(fg.map(r => r.m)).size || 1;
-    const cap = [...new Set(fg.map(r => r.code))]
-                  .reduce((a, c) => a + CAP[c], 0) * months;
-    return cap ? mw(fg) / (cap / 30) : null;
-  }
-  const iss = sum(rs, r => r.iss);
-  return iss ? val(rs) / (iss / 30) : null;
+  const months = new Set(rs.map(r => r.m)).size || 1;
+  const cap = [...new Set(rs.map(r => r.code))].reduce((a, c) => a + CAP[c], 0) * months;
+  return cap ? mw(rs) / cap : null;
 }
 const f2 = v => v == null ? '' : v.toFixed(2);
 const f1 = v => v == null ? '' : v.toFixed(1);
@@ -405,8 +399,7 @@ function band(page){
   card(page, 432, 12, 200, 'FG ₹ Cr', f2(val(r.filter(x => x.cat === 'FG'))));
   card(page, 640, 12, 200, 'Consumables ₹ Cr',
        f2(val(r.filter(x => x.cat === 'Consumables'))));
-  card(page, 848, 12, 200, 'FG days of inventory',
-       f1(days(r.filter(x => x.cat === 'FG'))));
+  card(page, 848, 12, 200, 'Days of inventory', f1(days(r)));
   card(page, 1056, 12, 208, 'Change vs last month',
        chg == null ? '—' : pc(chg), chg == null ? '' : (chg >= 0 ? ' up' : ' dn'));
   slicer(page, 16, 108, 300, 'Month', ['All', ...MONTHS], S.month,
@@ -578,7 +571,7 @@ function unitCell(filterFn, measure, sub){
 function pageFG(page){
   band(page);
   let b = vis(page, 16, 168, 1248, 176, 'FG by plant — MW · In ₹ Cr · In Days',
-    '1905 has no module capacity, so its Days cell is deliberately blank.');
+    'Days = stock in MW ÷ the MW capacity on the Variables sheet. 1905 has no capacity, so its Days cell is blank on purpose.');
   matrix(b, 'fgp', PLANTS.map(p => ({key: p.n, label: `${p.c} — ${p.n}`})),
     ['MW', 'In ₹ Cr', 'In Days'], LAST4,
     (rk, kk, top, sub) => unitCell(r => r.cat === 'FG' && r.plant === rk, top, sub),
