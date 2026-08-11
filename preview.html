@@ -212,7 +212,7 @@ function vis(page, x, y, w, h, title, note){
   const b = el('div', 'vb');
   b.style.overflow = 'hidden';
   v.appendChild(b); page.appendChild(v);
-  if (note) v.appendChild(el('div', 'note', '', note));
+  if (note){ v.appendChild(el('div', 'note', '', note)); b.style.bottom = '18px'; }
   b.W = w; b.H = h - 26 - (note ? 16 : 0);
   return b;
 }
@@ -241,7 +241,7 @@ function grid(b, max){
   for (let i = 0; i <= 4; i++){
     const y = 26 + (b.H - 52) * i / 4;
     b.appendChild(el('div', 'gl', `bottom:${y}px`));
-    b.appendChild(el('div', 'yl', `bottom:${y - 5}px`, (max * i / 4).toFixed(0)));
+    b.appendChild(el('div', 'yl', `bottom:${y - 5}px`, (max * i / 4).toFixed(max < 10 ? 2 : 0)));
   }
 }
 
