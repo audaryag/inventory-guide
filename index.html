@@ -1,0 +1,1382 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inventory Power BI — build guide</title>
+<style>
+:root{--bg:#0f1115;--panel:#171a21;--line:#262b36;--fg:#e6e9ef;--dim:#9aa4b2;--acc:#4c8dff;--ok:#2ea043}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 -apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--fg)}
+a{color:var(--acc)}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 80px}
+h1{font-size:26px;margin:28px 0 6px}
+.sub{color:var(--dim);margin:0 0 20px}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);
+  display:flex;gap:6px;padding:10px 0;flex-wrap:wrap}
+nav.tabs button{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:7px;
+  padding:8px 14px;cursor:pointer;font-size:14px}
+nav.tabs button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+#search{flex:1;min-width:160px;background:var(--panel);border:1px solid var(--line);color:var(--fg);
+  border-radius:7px;padding:8px 12px;font-size:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:14px 0;overflow:hidden}
+.card.done{opacity:.5}
+.card.done .num{background:var(--ok)}
+.card header{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.card h3{margin:0;font-size:15px;font-family:ui-monospace,Menlo,Consolas,monospace;flex:1;word-break:break-all}
+.num{background:#39414f;color:#fff;border-radius:20px;min-width:26px;height:24px;display:grid;
+  place-items:center;font-size:12px;padding:0 7px}
+button.copy,button.done{border:1px solid var(--line);background:#232936;color:var(--fg);border-radius:6px;
+  padding:6px 12px;font-size:13px;cursor:pointer;white-space:nowrap}
+button.copy:hover,button.done:hover{border-color:var(--acc)}
+button.copy.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.note{margin:10px 14px 0;color:var(--dim);font-size:13px;border-left:2px solid var(--acc);padding-left:10px}
+pre{margin:12px 14px 14px;padding:12px;background:#0c0e13;border:1px solid var(--line);border-radius:7px;
+  overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;white-space:pre}
+pre.plain{margin:12px 0}
+.panel{display:none}
+.panel.on{display:block}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#1c2130}
+code{background:#0c0e13;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:.92em}
+h2{margin:26px 0 8px;font-size:20px;border-bottom:1px solid var(--line);padding-bottom:6px}
+h3{margin:18px 0 6px;font-size:16px}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+li{margin:3px 0}
+blockquote{margin:12px 0;padding:8px 14px;border-left:3px solid var(--acc);background:#1b2030;
+  color:var(--dim);border-radius:0 7px 7px 0}
+.bar{display:flex;align-items:center;gap:12px;margin:16px 0 4px;color:var(--dim);font-size:13px}
+.bar .track{flex:1;height:7px;background:#232936;border-radius:5px;overflow:hidden}
+.bar .fill{height:100%;background:var(--ok);width:0}
+footer{color:var(--dim);font-size:12px;margin-top:40px;text-align:center}
+</style></head><body>
+<div class="wrap">
+<h1>Inventory Power BI — build guide</h1>
+<p class="sub">Click <strong>Copy</strong> on a block, then paste it into Power Query's Advanced Editor.
+Tick <strong>Done</strong> to keep your place — it is remembered in this browser.</p>
+
+<nav class="tabs">
+  <button data-tab="q" class="on">Queries (27)</button>
+  <button data-tab="m">Measures (22)</button>
+  <button data-tab="g">Walkthrough</button>
+  <input id="search" placeholder="Search a query name or code…">
+  <button id="reset" title="Clear progress">Reset</button>
+</nav>
+
+<div class="bar"><span id="ptext"></span><span class="track"><span class="fill" id="pfill"></span></span></div>
+
+<div class="panel on" id="tab-q">
+  <p class="sub">One query per box, in this order. For each: <strong>Home → New Source → Blank Query</strong>,
+  then <strong>Home → Advanced Editor</strong>, Ctrl+A, Delete, paste, <strong>Done</strong>,
+  then right-click the query → <strong>Rename</strong> and type the name shown.
+  Never paste two boxes into one editor. Errors are normal until all 27 exist.</p>
+  
+<section class="card" id="q-1" data-name="proot">
+  <header>
+    <span class="num">1</span>
+    <h3>pRoot</h3>
+    <button class="copy" data-target="qcode1">Copy</button>
+    <button class="done" data-key="q-1">Done</button>
+  </header>
+  <p class='note'>Replace the whole path with YOUR real folder path. Keep the quote marks. No trailing backslash. No angle brackets.</p>
+  <pre id="qcode1">&quot;C:\Data\Inventory Report&quot;</pre>
+</section>
+
+<section class="card" id="q-2" data-name="pvarsfile">
+  <header>
+    <span class="num">2</span>
+    <h3>pVarsFile</h3>
+    <button class="copy" data-target="qcode2">Copy</button>
+    <button class="done" data-key="q-2">Done</button>
+  </header>
+  
+  <pre id="qcode2">pRoot &amp; &quot;\Variables and Calculations.xlsx&quot;</pre>
+</section>
+
+<section class="card" id="q-3" data-name="fncleanmb5b">
+  <header>
+    <span class="num">3</span>
+    <h3>fnCleanMB5B</h3>
+    <button class="copy" data-target="qcode3">Copy</button>
+    <button class="done" data-key="q-3">Done</button>
+  </header>
+  <p class='note'>Matches headers ignoring case, spaces and punctuation; finds the header row itself; does not require the sheet to be named Sheet1. A genuinely missing column loads as blank rather than failing the refresh - qcHeaders is how you catch that.</p>
+  <pre id="qcode3">let
+    fnCleanMB5B = (content as binary) as table =&gt;
+    let
+        Wb        = Excel.Workbook(content, null, true),
+        // take the sheet named Sheet1 if it exists, otherwise the first sheet
+        Sheets    = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
+        Picked    = try Sheets{[Item=&quot;Sheet1&quot;, Kind=&quot;Sheet&quot;]}[Data] otherwise Sheets{0}[Data],
+
+        // strip out fully blank leading rows, then promote whichever row is the header.
+        // SAP downloads often carry a title or a blank line above the real header.
+        Norm      = (n as any) as text =&gt;
+                        Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? &quot;&quot;)),
+                                               {&quot; &quot;, &quot;.&quot;, &quot;_&quot;, &quot;-&quot;, &quot;/&quot;, &quot;(&quot;, &quot;)&quot;})),
+        IsHdrRow  = (row as list) as logical =&gt;
+                        List.Contains(List.Transform(row, Norm), &quot;MATERIAL&quot;),
+        AllRows   = Table.ToRows(Picked),
+        HdrIndex  = List.PositionOf(List.Transform(AllRows, IsHdrRow), true),
+        Trimmed   = if HdrIndex &gt; 0 then Table.Skip(Picked, HdrIndex) else Picked,
+        Promoted  = Table.PromoteHeaders(Trimmed, [PromoteAllScalars=true]),
+
+        // map whatever the file calls a column onto our internal name.
+        // matching is done on the normalised form, so case and spacing don&#x27;t matter.
+        Aliases   = {
+            {&quot;VALUATIONAREA&quot;,         &quot;ValuationArea&quot;},
+            {&quot;VALAREA&quot;,               &quot;ValuationArea&quot;},
+            {&quot;PLANT&quot;,                 &quot;ValuationArea&quot;},
+            {&quot;MATERIAL&quot;,              &quot;Material&quot;},
+            {&quot;MATERIALNO&quot;,            &quot;Material&quot;},
+            {&quot;MATERIALDESCRIPTION&quot;,   &quot;MaterialDesc&quot;},
+            {&quot;MATERIALDESC&quot;,          &quot;MaterialDesc&quot;},
+            {&quot;FROMDATE&quot;,              &quot;FromDate&quot;},
+            {&quot;TODATE&quot;,                &quot;ToDate&quot;},
+            {&quot;OPENINGSTOCK&quot;,          &quot;OpenQty&quot;},
+            {&quot;OPENINGVALUE&quot;,          &quot;OpenVal&quot;},
+            {&quot;TOTALRECEIPTQTIES&quot;,     &quot;ReceiptQty&quot;},
+            {&quot;TOTALRECEIPTQTY&quot;,       &quot;ReceiptQty&quot;},
+            {&quot;TOTALRECEIPTQUANTITY&quot;,  &quot;ReceiptQty&quot;},
+            {&quot;TOTALRECEIPTQUANTITIES&quot;,&quot;ReceiptQty&quot;},
+            {&quot;TOTALRECEIPTVALUE&quot;,     &quot;ReceiptVal&quot;},
+            {&quot;TOTALRECEIPTVALUES&quot;,    &quot;ReceiptVal&quot;},
+            {&quot;TOTALISSUEQTIES&quot;,       &quot;IssueQty&quot;},
+            {&quot;TOTALISSUEQTY&quot;,         &quot;IssueQty&quot;},
+            {&quot;TOTALISSUEQUANTITY&quot;,    &quot;IssueQty&quot;},
+            {&quot;TOTALISSUEQUANTITIES&quot;,  &quot;IssueQty&quot;},
+            {&quot;TOTALISSUEVALUE&quot;,       &quot;IssueVal&quot;},
+            {&quot;TOTALISSUEVALUES&quot;,      &quot;IssueVal&quot;},
+            {&quot;CLOSINGSTOCK&quot;,          &quot;CloseQty&quot;},
+            {&quot;CLOSINGVALUE&quot;,          &quot;CloseVal&quot;},
+            {&quot;BASICUNITOFMEASURE&quot;,    &quot;BaseUOM&quot;},
+            {&quot;BASEUNITOFMEASURE&quot;,     &quot;BaseUOM&quot;},
+            {&quot;BASEUNITMEASURE&quot;,       &quot;BaseUOM&quot;},
+            {&quot;BUN&quot;,                   &quot;BaseUOM&quot;},
+            {&quot;SPECIALSTOCK&quot;,          &quot;SpecialStock&quot;},
+            {&quot;CURRENCY&quot;,              &quot;Currency&quot;}
+        },
+        LookupAlias = (n as text) as nullable text =&gt;
+            let hit = List.Select(Aliases, each _{0} = Norm(n))
+            in  if List.Count(hit) &gt; 0 then hit{0}{1} else null,
+
+        Actual    = Table.ColumnNames(Promoted),
+        RenamePrs = List.RemoveNulls(List.Transform(Actual,
+                        each let t = LookupAlias(_) in if t = null then null else {_, t})),
+        Renamed   = Table.RenameColumns(Promoted, RenamePrs),
+
+        Wanted    = {&quot;ValuationArea&quot;,&quot;Material&quot;,&quot;MaterialDesc&quot;,&quot;FromDate&quot;,&quot;ToDate&quot;,
+                     &quot;OpenQty&quot;,&quot;OpenVal&quot;,&quot;ReceiptQty&quot;,&quot;ReceiptVal&quot;,&quot;IssueQty&quot;,&quot;IssueVal&quot;,
+                     &quot;CloseQty&quot;,&quot;CloseVal&quot;,&quot;BaseUOM&quot;,&quot;SpecialStock&quot;,&quot;Currency&quot;},
+        Present   = Table.ColumnNames(Renamed),
+        Missing   = List.Difference(Wanted, Present),
+        // any column the file genuinely doesn&#x27;t have is added as blank, so one odd
+        // export can&#x27;t stop the whole refresh
+        Padded    = List.Accumulate(Missing, Renamed,
+                        (tbl, col) =&gt; Table.AddColumn(tbl, col, each null)),
+        Kept      = Table.SelectColumns(Padded, Wanted),
+
+        Keys      = Table.TransformColumns(Kept, {
+                        {&quot;ValuationArea&quot;, each Text.Trim(Text.From(_ ?? &quot;&quot;)), type text},
+                        {&quot;Material&quot;,      each Text.TrimStart(Text.Trim(Text.From(_ ?? &quot;&quot;)), &quot;0&quot;), type text},
+                        {&quot;MaterialDesc&quot;,  each Text.Trim(Text.From(_ ?? &quot;&quot;)), type text}}),
+        Typed     = Table.TransformColumnTypes(Keys, {
+                        {&quot;FromDate&quot;, type date}, {&quot;ToDate&quot;, type date},
+                        {&quot;OpenQty&quot;, type number},   {&quot;OpenVal&quot;, type number},
+                        {&quot;ReceiptQty&quot;, type number},{&quot;ReceiptVal&quot;, type number},
+                        {&quot;IssueQty&quot;, type number},  {&quot;IssueVal&quot;, type number},
+                        {&quot;CloseQty&quot;, type number},  {&quot;CloseVal&quot;, type number},
+                        {&quot;BaseUOM&quot;, type text}, {&quot;SpecialStock&quot;, type text},
+                        {&quot;Currency&quot;, type text}}),
+        NoJunk    = Table.SelectRows(Typed, each
+                        [Material] &lt;&gt; null and [Material] &lt;&gt; &quot;&quot;
+                        and not Text.StartsWith([MaterialDesc] ?? &quot;&quot;, &quot;Total&quot;, Comparer.OrdinalIgnoreCase)
+                        and [FromDate] &lt;&gt; null),
+        WithMonth = Table.AddColumn(NoJunk, &quot;Month&quot;,
+                        each Date.StartOfMonth([FromDate]), type date),
+        MatKey    = Table.AddColumn(WithMonth, &quot;MatKey&quot;,
+                        each [ValuationArea] &amp; &quot;|&quot; &amp; [Material], type text)
+    in
+        MatKey
+in
+    fnCleanMB5B</pre>
+</section>
+
+<section class="card" id="q-4" data-name="stgrm">
+  <header>
+    <span class="num">4</span>
+    <h3>stgRM</h3>
+    <button class="copy" data-target="qcode4">Copy</button>
+    <button class="done" data-key="q-4">Done</button>
+  </header>
+  
+  <pre id="qcode4">let
+    Files    = Folder.Files(pRoot &amp; &quot;\RM Raw&quot;),
+    OnlyXlsx = Table.SelectRows(Files, each
+                   Text.Lower([Extension]) = &quot;.xlsx&quot;
+                   and not Text.StartsWith([Name], &quot;~$&quot;)
+                   and not Text.StartsWith([Name], &quot;.&quot;)),
+    Cleaned  = Table.AddColumn(OnlyXlsx, &quot;Data&quot;, each fnCleanMB5B([Content])),
+    Slim     = Table.SelectColumns(Cleaned, {&quot;Name&quot;,&quot;Data&quot;}),
+    Expanded = Table.ExpandTableColumn(Slim, &quot;Data&quot;,
+                   {&quot;ValuationArea&quot;,&quot;Material&quot;,&quot;MatKey&quot;,&quot;MaterialDesc&quot;,&quot;FromDate&quot;,&quot;ToDate&quot;,
+                    &quot;OpenQty&quot;,&quot;OpenVal&quot;,&quot;ReceiptQty&quot;,&quot;ReceiptVal&quot;,&quot;IssueQty&quot;,&quot;IssueVal&quot;,
+                    &quot;CloseQty&quot;,&quot;CloseVal&quot;,&quot;BaseUOM&quot;,&quot;SpecialStock&quot;,&quot;Currency&quot;,&quot;Month&quot;}),
+    Tagged   = Table.AddColumn(Expanded, &quot;Category&quot;, each &quot;RM&quot;, type text),
+    Renamed  = Table.RenameColumns(Tagged, {{&quot;Name&quot;,&quot;SourceFile&quot;}})
+in
+    Renamed</pre>
+</section>
+
+<section class="card" id="q-5" data-name="stgfg">
+  <header>
+    <span class="num">5</span>
+    <h3>stgFG</h3>
+    <button class="copy" data-target="qcode5">Copy</button>
+    <button class="done" data-key="q-5">Done</button>
+  </header>
+  
+  <pre id="qcode5">let
+    Files    = Folder.Files(pRoot &amp; &quot;\FG Raw&quot;),
+    OnlyXlsx = Table.SelectRows(Files, each
+                   Text.Lower([Extension]) = &quot;.xlsx&quot;
+                   and not Text.StartsWith([Name], &quot;~$&quot;)
+                   and not Text.StartsWith([Name], &quot;.&quot;)),
+    Cleaned  = Table.AddColumn(OnlyXlsx, &quot;Data&quot;, each fnCleanMB5B([Content])),
+    Slim     = Table.SelectColumns(Cleaned, {&quot;Name&quot;,&quot;Data&quot;}),
+    Expanded = Table.ExpandTableColumn(Slim, &quot;Data&quot;,
+                   {&quot;ValuationArea&quot;,&quot;Material&quot;,&quot;MatKey&quot;,&quot;MaterialDesc&quot;,&quot;FromDate&quot;,&quot;ToDate&quot;,
+                    &quot;OpenQty&quot;,&quot;OpenVal&quot;,&quot;ReceiptQty&quot;,&quot;ReceiptVal&quot;,&quot;IssueQty&quot;,&quot;IssueVal&quot;,
+                    &quot;CloseQty&quot;,&quot;CloseVal&quot;,&quot;BaseUOM&quot;,&quot;SpecialStock&quot;,&quot;Currency&quot;,&quot;Month&quot;}),
+    Tagged   = Table.AddColumn(Expanded, &quot;Category&quot;, each &quot;FG&quot;, type text),
+    Renamed  = Table.RenameColumns(Tagged, {{&quot;Name&quot;,&quot;SourceFile&quot;}})
+in
+    Renamed</pre>
+</section>
+
+<section class="card" id="q-6" data-name="stgconble">
+  <header>
+    <span class="num">6</span>
+    <h3>stgConble</h3>
+    <button class="copy" data-target="qcode6">Copy</button>
+    <button class="done" data-key="q-6">Done</button>
+  </header>
+  
+  <pre id="qcode6">let
+    Files    = Folder.Files(pRoot &amp; &quot;\Consble Raw&quot;),
+    OnlyXlsx = Table.SelectRows(Files, each
+                   Text.Lower([Extension]) = &quot;.xlsx&quot;
+                   and not Text.StartsWith([Name], &quot;~$&quot;)
+                   and not Text.StartsWith([Name], &quot;.&quot;)),
+    Cleaned  = Table.AddColumn(OnlyXlsx, &quot;Data&quot;, each fnCleanMB5B([Content])),
+    Slim     = Table.SelectColumns(Cleaned, {&quot;Name&quot;,&quot;Data&quot;}),
+    Expanded = Table.ExpandTableColumn(Slim, &quot;Data&quot;,
+                   {&quot;ValuationArea&quot;,&quot;Material&quot;,&quot;MatKey&quot;,&quot;MaterialDesc&quot;,&quot;FromDate&quot;,&quot;ToDate&quot;,
+                    &quot;OpenQty&quot;,&quot;OpenVal&quot;,&quot;ReceiptQty&quot;,&quot;ReceiptVal&quot;,&quot;IssueQty&quot;,&quot;IssueVal&quot;,
+                    &quot;CloseQty&quot;,&quot;CloseVal&quot;,&quot;BaseUOM&quot;,&quot;SpecialStock&quot;,&quot;Currency&quot;,&quot;Month&quot;}),
+    Tagged   = Table.AddColumn(Expanded, &quot;Category&quot;, each &quot;Consumables&quot;, type text),
+    Renamed  = Table.RenameColumns(Tagged, {{&quot;Name&quot;,&quot;SourceFile&quot;}})
+in
+    Renamed</pre>
+</section>
+
+<section class="card" id="q-7" data-name="fnvarsheet">
+  <header>
+    <span class="num">7</span>
+    <h3>fnVarSheet</h3>
+    <button class="copy" data-target="qcode7">Copy</button>
+    <button class="done" data-key="q-7">Done</button>
+  </header>
+  <p class='note'>Shared helper. Create this BEFORE dimMaterialAttr, dimFGAttr, varConstants and dimTBMaster, which all call it.</p>
+  <pre id="qcode7">let
+    // Reads a sheet from Variables and Calculations by fuzzy name, promotes the header
+    // row, and renames columns using an alias list. Case, spaces, dots, underscores,
+    // hyphens and brackets are all ignored on both sheet names and column names.
+    fnVarSheet = (sheetAliases as list, columnAliases as list) as table =&gt;
+    let
+        Norm     = (n as any) as text =&gt;
+                       Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? &quot;&quot;)),
+                                  {&quot; &quot;, &quot;.&quot;, &quot;_&quot;, &quot;-&quot;, &quot;/&quot;, &quot;(&quot;, &quot;)&quot;, &quot;,&quot;, &quot;&#x27;&quot;})),
+        Wb       = Excel.Workbook(File.Contents(pVarsFile), null, true),
+        Sheets   = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
+        WantedNm = List.Transform(sheetAliases, Norm),
+        Hit      = Table.SelectRows(Sheets, each List.Contains(WantedNm, Norm([Item]))),
+        Data     = if Table.RowCount(Hit) = 0
+                   then error &quot;No sheet matching: &quot; &amp; Text.Combine(sheetAliases, &quot; / &quot;)
+                        &amp; &quot;. Sheets present: &quot;
+                        &amp; Text.Combine(List.Transform(Sheets[Item], Text.From), &quot; | &quot;)
+                   else Hit{0}[Data],
+        Promoted = Table.PromoteHeaders(Data, [PromoteAllScalars=true]),
+        Actual   = Table.ColumnNames(Promoted),
+        Pairs    = List.RemoveNulls(List.Transform(Actual, (a) =&gt;
+                       let hit = List.Select(columnAliases, each List.Contains(
+                                     List.Transform(_{0}, Norm), Norm(a)))
+                       in  if List.Count(hit) &gt; 0 then {a, hit{0}{1}} else null)),
+        Renamed  = Table.RenameColumns(Promoted, Pairs)
+    in
+        Renamed
+in
+    fnVarSheet</pre>
+</section>
+
+<section class="card" id="q-8" data-name="dimplant">
+  <header>
+    <span class="num">8</span>
+    <h3>dimPlant</h3>
+    <button class="copy" data-target="qcode8">Copy</button>
+    <button class="done" data-key="q-8">Done</button>
+  </header>
+  <p class='note'>Hardcoded on purpose: no sheet, no header to mismatch. Add a plant by adding a line.</p>
+  <pre id="qcode8">let
+    Src = #table(
+        type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type],
+        {
+            {&quot;1900&quot;, &quot;Jaipur Module&quot;,  1},
+            {&quot;1902&quot;, &quot;Dholera Module&quot;, 2},
+            {&quot;1905&quot;, &quot;Dholera Cell&quot;,   3}
+        })
+in
+    Src</pre>
+</section>
+
+<section class="card" id="q-9" data-name="dimmaterialattr">
+  <header>
+    <span class="num">9</span>
+    <h3>dimMaterialAttr</h3>
+    <button class="copy" data-target="qcode9">Copy</button>
+    <button class="done" data-key="q-9">Done</button>
+  </header>
+  
+  <pre id="qcode9">let
+    Raw      = fnVarSheet(
+                   {&quot;RM Nature&quot;, &quot;RM Master&quot;, &quot;RMNature&quot;},
+                   {
+                     {{&quot;Valuation Area&quot;,&quot;Val Area&quot;,&quot;Plant&quot;,&quot;Valuation area&quot;}, &quot;ValuationArea&quot;},
+                     {{&quot;Material&quot;,&quot;Material No&quot;,&quot;Material Number&quot;},           &quot;Material&quot;},
+                     {{&quot;Material Description&quot;,&quot;Merterial Description&quot;,&quot;Material Desc&quot;,
+                       &quot;Material description&quot;},                              &quot;MaterialDescVar&quot;},
+                     {{&quot;Nature&quot;},                                             &quot;Nature&quot;},
+                     {{&quot;Group Nature&quot;,&quot;GroupNature&quot;,&quot;Nature Group&quot;},           &quot;GroupNature&quot;},
+                     {{&quot;BOM Std Qty&quot;,&quot;BOM StdQty&quot;,&quot;BOMStdQty&quot;,&quot;Std Qty&quot;},      &quot;BOMStdQty&quot;},
+                     {{&quot;Item&quot;},                                               &quot;Item&quot;}
+                   }),
+    Keys     = Table.TransformColumns(Raw, {
+                   {&quot;ValuationArea&quot;, each Text.Trim(Text.From(_ ?? &quot;&quot;)), type text},
+                   {&quot;Material&quot;,      each Text.TrimStart(Text.Trim(Text.From(_ ?? &quot;&quot;)), &quot;0&quot;), type text}}),
+    NoBlank  = Table.SelectRows(Keys, each [Material] &lt;&gt; null and [Material] &lt;&gt; &quot;&quot;),
+    MatKey   = Table.AddColumn(NoBlank, &quot;MatKey&quot;,
+                   each [ValuationArea] &amp; &quot;|&quot; &amp; [Material], type text),
+    Typed    = Table.TransformColumnTypes(MatKey, {
+                   {&quot;Nature&quot;, type text}, {&quot;GroupNature&quot;, type text},
+                   {&quot;BOMStdQty&quot;, type number}, {&quot;Item&quot;, type text}}),
+    Slim     = Table.SelectColumns(Typed, {&quot;MatKey&quot;,&quot;Nature&quot;,&quot;GroupNature&quot;,&quot;BOMStdQty&quot;,&quot;Item&quot;}),
+    Dedup    = Table.Distinct(Slim, {&quot;MatKey&quot;}),
+    Buffered = Table.Buffer(Dedup)
+in
+    Buffered</pre>
+</section>
+
+<section class="card" id="q-10" data-name="dimfgattr">
+  <header>
+    <span class="num">10</span>
+    <h3>dimFGAttr</h3>
+    <button class="copy" data-target="qcode10">Copy</button>
+    <button class="done" data-key="q-10">Done</button>
+  </header>
+  
+  <pre id="qcode10">let
+    Raw      = fnVarSheet(
+                   {&quot;FG Master&quot;, &quot;FM Master&quot;, &quot;FG Nature&quot;, &quot;FGMaster&quot;},
+                   {
+                     {{&quot;Valuation Area&quot;,&quot;Val Area&quot;,&quot;Plant&quot;,&quot;Valuation area&quot;}, &quot;ValuationArea&quot;},
+                     {{&quot;Material&quot;,&quot;Material No&quot;,&quot;Material Number&quot;},           &quot;Material&quot;},
+                     {{&quot;Material Description&quot;,&quot;Merterial Description&quot;,&quot;Material Desc&quot;,
+                       &quot;Material description&quot;},                              &quot;MaterialDescVar&quot;},
+                     {{&quot;Nature&quot;,&quot;Tech&quot;,&quot;Technology&quot;},                         &quot;Nature&quot;}
+                   }),
+    Keys     = Table.TransformColumns(Raw, {
+                   {&quot;ValuationArea&quot;, each Text.Trim(Text.From(_ ?? &quot;&quot;)), type text},
+                   {&quot;Material&quot;,      each Text.TrimStart(Text.Trim(Text.From(_ ?? &quot;&quot;)), &quot;0&quot;), type text},
+                   {&quot;Nature&quot;,        each Text.Trim(Text.From(_ ?? &quot;&quot;)), type text}}),
+    NoBlank  = Table.SelectRows(Keys, each [Material] &lt;&gt; null and [Material] &lt;&gt; &quot;&quot;),
+    MatKey   = Table.AddColumn(NoBlank, &quot;MatKey&quot;,
+                   each [ValuationArea] &amp; &quot;|&quot; &amp; [Material], type text),
+    Slim     = Table.SelectColumns(MatKey, {&quot;MatKey&quot;,&quot;Nature&quot;}),
+    Dedup    = Table.Distinct(Slim, {&quot;MatKey&quot;}),
+    Buffered = Table.Buffer(Dedup)
+in
+    Buffered</pre>
+</section>
+
+<section class="card" id="q-11" data-name="varconstants">
+  <header>
+    <span class="num">11</span>
+    <h3>varConstants</h3>
+    <button class="copy" data-target="qcode11">Copy</button>
+    <button class="done" data-key="q-11">Done</button>
+  </header>
+  <p class='note'>Works with or without an Effective From column. Needs a row named exactly RM_MW_FACTOR (value 580) or RM MW comes out blank.</p>
+  <pre id="qcode11">let
+    Raw      = fnVarSheet(
+                   {&quot;Constants&quot;, &quot;Constant&quot;, &quot;Variables&quot;},
+                   {
+                     {{&quot;Effective From&quot;,&quot;EffectiveFrom&quot;,&quot;Effective Date&quot;,&quot;From Date&quot;,&quot;Date&quot;}, &quot;EffectiveFrom&quot;},
+                     {{&quot;Constant Name&quot;,&quot;ConstantName&quot;,&quot;Name&quot;,&quot;Constant&quot;},                    &quot;ConstantName&quot;},
+                     {{&quot;Value&quot;,&quot;Amount&quot;,&quot;Number&quot;},                                           &quot;Value&quot;}
+                   }),
+    Wanted   = {&quot;EffectiveFrom&quot;,&quot;ConstantName&quot;,&quot;Value&quot;},
+    Padded   = List.Accumulate(List.Difference(Wanted, Table.ColumnNames(Raw)), Raw,
+                   (t, c) =&gt; Table.AddColumn(t, c, each null)),
+    Slim     = Table.SelectColumns(Padded, Wanted),
+    // no date given = applies from the beginning of time
+    Filled   = Table.TransformColumns(Slim, {
+                   {&quot;EffectiveFrom&quot;, each if _ = null then #date(1900,1,1) else DateTime.Date(DateTime.From(_)), type date}}),
+    Typed    = Table.TransformColumnTypes(Filled, {
+                   {&quot;ConstantName&quot;, type text}, {&quot;Value&quot;, type number}}),
+    NoBlank  = Table.SelectRows(Typed, each [ConstantName] &lt;&gt; null and [ConstantName] &lt;&gt; &quot;&quot;),
+    Buffered = Table.Buffer(NoBlank)
+in
+    Buffered</pre>
+</section>
+
+<section class="card" id="q-12" data-name="fnconstantasof">
+  <header>
+    <span class="num">12</span>
+    <h3>fnConstantAsOf</h3>
+    <button class="copy" data-target="qcode12">Copy</button>
+    <button class="done" data-key="q-12">Done</button>
+  </header>
+  
+  <pre id="qcode12">let
+    fnConstantAsOf = (name as text, asOf as date) as nullable number =&gt;
+    let
+        Rows   = Table.SelectRows(varConstants,
+                     each [ConstantName] = name and [EffectiveFrom] &lt;= asOf),
+        Sorted = Table.Sort(Rows, {{&quot;EffectiveFrom&quot;, Order.Descending}}),
+        Val    = try Sorted{0}[Value] otherwise null
+    in
+        Val
+in
+    fnConstantAsOf</pre>
+</section>
+
+<section class="card" id="q-13" data-name="factrm">
+  <header>
+    <span class="num">13</span>
+    <h3>factRM</h3>
+    <button class="copy" data-target="qcode13">Copy</button>
+    <button class="done" data-key="q-13">Done</button>
+  </header>
+  
+  <pre id="qcode13">let
+    Src      = stgRM,
+    Merged   = Table.NestedJoin(Src, {&quot;MatKey&quot;}, dimMaterialAttr, {&quot;MatKey&quot;},
+                   &quot;attr&quot;, JoinKind.LeftOuter),
+    Expanded = Table.ExpandTableColumn(Merged, &quot;attr&quot;,
+                   {&quot;Nature&quot;,&quot;GroupNature&quot;,&quot;BOMStdQty&quot;,&quot;Item&quot;}),
+    Flag     = Table.AddColumn(Expanded, &quot;AttrMissing&quot;,
+                   each [Nature] = null, type logical),
+    // RM MW = Closing Stock / BOM Std Qty * RM_MW_FACTOR / 10^6
+    // (the 580 you had hardcoded, now read from the Constants sheet)
+    MW       = Table.AddColumn(Flag, &quot;MW&quot;, each
+                   let f = fnConstantAsOf(&quot;RM_MW_FACTOR&quot;, [Month])
+                   in  try [CloseQty] / [BOMStdQty] * f / 1000000 otherwise null,
+                   type number)
+in
+    MW</pre>
+</section>
+
+<section class="card" id="q-14" data-name="factfg">
+  <header>
+    <span class="num">14</span>
+    <h3>factFG</h3>
+    <button class="copy" data-target="qcode14">Copy</button>
+    <button class="done" data-key="q-14">Done</button>
+  </header>
+  
+  <pre id="qcode14">let
+    Src      = stgFG,
+    Merged   = Table.NestedJoin(Src, {&quot;MatKey&quot;}, dimFGAttr, {&quot;MatKey&quot;},
+                   &quot;attr&quot;, JoinKind.LeftOuter),
+    Expanded = Table.ExpandTableColumn(Merged, &quot;attr&quot;, {&quot;Nature&quot;}),
+    Flag     = Table.AddColumn(Expanded, &quot;AttrMissing&quot;, each [Nature] = null, type logical),
+
+    // Rate = RIGHT(desc,3)
+    RateTxt  = Table.AddColumn(Flag, &quot;RateText&quot;,
+                   each Text.End(Text.Trim([MaterialDesc] ?? &quot;&quot;), 3), type text),
+    Rate     = Table.AddColumn(RateTxt, &quot;Rate&quot;,
+                   each try Number.From(Text.Select([RateText], {&quot;0&quot;..&quot;9&quot;,&quot;.&quot;})) otherwise null,
+                   type number),
+    RateBad  = Table.AddColumn(Rate, &quot;RateParseFailed&quot;,
+                   each [Rate] = null, type logical),
+
+    // Mid = MID(desc,13,13)  -- M is 0-based, so start = 12
+    MidCol   = Table.AddColumn(RateBad, &quot;Mid&quot;,
+                   each try Text.Middle(Text.Trim([MaterialDesc] ?? &quot;&quot;), 12, 13) otherwise null,
+                   type text),
+    // Base = LEFT(desc,6)
+    BaseCol  = Table.AddColumn(MidCol, &quot;Base&quot;,
+                   each try Text.Start(Text.Trim([MaterialDesc] ?? &quot;&quot;), 6) otherwise null,
+                   type text),
+
+    // MW = Closing Stock * Rate / 10^6
+    MW       = Table.AddColumn(BaseCol, &quot;MW&quot;,
+                   each try [CloseQty] * [Rate] / 1000000 otherwise null, type number),
+
+    // Inr Wp = Closing Value / (MW * 10^6)
+    INRwp    = Table.AddColumn(MW, &quot;INR_WP&quot;,
+                   each try [CloseVal] / ([MW] * 1000000) otherwise null, type number),
+
+    Cleaned  = Table.RemoveColumns(INRwp, {&quot;RateText&quot;})
+in
+    Cleaned</pre>
+</section>
+
+<section class="card" id="q-15" data-name="factconble">
+  <header>
+    <span class="num">15</span>
+    <h3>factConble</h3>
+    <button class="copy" data-target="qcode15">Copy</button>
+    <button class="done" data-key="q-15">Done</button>
+  </header>
+  
+  <pre id="qcode15">stgConble</pre>
+</section>
+
+<section class="card" id="q-16" data-name="factinventory">
+  <header>
+    <span class="num">16</span>
+    <h3>factInventory</h3>
+    <button class="copy" data-target="qcode16">Copy</button>
+    <button class="done" data-key="q-16">Done</button>
+  </header>
+  <p class='note'>The single table every report visual uses.</p>
+  <pre id="qcode16">let
+    Combined = Table.Combine({factRM, factFG, factConble})
+in
+    Combined</pre>
+</section>
+
+<section class="card" id="q-17" data-name="varmwcapacity">
+  <header>
+    <span class="num">17</span>
+    <h3>varMWCapacity</h3>
+    <button class="copy" data-target="qcode17">Copy</button>
+    <button class="done" data-key="q-17">Done</button>
+  </header>
+  <p class='note'>This version reads the ORIGINAL two-block MW sheet and unpivots the three plant columns. Expect 18 rows (6 Techs x 3 plants), MW = 0 for every 1905.</p>
+  <pre id="qcode17">let
+    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
+    Sh      = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
+    Norm    = (n as any) as text =&gt; Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? &quot;&quot;)), {&quot; &quot;,&quot;.&quot;})),
+    Hit     = Table.SelectRows(Sh, each List.Contains({&quot;MW&quot;,&quot;MWCAPACITY&quot;,&quot;CAPACITY&quot;}, Norm([Item]))),
+    Data    = Hit{0}[Data],
+    C       = Table.ColumnNames(Data),
+    // keep only rows whose first cell is text: that is the Tech block, not the Plant block
+    TechRow = Table.SelectRows(Data, each
+                  [Column1] &lt;&gt; null and [Column1] &lt;&gt; &quot;&quot; and Value.Is([Column1], type text)
+                  and not Text.StartsWith(Text.From([Column1]), &quot;Plant&quot;, Comparer.OrdinalIgnoreCase)),
+    Pick    = Table.SelectColumns(TechRow, {C{0}, C{2}, C{3}, C{4}}),
+    Named   = Table.RenameColumns(Pick, {
+                  {C{0}, &quot;Tech&quot;}, {C{2}, &quot;1900&quot;}, {C{3}, &quot;1902&quot;}, {C{4}, &quot;1905&quot;}}),
+    Unpiv   = Table.UnpivotOtherColumns(Named, {&quot;Tech&quot;}, &quot;ValuationArea&quot;, &quot;MWRaw&quot;),
+    MWNum   = Table.AddColumn(Unpiv, &quot;MW&quot;, each try Number.From([MWRaw]) otherwise 0, type number),
+    Dated   = Table.AddColumn(MWNum, &quot;EffectiveFrom&quot;, each #date(1900,1,1), type date),
+    Keys    = Table.TransformColumns(Dated, {
+                  {&quot;Tech&quot;,          each Text.Trim(Text.From(_ ?? &quot;&quot;)), type text},
+                  {&quot;ValuationArea&quot;, each Text.Trim(Text.From(_ ?? &quot;&quot;)), type text}}),
+    Out     = Table.Buffer(Table.SelectColumns(Keys,
+                  {&quot;EffectiveFrom&quot;,&quot;Tech&quot;,&quot;ValuationArea&quot;,&quot;MW&quot;}))
+in
+    Out</pre>
+</section>
+
+<section class="card" id="q-18" data-name="dimcapacity">
+  <header>
+    <span class="num">18</span>
+    <h3>dimCapacity</h3>
+    <button class="copy" data-target="qcode18">Copy</button>
+    <button class="done" data-key="q-18">Done</button>
+  </header>
+  
+  <pre id="qcode18">let
+    Months   = List.Distinct(List.Sort(factInventory[Month])),
+    Combos   = Table.Distinct(Table.SelectColumns(varMWCapacity, {&quot;Tech&quot;,&quot;ValuationArea&quot;})),
+    Grid     = Table.AddColumn(Combos, &quot;Month&quot;, each Months),
+    Expanded = Table.ExpandListColumn(Grid, &quot;Month&quot;),
+    AsOf     = Table.AddColumn(Expanded, &quot;CapacityMW&quot;, (row) =&gt;
+                   let
+                       Rows   = Table.SelectRows(varMWCapacity, each
+                                    [Tech] = row[Tech]
+                                    and [ValuationArea] = row[ValuationArea]
+                                    and [EffectiveFrom] &lt;= row[Month]),
+                       Sorted = Table.Sort(Rows, {{&quot;EffectiveFrom&quot;, Order.Descending}}),
+                       Val    = try Sorted{0}[MW] otherwise null
+                   in  Val, type number),
+    Typed    = Table.TransformColumnTypes(AsOf, {{&quot;Month&quot;, type date}})
+in
+    Typed</pre>
+</section>
+
+<section class="card" id="q-19" data-name="dimnature">
+  <header>
+    <span class="num">19</span>
+    <h3>dimNature</h3>
+    <button class="copy" data-target="qcode19">Copy</button>
+    <button class="done" data-key="q-19">Done</button>
+  </header>
+  <p class='note'>Bridge table. Without it, slicing FG by Nature leaves Capacity MW unfiltered and Days is wrong everywhere except the grand total.</p>
+  <pre id="qcode19">let
+    FromRM  = List.RemoveNulls(dimMaterialAttr[Nature]),
+    FromFG  = List.RemoveNulls(dimFGAttr[Nature]),
+    FromCap = List.RemoveNulls(varMWCapacity[Tech]),
+    All     = List.Distinct(List.Combine({FromRM, FromFG, FromCap})),
+    T       = Table.FromList(All, Splitter.SplitByNothing(), {&quot;Nature&quot;}),
+    Typed   = Table.TransformColumnTypes(T, {{&quot;Nature&quot;, type text}})
+in
+    Typed</pre>
+</section>
+
+<section class="card" id="q-20" data-name="dimtbmaster">
+  <header>
+    <span class="num">20</span>
+    <h3>dimTBMaster</h3>
+    <button class="copy" data-target="qcode20">Copy</button>
+    <button class="done" data-key="q-20">Done</button>
+  </header>
+  
+  <pre id="qcode20">let
+    Raw      = fnVarSheet(
+                   {&quot;TB Master&quot;, &quot;TBMaster&quot;, &quot;TB&quot;},
+                   {
+                     {{&quot;GL Account Number&quot;,&quot;gl Account Number&quot;,&quot;GLAccountNumber&quot;,
+                       &quot;GL Account&quot;,&quot;G/L Account&quot;,&quot;GL No&quot;},                    &quot;GLAccount&quot;},
+                     {{&quot;GL Account Description&quot;,&quot;GL Description&quot;,&quot;GLDescription&quot;,
+                       &quot;Account Description&quot;,&quot;Account Name&quot;},                  &quot;GLDescMaster&quot;},
+                     {{&quot;Nature&quot;},                                             &quot;Nature&quot;},
+                     {{&quot;Plant&quot;,&quot;Valuation Area&quot;},                             &quot;TBPlant&quot;},
+                     {{&quot;Sort Order&quot;,&quot;SortOrder&quot;,&quot;Sort&quot;},                       &quot;TBSort&quot;}
+                   }),
+    Keys     = Table.TransformColumns(Raw, {
+                   {&quot;GLAccount&quot;, each Text.TrimStart(Text.Trim(Text.From(_ ?? &quot;&quot;)), &quot;0&quot;), type text}}),
+    NoBlank  = Table.SelectRows(Keys, each [GLAccount] &lt;&gt; null and [GLAccount] &lt;&gt; &quot;&quot;),
+    Wanted   = {&quot;GLAccount&quot;,&quot;GLDescMaster&quot;,&quot;Nature&quot;,&quot;TBPlant&quot;,&quot;TBSort&quot;},
+    Present  = Table.ColumnNames(NoBlank),
+    Padded   = List.Accumulate(List.Difference(Wanted, Present), NoBlank,
+                   (t, c) =&gt; Table.AddColumn(t, c, each null)),
+    Slim     = Table.SelectColumns(Padded, Wanted),
+    Typed    = Table.TransformColumnTypes(Slim, {
+                   {&quot;Nature&quot;, type text}, {&quot;TBPlant&quot;, type text}}),
+    Dedup    = Table.Distinct(Typed, {&quot;GLAccount&quot;})
+in
+    Dedup</pre>
+</section>
+
+<section class="card" id="q-21" data-name="facttb_staged">
+  <header>
+    <span class="num">21</span>
+    <h3>factTB_Staged</h3>
+    <button class="copy" data-target="qcode21">Copy</button>
+    <button class="done" data-key="q-21">Done</button>
+  </header>
+  
+  <pre id="qcode21">let
+    Files    = Folder.Files(pRoot &amp; &quot;\TB&quot;),
+    OnlyXlsx = Table.SelectRows(Files, each Text.Lower([Extension]) = &quot;.xlsx&quot;
+                   and not Text.StartsWith([Name], &quot;~$&quot;)
+                   and not Text.StartsWith([Name], &quot;.&quot;)),
+    Loaded   = Table.AddColumn(OnlyXlsx, &quot;Data&quot;, each
+                   let
+                       Wb = Excel.Workbook([Content], true, true),
+                       Sh = Wb{[Item=&quot;Sheet1&quot;, Kind=&quot;Sheet&quot;]}[Data],
+                       Pr = Table.PromoteHeaders(Sh, [PromoteAllScalars=true])
+                   in
+                       Table.SelectColumns(Pr, {
+                           &quot;GL Account Number&quot;,&quot;GL Account Description&quot;,
+                           &quot;Profit Centre&quot;,&quot;Profit Centre Description&quot;,&quot;Amount&quot;},
+                           MissingField.Error)),
+    // month from the file name: TB_YYYYMM.xlsx
+    WithMonth = Table.AddColumn(Loaded, &quot;Month&quot;, each
+                   let
+                       digits = Text.Select([Name], {&quot;0&quot;..&quot;9&quot;}),
+                       yyyymm = Text.Middle(digits, 0, 6)
+                   in
+                       try #date(Number.From(Text.Start(yyyymm,4)),
+                                 Number.From(Text.Middle(yyyymm,4,2)), 1)
+                       otherwise null, type date),
+    Slim     = Table.SelectColumns(WithMonth, {&quot;Name&quot;,&quot;Month&quot;,&quot;Data&quot;}),
+    Expanded = Table.ExpandTableColumn(Slim, &quot;Data&quot;,
+                   {&quot;GL Account Number&quot;,&quot;GL Account Description&quot;,
+                    &quot;Profit Centre&quot;,&quot;Profit Centre Description&quot;,&quot;Amount&quot;}),
+    Renamed  = Table.RenameColumns(Expanded, {
+                   {&quot;Name&quot;,&quot;SourceFile&quot;},
+                   {&quot;GL Account Number&quot;,&quot;GLAccount&quot;},
+                   {&quot;GL Account Description&quot;,&quot;GLDesc&quot;},
+                   {&quot;Profit Centre&quot;,&quot;ProfitCentre&quot;},
+                   {&quot;Profit Centre Description&quot;,&quot;ProfitCentreDesc&quot;}}),
+    Keys     = Table.TransformColumns(Renamed, {
+                   {&quot;GLAccount&quot;,    each Text.TrimStart(Text.Trim(Text.From(_)), &quot;0&quot;), type text},
+                   {&quot;ProfitCentre&quot;, each Text.Trim(Text.From(_)), type text}}),
+    // plant = characters 3-6 of the profit centre  (0-based start = 2)
+    PlantRaw = Table.AddColumn(Keys, &quot;PlantCode&quot;,
+                   each try Text.Middle([ProfitCentre], 2, 4) otherwise null, type text),
+    Known    = List.Buffer(dimPlant[ValuationArea]),
+    PlantCol = Table.AddColumn(PlantRaw, &quot;ValuationArea&quot;,
+                   each if List.Contains(Known, [PlantCode]) then [PlantCode] else &quot;Unallocated&quot;,
+                   type text),
+    Typed    = Table.TransformColumnTypes(PlantCol, {{&quot;Amount&quot;, type number}})
+in
+    Typed</pre>
+</section>
+
+<section class="card" id="q-22" data-name="facttb">
+  <header>
+    <span class="num">22</span>
+    <h3>factTB</h3>
+    <button class="copy" data-target="qcode22">Copy</button>
+    <button class="done" data-key="q-22">Done</button>
+  </header>
+  <p class='note'>The inner join to dimTBMaster IS the trial-balance cleaning - only whitelisted GL accounts survive.</p>
+  <pre id="qcode22">let
+    Mapped  = Table.NestedJoin(factTB_Staged, {&quot;GLAccount&quot;}, dimTBMaster, {&quot;GLAccount&quot;},
+                  &quot;tpl&quot;, JoinKind.Inner),
+    Expand  = Table.ExpandTableColumn(Mapped, &quot;tpl&quot;, {&quot;Nature&quot;,&quot;TBPlant&quot;,&quot;TBSort&quot;})
+in
+    Expand</pre>
+</section>
+
+<section class="card" id="q-23" data-name="facttb_unmapped">
+  <header>
+    <span class="num">23</span>
+    <h3>factTB_Unmapped</h3>
+    <button class="copy" data-target="qcode23">Copy</button>
+    <button class="done" data-key="q-23">Done</button>
+  </header>
+  <p class='note'>GL accounts present in the raw TB but absent from TB Master. Empty = good. This is what stops a new GL silently vanishing.</p>
+  <pre id="qcode23">let
+    Anti  = Table.NestedJoin(factTB_Staged, {&quot;GLAccount&quot;}, dimTBMaster, {&quot;GLAccount&quot;},
+                &quot;tpl&quot;, JoinKind.LeftAnti),
+    Clean = Table.RemoveColumns(Anti, {&quot;tpl&quot;}),
+    Group = Table.Group(Clean, {&quot;GLAccount&quot;,&quot;GLDesc&quot;},
+                {{&quot;Amount&quot;, each List.Sum([Amount]), type number},
+                 {&quot;Rows&quot;,   each Table.RowCount(_), Int64.Type}})
+in
+    Group</pre>
+</section>
+
+<section class="card" id="q-24" data-name="dimdate">
+  <header>
+    <span class="num">24</span>
+    <h3>dimDate</h3>
+    <button class="copy" data-target="qcode24">Copy</button>
+    <button class="done" data-key="q-24">Done</button>
+  </header>
+  
+  <pre id="qcode24">let
+    MinD  = List.Min(factInventory[FromDate]),
+    MaxD  = List.Max(factInventory[ToDate]),
+    Start = #date(Date.Year(MinD) - (if Date.Month(MinD) &lt; 4 then 1 else 0), 4, 1),
+    End   = #date(Date.Year(MaxD) + (if Date.Month(MaxD) &gt;= 4 then 1 else 0), 3, 31),
+    Days  = List.Dates(Start, Duration.Days(End - Start) + 1, #duration(1,0,0,0)),
+    T     = Table.TransformColumnTypes(
+                Table.FromList(Days, Splitter.SplitByNothing(), {&quot;Date&quot;}),
+                {{&quot;Date&quot;, type date}}),
+    M     = Table.AddColumn(T, &quot;Month&quot;, each Date.StartOfMonth([Date]), type date),
+    MN    = Table.AddColumn(M, &quot;MonthName&quot;, each Date.ToText([Date], &quot;MMM&#x27;&#x27;yy&quot;), type text),
+    MS    = Table.AddColumn(MN, &quot;MonthSort&quot;,
+                each Date.Year([Date]) * 100 + Date.Month([Date]), Int64.Type),
+    FY    = Table.AddColumn(MS, &quot;FY&quot;, each
+                let y = if Date.Month([Date]) &gt;= 4 then Date.Year([Date]) else Date.Year([Date]) - 1
+                in  &quot;FY &quot; &amp; Text.From(y) &amp; &quot;-&quot; &amp; Text.End(Text.From(y + 1), 2), type text)
+in
+    FY</pre>
+</section>
+
+<section class="card" id="q-25" data-name="qcheaders">
+  <header>
+    <span class="num">25</span>
+    <h3>qcHeaders</h3>
+    <button class="copy" data-target="qcode25">Copy</button>
+    <button class="done" data-key="q-25">Done</button>
+  </header>
+  <p class='note'>Your self-check: lists the real sheet names and headers of every file in all four folders. Leave Enable load ON.</p>
+  <pre id="qcode25">let
+    Folders  = {&quot;RM Raw&quot;, &quot;FG Raw&quot;, &quot;Consble Raw&quot;, &quot;TB&quot;},
+    AllFiles = Table.Combine(List.Transform(Folders, (f) =&gt;
+                   Table.AddColumn(
+                       Table.SelectRows(Folder.Files(pRoot &amp; &quot;\&quot; &amp; f),
+                           each Text.Lower([Extension]) = &quot;.xlsx&quot;
+                           and not Text.StartsWith([Name], &quot;~$&quot;)
+                           and not Text.StartsWith([Name], &quot;.&quot;)),
+                       &quot;Folder&quot;, each f, type text))),
+    Slim     = Table.SelectColumns(AllFiles, {&quot;Folder&quot;,&quot;Name&quot;,&quot;Content&quot;}),
+    Hdrs     = Table.AddColumn(Slim, &quot;Headers&quot;, each
+                   let
+                       Wb = Excel.Workbook([Content], null, true),
+                       Sh = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
+                       D  = try Sh{[Item=&quot;Sheet1&quot;, Kind=&quot;Sheet&quot;]}[Data] otherwise Sh{0}[Data],
+                       P  = Table.PromoteHeaders(D, [PromoteAllScalars=true])
+                   in
+                       Text.Combine(List.Transform(Table.ColumnNames(P), Text.From), &quot; | &quot;),
+                   type text),
+    Sheets   = Table.AddColumn(Hdrs, &quot;SheetNames&quot;, each
+                   let Wb = Excel.Workbook([Content], null, true)
+                   in  Text.Combine(Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;)[Item], &quot; | &quot;),
+                   type text),
+    Out      = Table.SelectColumns(Sheets, {&quot;Folder&quot;,&quot;Name&quot;,&quot;SheetNames&quot;,&quot;Headers&quot;})
+in
+    Out</pre>
+</section>
+
+<section class="card" id="q-26" data-name="qcvarheaders">
+  <header>
+    <span class="num">26</span>
+    <h3>qcVarHeaders</h3>
+    <button class="copy" data-target="qcode26">Copy</button>
+    <button class="done" data-key="q-26">Done</button>
+  </header>
+  <p class='note'>Your self-check for Variables and Calculations: every sheet, its exact headers, and its row count. Leave Enable load ON.</p>
+  <pre id="qcode26">let
+    Wb    = Excel.Workbook(File.Contents(pVarsFile), null, true),
+    Sh    = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
+    Slim  = Table.SelectColumns(Sh, {&quot;Item&quot;,&quot;Data&quot;}),
+    Hdrs  = Table.AddColumn(Slim, &quot;Headers&quot;, each
+                Text.Combine(List.Transform(
+                    Table.ColumnNames(Table.PromoteHeaders([Data], [PromoteAllScalars=true])),
+                    Text.From), &quot; | &quot;), type text),
+    Rows  = Table.AddColumn(Hdrs, &quot;DataRows&quot;, each Table.RowCount([Data]) - 1, Int64.Type),
+    Out   = Table.RenameColumns(Table.SelectColumns(Rows, {&quot;Item&quot;,&quot;Headers&quot;,&quot;DataRows&quot;}),
+                {{&quot;Item&quot;,&quot;SheetName&quot;}})
+in
+    Out</pre>
+</section>
+
+<section class="card" id="q-27" data-name="qcnaturenocapacity">
+  <header>
+    <span class="num">27</span>
+    <h3>qcNatureNoCapacity</h3>
+    <button class="copy" data-target="qcode27">Copy</button>
+    <button class="done" data-key="q-27">Done</button>
+  </header>
+  <p class='note'>Lists FG Natures with no matching Tech on the MW sheet. Those rows get blank Days. Empty table = good.</p>
+  <pre id="qcode27">let
+    FGNatures = List.Distinct(List.RemoveNulls(dimFGAttr[Nature])),
+    CapTechs  = List.Distinct(List.RemoveNulls(varMWCapacity[Tech])),
+    Orphans   = List.Difference(FGNatures, CapTechs),
+    T         = Table.FromList(Orphans, Splitter.SplitByNothing(), {&quot;Nature&quot;})
+in
+    T</pre>
+</section>
+</div>
+
+<div class="panel" id="tab-m">
+  <p class="sub">In report view: <strong>Home → New measure</strong>, paste, Enter. One per box.</p>
+  
+<section class="card" id="m-1" data-name="closing value">
+  <header>
+    <span class="num">1</span>
+    <h3>Closing Value</h3>
+    <button class="copy" data-target="mcode1">Copy</button>
+    <button class="done" data-key="m-1">Done</button>
+  </header>
+  
+  <pre id="mcode1">Closing Value   = SUM(factInventory[CloseVal])</pre>
+</section>
+
+<section class="card" id="m-2" data-name="inventory total">
+  <header>
+    <span class="num">2</span>
+    <h3>Inventory Total</h3>
+    <button class="copy" data-target="mcode2">Copy</button>
+    <button class="done" data-key="m-2">Done</button>
+  </header>
+  
+  <pre id="mcode2">Inventory Total = [Closing Value]</pre>
+</section>
+
+<section class="card" id="m-3" data-name="closing qty">
+  <header>
+    <span class="num">3</span>
+    <h3>Closing Qty</h3>
+    <button class="copy" data-target="mcode3">Copy</button>
+    <button class="done" data-key="m-3">Done</button>
+  </header>
+  
+  <pre id="mcode3">Closing Qty     = SUM(factInventory[CloseQty])</pre>
+</section>
+
+<section class="card" id="m-4" data-name="opening value">
+  <header>
+    <span class="num">4</span>
+    <h3>Opening Value</h3>
+    <button class="copy" data-target="mcode4">Copy</button>
+    <button class="done" data-key="m-4">Done</button>
+  </header>
+  
+  <pre id="mcode4">Opening Value   = SUM(factInventory[OpenVal])</pre>
+</section>
+
+<section class="card" id="m-5" data-name="receipts value">
+  <header>
+    <span class="num">5</span>
+    <h3>Receipts Value</h3>
+    <button class="copy" data-target="mcode5">Copy</button>
+    <button class="done" data-key="m-5">Done</button>
+  </header>
+  
+  <pre id="mcode5">Receipts Value  = SUM(factInventory[ReceiptVal])</pre>
+</section>
+
+<section class="card" id="m-6" data-name="issues value">
+  <header>
+    <span class="num">6</span>
+    <h3>Issues Value</h3>
+    <button class="copy" data-target="mcode6">Copy</button>
+    <button class="done" data-key="m-6">Done</button>
+  </header>
+  
+  <pre id="mcode6">Issues Value    = SUM(factInventory[IssueVal])</pre>
+</section>
+
+<section class="card" id="m-7" data-name="mw">
+  <header>
+    <span class="num">7</span>
+    <h3>MW</h3>
+    <button class="copy" data-target="mcode7">Copy</button>
+    <button class="done" data-key="m-7">Done</button>
+  </header>
+  
+  <pre id="mcode7">MW              = SUM(factInventory[MW])</pre>
+</section>
+
+<section class="card" id="m-8" data-name="inr per wp">
+  <header>
+    <span class="num">8</span>
+    <h3>INR per Wp</h3>
+    <button class="copy" data-target="mcode8">Copy</button>
+    <button class="done" data-key="m-8">Done</button>
+  </header>
+  
+  <pre id="mcode8">INR per Wp      = SUM(factInventory[INR_WP])</pre>
+</section>
+
+<section class="card" id="m-9" data-name="inv rm">
+  <header>
+    <span class="num">9</span>
+    <h3>Inv RM</h3>
+    <button class="copy" data-target="mcode9">Copy</button>
+    <button class="done" data-key="m-9">Done</button>
+  </header>
+  
+  <pre id="mcode9">Inv RM          = CALCULATE([Closing Value], factInventory[Category] = &quot;RM&quot;)</pre>
+</section>
+
+<section class="card" id="m-10" data-name="inv fg">
+  <header>
+    <span class="num">10</span>
+    <h3>Inv FG</h3>
+    <button class="copy" data-target="mcode10">Copy</button>
+    <button class="done" data-key="m-10">Done</button>
+  </header>
+  
+  <pre id="mcode10">Inv FG          = CALCULATE([Closing Value], factInventory[Category] = &quot;FG&quot;)</pre>
+</section>
+
+<section class="card" id="m-11" data-name="inv consumables">
+  <header>
+    <span class="num">11</span>
+    <h3>Inv Consumables</h3>
+    <button class="copy" data-target="mcode11">Copy</button>
+    <button class="done" data-key="m-11">Done</button>
+  </header>
+  
+  <pre id="mcode11">Inv Consumables = CALCULATE([Closing Value], factInventory[Category] = &quot;Consumables&quot;)</pre>
+</section>
+
+<section class="card" id="m-12" data-name="capacity mw">
+  <header>
+    <span class="num">12</span>
+    <h3>Capacity MW</h3>
+    <button class="copy" data-target="mcode12">Copy</button>
+    <button class="done" data-key="m-12">Done</button>
+  </header>
+  
+  <pre id="mcode12">Capacity MW     = SUM(dimCapacity[CapacityMW])</pre>
+</section>
+
+<section class="card" id="m-13" data-name="fg mw">
+  <header>
+    <span class="num">13</span>
+    <h3>FG MW</h3>
+    <button class="copy" data-target="mcode13">Copy</button>
+    <button class="done" data-key="m-13">Done</button>
+  </header>
+  
+  <pre id="mcode13">FG MW           = CALCULATE([MW], factInventory[Category] = &quot;FG&quot;)</pre>
+</section>
+
+<section class="card" id="m-14" data-name="days">
+  <header>
+    <span class="num">14</span>
+    <h3>Days</h3>
+    <button class="copy" data-target="mcode14">Copy</button>
+    <button class="done" data-key="m-14">Done</button>
+  </header>
+  
+  <pre id="mcode14">Days            = DIVIDE([FG MW], [Capacity MW])</pre>
+</section>
+
+<section class="card" id="m-15" data-name="tb value">
+  <header>
+    <span class="num">15</span>
+    <h3>TB Value</h3>
+    <button class="copy" data-target="mcode15">Copy</button>
+    <button class="done" data-key="m-15">Done</button>
+  </header>
+  
+  <pre id="mcode15">TB Value        = SUM(factTB[Amount])</pre>
+</section>
+
+<section class="card" id="m-16" data-name="difference">
+  <header>
+    <span class="num">16</span>
+    <h3>Difference</h3>
+    <button class="copy" data-target="mcode16">Copy</button>
+    <button class="done" data-key="m-16">Done</button>
+  </header>
+  
+  <pre id="mcode16">Difference      = [TB Value] - [Closing Value]</pre>
+</section>
+
+<section class="card" id="m-17" data-name="difference %">
+  <header>
+    <span class="num">17</span>
+    <h3>Difference %</h3>
+    <button class="copy" data-target="mcode17">Copy</button>
+    <button class="done" data-key="m-17">Done</button>
+  </header>
+  
+  <pre id="mcode17">Difference %    = DIVIDE([Difference], [TB Value])</pre>
+</section>
+
+<section class="card" id="m-18" data-name="prev month">
+  <header>
+    <span class="num">18</span>
+    <h3>Prev Month</h3>
+    <button class="copy" data-target="mcode18">Copy</button>
+    <button class="done" data-key="m-18">Done</button>
+  </header>
+  
+  <pre id="mcode18">Prev Month      = CALCULATE([Closing Value], DATEADD(dimDate[Date], -1, MONTH))</pre>
+</section>
+
+<section class="card" id="m-19" data-name="mom delta">
+  <header>
+    <span class="num">19</span>
+    <h3>MoM Delta</h3>
+    <button class="copy" data-target="mcode19">Copy</button>
+    <button class="done" data-key="m-19">Done</button>
+  </header>
+  
+  <pre id="mcode19">MoM Delta       = [Closing Value] - [Prev Month]</pre>
+</section>
+
+<section class="card" id="m-20" data-name="stock recon">
+  <header>
+    <span class="num">20</span>
+    <h3>Stock Recon</h3>
+    <button class="copy" data-target="mcode20">Copy</button>
+    <button class="done" data-key="m-20">Done</button>
+  </header>
+  
+  <pre id="mcode20">Stock Recon     = [Opening Value] + [Receipts Value] - [Issues Value] - [Closing Value]</pre>
+</section>
+
+<section class="card" id="m-21" data-name="rows missing attr">
+  <header>
+    <span class="num">21</span>
+    <h3>Rows Missing Attr</h3>
+    <button class="copy" data-target="mcode21">Copy</button>
+    <button class="done" data-key="m-21">Done</button>
+  </header>
+  
+  <pre id="mcode21">Rows Missing Attr = CALCULATE(COUNTROWS(factInventory), factInventory[AttrMissing] = TRUE())</pre>
+</section>
+
+<section class="card" id="m-22" data-name="unmapped tb">
+  <header>
+    <span class="num">22</span>
+    <h3>Unmapped TB</h3>
+    <button class="copy" data-target="mcode22">Copy</button>
+    <button class="done" data-key="m-22">Done</button>
+  </header>
+  
+  <pre id="mcode22">Unmapped TB     = SUM(factTB_Unmapped[Amount])</pre>
+</section>
+</div>
+
+<div class="panel" id="tab-g"><h1>Build guide — click by click</h1>
+<p>Follow top to bottom. Don&#x27;t skip ahead; each query references the ones before it. Every code block you need is in <strong>Appendix A</strong> at the end of this file, under the same name as the step that asks for it.</p>
+<p>Rough time: Part 1–3 about 40 minutes, Part 4 (visuals) about 2 hours.</p>
+<hr>
+<h1>PART 0 — Set up the folders (10 min)</h1>
+<p><strong>0.1</strong> In OneDrive, create this exact structure:</p>
+<pre class='plain'>Inventory Report\
+    RM Raw\
+    FG Raw\
+    Consble Raw\
+    TB\
+    Variables and Calculations.xlsx</pre>
+<p><strong>0.2</strong> Put the <code>Variables and Calculations.xlsx</code> I sent you into <code>Inventory Report\</code> (not into a subfolder). Fill in your data rows. Don&#x27;t rename sheets or headers.</p>
+<p><strong>0.3</strong> Drop your SAP MB5B exports into the three Raw folders. Never edit these files.</p>
+<p><strong>0.4</strong> Rename your TB files to <code>TB_202601.xlsx</code>, <code>TB_202602.xlsx</code>, etc. (year then month).</p>
+<p><strong>0.5</strong> Get the folder path: open <code>Inventory Report</code> in File Explorer, click the address bar once, copy the whole path. Keep it on your clipboard — you need it in step 1.3.</p>
+<p><strong>0.6</strong> Close every Excel file in these folders. A file open in Excel makes the refresh fail with a file-lock error. This applies every time you refresh, forever.</p>
+<hr>
+<h1>PART 1 — Create the queries (30 min)</h1>
+<p><strong>1.1</strong> Open <strong>Power BI Desktop</strong> → <strong>Blank report</strong>.</p>
+<p><strong>1.2</strong> Ribbon: <strong>Home</strong> → <strong>Transform data</strong>. The Power Query Editor window opens. Everything in Part 1 happens in this window.</p>
+<h3>How to add each query (you will repeat this 27 times)</h3>
+<ol>
+<li>In Power Query, ribbon: <strong>Home</strong> → <strong>New Source</strong> → <strong>Blank Query</strong>.</li>
+<li>Ribbon: <strong>Home</strong> → <strong>Advanced Editor</strong>.</li>
+<li>Select everything in the box (Ctrl+A) and delete it.</li>
+<li>Paste the code block from Appendix A.</li>
+<li>Click <strong>Done</strong>.</li>
+<li>In the <strong>Queries</strong> list on the left, right-click the new query → <strong>Rename</strong> → type the</li>
+</ol>
+<p>exact name from the appendix heading (e.g. <code>fnCleanMB5B</code>). <strong>Names must match exactly</strong> — the other queries call each other by name.</p>
+<blockquote>You&#x27;ll see errors like &quot;pRoot not recognised&quot; until the query it depends on exists. That&#x27;s expected. Ignore errors until you&#x27;ve created all of them.</blockquote>
+<p><strong>1.3</strong> Create the queries in <strong>this order</strong>:</p>
+<table>
+<tr><th>#</th><th>Query name</th><th>Note</th></tr>
+<tr><td>1</td><td><code>pRoot</code></td><td><strong>Paste YOUR folder path</strong> between the quote marks</td></tr>
+<tr><td>2</td><td><code>pVarsFile</code></td><td></td></tr>
+<tr><td>3</td><td><code>fnCleanMB5B</code></td><td></td></tr>
+<tr><td>4</td><td><code>stgRM</code></td><td></td></tr>
+<tr><td>5</td><td><code>stgFG</code></td><td></td></tr>
+<tr><td>6</td><td><code>stgConble</code></td><td></td></tr>
+<tr><td>7</td><td><code>fnVarSheet</code></td><td>helper — must exist before the next four</td></tr>
+<tr><td>8</td><td><code>dimPlant</code></td><td>hardcoded, reads no sheet</td></tr>
+<tr><td>9</td><td><code>dimMaterialAttr</code></td><td></td></tr>
+<tr><td>10</td><td><code>dimFGAttr</code></td><td></td></tr>
+<tr><td>11</td><td><code>varConstants</code></td><td>needs a <code>RM_MW_FACTOR</code> = 580 row</td></tr>
+<tr><td>12</td><td><code>fnConstantAsOf</code></td><td></td></tr>
+<tr><td>13</td><td><code>factRM</code></td><td></td></tr>
+<tr><td>14</td><td><code>factFG</code></td><td></td></tr>
+<tr><td>15</td><td><code>factConble</code></td><td></td></tr>
+<tr><td>16</td><td><code>factInventory</code></td><td></td></tr>
+<tr><td>17</td><td><code>varMWCapacity</code></td><td>reads the two-block MW sheet</td></tr>
+<tr><td>18</td><td><code>dimCapacity</code></td><td></td></tr>
+<tr><td>19</td><td><code>dimNature</code></td><td></td></tr>
+<tr><td>20</td><td><code>dimTBMaster</code></td><td></td></tr>
+<tr><td>21</td><td><code>factTB_Staged</code></td><td></td></tr>
+<tr><td>22</td><td><code>factTB</code></td><td></td></tr>
+<tr><td>23</td><td><code>factTB_Unmapped</code></td><td></td></tr>
+<tr><td>24</td><td><code>dimDate</code></td><td></td></tr>
+<tr><td>25</td><td><code>qcHeaders</code></td><td>self-check</td></tr>
+<tr><td>26</td><td><code>qcVarHeaders</code></td><td>self-check</td></tr>
+<tr><td>27</td><td><code>qcNatureNoCapacity</code></td><td>self-check</td></tr>
+</table>
+<p><strong>1.4</strong> If Power BI asks about <strong>privacy levels</strong> or <strong>credentials</strong>, choose <strong>Organizational</strong> for OneDrive and click through. If it warns about combining data sources, click <strong>Ignore Privacy Levels</strong> (it&#x27;s all your own data).</p>
+<p><strong>1.5 — Important.</strong> Turn off loading for the helper queries. For <strong>each</strong> of these, right-click the query in the left list and <strong>untick &quot;Enable load&quot;</strong>:</p>
+<pre class='plain'>pRoot, pVarsFile, fnCleanMB5B, stgRM, stgFG, stgConble,
+fnVarSheet, factRM, factFG, factConble, varConstants,
+fnConstantAsOf, varMWCapacity, factTB_Staged</pre>
+<p>Leave these ticked (they become your tables):</p>
+<pre class='plain'>factInventory, factTB, factTB_Unmapped, dimPlant, dimDate,
+dimNature, dimCapacity, dimTBMaster, dimMaterialAttr, dimFGAttr,
+qcHeaders, qcVarHeaders, qcNatureNoCapacity</pre>
+<p><strong>1.6</strong> Ribbon: <strong>Home</strong> → <strong>Close &amp; Apply</strong>. Wait for it to load.</p>
+<h3>If something fails here</h3>
+<table>
+<tr><th>Error message</th><th>What it means</th><th>Fix</th></tr>
+<tr><td>&quot;Column &#x27;X&#x27; of the table wasn&#x27;t found&quot;</td><td>a header in Excel doesn&#x27;t match the code</td><td>fix the spelling in Excel to match the code, or tell me and I&#x27;ll change the code</td></tr>
+<tr><td>&quot;The key didn&#x27;t match any rows&quot;</td><td>a sheet name is wrong</td><td>check sheet names: <code>RM Nature</code>, <code>FG Master</code>, <code>MW Capacity</code>, <code>Constants</code>, <code>TB Master</code>, <code>Plant Master</code></td></tr>
+<tr><td>&quot;We couldn&#x27;t find folder&quot;</td><td><code>pRoot</code> path is wrong</td><td>recheck step 0.5; no trailing backslash</td></tr>
+<tr><td>&quot;The file is being used by another process&quot;</td><td>an Excel file is open</td><td>close all Excel files; check Task Manager for a stray EXCEL.EXE; delete any <code>~$</code> file</td></tr>
+<tr><td>&quot;Illegal characters in path&quot;</td><td><code>pRoot</code> is not your real path</td><td>open the folder in File Explorer, click the address bar, copy it in — keep the quote marks</td></tr>
+<tr><td>&quot;Token Literal expected&quot;</td><td>a text value lost its quote marks</td><td><code>pRoot</code> must be <code>&quot;C:\...\Inventory Report&quot;</code>, quotes included</td></tr>
+<tr><td>&quot;Expression.Syntax Error&quot; right after pasting</td><td>the whole appendix went into one query</td><td>one query per Blank Query, 27 times</td></tr>
+</table>
+<p>Send me the exact error text and I&#x27;ll tell you the one-line fix.</p>
+<hr>
+<h1>PART 2 — Build the model (10 min)</h1>
+<p><strong>2.1</strong> Left sidebar: click the <strong>Model</strong> icon (third one down, looks like a table diagram).</p>
+<p><strong>2.2</strong> Power BI will have guessed some relationships. <strong>Delete all of them</strong>: click each connecting line and press Delete. Cleaner to start blank.</p>
+<p><strong>2.3</strong> Create these 8 relationships. To create one: click and drag the <strong>from</strong> field onto the <strong>to</strong> field. Then double-click the line and confirm the settings.</p>
+<table>
+<tr><th>From (the &quot;one&quot; side)</th><th>To (the &quot;many&quot; side)</th><th>Cardinality</th><th>Direction</th></tr>
+<tr><td><code>dimDate[Month]</code></td><td><code>factInventory[Month]</code></td><td>One to many</td><td>Single</td></tr>
+<tr><td><code>dimDate[Month]</code></td><td><code>factTB[Month]</code></td><td>One to many</td><td>Single</td></tr>
+<tr><td><code>dimDate[Month]</code></td><td><code>dimCapacity[Month]</code></td><td>One to many</td><td>Single</td></tr>
+<tr><td><code>dimPlant[ValuationArea]</code></td><td><code>factInventory[ValuationArea]</code></td><td>One to many</td><td>Single</td></tr>
+<tr><td><code>dimPlant[ValuationArea]</code></td><td><code>factTB[ValuationArea]</code></td><td>One to many</td><td>Single</td></tr>
+<tr><td><code>dimPlant[ValuationArea]</code></td><td><code>dimCapacity[ValuationArea]</code></td><td>One to many</td><td>Single</td></tr>
+<tr><td><code>dimNature[Nature]</code></td><td><code>factInventory[Nature]</code></td><td>One to many</td><td>Single</td></tr>
+<tr><td><code>dimNature[Nature]</code></td><td><code>dimCapacity[Tech]</code></td><td>One to many</td><td>Single</td></tr>
+<tr><td><code>dimTBMaster[GLAccount]</code></td><td><code>factTB[GLAccount]</code></td><td>One to many</td><td>Single</td></tr>
+</table>
+<p>Every one is <strong>Single</strong> direction. If Power BI offers &quot;Both&quot;, don&#x27;t take it — bidirectional relationships cause wrong totals in ways that are very hard to spot later.</p>
+<p><strong>2.4</strong> Mark the date table: click <code>dimDate</code> in the Fields list → ribbon <strong>Table tools</strong> → <strong>Mark as date table</strong> → choose the <code>Date</code> column.</p>
+<p><strong>2.5</strong> Fix month sorting: click the <code>MonthName</code> column in <code>dimDate</code> → ribbon <strong>Column tools</strong> → <strong>Sort by column</strong> → pick <code>MonthSort</code>. Without this, months sort alphabetically (Apr, Aug, Dec…) and every chart reads as nonsense.</p>
+<p><strong>2.6</strong> Do the same for <code>dimPlant</code>: click <code>Plant</code> → <strong>Sort by column</strong> → <code>PlantSort</code>.</p>
+<p><strong>2.7</strong> Hide the plumbing so the Fields list stays usable. Right-click → <strong>Hide</strong> on: <code>factInventory[MatKey]</code>, <code>factTB[PlantCode]</code>, <code>dimDate[MonthSort]</code>, <code>dimPlant[PlantSort]</code>.</p>
+<hr>
+<h1>PART 3 — Add the measures (15 min)</h1>
+<p><strong>3.1</strong> Left sidebar: click the <strong>Report</strong> icon (top one).</p>
+<p><strong>3.2</strong> In the Fields pane, click <code>factInventory</code> once to select it.</p>
+<p><strong>3.3</strong> Ribbon: <strong>Home</strong> → <strong>New measure</strong>. A formula bar appears at the top.</p>
+<p><strong>3.4</strong> Delete what&#x27;s there, paste <strong>one</strong> measure from Appendix B, press <strong>Enter</strong>.</p>
+<p><strong>3.5</strong> Repeat 3.3–3.4 for every measure in Appendix B. One at a time — Power BI takes one measure per box.</p>
+<p><strong>3.6</strong> Format the money ones. Click each of <code>Closing Value</code>, <code>Opening Value</code>, <code>Receipts Value</code>, <code>Issues Value</code>, <code>TB Value</code>, <code>Difference</code> → ribbon <strong>Measure tools</strong> → <strong>Format: Currency</strong>, <strong>Decimal places: 0</strong>. For <code>Difference %</code>, set <strong>Format: Percentage</strong>, 1 decimal. For <code>Days</code>, <code>MW</code>, <code>Capacity MW</code>, set <strong>Decimal places: 1</strong>.</p>
+<hr>
+<h1>PART 4 — Build the pages</h1>
+<p>Five pages. Add a page with the <strong>+</strong> at the bottom of the window; rename by double-clicking the tab.</p>
+<h2>The header band (do this once, then copy to every page)</h2>
+<p><strong>4.1</strong> On page 1, add five <strong>Card</strong> visuals across the top. To add one: <strong>Insert</strong> → <strong>Card</strong> (or click Card in the Visualizations pane), then drag it into place. Drop one measure into each card&#x27;s <strong>Fields</strong> well: <code>Inventory Total</code> · <code>Inv RM</code> · <code>Inv FG</code> · <code>Inv Consumables</code> · <code>Difference</code></p>
+<p><strong>4.2</strong> Add two slicers below them: <strong>Insert</strong> → <strong>Slicer</strong>.</p>
+<ul>
+<li>Slicer 1: drag <code>dimDate[MonthName]</code> into it. In <strong>Format</strong> → <strong>Slicer settings</strong> →</li>
+</ul>
+<p><strong>Style: Dropdown</strong>.</p>
+<ul>
+<li>Slicer 2: drag <code>dimPlant[Plant]</code> into it. Same dropdown style.</li>
+</ul>
+<p><strong>4.3</strong> Select all seven visuals (click one, Ctrl+click the rest) → <strong>Ctrl+C</strong>. On each other page, <strong>Ctrl+V</strong>. Now the band is identical everywhere.</p>
+<p><strong>4.4</strong> Sync the slicers so picking a month on one page applies everywhere: ribbon <strong>View</strong> → tick <strong>Sync slicers</strong>. A pane opens on the right. Click the Month slicer, then tick both <strong>Sync</strong> and <strong>Visible</strong> for all five pages. Repeat for the Plant slicer.</p>
+<h2>Page 1 — Overview</h2>
+<p><strong>4.5</strong> <strong>Stacked column chart</strong>:</p>
+<ul>
+<li>X-axis: <code>dimDate[MonthName]</code></li>
+<li>Y-axis: <code>Closing Value</code></li>
+<li>Legend: <code>factInventory[Category]</code></li>
+</ul>
+<p><strong>4.6</strong> <strong>Line chart</strong>:</p>
+<ul>
+<li>X-axis: <code>dimDate[MonthName]</code></li>
+<li>Y-axis: <code>Closing Value</code> and <code>Prev Month</code> (drag both in)</li>
+</ul>
+<p><strong>4.7</strong> <strong>Clustered column chart</strong>:</p>
+<ul>
+<li>X-axis: <code>dimPlant[Plant]</code></li>
+<li>Y-axis: <code>Closing Value</code></li>
+<li>Legend: <code>factInventory[Category]</code></li>
+</ul>
+<h2>Page 2 — Summary (TB vs MB5B)</h2>
+<p><strong>4.8</strong> <strong>Matrix</strong>:</p>
+<ul>
+<li>Rows: <code>dimPlant[Plant]</code></li>
+<li>Values: <code>TB Value</code>, <code>Closing Value</code>, <code>Difference</code>, <code>Difference %</code></li>
+</ul>
+<p><strong>4.9</strong> Colour the Difference column: click the matrix, in the <strong>Values</strong> well click the dropdown on <code>Difference</code> → <strong>Conditional formatting</strong> → <strong>Background color</strong> → choose diverging, centred on 0. Now a bad reconciliation is visible at a glance instead of something you have to read.</p>
+<p><strong>4.10</strong> <strong>Waterfall chart</strong>:</p>
+<ul>
+<li>Category: <code>dimPlant[Plant]</code></li>
+<li>Y-axis: <code>Difference</code></li>
+</ul>
+<h2>Page 3 — FG</h2>
+<p><strong>4.11</strong> <strong>Matrix</strong>:</p>
+<ul>
+<li>Rows: <code>dimNature[Nature]</code>, then <code>factInventory[Material]</code> underneath it</li>
+<li>Values: <code>Closing Value</code>, <code>FG MW</code>, <code>Capacity MW</code>, <code>Days</code>, <code>INR per Wp</code></li>
+<li><strong>Filters</strong> pane: drag <code>factInventory[Category]</code> → set to <strong>is FG</strong></li>
+</ul>
+<p><strong>4.12</strong> <strong>Area chart</strong>:</p>
+<ul>
+<li>X-axis: <code>dimDate[MonthName]</code></li>
+<li>Y-axis: <code>Closing Value</code></li>
+<li>Legend: <code>dimNature[Nature]</code></li>
+<li>Same Category = FG filter</li>
+</ul>
+<h2>Page 4 — RM</h2>
+<p><strong>4.13</strong> <strong>Matrix</strong>:</p>
+<ul>
+<li>Rows: <code>dimPlant[Plant]</code>, <code>dimNature[Nature]</code>, <code>factInventory[GroupNature]</code></li>
+<li>Values: <code>Closing Value</code>, <code>MW</code></li>
+<li>Filter: <code>factInventory[Category]</code> is <strong>RM</strong></li>
+</ul>
+<p><strong>4.14</strong> <strong>Decomposition tree</strong>:</p>
+<ul>
+<li>Analyze: <code>Closing Value</code></li>
+<li>Explain by: <code>dimPlant[Plant]</code>, <code>dimNature[Nature]</code>, <code>factInventory[GroupNature]</code></li>
+<li>Same RM filter</li>
+</ul>
+<p>This one visual replaces most of what your RM sheet does by hand, and it drills in any order you click.</p>
+<h2>Page 5 — Data Quality</h2>
+<p>Not decoration. This page is how you find out something&#x27;s wrong before your superior does.</p>
+<p><strong>4.15</strong> <strong>Card</strong>: <code>Rows Missing Attr</code> — materials with no row in the master sheets.</p>
+<p><strong>4.16</strong> <strong>Card</strong>: <code>Stock Recon</code> — should always read <strong>0</strong>. Anything else means a bad or duplicated file.</p>
+<p><strong>4.17</strong> <strong>Table</strong>: <code>factTB_Unmapped</code> → fields <code>GLAccount</code>, <code>GLDesc</code>, <code>Amount</code>, <code>Rows</code> — GL accounts in the raw TB that <code>TB Master</code> doesn&#x27;t list. Empty is good.</p>
+<p><strong>4.18</strong> <strong>Table</strong>: <code>qcNatureNoCapacity</code> → field <code>Nature</code> — FG Natures with no matching Tech on <code>MW Capacity</code>. Empty is good; anything listed here has blank Days.</p>
+<p><strong>4.19</strong> <strong>Table</strong>: <code>qcHeaders</code> → fields <code>Folder</code>, <code>Name</code>, <code>SheetNames</code>, <code>Headers</code> — the real headers of every source file. This is what you read when a column comes through blank.</p>
+<p><strong>4.20</strong> <strong>Table</strong>: <code>qcVarHeaders</code> → fields <code>SheetName</code>, <code>Headers</code>, <code>DataRows</code> — same for the Variables workbook. <code>DataRows = 0</code> means a sheet is empty.</p>
+<p><strong>4.21</strong> <strong>Table</strong>: <code>factInventory</code> → <code>SourceFile</code>, <code>Month</code>, <code>Category</code>, with <code>Closing Value</code>. Scan it after each refresh to confirm every month&#x27;s file actually loaded.</p>
+<hr>
+<h1>PART 5 — Publish and hand over</h1>
+<p><strong>5.1</strong> Ribbon <strong>Home</strong> → <strong>Publish</strong> → sign in → pick or create a workspace.</p>
+<ul>
+<li>If it lets you pick a workspace, you have Power BI Pro. Good.</li>
+<li>If it asks you to start a trial, you don&#x27;t have Pro. Ask IT to assign a licence —</li>
+</ul>
+<p>otherwise you can only email the .pbix file and it won&#x27;t refresh on its own.</p>
+<p><strong>5.2</strong> In the browser at app.powerbi.com, open the workspace → find the dataset → <strong>Settings</strong> → <strong>Scheduled refresh</strong> → turn on, set a daily time.</p>
+<p><strong>5.3</strong> Give your successor access: workspace → <strong>Access</strong> → add their email as <strong>Member</strong> (Member, not Viewer, so they can edit after you&#x27;ve gone).</p>
+<p><strong>5.4</strong> Tell them the two permanent rules:</p>
+<ol>
+<li>Close all Excel files before refreshing.</li>
+<li>On <code>MW Capacity</code> and <code>Constants</code>, never overwrite a number — add a new row with the</li>
+</ol>
+<p>date it takes effect. Overwriting silently rewrites past months.</p>
+<hr>
+<h1>Monthly routine, once it&#x27;s live</h1>
+<ol>
+<li>Drop the new MB5B exports into the three Raw folders.</li>
+<li>Drop the new TB in as <code>TB_YYYYMM.xlsx</code>.</li>
+<li>Add any new materials to <code>RM Nature</code> / <code>FG Master</code>.</li>
+<li>If capacity or a constant changed, add a <strong>new row</strong> with the effective date.</li>
+<li>Open the .pbix → <strong>Refresh</strong>. Check the Data Quality page.</li>
+</ol>
+<p>That&#x27;s it. No formulas to drag down, no SUMIFS to extend.</p></div>
+
+<footer>Updated 11 Aug 2026 06:10 UTC</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+$$('nav.tabs button[data-tab]').forEach(b=>b.onclick=()=>{
+  $$('nav.tabs button[data-tab]').forEach(x=>x.classList.toggle('on',x===b));
+  $$('.panel').forEach(p=>p.classList.toggle('on',p.id==='tab-'+b.dataset.tab));
+  window.scrollTo(0,0);
+});
+$$('button.copy').forEach(b=>b.onclick=async()=>{
+  const t=document.getElementById(b.dataset.target).textContent;
+  try{await navigator.clipboard.writeText(t);}
+  catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);
+    a.select();document.execCommand('copy');a.remove();}
+  b.textContent='Copied';b.classList.add('ok');
+  setTimeout(()=>{b.textContent='Copy';b.classList.remove('ok');},1200);
+});
+const KEY='invGuideDone';
+const done=new Set(JSON.parse(localStorage.getItem(KEY)||'[]'));
+function paint(){
+  $$('.card').forEach(c=>c.classList.toggle('done',done.has(c.id)));
+  $$('button.done').forEach(b=>b.textContent=done.has(b.dataset.key)?'Undo':'Done');
+  const q=$$('.card[id^=q-]').length, d=$$('.card[id^=q-]').filter(c=>done.has(c.id)).length;
+  $('#pfill').style.width=(q?100*d/q:0)+'%';
+  $('#ptext').textContent=d+' of '+q+' queries done';
+}
+$$('button.done').forEach(b=>b.onclick=()=>{
+  const k=b.dataset.key; done.has(k)?done.delete(k):done.add(k);
+  localStorage.setItem(KEY,JSON.stringify([...done])); paint();
+});
+$('#search').oninput=e=>{
+  const v=e.target.value.trim().toLowerCase();
+  $$('.card').forEach(c=>{
+    c.style.display=(!v||c.dataset.name.includes(v)||
+      c.querySelector('pre').textContent.toLowerCase().includes(v))?'':'none';
+  });
+};
+$('#reset').onclick=()=>{if(confirm('Clear all Done ticks?')){done.clear();
+  localStorage.setItem(KEY,'[]');paint();}};
+paint();
+</script>
+</body></html>
