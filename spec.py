@@ -11,7 +11,7 @@ PAGES = ["Overview", "Summary", "FG", "RM", "Detail", "Data Quality"]
 # The drill-through page: right-click any bar, row or slice on the other pages and choose
 # Drill through → Detail, and these fields carry the clicked context across.
 DRILL_PAGE = "Detail"
-DRILL_FIELDS = ["dimPlant[Plant]", "dimDate[MonthName]", "factInventory[Category]",
+DRILL_FIELDS = ["dimPlant[Plant]", "dimDate[MonthName]", "dimCategory[Category]",
                 "dimNature[Nature]"]
 
 # Pages that get a copy of the header band. Detail is driven by what you clicked rather
@@ -31,7 +31,7 @@ CARDS = [
 SLICERS = [
     ("dimDate[MonthName]", 16, 108, 300, 44, "Month"),
     ("dimPlant[Plant]",   324, 108, 300, 44, "Plant"),
-    ("factInventory[Category]", 632, 108, 300, 44, "Category"),
+    ("dimCategory[Category]", 632, 108, 300, 44, "Category"),
 ]
 
 # ---- one entry per visual ----------------------------------------------------------------
@@ -40,16 +40,22 @@ VISUALS = [
     ("Overview", "Stacked column chart", "Value ₹ Cr by month and category",
      [("X-axis", ["dimDate[MonthName]"]),
       ("Y-axis", ["Value ₹ Cr"]),
-      ("Legend", ["factInventory[Category]"])],
+      ("Legend", ["dimCategory[Category]"])],
      (16, 168, 764, 264),
-     "Every month side by side, split RM / FG / consumables.", []),
+     "Every month side by side, split RM / FG / consumables. Click one segment and the "
+     "rest of the page follows it; right-click → Drill through → Detail for the pies "
+     "behind it.", []),
 
-    ("Overview", "Clustered column chart", "Value ₹ Cr by plant",
-     [("X-axis", ["dimPlant[Plant]"]),
-      ("Y-axis", ["Value ₹ Cr"]),
-      ("Legend", ["factInventory[Category]"])],
+    ("Overview", "Clustered column chart", "Value ₹ Cr by plant — click to go deeper",
+     [("X-axis", ["dimPlant[Plant]", "dimCategory[Category]", "dimNature[Nature]"]),
+      ("Y-axis", ["Value ₹ Cr"])],
      (788, 168, 476, 264),
-     "Which plant is holding the stock, and of what kind.", []),
+     "Three fields in the X-axis makes it a hierarchy, so the little arrows appear in the "
+     "visual's top-right corner: plant, then category inside a plant, then nature inside "
+     "that. Clicking is the whole point — nobody has to build three charts.",
+     ["The double-down-arrow in the header turns on drill mode; after that a single click "
+      "on a bar opens the next level, and the up-arrow goes back.",
+      "Right-click a bar → Drill through → Detail for the pie-chart page instead."]),
 
     ("Overview", "Line and clustered column chart",
      "Value ₹ Cr — this month vs last month",
@@ -61,7 +67,7 @@ VISUALS = [
      "what people argue about.", []),
 
     ("Overview", "Matrix", "Months side by side",
-     [("Rows", ["factInventory[Category]"]),
+     [("Rows", ["dimCategory[Category]"]),
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Value ₹ Cr"])],
      (788, 444, 476, 268),
@@ -69,91 +75,129 @@ VISUALS = [
      ["Format pane → Row headers → Stepped layout: Off.",
       "Turn Format pane → Subtotals → Row subtotals: On, so each column has a total."]),
 
-    ("Summary", "Matrix", "Value ₹ Cr by month, category and plant",
-     [("Rows", ["factInventory[Category]", "dimPlant[Plant]"]),
-      ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["Value ₹ Cr"])],
-     (16, 168, 1248, 264),
-     "The whole model in one grid: months across, category and plant down. Click a row's "
-     "arrow to expand plants under a category.",
-     ["Format pane → Row headers → Stepped layout: Off.",
-      "Format pane → Subtotals → turn on both Row subtotals and Column subtotals."]),
+    # ---- Summary: TB | MB5B | Difference as master columns, plants as master rows -------
+    ("Summary", "Matrix", "Inventory (TB) · Inventory (MB5B) · Difference — ₹ Cr",
+     [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
+      ("Columns", ["dimMetric[Metric]", "dimDate[MonthName]"]),
+      ("Values", ["Summary Value ₹ Cr"]),
+      ("Filters", ["Last 4 Months  →  is 1"])],
+     (16, 168, 1248, 300),
+     "The whole reconciliation in one grid, exactly as it is read out: three master columns "
+     "(TB, MB5B, Difference), the last four months under each, one row per plant with RM, "
+     "FG and consumables beneath it, and a Total row. Everything in crore rupees.",
+     ["Order of the two Columns fields matters: dimMetric[Metric] FIRST, then "
+      "dimDate[MonthName]. That is what makes TB / MB5B / Difference the master columns "
+      "with months nested inside.",
+      "Format pane → Row headers → Stepped layout: Off (so Plant and Category get their "
+      "own columns).",
+      "Format pane → Row headers → +/- icons: On (that is the click-to-expand control).",
+      "Format pane → Subtotals → Row subtotals On, Column subtotals Off, and set "
+      "'Per row level' so each plant shows its own total. Grand total row = the Total row.",
+      "In the Values well, arrow next to Summary Value ₹ Cr → Conditional formatting → "
+      "Background color → Format style Diverging, centre 0, both ends red: a difference "
+      "either direction is equally wrong.",
+      "Expand all plants once with the arrow at the top-left of the matrix, then save — "
+      "the expansion state is remembered."]),
 
-    ("Summary", "Matrix", "MW and days by month",
-     [("Rows", ["dimDate[MonthName]"]),
-      ("Values", ["MW", "FG MW", "Capacity MW", "Days of Inventory", "Days vs LM"])],
-     (16, 444, 620, 268),
-     "The MW view of the same months, with days of inventory and how it moved.", []),
+    ("Summary", "Clustered column chart", "Difference ₹ Cr by plant — click a bar",
+     [("X-axis", ["dimPlant[Plant]"]),
+      ("Y-axis", ["Difference ₹ Cr"])],
+     (16, 480, 620, 232),
+     "The reconciliation as a picture. Click a bar and the matrix above filters to that "
+     "plant; right-click → Drill through → Detail for the materials behind it.",
+     ["Format pane → Columns → Colour → fx → Format style: Rules, and colour any negative "
+      "value red. A difference either direction is equally wrong."]),
 
-    ("Summary", "Matrix", "Trial balance vs MB5B",
+    ("Summary", "Clustered column chart", "Inventory (TB) vs Inventory (MB5B) by month",
+     [("X-axis", ["dimDate[MonthName]"]),
+      ("Y-axis", ["TB ₹ Cr", "Value ₹ Cr"])],
+     (644, 480, 620, 232),
+     "Two bars per month, books against stock report — a gap that is opening up shows here "
+     "before anyone notices it in the numbers.", []),
+
+    # ---- FG: MW | In ₹ Cr | In Days as master columns ----------------------------------
+    ("FG", "Matrix", "FG by plant — MW · In ₹ Cr · In Days",
      [("Rows", ["dimPlant[Plant]"]),
-      ("Values", ["TB ₹ Cr", "Value ₹ Cr", "Difference ₹ Cr", "Difference %"])],
-     (644, 444, 620, 268),
-     "The reconciliation: what the books say against what the stock report says.",
-     ["In the Values well click the arrow next to Difference ₹ Cr → Conditional formatting "
-      "→ Background color.",
-      "Format style: Diverging. Minimum red, Centre white with Centre = 0, Maximum red.",
-      "Both ends red on purpose: a difference either direction is equally wrong."]),
+      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
+      ("Values", ["Unit Value"]),
+      ("Filters", ["dimCategory[Category]  →  is FG", "Last 4 Months  →  is 1"])],
+     (16, 168, 1248, 176),
+     "FG per plant in all three units at once — megawatts, crore rupees and days — with the "
+     "last four months under each. One grid instead of three sheets.",
+     ["dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName].",
+      "Format pane → Row headers → Stepped layout: Off.",
+      "Click a plant row to filter the technology table below it."]),
 
-    ("FG", "Matrix", "FG by technology",
+    ("FG", "Matrix", "FG by technology — MW · In ₹ Cr · In Days",
      [("Rows", ["dimNature[Nature]"]),
-      ("Values", ["Value ₹ Cr", "FG MW", "Capacity MW", "Days of Inventory", "INR per Wp",
-                  "Value ₹ Cr % vs LM"]),
-      ("Filters", ["factInventory[Category]  →  is FG"])],
-     (16, 168, 764, 264),
-     "Technology by technology: value, MW, capacity, days, rupees per watt and the "
-     "month's movement.",
-     ["Format pane → Row headers → Stepped layout: Off."]),
+      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
+      ("Values", ["Unit Value"]),
+      ("Filters", ["dimCategory[Category]  →  is FG", "Last 4 Months  →  is 1"])],
+     (16, 356, 620, 356),
+     "The same three units by technology rather than by plant, which is where a build-up in "
+     "one technology shows up.",
+     ["Same column order: dimMeasure[Measure] then dimDate[MonthName].",
+      "Format pane → Row headers → Stepped layout: Off."]),
 
-    ("FG", "Matrix", "FG technology by month",
-     [("Rows", ["dimNature[Nature]"]),
-      ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["FG MW"]),
-      ("Filters", ["factInventory[Category]  →  is FG"])],
-     (788, 168, 476, 264),
-     "MW per technology with the months side by side, so a build-up in one tech is obvious.",
-     []),
+    ("FG", "Clustered column chart", "FG MW by technology — click a bar",
+     [("X-axis", ["dimNature[Nature]"]),
+      ("Y-axis", ["MW"]),
+      ("Filters", ["dimCategory[Category]  →  is FG"])],
+     (644, 356, 620, 176),
+     "Clicking one technology filters both matrices to it; right-click drills through.", []),
 
-    ("FG", "Area chart", "FG value ₹ Cr by technology over time",
+    ("FG", "Line and clustered column chart", "FG days — click a bar to drill in",
      [("X-axis", ["dimDate[MonthName]"]),
-      ("Y-axis", ["Value ₹ Cr"]),
-      ("Legend", ["dimNature[Nature]"]),
-      ("Filters", ["factInventory[Category]  →  is FG"])],
-     (16, 444, 764, 268),
-     "History of FG stock, split by technology.", []),
-
-    ("FG", "Line and clustered column chart", "FG days of inventory vs last month",
-     [("X-axis", ["dimDate[MonthName]"]),
-      ("Column y-axis", ["Days of Inventory"]),
+      ("Column y-axis", ["Days"]),
       ("Line y-axis", ["Days vs LM"]),
-      ("Filters", ["factInventory[Category]  →  is FG"])],
-     (788, 444, 476, 268),
-     "Days of inventory month by month, with the change on a line — the number your "
-     "superior asks for first.", []),
-
-    ("RM", "Matrix", "RM by plant and nature",
-     [("Rows", ["dimPlant[Plant]", "dimNature[Nature]", "factInventory[GroupNature]"]),
-      ("Values", ["Value ₹ Cr", "MW", "Value ₹ Cr % vs LM"]),
-      ("Filters", ["factInventory[Category]  →  is RM"])],
-     (16, 168, 620, 544),
-     "The RM equivalent of the FG grid.",
-     ["Format pane → Row headers → Stepped layout: Off."]),
-
-    ("RM", "Matrix", "RM by month",
-     [("Rows", ["dimNature[Nature]"]),
-      ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["Value ₹ Cr"]),
-      ("Filters", ["factInventory[Category]  →  is RM"])],
-     (644, 168, 620, 264),
-     "RM months side by side.", []),
-
-    ("RM", "Decomposition tree", "RM breakdown",
-     [("Analyze", ["Value ₹ Cr"]),
-      ("Explain by", ["dimPlant[Plant]", "dimNature[Nature]", "factInventory[GroupNature]"]),
-      ("Filters", ["factInventory[Category]  →  is RM"])],
-     (644, 444, 620, 268),
-     "Replaces most of what the RM sheet does by hand, and drills in any order you click.",
+      ("Filters", ["dimCategory[Category]  →  is FG"])],
+     (644, 544, 620, 168),
+     "Days month by month with the change on a line. Right-click any bar → Drill through → "
+     "Detail for the technology and material split behind it.",
      []),
+
+    # ---- RM: plant first, then group nature / nature, in ₹ Cr and days -----------------
+    ("RM", "Matrix", "RM by plant — In ₹ Cr · In Days",
+     [("Rows", ["dimPlant[Plant]"]),
+      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
+      ("Values", ["Unit Value"]),
+      ("Filters", ["dimCategory[Category]  →  is RM", "Last 4 Months  →  is 1",
+                   "dimMeasure[Measure]  →  untick MW"])],
+     (16, 168, 1248, 176),
+     "RM by plant in crore rupees and days of cover, last four months under each. MW is "
+     "unticked here because an RM megawatt figure is a derived number, not a measured one.",
+     ["dimMeasure[Measure] in Columns first, then dimDate[MonthName].",
+      "In the Filters pane, drag dimMeasure[Measure] in and untick MW.",
+      "Format pane → Row headers → Stepped layout: Off."]),
+
+    ("RM", "Matrix", "RM by group nature and nature",
+     [("Rows", ["factInventory[GroupNature]", "dimNature[Nature]"]),
+      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
+      ("Values", ["Unit Value"]),
+      ("Filters", ["dimCategory[Category]  →  is RM", "Last 4 Months  →  is 1",
+                   "dimMeasure[Measure]  →  untick MW"])],
+     (16, 356, 620, 356),
+     "Then the same numbers down the material hierarchy: group nature, and nature inside it. "
+     "The +/- arrow on each group row is the drill-in.",
+     ["Format pane → Row headers → Stepped layout: Off, +/- icons: On."]),
+
+    ("RM", "Clustered column chart", "RM ₹ Cr by group nature — click a bar",
+     [("X-axis", ["factInventory[GroupNature]"]),
+      ("Y-axis", ["Value ₹ Cr"]),
+      ("Filters", ["dimCategory[Category]  →  is RM"])],
+     (644, 356, 620, 176),
+     "One click sets the whole page to a group nature; right-click drills through to the "
+     "materials.", []),
+
+    ("RM", "Decomposition tree", "RM — click through any way you like",
+     [("Analyze", ["Value ₹ Cr"]),
+      ("Explain by", ["dimPlant[Plant]", "factInventory[GroupNature]", "dimNature[Nature]",
+                      "factInventory[Material]"]),
+      ("Filters", ["dimCategory[Category]  →  is RM"])],
+     (644, 544, 620, 168),
+     "The interactive one: click a box and it opens the next level, in whatever order you "
+     "click. This is what replaces filtering the RM sheet by hand.",
+     ["Click the + on a node to choose which field to split by next."]),
 
     ("Detail", "Card", "Value ₹ Cr of what you clicked",
      [("Fields", ["Value ₹ Cr"])],
@@ -177,7 +221,7 @@ VISUALS = [
      "How big this slice is against the whole.", []),
 
     ("Detail", "Pie chart", "Split by category",
-     [("Legend", ["factInventory[Category]"]),
+     [("Legend", ["dimCategory[Category]"]),
       ("Values", ["Value ₹ Cr"])],
      (16, 120, 404, 296),
      "RM / FG / consumables for exactly what you clicked.",

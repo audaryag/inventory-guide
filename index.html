@@ -82,9 +82,9 @@ Tick <strong>Done</strong> to keep your place — it is remembered in this brows
 Building the pages? Use <strong>Build it</strong> — one instruction per screen.</p>
 
 <nav class="tabs">
-  <button data-tab="q" class="on">Queries (28)</button>
-  <button data-tab="m">Measures (34)</button>
-  <button data-tab="b">Build it (49)</button>
+  <button data-tab="q" class="on">Queries (31)</button>
+  <button data-tab="m">Measures (39)</button>
+  <button data-tab="b">Build it (50)</button>
   <button data-tab="g">Walkthrough</button>
   <input id="search" placeholder="Search a query name or code…">
   <button id="reset" title="Clear progress">Reset</button>
@@ -96,7 +96,7 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
   <p class="sub">One query per box, in this order. For each: <strong>Home → New Source → Blank Query</strong>,
   then <strong>Home → Advanced Editor</strong>, Ctrl+A, Delete, paste, <strong>Done</strong>,
   then right-click the query → <strong>Rename</strong> and type the name shown.
-  Never paste two boxes into one editor. Errors are normal until all 28 exist.</p>
+  Never paste two boxes into one editor. Errors are normal until all 31 exist.</p>
   
 <section class="card" id="q-1" data-name="proot">
   <header>
@@ -857,13 +857,27 @@ in
     <button class="copy" data-target="qcode22">Copy</button>
     <button class="done" data-key="q-22">Done</button>
   </header>
-  <p class='note'>The inner join to dimTBMaster IS the trial-balance cleaning - only whitelisted GL accounts survive.</p>
+  <p class='note'>The inner join to dimTBMaster IS the trial-balance cleaning - only whitelisted GL accounts survive. `Category` is worked out from the Nature text on TB Master, so the trial balance and MB5B can be compared on the same RM / FG / Consumables row.</p>
   <pre id="qcode22">let
     Mapped  = Table.NestedJoin(factTB_Staged, {&quot;GLAccount&quot;}, dimTBMaster, {&quot;GLAccount&quot;},
                   &quot;tpl&quot;, JoinKind.Inner),
-    Expand  = Table.ExpandTableColumn(Mapped, &quot;tpl&quot;, {&quot;Nature&quot;,&quot;TBPlant&quot;,&quot;TBSort&quot;})
+    Expand  = Table.ExpandTableColumn(Mapped, &quot;tpl&quot;, {&quot;Nature&quot;,&quot;TBPlant&quot;,&quot;TBSort&quot;}),
+    // RM / FG / Consumables from whatever the Nature (or GL description) says
+    Bucket  = (n as any, d as any) as text =&gt;
+                  let T = Text.Upper(Text.From(n ?? &quot;&quot;) &amp; &quot; &quot; &amp; Text.From(d ?? &quot;&quot;)) in
+                  if Text.Contains(T, &quot;FINISH&quot;) or Text.Contains(T, &quot;FG&quot;)
+                      then &quot;FG&quot;
+                  else if Text.Contains(T, &quot;CONSUM&quot;) or Text.Contains(T, &quot;STORE&quot;)
+                      or Text.Contains(T, &quot;SPARE&quot;) or Text.Contains(T, &quot;PACK&quot;)
+                      then &quot;Consumables&quot;
+                  else if Text.Contains(T, &quot;RAW&quot;) or Text.Contains(T, &quot;RM&quot;)
+                      or Text.Contains(T, &quot;WIP&quot;) or Text.Contains(T, &quot;SEMI&quot;)
+                      then &quot;RM&quot;
+                  else &quot;RM&quot;,
+    Cat     = Table.AddColumn(Expand, &quot;Category&quot;,
+                  each Bucket([Nature], [GLDesc]), type text)
 in
-    Expand</pre>
+    Cat</pre>
 </section>
 
 <section class="card" id="q-23" data-name="facttb_unmapped">
@@ -1012,6 +1026,66 @@ in
                       (c) =&gt; {c, each Text.From(_ ?? &quot;&quot;), type text}))
 in
     AsText</pre>
+</section>
+
+<section class="card" id="q-29" data-name="dimcategory">
+  <header>
+    <span class="num">29</span>
+    <h3>dimCategory</h3>
+    <button class="copy" data-target="qcode29">Copy</button>
+    <button class="done" data-key="q-29">Done</button>
+  </header>
+  <p class='note'>The shared RM / FG / Consumables list. Both `factInventory` and `factTB` join to it, which is what puts the trial balance and MB5B on the same row of the Summary matrix.</p>
+  <pre id="qcode29">let
+    Src = #table(
+        type table [Category = text, CategorySort = Int64.Type],
+        {
+            {&quot;RM&quot;,          1},
+            {&quot;FG&quot;,          2},
+            {&quot;Consumables&quot;, 3}
+        })
+in
+    Src</pre>
+</section>
+
+<section class="card" id="q-30" data-name="dimmetric">
+  <header>
+    <span class="num">30</span>
+    <h3>dimMetric</h3>
+    <button class="copy" data-target="qcode30">Copy</button>
+    <button class="done" data-key="q-30">Done</button>
+  </header>
+  <p class='note'>Deliberately disconnected — no relationship to anything. It exists so a matrix can have `Inventory (TB)`, `Inventory (MB5B)` and `Difference` as its three master columns, with months underneath them. The `Summary Value ₹ Cr` measure reads which one a cell is in.</p>
+  <pre id="qcode30">let
+    Src = #table(
+        type table [Metric = text, MetricSort = Int64.Type],
+        {
+            {&quot;Inventory (TB)&quot;,    1},
+            {&quot;Inventory (MB5B)&quot;,  2},
+            {&quot;Difference&quot;,        3}
+        })
+in
+    Src</pre>
+</section>
+
+<section class="card" id="q-31" data-name="dimmeasure">
+  <header>
+    <span class="num">31</span>
+    <h3>dimMeasure</h3>
+    <button class="copy" data-target="qcode31">Copy</button>
+    <button class="done" data-key="q-31">Done</button>
+  </header>
+  <p class='note'>Also disconnected. Gives the FG and RM matrices their `MW` / `In ₹ Cr` / `In Days` master columns.</p>
+  <pre id="qcode31">let
+    Src = #table(
+        type table [Measure = text, MeasureSort = Int64.Type],
+        {
+            {&quot;MW&quot;,       1},
+            {&quot;In ₹ Cr&quot;,  2},
+            {&quot;In Days&quot;,  3}
+        })
+in
+    Src</pre>
 </section>
 </div>
 
@@ -1401,6 +1475,78 @@ RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)</pre>
   
   <pre id="mcode34">Unmapped TB ₹ Cr = DIVIDE(SUM(factTB_Unmapped[Amount]), 10000000)</pre>
 </section>
+
+<section class="card" id="m-35" data-name="days of cover">
+  <header>
+    <span class="num">35</span>
+    <h3>Days of Cover</h3>
+    <button class="copy" data-target="mcode35">Copy</button>
+    <button class="done" data-key="m-35">Done</button>
+  </header>
+  
+  <pre id="mcode35">Days of Cover =
+VAR MonthlyIssues = [Issues ₹ Cr]
+RETURN DIVIDE([Value ₹ Cr], DIVIDE(MonthlyIssues, 30))</pre>
+</section>
+
+<section class="card" id="m-36" data-name="days">
+  <header>
+    <span class="num">36</span>
+    <h3>Days</h3>
+    <button class="copy" data-target="mcode36">Copy</button>
+    <button class="done" data-key="m-36">Done</button>
+  </header>
+  
+  <pre id="mcode36">Days =
+IF(SELECTEDVALUE(dimCategory[Category]) = &quot;FG&quot;,
+   [Days of Inventory],
+   [Days of Cover])</pre>
+</section>
+
+<section class="card" id="m-37" data-name="summary value ₹ cr">
+  <header>
+    <span class="num">37</span>
+    <h3>Summary Value ₹ Cr</h3>
+    <button class="copy" data-target="mcode37">Copy</button>
+    <button class="done" data-key="m-37">Done</button>
+  </header>
+  
+  <pre id="mcode37">Summary Value ₹ Cr =
+SWITCH(SELECTEDVALUE(dimMetric[Metric]),
+    &quot;Inventory (TB)&quot;,   [TB ₹ Cr],
+    &quot;Inventory (MB5B)&quot;, [Value ₹ Cr],
+    &quot;Difference&quot;,       [Difference ₹ Cr],
+    [Value ₹ Cr])</pre>
+</section>
+
+<section class="card" id="m-38" data-name="unit value">
+  <header>
+    <span class="num">38</span>
+    <h3>Unit Value</h3>
+    <button class="copy" data-target="mcode38">Copy</button>
+    <button class="done" data-key="m-38">Done</button>
+  </header>
+  
+  <pre id="mcode38">Unit Value =
+SWITCH(SELECTEDVALUE(dimMeasure[Measure]),
+    &quot;MW&quot;,      [MW],
+    &quot;In ₹ Cr&quot;, [Value ₹ Cr],
+    &quot;In Days&quot;, [Days],
+    [Value ₹ Cr])</pre>
+</section>
+
+<section class="card" id="m-39" data-name="last 4 months">
+  <header>
+    <span class="num">39</span>
+    <h3>Last 4 Months</h3>
+    <button class="copy" data-target="mcode39">Copy</button>
+    <button class="done" data-key="m-39">Done</button>
+  </header>
+  
+  <pre id="mcode39">Last 4 Months =
+VAR LastIdx = CALCULATE(MAX(dimDate[MonthIndex]), ALL(dimDate))
+RETURN IF(MAX(dimDate[MonthIndex]) &gt; LastIdx - 4, 1, 0)</pre>
+</section>
 </div>
 
 <div class="panel" id="tab-b">
@@ -1434,7 +1580,7 @@ RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)</pre>
 <h1>PART 1 — Create the queries (30 min)</h1>
 <p><strong>1.1</strong> Open <strong>Power BI Desktop</strong> → <strong>Blank report</strong>.</p>
 <p><strong>1.2</strong> Ribbon: <strong>Home</strong> → <strong>Transform data</strong>. The Power Query Editor window opens. Everything in Part 1 happens in this window.</p>
-<h3>How to add each query (you will repeat this 28 times)</h3>
+<h3>How to add each query (you will repeat this 31 times)</h3>
 <ol>
 <li>In Power Query, ribbon: <strong>Home</strong> → <strong>New Source</strong> → <strong>Blank Query</strong>.</li>
 <li>Ribbon: <strong>Home</strong> → <strong>Advanced Editor</strong>.</li>
@@ -1476,6 +1622,9 @@ RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)</pre>
 <tr><td>26</td><td><code>qcVarHeaders</code></td><td>self-check</td></tr>
 <tr><td>27</td><td><code>qcNatureNoCapacity</code></td><td>self-check</td></tr>
 <tr><td>28</td><td><code>qcMWSheet</code></td><td>self-check — shows the MW sheet raw</td></tr>
+<tr><td>29</td><td><code>dimCategory</code></td><td>lets TB and MB5B share one RM/FG/Consumables row</td></tr>
+<tr><td>30</td><td><code>dimMetric</code></td><td>makes Inventory (TB) / Inventory (MB5B) / Difference into columns</td></tr>
+<tr><td>31</td><td><code>dimMeasure</code></td><td>makes MW / In ₹ Cr / In Days into columns</td></tr>
 </table>
 <p><strong>1.4</strong> If Power BI asks about <strong>privacy levels</strong> or <strong>credentials</strong>, choose <strong>Organizational</strong> for OneDrive and click through. If it warns about combining data sources, click <strong>Ignore Privacy Levels</strong> (it&#x27;s all your own data).</p>
 <p><strong>1.5 — Important.</strong> Turn off loading for the helper queries. For <strong>each</strong> of these, right-click the query in the left list and <strong>untick &quot;Enable load&quot;</strong>:</p>
@@ -1485,6 +1634,7 @@ fnConstantAsOf, varMWCapacity, factTB_Staged</pre>
 <p>Leave these ticked (they become your tables):</p>
 <pre class='plain'>factInventory, factTB, factTB_Unmapped, dimPlant, dimDate,
 dimNature, dimCapacity, dimTBMaster, dimMaterialAttr, dimFGAttr,
+dimCategory, dimMetric, dimMeasure,
 qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <p><strong>1.6</strong> Ribbon: <strong>Home</strong> → <strong>Close &amp; Apply</strong>. Wait for it to load.</p>
 <h3>If something fails here</h3>
@@ -1497,14 +1647,14 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <tr><td>&quot;Illegal characters in path&quot;</td><td><code>pRoot</code> is not your real path</td><td>open the folder in File Explorer, click the address bar, copy it in — keep the quote marks</td></tr>
 <tr><td>&quot;Token Literal expected&quot;</td><td>a text value lost its quote marks</td><td><code>pRoot</code> must be <code>&quot;C:\...\Inventory Report&quot;</code>, quotes included</td></tr>
 <tr><td>&quot;Not enough elements in the enumeration&quot;</td><td>a query assumed more columns than the sheet has</td><td>you are on an old version of the query — refresh the guide page and re-copy</td></tr>
-<tr><td>&quot;Expression.Syntax Error&quot; right after pasting</td><td>the whole appendix went into one query</td><td>one query per Blank Query, 28 times</td></tr>
+<tr><td>&quot;Expression.Syntax Error&quot; right after pasting</td><td>the whole appendix went into one query</td><td>one query per Blank Query, 31 times</td></tr>
 </table>
 <p>Send me the exact error text and I&#x27;ll tell you the one-line fix.</p>
 <hr>
 <h1>PART 2 — Build the model (10 min)</h1>
 <p><strong>2.1</strong> Left sidebar: click the <strong>Model</strong> icon (third one down, looks like a table diagram).</p>
 <p><strong>2.2</strong> Power BI will have guessed some relationships. <strong>Delete all of them</strong>: click each connecting line and press Delete. Cleaner to start blank.</p>
-<p><strong>2.3</strong> Create these 8 relationships. To create one: click and drag the <strong>from</strong> field onto the <strong>to</strong> field. Then double-click the line and confirm the settings.</p>
+<p><strong>2.3</strong> Create these 11 relationships. To create one: click and drag the <strong>from</strong> field onto the <strong>to</strong> field. Then double-click the line and confirm the settings.</p>
 <table>
 <tr><th>From (the &quot;one&quot; side)</th><th>To (the &quot;many&quot; side)</th><th>Cardinality</th><th>Direction</th></tr>
 <tr><td><code>dimDate[Month]</code></td><td><code>factInventory[Month]</code></td><td>One to many</td><td>Single</td></tr>
@@ -1516,11 +1666,15 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <tr><td><code>dimNature[Nature]</code></td><td><code>factInventory[Nature]</code></td><td>One to many</td><td>Single</td></tr>
 <tr><td><code>dimNature[Nature]</code></td><td><code>dimCapacity[Tech]</code></td><td>One to many</td><td>Single</td></tr>
 <tr><td><code>dimTBMaster[GLAccount]</code></td><td><code>factTB[GLAccount]</code></td><td>One to many</td><td>Single</td></tr>
+<tr><td><code>dimCategory[Category]</code></td><td><code>factInventory[Category]</code></td><td>One to many</td><td>Single</td></tr>
+<tr><td><code>dimCategory[Category]</code></td><td><code>factTB[Category]</code></td><td>One to many</td><td>Single</td></tr>
 </table>
+<p>The last two are what let one matrix show the trial balance and MB5B on the <strong>same</strong> RM / FG / Consumables row. Without them the TB column repeats the same total against every row, which is the classic wrong-looking reconciliation.</p>
+<p><code>dimMetric</code> and <code>dimMeasure</code> get <strong>no relationship at all</strong> — they are deliberately disconnected. They exist to give a matrix its master columns, and the measures read them with <code>SELECTEDVALUE</code>. If you connect them, the matrix goes blank.</p>
 <p>Every one is <strong>Single</strong> direction. If Power BI offers &quot;Both&quot;, don&#x27;t take it — bidirectional relationships cause wrong totals in ways that are very hard to spot later.</p>
 <p><strong>2.4</strong> Skip &quot;Mark as date table&quot; — it needs one row per <em>day</em>, and <code>dimDate</code> is monthly on purpose. None of the measures need it; <code>Value ₹ Cr LM</code> uses <code>MonthIndex</code> instead.</p>
 <p><strong>2.5</strong> Fix month sorting: click the <code>MonthName</code> column in <code>dimDate</code> → ribbon <strong>Column tools</strong> → <strong>Sort by column</strong> → pick <code>MonthSort</code>. Without this, months sort alphabetically (Apr, Aug, Dec…) and every chart reads as nonsense.</p>
-<p><strong>2.6</strong> Do the same for <code>dimPlant</code>: click <code>Plant</code> → <strong>Sort by column</strong> → <code>PlantSort</code>.</p>
+<p><strong>2.6</strong> Do the same for: <code>dimPlant[Plant]</code> → <code>PlantSort</code>, <code>dimCategory[Category]</code> → <code>CategorySort</code>, <code>dimMetric[Metric]</code> → <code>MetricSort</code>, <code>dimMeasure[Measure]</code> → <code>MeasureSort</code>. The last two matter — without them your master columns come out alphabetically (Difference first), which reads backwards.</p>
 <p><strong>2.7</strong> Hide the plumbing so the Fields list stays usable. Right-click → <strong>Hide</strong> on: <code>factInventory[MatKey]</code>, <code>factTB[PlantCode]</code>, <code>dimDate[MonthSort]</code>, <code>dimPlant[PlantSort]</code>.</p>
 <hr>
 <h1>PART 3 — Add the measures (15 min)</h1>
@@ -1561,31 +1715,34 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <tr><th>Slicer</th><th>Field</th><th>X</th><th>Y</th><th>Width</th><th>Height</th></tr>
 <tr><td>Month</td><td><code>dimDate[MonthName]</code></td><td>16</td><td>108</td><td>300</td><td>44</td></tr>
 <tr><td>Plant</td><td><code>dimPlant[Plant]</code></td><td>324</td><td>108</td><td>300</td><td>44</td></tr>
-<tr><td>Category</td><td><code>factInventory[Category]</code></td><td>632</td><td>108</td><td>300</td><td>44</td></tr>
+<tr><td>Category</td><td><code>dimCategory[Category]</code></td><td>632</td><td>108</td><td>300</td><td>44</td></tr>
 </table>
 <p><strong>4.3</strong> Select all 9 → <strong>Ctrl+C</strong> → <strong>Ctrl+V</strong> on <code>Summary</code>, <code>FG</code>, <code>RM</code>. Positions come with them.</p>
 <p>Not on <code>Detail</code> (it is filtered by whatever you clicked to get there) or <code>Data Quality</code> (a filtered check is not a check).</p>
 <p><strong>4.4</strong> Ribbon <strong>View</strong> → tick <strong>Sync slicers</strong>; for each slicer tick <strong>Sync</strong> and <strong>Visible</strong> on <code>Overview</code>, <code>Summary</code>, <code>FG</code>, <code>RM</code>. Without it, two pages can disagree about the same month.</p>
 <hr>
 <h2>Page — Overview</h2>
-<p><strong>4.5</strong> <strong>Stacked column chart</strong> — Every month side by side, split RM / FG / consumables.</p>
+<p><strong>4.5</strong> <strong>Stacked column chart</strong> — Every month side by side, split RM / FG / consumables. Click one segment and the rest of the page follows it; right-click → Drill through → Detail for the pies behind it.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
 <tr><td>Y-axis</td><td><code>Value ₹ Cr</code></td></tr>
-<tr><td>Legend</td><td><code>factInventory[Category]</code></td></tr>
+<tr><td>Legend</td><td><code>dimCategory[Category]</code></td></tr>
 </table>
 <p>Title: <code>Value ₹ Cr by month and category</code></p>
 <p>Position: X 16, Y 168, W 764, H 264.</p>
-<p><strong>4.6</strong> <strong>Clustered column chart</strong> — Which plant is holding the stock, and of what kind.</p>
+<p><strong>4.6</strong> <strong>Clustered column chart</strong> — Three fields in the X-axis makes it a hierarchy, so the little arrows appear in the visual&#x27;s top-right corner: plant, then category inside a plant, then nature inside that. Clicking is the whole point — nobody has to build three charts.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
-<tr><td>X-axis</td><td><code>dimPlant[Plant]</code></td></tr>
+<tr><td>X-axis</td><td><code>dimPlant[Plant]</code>, <code>dimCategory[Category]</code>, <code>dimNature[Nature]</code></td></tr>
 <tr><td>Y-axis</td><td><code>Value ₹ Cr</code></td></tr>
-<tr><td>Legend</td><td><code>factInventory[Category]</code></td></tr>
 </table>
-<p>Title: <code>Value ₹ Cr by plant</code></p>
+<p>Title: <code>Value ₹ Cr by plant — click to go deeper</code></p>
 <p>Position: X 788, Y 168, W 476, H 264.</p>
+<ul>
+<li>The double-down-arrow in the header turns on drill mode; after that a single click on a bar opens the next level, and the up-arrow goes back.</li>
+<li>Right-click a bar → Drill through → Detail for the pie-chart page instead.</li>
+</ul>
 <p><strong>4.7</strong> <strong>Line and clustered column chart</strong> — Bars compare the two months directly; the line is the percentage swing, which is what people argue about.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
@@ -1598,7 +1755,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <p><strong>4.8</strong> <strong>Matrix</strong> — The same numbers as a table, because some readers only trust a table.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
-<tr><td>Rows</td><td><code>factInventory[Category]</code></td></tr>
+<tr><td>Rows</td><td><code>dimCategory[Category]</code></td></tr>
 <tr><td>Columns</td><td><code>dimDate[MonthName]</code></td></tr>
 <tr><td>Values</td><td><code>Value ₹ Cr</code></td></tr>
 </table>
@@ -1610,151 +1767,178 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 </ul>
 <hr>
 <h2>Page — Summary</h2>
-<p><strong>4.9</strong> <strong>Matrix</strong> — The whole model in one grid: months across, category and plant down. Click a row&#x27;s arrow to expand plants under a category.</p>
+<p><strong>4.9</strong> <strong>Matrix</strong> — The whole reconciliation in one grid, exactly as it is read out: three master columns (TB, MB5B, Difference), the last four months under each, one row per plant with RM, FG and consumables beneath it, and a Total row. Everything in crore rupees.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
-<tr><td>Rows</td><td><code>factInventory[Category]</code>, <code>dimPlant[Plant]</code></td></tr>
-<tr><td>Columns</td><td><code>dimDate[MonthName]</code></td></tr>
-<tr><td>Values</td><td><code>Value ₹ Cr</code></td></tr>
+<tr><td>Rows</td><td><code>dimPlant[Plant]</code>, <code>dimCategory[Category]</code></td></tr>
+<tr><td>Columns</td><td><code>dimMetric[Metric]</code>, <code>dimDate[MonthName]</code></td></tr>
+<tr><td>Values</td><td><code>Summary Value ₹ Cr</code></td></tr>
+<tr><td>Filters</td><td><code>Last 4 Months  →  is 1</code></td></tr>
 </table>
-<p>Title: <code>Value ₹ Cr by month, category and plant</code></p>
-<p>Position: X 16, Y 168, W 1248, H 264.</p>
+<p>Title: <code>Inventory (TB) · Inventory (MB5B) · Difference — ₹ Cr</code></p>
+<p>Position: X 16, Y 168, W 1248, H 300.</p>
 <ul>
-<li>Format pane → Row headers → Stepped layout: Off.</li>
-<li>Format pane → Subtotals → turn on both Row subtotals and Column subtotals.</li>
+<li>Order of the two Columns fields matters: dimMetric[Metric] FIRST, then dimDate[MonthName]. That is what makes TB / MB5B / Difference the master columns with months nested inside.</li>
+<li>Format pane → Row headers → Stepped layout: Off (so Plant and Category get their own columns).</li>
+<li>Format pane → Row headers → +/- icons: On (that is the click-to-expand control).</li>
+<li>Format pane → Subtotals → Row subtotals On, Column subtotals Off, and set &#x27;Per row level&#x27; so each plant shows its own total. Grand total row = the Total row.</li>
+<li>In the Values well, arrow next to Summary Value ₹ Cr → Conditional formatting → Background color → Format style Diverging, centre 0, both ends red: a difference either direction is equally wrong.</li>
+<li>Expand all plants once with the arrow at the top-left of the matrix, then save — the expansion state is remembered.</li>
 </ul>
-<p><strong>4.10</strong> <strong>Matrix</strong> — The MW view of the same months, with days of inventory and how it moved.</p>
+<p><strong>4.10</strong> <strong>Clustered column chart</strong> — The reconciliation as a picture. Click a bar and the matrix above filters to that plant; right-click → Drill through → Detail for the materials behind it.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
-<tr><td>Rows</td><td><code>dimDate[MonthName]</code></td></tr>
-<tr><td>Values</td><td><code>MW</code>, <code>FG MW</code>, <code>Capacity MW</code>, <code>Days of Inventory</code>, <code>Days vs LM</code></td></tr>
+<tr><td>X-axis</td><td><code>dimPlant[Plant]</code></td></tr>
+<tr><td>Y-axis</td><td><code>Difference ₹ Cr</code></td></tr>
 </table>
-<p>Title: <code>MW and days by month</code></p>
-<p>Position: X 16, Y 444, W 620, H 268.</p>
-<p><strong>4.11</strong> <strong>Matrix</strong> — The reconciliation: what the books say against what the stock report says.</p>
+<p>Title: <code>Difference ₹ Cr by plant — click a bar</code></p>
+<p>Position: X 16, Y 480, W 620, H 232.</p>
+<ul>
+<li>Format pane → Columns → Colour → fx → Format style: Rules, and colour any negative value red. A difference either direction is equally wrong.</li>
+</ul>
+<p><strong>4.11</strong> <strong>Clustered column chart</strong> — Two bars per month, books against stock report — a gap that is opening up shows here before anyone notices it in the numbers.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
+<tr><td>Y-axis</td><td><code>TB ₹ Cr</code>, <code>Value ₹ Cr</code></td></tr>
+</table>
+<p>Title: <code>Inventory (TB) vs Inventory (MB5B) by month</code></p>
+<p>Position: X 644, Y 480, W 620, H 232.</p>
+<hr>
+<h2>Page — FG</h2>
+<p><strong>4.12</strong> <strong>Matrix</strong> — FG per plant in all three units at once — megawatts, crore rupees and days — with the last four months under each. One grid instead of three sheets.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Rows</td><td><code>dimPlant[Plant]</code></td></tr>
-<tr><td>Values</td><td><code>TB ₹ Cr</code>, <code>Value ₹ Cr</code>, <code>Difference ₹ Cr</code>, <code>Difference %</code></td></tr>
+<tr><td>Columns</td><td><code>dimMeasure[Measure]</code>, <code>dimDate[MonthName]</code></td></tr>
+<tr><td>Values</td><td><code>Unit Value</code></td></tr>
+<tr><td>Filters</td><td><code>dimCategory[Category]  →  is FG</code>, <code>Last 4 Months  →  is 1</code></td></tr>
 </table>
-<p>Title: <code>Trial balance vs MB5B</code></p>
-<p>Position: X 644, Y 444, W 620, H 268.</p>
+<p>Title: <code>FG by plant — MW · In ₹ Cr · In Days</code></p>
+<p>Position: X 16, Y 168, W 1248, H 176.</p>
 <ul>
-<li>In the Values well click the arrow next to Difference ₹ Cr → Conditional formatting → Background color.</li>
-<li>Format style: Diverging. Minimum red, Centre white with Centre = 0, Maximum red.</li>
-<li>Both ends red on purpose: a difference either direction is equally wrong.</li>
+<li>dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName].</li>
+<li>Format pane → Row headers → Stepped layout: Off.</li>
+<li>Click a plant row to filter the technology table below it.</li>
 </ul>
-<hr>
-<h2>Page — FG</h2>
-<p><strong>4.12</strong> <strong>Matrix</strong> — Technology by technology: value, MW, capacity, days, rupees per watt and the month&#x27;s movement.</p>
+<p><strong>4.13</strong> <strong>Matrix</strong> — The same three units by technology rather than by plant, which is where a build-up in one technology shows up.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Rows</td><td><code>dimNature[Nature]</code></td></tr>
-<tr><td>Values</td><td><code>Value ₹ Cr</code>, <code>FG MW</code>, <code>Capacity MW</code>, <code>Days of Inventory</code>, <code>INR per Wp</code>, <code>Value ₹ Cr % vs LM</code></td></tr>
-<tr><td>Filters</td><td><code>factInventory[Category]  →  is FG</code></td></tr>
+<tr><td>Columns</td><td><code>dimMeasure[Measure]</code>, <code>dimDate[MonthName]</code></td></tr>
+<tr><td>Values</td><td><code>Unit Value</code></td></tr>
+<tr><td>Filters</td><td><code>dimCategory[Category]  →  is FG</code>, <code>Last 4 Months  →  is 1</code></td></tr>
 </table>
-<p>Title: <code>FG by technology</code></p>
-<p>Position: X 16, Y 168, W 764, H 264.</p>
+<p>Title: <code>FG by technology — MW · In ₹ Cr · In Days</code></p>
+<p>Position: X 16, Y 356, W 620, H 356.</p>
 <ul>
+<li>Same column order: dimMeasure[Measure] then dimDate[MonthName].</li>
 <li>Format pane → Row headers → Stepped layout: Off.</li>
 </ul>
-<p><strong>4.13</strong> <strong>Matrix</strong> — MW per technology with the months side by side, so a build-up in one tech is obvious.</p>
+<p><strong>4.14</strong> <strong>Clustered column chart</strong> — Clicking one technology filters both matrices to it; right-click drills through.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
-<tr><td>Rows</td><td><code>dimNature[Nature]</code></td></tr>
-<tr><td>Columns</td><td><code>dimDate[MonthName]</code></td></tr>
-<tr><td>Values</td><td><code>FG MW</code></td></tr>
-<tr><td>Filters</td><td><code>factInventory[Category]  →  is FG</code></td></tr>
+<tr><td>X-axis</td><td><code>dimNature[Nature]</code></td></tr>
+<tr><td>Y-axis</td><td><code>MW</code></td></tr>
+<tr><td>Filters</td><td><code>dimCategory[Category]  →  is FG</code></td></tr>
 </table>
-<p>Title: <code>FG technology by month</code></p>
-<p>Position: X 788, Y 168, W 476, H 264.</p>
-<p><strong>4.14</strong> <strong>Area chart</strong> — History of FG stock, split by technology.</p>
+<p>Title: <code>FG MW by technology — click a bar</code></p>
+<p>Position: X 644, Y 356, W 620, H 176.</p>
+<p><strong>4.15</strong> <strong>Line and clustered column chart</strong> — Days month by month with the change on a line. Right-click any bar → Drill through → Detail for the technology and material split behind it.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
-<tr><td>Y-axis</td><td><code>Value ₹ Cr</code></td></tr>
-<tr><td>Legend</td><td><code>dimNature[Nature]</code></td></tr>
-<tr><td>Filters</td><td><code>factInventory[Category]  →  is FG</code></td></tr>
-</table>
-<p>Title: <code>FG value ₹ Cr by technology over time</code></p>
-<p>Position: X 16, Y 444, W 764, H 268.</p>
-<p><strong>4.15</strong> <strong>Line and clustered column chart</strong> — Days of inventory month by month, with the change on a line — the number your superior asks for first.</p>
-<table>
-<tr><th>Well</th><th>Field</th></tr>
-<tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
-<tr><td>Column y-axis</td><td><code>Days of Inventory</code></td></tr>
+<tr><td>Column y-axis</td><td><code>Days</code></td></tr>
 <tr><td>Line y-axis</td><td><code>Days vs LM</code></td></tr>
-<tr><td>Filters</td><td><code>factInventory[Category]  →  is FG</code></td></tr>
+<tr><td>Filters</td><td><code>dimCategory[Category]  →  is FG</code></td></tr>
 </table>
-<p>Title: <code>FG days of inventory vs last month</code></p>
-<p>Position: X 788, Y 444, W 476, H 268.</p>
+<p>Title: <code>FG days — click a bar to drill in</code></p>
+<p>Position: X 644, Y 544, W 620, H 168.</p>
 <hr>
 <h2>Page — RM</h2>
-<p><strong>4.16</strong> <strong>Matrix</strong> — The RM equivalent of the FG grid.</p>
+<p><strong>4.16</strong> <strong>Matrix</strong> — RM by plant in crore rupees and days of cover, last four months under each. MW is unticked here because an RM megawatt figure is a derived number, not a measured one.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
-<tr><td>Rows</td><td><code>dimPlant[Plant]</code>, <code>dimNature[Nature]</code>, <code>factInventory[GroupNature]</code></td></tr>
-<tr><td>Values</td><td><code>Value ₹ Cr</code>, <code>MW</code>, <code>Value ₹ Cr % vs LM</code></td></tr>
-<tr><td>Filters</td><td><code>factInventory[Category]  →  is RM</code></td></tr>
+<tr><td>Rows</td><td><code>dimPlant[Plant]</code></td></tr>
+<tr><td>Columns</td><td><code>dimMeasure[Measure]</code>, <code>dimDate[MonthName]</code></td></tr>
+<tr><td>Values</td><td><code>Unit Value</code></td></tr>
+<tr><td>Filters</td><td><code>dimCategory[Category]  →  is RM</code>, <code>Last 4 Months  →  is 1</code>, <code>dimMeasure[Measure]  →  untick MW</code></td></tr>
 </table>
-<p>Title: <code>RM by plant and nature</code></p>
-<p>Position: X 16, Y 168, W 620, H 544.</p>
+<p>Title: <code>RM by plant — In ₹ Cr · In Days</code></p>
+<p>Position: X 16, Y 168, W 1248, H 176.</p>
 <ul>
+<li>dimMeasure[Measure] in Columns first, then dimDate[MonthName].</li>
+<li>In the Filters pane, drag dimMeasure[Measure] in and untick MW.</li>
 <li>Format pane → Row headers → Stepped layout: Off.</li>
 </ul>
-<p><strong>4.17</strong> <strong>Matrix</strong> — RM months side by side.</p>
+<p><strong>4.17</strong> <strong>Matrix</strong> — Then the same numbers down the material hierarchy: group nature, and nature inside it. The +/- arrow on each group row is the drill-in.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
-<tr><td>Rows</td><td><code>dimNature[Nature]</code></td></tr>
-<tr><td>Columns</td><td><code>dimDate[MonthName]</code></td></tr>
-<tr><td>Values</td><td><code>Value ₹ Cr</code></td></tr>
-<tr><td>Filters</td><td><code>factInventory[Category]  →  is RM</code></td></tr>
+<tr><td>Rows</td><td><code>factInventory[GroupNature]</code>, <code>dimNature[Nature]</code></td></tr>
+<tr><td>Columns</td><td><code>dimMeasure[Measure]</code>, <code>dimDate[MonthName]</code></td></tr>
+<tr><td>Values</td><td><code>Unit Value</code></td></tr>
+<tr><td>Filters</td><td><code>dimCategory[Category]  →  is RM</code>, <code>Last 4 Months  →  is 1</code>, <code>dimMeasure[Measure]  →  untick MW</code></td></tr>
 </table>
-<p>Title: <code>RM by month</code></p>
-<p>Position: X 644, Y 168, W 620, H 264.</p>
-<p><strong>4.18</strong> <strong>Decomposition tree</strong> — Replaces most of what the RM sheet does by hand, and drills in any order you click.</p>
+<p>Title: <code>RM by group nature and nature</code></p>
+<p>Position: X 16, Y 356, W 620, H 356.</p>
+<ul>
+<li>Format pane → Row headers → Stepped layout: Off, +/- icons: On.</li>
+</ul>
+<p><strong>4.18</strong> <strong>Clustered column chart</strong> — One click sets the whole page to a group nature; right-click drills through to the materials.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>X-axis</td><td><code>factInventory[GroupNature]</code></td></tr>
+<tr><td>Y-axis</td><td><code>Value ₹ Cr</code></td></tr>
+<tr><td>Filters</td><td><code>dimCategory[Category]  →  is RM</code></td></tr>
+</table>
+<p>Title: <code>RM ₹ Cr by group nature — click a bar</code></p>
+<p>Position: X 644, Y 356, W 620, H 176.</p>
+<p><strong>4.19</strong> <strong>Decomposition tree</strong> — The interactive one: click a box and it opens the next level, in whatever order you click. This is what replaces filtering the RM sheet by hand.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Analyze</td><td><code>Value ₹ Cr</code></td></tr>
-<tr><td>Explain by</td><td><code>dimPlant[Plant]</code>, <code>dimNature[Nature]</code>, <code>factInventory[GroupNature]</code></td></tr>
-<tr><td>Filters</td><td><code>factInventory[Category]  →  is RM</code></td></tr>
+<tr><td>Explain by</td><td><code>dimPlant[Plant]</code>, <code>factInventory[GroupNature]</code>, <code>dimNature[Nature]</code>, <code>factInventory[Material]</code></td></tr>
+<tr><td>Filters</td><td><code>dimCategory[Category]  →  is RM</code></td></tr>
 </table>
-<p>Title: <code>RM breakdown</code></p>
-<p>Position: X 644, Y 444, W 620, H 268.</p>
+<p>Title: <code>RM — click through any way you like</code></p>
+<p>Position: X 644, Y 544, W 620, H 168.</p>
+<ul>
+<li>Click the + on a node to choose which field to split by next.</li>
+</ul>
 <hr>
 <h2>Page — Detail</h2>
-<p><strong>4.19</strong> <strong>Card</strong> — The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.</p>
+<p><strong>4.20</strong> <strong>Card</strong> — The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Fields</td><td><code>Value ₹ Cr</code></td></tr>
 </table>
 <p>Title: <code>Value ₹ Cr of what you clicked</code></p>
 <p>Position: X 16, Y 16, W 296, H 92.</p>
-<p><strong>4.20</strong> <strong>Card</strong> — Same slice in megawatts.</p>
+<p><strong>4.21</strong> <strong>Card</strong> — Same slice in megawatts.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Fields</td><td><code>MW</code></td></tr>
 </table>
 <p>Title: <code>MW</code></p>
 <p>Position: X 320, Y 16, W 296, H 92.</p>
-<p><strong>4.21</strong> <strong>Card</strong> — Blank unless the slice is FG — that is deliberate.</p>
+<p><strong>4.22</strong> <strong>Card</strong> — Blank unless the slice is FG — that is deliberate.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Fields</td><td><code>Days of Inventory</code></td></tr>
 </table>
 <p>Title: <code>Days of inventory</code></p>
 <p>Position: X 624, Y 16, W 296, H 92.</p>
-<p><strong>4.22</strong> <strong>Card</strong> — How big this slice is against the whole.</p>
+<p><strong>4.23</strong> <strong>Card</strong> — How big this slice is against the whole.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Fields</td><td><code>Share of Total %</code></td></tr>
 </table>
 <p>Title: <code>Share of the total</code></p>
 <p>Position: X 928, Y 16, W 336, H 92.</p>
-<p><strong>4.23</strong> <strong>Pie chart</strong> — RM / FG / consumables for exactly what you clicked.</p>
+<p><strong>4.24</strong> <strong>Pie chart</strong> — RM / FG / consumables for exactly what you clicked.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
-<tr><td>Legend</td><td><code>factInventory[Category]</code></td></tr>
+<tr><td>Legend</td><td><code>dimCategory[Category]</code></td></tr>
 <tr><td>Values</td><td><code>Value ₹ Cr</code></td></tr>
 </table>
 <p>Title: <code>Split by category</code></p>
@@ -1762,7 +1946,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <ul>
 <li>Format pane → Detail labels → Label contents: Category, percent of total.</li>
 </ul>
-<p><strong>4.24</strong> <strong>Donut chart</strong> — Which technology or material nature the slice is made of.</p>
+<p><strong>4.25</strong> <strong>Donut chart</strong> — Which technology or material nature the slice is made of.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Legend</td><td><code>dimNature[Nature]</code></td></tr>
@@ -1773,7 +1957,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <ul>
 <li>Format pane → Detail labels → Label contents: Category, percent of total.</li>
 </ul>
-<p><strong>4.25</strong> <strong>Pie chart</strong> — Where the slice sits. A single-colour pie means it is one plant already.</p>
+<p><strong>4.26</strong> <strong>Pie chart</strong> — Where the slice sits. A single-colour pie means it is one plant already.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Legend</td><td><code>dimPlant[Plant]</code></td></tr>
@@ -1784,7 +1968,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <ul>
 <li>Format pane → Detail labels → Label contents: Category, percent of total.</li>
 </ul>
-<p><strong>4.26</strong> <strong>Table</strong> — The line-item detail: the question &#x27;which materials is that made of?&#x27; answered by clicking, instead of by another Excel sheet.</p>
+<p><strong>4.27</strong> <strong>Table</strong> — The line-item detail: the question &#x27;which materials is that made of?&#x27; answered by clicking, instead of by another Excel sheet.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Columns</td><td><code>factInventory[Material]</code>, <code>factInventory[MaterialDesc]</code>, <code>Value ₹ Cr</code>, <code>MW</code>, <code>INR per Wp</code>, <code>Share of Total %</code></td></tr>
@@ -1796,49 +1980,49 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 </ul>
 <hr>
 <h2>Page — Data Quality</h2>
-<p><strong>4.27</strong> <strong>Card</strong> — Materials with no row in the master sheets.</p>
+<p><strong>4.28</strong> <strong>Card</strong> — Materials with no row in the master sheets.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Fields</td><td><code>Rows Missing Attr</code></td></tr>
 </table>
 <p>Title: <code>Rows missing master attributes (want 0)</code></p>
 <p>Position: X 16, Y 168, W 300, H 100.</p>
-<p><strong>4.28</strong> <strong>Card</strong> — Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited.</p>
+<p><strong>4.29</strong> <strong>Card</strong> — Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Fields</td><td><code>Stock Recon ₹ Cr</code></td></tr>
 </table>
 <p>Title: <code>Stock reconciliation ₹ Cr (must be 0)</code></p>
 <p>Position: X 324, Y 168, W 300, H 100.</p>
-<p><strong>4.29</strong> <strong>Table</strong> — Catches a new GL account nobody added to TB Master — otherwise it vanishes silently.</p>
+<p><strong>4.30</strong> <strong>Table</strong> — Catches a new GL account nobody added to TB Master — otherwise it vanishes silently.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Columns</td><td><code>factTB_Unmapped[GLAccount]</code>, <code>factTB_Unmapped[GLDesc]</code>, <code>Unmapped TB ₹ Cr</code></td></tr>
 </table>
 <p>Title: <code>GLs in TB but not in TB Master (want empty)</code></p>
 <p>Position: X 632, Y 168, W 632, H 100.</p>
-<p><strong>4.30</strong> <strong>Table</strong> — Anything listed here gets blank days. This is the check that catches a Nature/Tech typo.</p>
+<p><strong>4.31</strong> <strong>Table</strong> — Anything listed here gets blank days. This is the check that catches a Nature/Tech typo.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Columns</td><td><code>qcNatureNoCapacity[Nature]</code></td></tr>
 </table>
 <p>Title: <code>FG technologies with no capacity row (want empty)</code></p>
 <p>Position: X 16, Y 276, W 608, H 210.</p>
-<p><strong>4.31</strong> <strong>Table</strong> — Read this when a column comes through blank — it shows what the file really says.</p>
+<p><strong>4.32</strong> <strong>Table</strong> — Read this when a column comes through blank — it shows what the file really says.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Columns</td><td><code>qcHeaders[Folder]</code>, <code>qcHeaders[Name]</code>, <code>qcHeaders[SheetNames]</code>, <code>qcHeaders[Headers]</code></td></tr>
 </table>
 <p>Title: <code>Actual headers of every source file</code></p>
 <p>Position: X 632, Y 276, W 632, H 210.</p>
-<p><strong>4.32</strong> <strong>Table</strong> — DataRows = 0 means a sheet is empty.</p>
+<p><strong>4.33</strong> <strong>Table</strong> — DataRows = 0 means a sheet is empty.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Columns</td><td><code>qcVarHeaders[SheetName]</code>, <code>qcVarHeaders[Headers]</code>, <code>qcVarHeaders[DataRows]</code></td></tr>
 </table>
 <p>Title: <code>Variables workbook sheets</code></p>
 <p>Position: X 16, Y 494, W 608, H 218.</p>
-<p><strong>4.33</strong> <strong>Table</strong> — Check after every refresh: a missing month looks like a real fall in inventory, not like an error.</p>
+<p><strong>4.34</strong> <strong>Table</strong> — Check after every refresh: a missing month looks like a real fall in inventory, not like an error.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Columns</td><td><code>factInventory[SourceFile]</code>, <code>factInventory[Month]</code>, <code>factInventory[Category]</code>, <code>Value ₹ Cr</code></td></tr>
@@ -1847,15 +2031,15 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <p>Position: X 632, Y 494, W 632, H 218.</p>
 <hr>
 <h2>Making it clickable</h2>
-<p><strong>4.34 Drill through.</strong> On the <code>Detail</code> page click the empty area around the visuals so nothing is selected, then drag these into the <strong>Drill through</strong> well of the Visualizations pane (leave <em>Keep all filters</em> on):</p>
+<p><strong>4.35 Drill through.</strong> On the <code>Detail</code> page click the empty area around the visuals so nothing is selected, then drag these into the <strong>Drill through</strong> well of the Visualizations pane (leave <em>Keep all filters</em> on):</p>
 <ul>
 <li><code>dimPlant[Plant]</code></li>
 <li><code>dimDate[MonthName]</code></li>
-<li><code>factInventory[Category]</code></li>
+<li><code>dimCategory[Category]</code></li>
 <li><code>dimNature[Nature]</code></li>
 </ul>
 <p>That is the whole trick. A <strong>Back</strong> arrow appears on <code>Detail</code> by itself, and every bar, row and slice on the other pages now offers <strong>right-click → Drill through → <code>Detail</code></strong>, which opens the pies filtered to whatever was clicked.</p>
-<p><strong>4.35 Interactions.</strong> A <em>left</em>-click needs no setup — it already cross-filters the rest of the page. To change what it does: select a visual → ribbon <strong>Format</strong> → <strong>Edit interactions</strong>, then on each other visual pick <strong>filter</strong> (funnel), <strong>highlight</strong> (chart) or <strong>none</strong>.</p>
+<p><strong>4.36 Interactions.</strong> A <em>left</em>-click needs no setup — it already cross-filters the rest of the page. To change what it does: select a visual → ribbon <strong>Format</strong> → <strong>Edit interactions</strong>, then on each other visual pick <strong>filter</strong> (funnel), <strong>highlight</strong> (chart) or <strong>none</strong>.</p>
 <p>Worth setting deliberately: matrices to <strong>filter</strong> (so their totals match the click), and the header cards to <strong>none</strong> (so the band always shows the company total).</p>
 <hr>
 <h1>PART 5 — Publish and hand over</h1>
@@ -1884,9 +2068,9 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 </ol>
 <p>That&#x27;s it. No formulas to drag down, no SUMIFS to extend.</p></div>
 
-<footer>Updated 11 Aug 2026 09:30 UTC</footer>
+<footer>Updated 11 Aug 2026 09:53 UTC</footer>
 </div>
-<script>const STEPS = [{"title": "Before you start", "page": "\u2014", "do": ["You should already have: the queries loaded (Part 1), the relationships made (Part 2) and the measures added (Part 3).", "If a name below does not exist in the Fields pane on the right, that part is not finished \u2014 go back to the guide's Part 1-3 rather than guessing."], "fields": [], "note": ""}, {"title": "Set the canvas size", "page": "\u2014", "do": ["Click on the empty white area of the report (not on a visual).", "Open the Format pane: the paintbrush icon on the right.", "Open Canvas settings.", "Set Type to 16:9, then type the height and width below."], "fields": [["Height", "720"], ["Width", "1280"]], "note": "Every position in these steps assumes this canvas, so do it before anything else \u2014 changing it later moves everything."}, {"title": "Load the colour theme", "page": "\u2014", "do": ["Click the download link just below these steps to save inventory-theme.json (put it in your Inventory Report folder).", "Ribbon: View \u2192 Themes (dropdown) \u2192 Browse for themes.", "Pick the file you just saved."], "fields": [], "note": "This sets all colours, fonts, borders and card styling, so no step below asks you to colour anything.", "link": "inventory-theme.json"}, {"title": "Create the 6 pages", "page": "\u2014", "do": ["At the bottom of the window, click the + button 6 times.", "Double-click each tab and rename it, in this order."], "fields": [["Page 1", "Overview"], ["Page 2", "Summary"], ["Page 3", "FG"], ["Page 4", "RM"], ["Page 5", "Detail"], ["Page 6", "Data Quality"]], "note": "Names must match, because later steps say which page to work on."}, {"title": "Header card 1 of 6 \u2014 Total value \u20b9 Cr", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Value \u20b9 Cr"], ["X", "16"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 2 of 6 \u2014 Raw materials \u20b9 Cr", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "RM \u20b9 Cr"], ["X", "224"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 3 of 6 \u2014 Finished goods \u20b9 Cr", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "FG \u20b9 Cr"], ["X", "432"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 4 of 6 \u2014 Consumables \u20b9 Cr", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Consumables \u20b9 Cr"], ["X", "640"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 5 of 6 \u2014 FG days of inventory", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Days of Inventory"], ["X", "848"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 6 of 6 \u2014 Change vs last month", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Value \u20b9 Cr % vs LM"], ["X", "1056"], ["Y", "12"], ["Width", "208"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header slicer \u2014 Month", "page": "Overview", "do": ["Ribbon: Insert \u2192 Slicer.", "Drag the field below into it.", "Format pane \u2192 Slicer settings \u2192 Style: Dropdown.", "Then set the position numbers."], "fields": [["Field", "dimDate[MonthName]"], ["X", "16"], ["Y", "108"], ["Width", "300"], ["Height", "44"]], "note": ""}, {"title": "Header slicer \u2014 Plant", "page": "Overview", "do": ["Ribbon: Insert \u2192 Slicer.", "Drag the field below into it.", "Format pane \u2192 Slicer settings \u2192 Style: Dropdown.", "Then set the position numbers."], "fields": [["Field", "dimPlant[Plant]"], ["X", "324"], ["Y", "108"], ["Width", "300"], ["Height", "44"]], "note": ""}, {"title": "Header slicer \u2014 Category", "page": "Overview", "do": ["Ribbon: Insert \u2192 Slicer.", "Drag the field below into it.", "Format pane \u2192 Slicer settings \u2192 Style: Dropdown.", "Then set the position numbers."], "fields": [["Field", "factInventory[Category]"], ["X", "632"], ["Y", "108"], ["Width", "300"], ["Height", "44"]], "note": ""}, {"title": "Copy the header band to the other pages", "page": "Overview", "do": ["Click the first card, then Ctrl+click the other 5 cards and all 3 slicers (9 things selected).", "Ctrl+C.", "Go to each page listed below and press Ctrl+V."], "fields": [["Paste on", "Summary"], ["Paste on", "FG"], ["Paste on", "RM"]], "note": "Not on Detail or Data Quality: Detail is filtered by whatever you clicked to get there, and Data Quality must never be filtered or it stops being a check."}, {"title": "Sync the slicers across pages", "page": "\u2014", "do": ["Ribbon: View \u2192 tick Sync slicers. A pane opens on the right.", "Click the Month slicer, then tick both Sync and Visible for these pages: Overview, Summary, FG, RM.", "Do the same for the Plant and Category slicers."], "fields": [], "note": "Skip this and each page filters on its own, so two pages will show different totals for the same month."}, {"title": "Overview 1 of 4 \u2014 Value \u20b9 Cr by month and category", "page": "Overview", "do": ["Go to the Overview page.", "Ribbon: Insert \u2192 Stacked column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Stacked column chart"], ["Title", "Value \u20b9 Cr by month and category"], ["X-axis", "dimDate[MonthName]"], ["Y-axis", "Value \u20b9 Cr"], ["Legend", "factInventory[Category]"], ["X", "16"], ["Y", "168"], ["Width", "764"], ["Height", "264"]], "note": "Every month side by side, split RM / FG / consumables."}, {"title": "Overview 2 of 4 \u2014 Value \u20b9 Cr by plant", "page": "Overview", "do": ["Go to the Overview page.", "Ribbon: Insert \u2192 Clustered column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Clustered column chart"], ["Title", "Value \u20b9 Cr by plant"], ["X-axis", "dimPlant[Plant]"], ["Y-axis", "Value \u20b9 Cr"], ["Legend", "factInventory[Category]"], ["X", "788"], ["Y", "168"], ["Width", "476"], ["Height", "264"]], "note": "Which plant is holding the stock, and of what kind."}, {"title": "Overview 3 of 4 \u2014 Value \u20b9 Cr \u2014 this month vs last month", "page": "Overview", "do": ["Go to the Overview page.", "Ribbon: Insert \u2192 Line and clustered column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Line and clustered column chart"], ["Title", "Value \u20b9 Cr \u2014 this month vs last month"], ["X-axis", "dimDate[MonthName]"], ["Column y-axis", "Value \u20b9 Cr"], ["Column y-axis", "Value \u20b9 Cr LM"], ["Line y-axis", "Value \u20b9 Cr % vs LM"], ["X", "16"], ["Y", "444"], ["Width", "764"], ["Height", "268"]], "note": "Bars compare the two months directly; the line is the percentage swing, which is what people argue about."}, {"title": "Overview 4 of 4 \u2014 Months side by side", "page": "Overview", "do": ["Go to the Overview page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Row headers \u2192 Stepped layout: Off.", "Turn Format pane \u2192 Subtotals \u2192 Row subtotals: On, so each column has a total."], "fields": [["Visual", "Matrix"], ["Title", "Months side by side"], ["Rows", "factInventory[Category]"], ["Columns", "dimDate[MonthName]"], ["Values", "Value \u20b9 Cr"], ["X", "788"], ["Y", "444"], ["Width", "476"], ["Height", "268"]], "note": "The same numbers as a table, because some readers only trust a table."}, {"title": "Summary 1 of 3 \u2014 Value \u20b9 Cr by month, category and plant", "page": "Summary", "do": ["Go to the Summary page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Row headers \u2192 Stepped layout: Off.", "Format pane \u2192 Subtotals \u2192 turn on both Row subtotals and Column subtotals."], "fields": [["Visual", "Matrix"], ["Title", "Value \u20b9 Cr by month, category and plant"], ["Rows", "factInventory[Category]"], ["Rows", "dimPlant[Plant]"], ["Columns", "dimDate[MonthName]"], ["Values", "Value \u20b9 Cr"], ["X", "16"], ["Y", "168"], ["Width", "1248"], ["Height", "264"]], "note": "The whole model in one grid: months across, category and plant down. Click a row's arrow to expand plants under a category."}, {"title": "Summary 2 of 3 \u2014 MW and days by month", "page": "Summary", "do": ["Go to the Summary page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Matrix"], ["Title", "MW and days by month"], ["Rows", "dimDate[MonthName]"], ["Values", "MW"], ["Values", "FG MW"], ["Values", "Capacity MW"], ["Values", "Days of Inventory"], ["Values", "Days vs LM"], ["X", "16"], ["Y", "444"], ["Width", "620"], ["Height", "268"]], "note": "The MW view of the same months, with days of inventory and how it moved."}, {"title": "Summary 3 of 3 \u2014 Trial balance vs MB5B", "page": "Summary", "do": ["Go to the Summary page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "In the Values well click the arrow next to Difference \u20b9 Cr \u2192 Conditional formatting \u2192 Background color.", "Format style: Diverging. Minimum red, Centre white with Centre = 0, Maximum red.", "Both ends red on purpose: a difference either direction is equally wrong."], "fields": [["Visual", "Matrix"], ["Title", "Trial balance vs MB5B"], ["Rows", "dimPlant[Plant]"], ["Values", "TB \u20b9 Cr"], ["Values", "Value \u20b9 Cr"], ["Values", "Difference \u20b9 Cr"], ["Values", "Difference %"], ["X", "644"], ["Y", "444"], ["Width", "620"], ["Height", "268"]], "note": "The reconciliation: what the books say against what the stock report says."}, {"title": "FG 1 of 4 \u2014 FG by technology", "page": "FG", "do": ["Go to the FG page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Row headers \u2192 Stepped layout: Off."], "fields": [["Visual", "Matrix"], ["Title", "FG by technology"], ["Rows", "dimNature[Nature]"], ["Values", "Value \u20b9 Cr"], ["Values", "FG MW"], ["Values", "Capacity MW"], ["Values", "Days of Inventory"], ["Values", "INR per Wp"], ["Values", "Value \u20b9 Cr % vs LM"], ["Filters", "factInventory[Category]  \u2192  is FG"], ["X", "16"], ["Y", "168"], ["Width", "764"], ["Height", "264"]], "note": "Technology by technology: value, MW, capacity, days, rupees per watt and the month's movement."}, {"title": "FG 2 of 4 \u2014 FG technology by month", "page": "FG", "do": ["Go to the FG page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Matrix"], ["Title", "FG technology by month"], ["Rows", "dimNature[Nature]"], ["Columns", "dimDate[MonthName]"], ["Values", "FG MW"], ["Filters", "factInventory[Category]  \u2192  is FG"], ["X", "788"], ["Y", "168"], ["Width", "476"], ["Height", "264"]], "note": "MW per technology with the months side by side, so a build-up in one tech is obvious."}, {"title": "FG 3 of 4 \u2014 FG value \u20b9 Cr by technology over time", "page": "FG", "do": ["Go to the FG page.", "Ribbon: Insert \u2192 Area chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Area chart"], ["Title", "FG value \u20b9 Cr by technology over time"], ["X-axis", "dimDate[MonthName]"], ["Y-axis", "Value \u20b9 Cr"], ["Legend", "dimNature[Nature]"], ["Filters", "factInventory[Category]  \u2192  is FG"], ["X", "16"], ["Y", "444"], ["Width", "764"], ["Height", "268"]], "note": "History of FG stock, split by technology."}, {"title": "FG 4 of 4 \u2014 FG days of inventory vs last month", "page": "FG", "do": ["Go to the FG page.", "Ribbon: Insert \u2192 Line and clustered column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Line and clustered column chart"], ["Title", "FG days of inventory vs last month"], ["X-axis", "dimDate[MonthName]"], ["Column y-axis", "Days of Inventory"], ["Line y-axis", "Days vs LM"], ["Filters", "factInventory[Category]  \u2192  is FG"], ["X", "788"], ["Y", "444"], ["Width", "476"], ["Height", "268"]], "note": "Days of inventory month by month, with the change on a line \u2014 the number your superior asks for first."}, {"title": "RM 1 of 3 \u2014 RM by plant and nature", "page": "RM", "do": ["Go to the RM page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Row headers \u2192 Stepped layout: Off."], "fields": [["Visual", "Matrix"], ["Title", "RM by plant and nature"], ["Rows", "dimPlant[Plant]"], ["Rows", "dimNature[Nature]"], ["Rows", "factInventory[GroupNature]"], ["Values", "Value \u20b9 Cr"], ["Values", "MW"], ["Values", "Value \u20b9 Cr % vs LM"], ["Filters", "factInventory[Category]  \u2192  is RM"], ["X", "16"], ["Y", "168"], ["Width", "620"], ["Height", "544"]], "note": "The RM equivalent of the FG grid."}, {"title": "RM 2 of 3 \u2014 RM by month", "page": "RM", "do": ["Go to the RM page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Matrix"], ["Title", "RM by month"], ["Rows", "dimNature[Nature]"], ["Columns", "dimDate[MonthName]"], ["Values", "Value \u20b9 Cr"], ["Filters", "factInventory[Category]  \u2192  is RM"], ["X", "644"], ["Y", "168"], ["Width", "620"], ["Height", "264"]], "note": "RM months side by side."}, {"title": "RM 3 of 3 \u2014 RM breakdown", "page": "RM", "do": ["Go to the RM page.", "Ribbon: Insert \u2192 Decomposition tree.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Decomposition tree"], ["Title", "RM breakdown"], ["Analyze", "Value \u20b9 Cr"], ["Explain by", "dimPlant[Plant]"], ["Explain by", "dimNature[Nature]"], ["Explain by", "factInventory[GroupNature]"], ["Filters", "factInventory[Category]  \u2192  is RM"], ["X", "644"], ["Y", "444"], ["Width", "620"], ["Height", "268"]], "note": "Replaces most of what the RM sheet does by hand, and drills in any order you click."}, {"title": "Detail 1 of 8 \u2014 Value \u20b9 Cr of what you clicked", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Value \u20b9 Cr of what you clicked"], ["Fields", "Value \u20b9 Cr"], ["X", "16"], ["Y", "16"], ["Width", "296"], ["Height", "92"]], "note": "The drill-through page opens already filtered to the bar or row you came from, so this card is that one number."}, {"title": "Detail 2 of 8 \u2014 MW", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "MW"], ["Fields", "MW"], ["X", "320"], ["Y", "16"], ["Width", "296"], ["Height", "92"]], "note": "Same slice in megawatts."}, {"title": "Detail 3 of 8 \u2014 Days of inventory", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Days of inventory"], ["Fields", "Days of Inventory"], ["X", "624"], ["Y", "16"], ["Width", "296"], ["Height", "92"]], "note": "Blank unless the slice is FG \u2014 that is deliberate."}, {"title": "Detail 4 of 8 \u2014 Share of the total", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Share of the total"], ["Fields", "Share of Total %"], ["X", "928"], ["Y", "16"], ["Width", "336"], ["Height", "92"]], "note": "How big this slice is against the whole."}, {"title": "Detail 5 of 8 \u2014 Split by category", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Pie chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Detail labels \u2192 Label contents: Category, percent of total."], "fields": [["Visual", "Pie chart"], ["Title", "Split by category"], ["Legend", "factInventory[Category]"], ["Values", "Value \u20b9 Cr"], ["X", "16"], ["Y", "120"], ["Width", "404"], ["Height", "296"]], "note": "RM / FG / consumables for exactly what you clicked."}, {"title": "Detail 6 of 8 \u2014 Split by technology / nature", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Donut chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Detail labels \u2192 Label contents: Category, percent of total."], "fields": [["Visual", "Donut chart"], ["Title", "Split by technology / nature"], ["Legend", "dimNature[Nature]"], ["Values", "Value \u20b9 Cr"], ["X", "428"], ["Y", "120"], ["Width", "404"], ["Height", "296"]], "note": "Which technology or material nature the slice is made of."}, {"title": "Detail 7 of 8 \u2014 Split by plant", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Pie chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Detail labels \u2192 Label contents: Category, percent of total."], "fields": [["Visual", "Pie chart"], ["Title", "Split by plant"], ["Legend", "dimPlant[Plant]"], ["Values", "Value \u20b9 Cr"], ["X", "840"], ["Y", "120"], ["Width", "424"], ["Height", "296"]], "note": "Where the slice sits. A single-colour pie means it is one plant already."}, {"title": "Detail 8 of 8 \u2014 Materials behind this number", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Click the Value \u20b9 Cr column header twice so it sorts largest first."], "fields": [["Visual", "Table"], ["Title", "Materials behind this number"], ["Columns", "factInventory[Material]"], ["Columns", "factInventory[MaterialDesc]"], ["Columns", "Value \u20b9 Cr"], ["Columns", "MW"], ["Columns", "INR per Wp"], ["Columns", "Share of Total %"], ["X", "16"], ["Y", "428"], ["Width", "1248"], ["Height", "284"]], "note": "The line-item detail: the question 'which materials is that made of?' answered by clicking, instead of by another Excel sheet."}, {"title": "Data Quality 1 of 7 \u2014 Rows missing master attributes (want 0)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Rows missing master attributes (want 0)"], ["Fields", "Rows Missing Attr"], ["X", "16"], ["Y", "168"], ["Width", "300"], ["Height", "100"]], "note": "Materials with no row in the master sheets."}, {"title": "Data Quality 2 of 7 \u2014 Stock reconciliation \u20b9 Cr (must be 0)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Stock reconciliation \u20b9 Cr (must be 0)"], ["Fields", "Stock Recon \u20b9 Cr"], ["X", "324"], ["Y", "168"], ["Width", "300"], ["Height", "100"]], "note": "Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited."}, {"title": "Data Quality 3 of 7 \u2014 GLs in TB but not in TB Master (want empty)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "GLs in TB but not in TB Master (want empty)"], ["Columns", "factTB_Unmapped[GLAccount]"], ["Columns", "factTB_Unmapped[GLDesc]"], ["Columns", "Unmapped TB \u20b9 Cr"], ["X", "632"], ["Y", "168"], ["Width", "632"], ["Height", "100"]], "note": "Catches a new GL account nobody added to TB Master \u2014 otherwise it vanishes silently."}, {"title": "Data Quality 4 of 7 \u2014 FG technologies with no capacity row (want empty)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "FG technologies with no capacity row (want empty)"], ["Columns", "qcNatureNoCapacity[Nature]"], ["X", "16"], ["Y", "276"], ["Width", "608"], ["Height", "210"]], "note": "Anything listed here gets blank days. This is the check that catches a Nature/Tech typo."}, {"title": "Data Quality 5 of 7 \u2014 Actual headers of every source file", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "Actual headers of every source file"], ["Columns", "qcHeaders[Folder]"], ["Columns", "qcHeaders[Name]"], ["Columns", "qcHeaders[SheetNames]"], ["Columns", "qcHeaders[Headers]"], ["X", "632"], ["Y", "276"], ["Width", "632"], ["Height", "210"]], "note": "Read this when a column comes through blank \u2014 it shows what the file really says."}, {"title": "Data Quality 6 of 7 \u2014 Variables workbook sheets", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "Variables workbook sheets"], ["Columns", "qcVarHeaders[SheetName]"], ["Columns", "qcVarHeaders[Headers]"], ["Columns", "qcVarHeaders[DataRows]"], ["X", "16"], ["Y", "494"], ["Width", "608"], ["Height", "218"]], "note": "DataRows = 0 means a sheet is empty."}, {"title": "Data Quality 7 of 7 \u2014 Files loaded this refresh", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "Files loaded this refresh"], ["Columns", "factInventory[SourceFile]"], ["Columns", "factInventory[Month]"], ["Columns", "factInventory[Category]"], ["Columns", "Value \u20b9 Cr"], ["X", "632"], ["Y", "494"], ["Width", "632"], ["Height", "218"]], "note": "Check after every refresh: a missing month looks like a real fall in inventory, not like an error."}, {"title": "Make clicking a bar open the pie charts", "page": "Detail", "do": ["Go to the Detail page and click the empty grey area around the visuals, so that nothing is selected.", "In the Visualizations pane, find the well called Drill through (scroll down; it is below Filters on this page).", "Drag each field below from the Fields pane into that Drill through well, one at a time.", "Leave 'Keep all filters' ON \u2014 it is on by default."], "fields": [["Drill through", "dimPlant[Plant]"], ["Drill through", "dimDate[MonthName]"], ["Drill through", "factInventory[Category]"], ["Drill through", "dimNature[Nature]"]], "note": "This is what makes the report clickable: a Back arrow appears on this page automatically, and every bar, row and slice on the other pages now offers Drill through \u2192 Detail."}, {"title": "Try it \u2014 click a bar, get the pies", "page": "Overview", "do": ["Go to the Overview page.", "Right-click one bar of the 'Value \u20b9 Cr by plant' chart.", "Choose Drill through \u2192 Detail.", "The Detail page opens showing only that plant: cards, three pies and the material list.", "Click the circled Back arrow at the top-left of the Detail page to return."], "fields": [], "note": "A left-click filters the rest of the page instead (that is Power BI's built-in cross-filtering, nothing to set up). Right-click is the one that opens the pies."}, {"title": "Choose what a click filters", "page": "Overview", "do": ["Click any chart once to select it.", "Ribbon: Format \u2192 Edit interactions. Small icons appear on every other visual.", "Each other visual now offers filter (funnel), highlight (chart) or none (circle with a line). Click the one you want.", "Click Edit interactions again to turn the mode off."], "fields": [], "note": "Default is highlight, which greys out the rest of a bar rather than removing it. Set the matrices to filter instead, so a click makes their totals match what you clicked. Set the header cards to none, so the band always shows the company total."}, {"title": "Save", "page": "\u2014", "do": ["Ctrl+S. If it asks for a name, call it Inventory Model.pbix."], "fields": [], "note": "Power BI does not autosave. Save every few steps, not just at the end."}, {"title": "Check it actually works", "page": "Data Quality", "do": ["Look at the Data Quality page.", "Stock reconciliation must read 0.", "Rows missing master attributes should read 0.", "Both tables (unmapped GLs, Natures with no capacity) should be empty.", "Then pick a month in the header slicer and confirm every page changes."], "fields": [], "note": "If any of those four is wrong, the numbers on the other pages are wrong too \u2014 fix it before showing anyone."}];</script>
+<script>const STEPS = [{"title": "Before you start", "page": "\u2014", "do": ["You should already have: the queries loaded (Part 1), the relationships made (Part 2) and the measures added (Part 3).", "If a name below does not exist in the Fields pane on the right, that part is not finished \u2014 go back to the guide's Part 1-3 rather than guessing."], "fields": [], "note": ""}, {"title": "Set the canvas size", "page": "\u2014", "do": ["Click on the empty white area of the report (not on a visual).", "Open the Format pane: the paintbrush icon on the right.", "Open Canvas settings.", "Set Type to 16:9, then type the height and width below."], "fields": [["Height", "720"], ["Width", "1280"]], "note": "Every position in these steps assumes this canvas, so do it before anything else \u2014 changing it later moves everything."}, {"title": "Load the colour theme", "page": "\u2014", "do": ["Click the download link just below these steps to save inventory-theme.json (put it in your Inventory Report folder).", "Ribbon: View \u2192 Themes (dropdown) \u2192 Browse for themes.", "Pick the file you just saved."], "fields": [], "note": "This sets all colours, fonts, borders and card styling, so no step below asks you to colour anything.", "link": "inventory-theme.json"}, {"title": "Create the 6 pages", "page": "\u2014", "do": ["At the bottom of the window, click the + button 6 times.", "Double-click each tab and rename it, in this order."], "fields": [["Page 1", "Overview"], ["Page 2", "Summary"], ["Page 3", "FG"], ["Page 4", "RM"], ["Page 5", "Detail"], ["Page 6", "Data Quality"]], "note": "Names must match, because later steps say which page to work on."}, {"title": "Header card 1 of 6 \u2014 Total value \u20b9 Cr", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Value \u20b9 Cr"], ["X", "16"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 2 of 6 \u2014 Raw materials \u20b9 Cr", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "RM \u20b9 Cr"], ["X", "224"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 3 of 6 \u2014 Finished goods \u20b9 Cr", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "FG \u20b9 Cr"], ["X", "432"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 4 of 6 \u2014 Consumables \u20b9 Cr", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Consumables \u20b9 Cr"], ["X", "640"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 5 of 6 \u2014 FG days of inventory", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Days of Inventory"], ["X", "848"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 6 of 6 \u2014 Change vs last month", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Value \u20b9 Cr % vs LM"], ["X", "1056"], ["Y", "12"], ["Width", "208"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header slicer \u2014 Month", "page": "Overview", "do": ["Ribbon: Insert \u2192 Slicer.", "Drag the field below into it.", "Format pane \u2192 Slicer settings \u2192 Style: Dropdown.", "Then set the position numbers."], "fields": [["Field", "dimDate[MonthName]"], ["X", "16"], ["Y", "108"], ["Width", "300"], ["Height", "44"]], "note": ""}, {"title": "Header slicer \u2014 Plant", "page": "Overview", "do": ["Ribbon: Insert \u2192 Slicer.", "Drag the field below into it.", "Format pane \u2192 Slicer settings \u2192 Style: Dropdown.", "Then set the position numbers."], "fields": [["Field", "dimPlant[Plant]"], ["X", "324"], ["Y", "108"], ["Width", "300"], ["Height", "44"]], "note": ""}, {"title": "Header slicer \u2014 Category", "page": "Overview", "do": ["Ribbon: Insert \u2192 Slicer.", "Drag the field below into it.", "Format pane \u2192 Slicer settings \u2192 Style: Dropdown.", "Then set the position numbers."], "fields": [["Field", "dimCategory[Category]"], ["X", "632"], ["Y", "108"], ["Width", "300"], ["Height", "44"]], "note": ""}, {"title": "Copy the header band to the other pages", "page": "Overview", "do": ["Click the first card, then Ctrl+click the other 5 cards and all 3 slicers (9 things selected).", "Ctrl+C.", "Go to each page listed below and press Ctrl+V."], "fields": [["Paste on", "Summary"], ["Paste on", "FG"], ["Paste on", "RM"]], "note": "Not on Detail or Data Quality: Detail is filtered by whatever you clicked to get there, and Data Quality must never be filtered or it stops being a check."}, {"title": "Sync the slicers across pages", "page": "\u2014", "do": ["Ribbon: View \u2192 tick Sync slicers. A pane opens on the right.", "Click the Month slicer, then tick both Sync and Visible for these pages: Overview, Summary, FG, RM.", "Do the same for the Plant and Category slicers."], "fields": [], "note": "Skip this and each page filters on its own, so two pages will show different totals for the same month."}, {"title": "Overview 1 of 4 \u2014 Value \u20b9 Cr by month and category", "page": "Overview", "do": ["Go to the Overview page.", "Ribbon: Insert \u2192 Stacked column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Stacked column chart"], ["Title", "Value \u20b9 Cr by month and category"], ["X-axis", "dimDate[MonthName]"], ["Y-axis", "Value \u20b9 Cr"], ["Legend", "dimCategory[Category]"], ["X", "16"], ["Y", "168"], ["Width", "764"], ["Height", "264"]], "note": "Every month side by side, split RM / FG / consumables. Click one segment and the rest of the page follows it; right-click \u2192 Drill through \u2192 Detail for the pies behind it."}, {"title": "Overview 2 of 4 \u2014 Value \u20b9 Cr by plant \u2014 click to go deeper", "page": "Overview", "do": ["Go to the Overview page.", "Ribbon: Insert \u2192 Clustered column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "The double-down-arrow in the header turns on drill mode; after that a single click on a bar opens the next level, and the up-arrow goes back.", "Right-click a bar \u2192 Drill through \u2192 Detail for the pie-chart page instead."], "fields": [["Visual", "Clustered column chart"], ["Title", "Value \u20b9 Cr by plant \u2014 click to go deeper"], ["X-axis", "dimPlant[Plant]"], ["X-axis", "dimCategory[Category]"], ["X-axis", "dimNature[Nature]"], ["Y-axis", "Value \u20b9 Cr"], ["X", "788"], ["Y", "168"], ["Width", "476"], ["Height", "264"]], "note": "Three fields in the X-axis makes it a hierarchy, so the little arrows appear in the visual's top-right corner: plant, then category inside a plant, then nature inside that. Clicking is the whole point \u2014 nobody has to build three charts."}, {"title": "Overview 3 of 4 \u2014 Value \u20b9 Cr \u2014 this month vs last month", "page": "Overview", "do": ["Go to the Overview page.", "Ribbon: Insert \u2192 Line and clustered column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Line and clustered column chart"], ["Title", "Value \u20b9 Cr \u2014 this month vs last month"], ["X-axis", "dimDate[MonthName]"], ["Column y-axis", "Value \u20b9 Cr"], ["Column y-axis", "Value \u20b9 Cr LM"], ["Line y-axis", "Value \u20b9 Cr % vs LM"], ["X", "16"], ["Y", "444"], ["Width", "764"], ["Height", "268"]], "note": "Bars compare the two months directly; the line is the percentage swing, which is what people argue about."}, {"title": "Overview 4 of 4 \u2014 Months side by side", "page": "Overview", "do": ["Go to the Overview page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Row headers \u2192 Stepped layout: Off.", "Turn Format pane \u2192 Subtotals \u2192 Row subtotals: On, so each column has a total."], "fields": [["Visual", "Matrix"], ["Title", "Months side by side"], ["Rows", "dimCategory[Category]"], ["Columns", "dimDate[MonthName]"], ["Values", "Value \u20b9 Cr"], ["X", "788"], ["Y", "444"], ["Width", "476"], ["Height", "268"]], "note": "The same numbers as a table, because some readers only trust a table."}, {"title": "Summary 1 of 3 \u2014 Inventory (TB) \u00b7 Inventory (MB5B) \u00b7 Difference \u2014 \u20b9 Cr", "page": "Summary", "do": ["Go to the Summary page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Order of the two Columns fields matters: dimMetric[Metric] FIRST, then dimDate[MonthName]. That is what makes TB / MB5B / Difference the master columns with months nested inside.", "Format pane \u2192 Row headers \u2192 Stepped layout: Off (so Plant and Category get their own columns).", "Format pane \u2192 Row headers \u2192 +/- icons: On (that is the click-to-expand control).", "Format pane \u2192 Subtotals \u2192 Row subtotals On, Column subtotals Off, and set 'Per row level' so each plant shows its own total. Grand total row = the Total row.", "In the Values well, arrow next to Summary Value \u20b9 Cr \u2192 Conditional formatting \u2192 Background color \u2192 Format style Diverging, centre 0, both ends red: a difference either direction is equally wrong.", "Expand all plants once with the arrow at the top-left of the matrix, then save \u2014 the expansion state is remembered."], "fields": [["Visual", "Matrix"], ["Title", "Inventory (TB) \u00b7 Inventory (MB5B) \u00b7 Difference \u2014 \u20b9 Cr"], ["Rows", "dimPlant[Plant]"], ["Rows", "dimCategory[Category]"], ["Columns", "dimMetric[Metric]"], ["Columns", "dimDate[MonthName]"], ["Values", "Summary Value \u20b9 Cr"], ["Filters", "Last 4 Months  \u2192  is 1"], ["X", "16"], ["Y", "168"], ["Width", "1248"], ["Height", "300"]], "note": "The whole reconciliation in one grid, exactly as it is read out: three master columns (TB, MB5B, Difference), the last four months under each, one row per plant with RM, FG and consumables beneath it, and a Total row. Everything in crore rupees."}, {"title": "Summary 2 of 3 \u2014 Difference \u20b9 Cr by plant \u2014 click a bar", "page": "Summary", "do": ["Go to the Summary page.", "Ribbon: Insert \u2192 Clustered column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Columns \u2192 Colour \u2192 fx \u2192 Format style: Rules, and colour any negative value red. A difference either direction is equally wrong."], "fields": [["Visual", "Clustered column chart"], ["Title", "Difference \u20b9 Cr by plant \u2014 click a bar"], ["X-axis", "dimPlant[Plant]"], ["Y-axis", "Difference \u20b9 Cr"], ["X", "16"], ["Y", "480"], ["Width", "620"], ["Height", "232"]], "note": "The reconciliation as a picture. Click a bar and the matrix above filters to that plant; right-click \u2192 Drill through \u2192 Detail for the materials behind it."}, {"title": "Summary 3 of 3 \u2014 Inventory (TB) vs Inventory (MB5B) by month", "page": "Summary", "do": ["Go to the Summary page.", "Ribbon: Insert \u2192 Clustered column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Clustered column chart"], ["Title", "Inventory (TB) vs Inventory (MB5B) by month"], ["X-axis", "dimDate[MonthName]"], ["Y-axis", "TB \u20b9 Cr"], ["Y-axis", "Value \u20b9 Cr"], ["X", "644"], ["Y", "480"], ["Width", "620"], ["Height", "232"]], "note": "Two bars per month, books against stock report \u2014 a gap that is opening up shows here before anyone notices it in the numbers."}, {"title": "FG 1 of 4 \u2014 FG by plant \u2014 MW \u00b7 In \u20b9 Cr \u00b7 In Days", "page": "FG", "do": ["Go to the FG page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName].", "Format pane \u2192 Row headers \u2192 Stepped layout: Off.", "Click a plant row to filter the technology table below it."], "fields": [["Visual", "Matrix"], ["Title", "FG by plant \u2014 MW \u00b7 In \u20b9 Cr \u00b7 In Days"], ["Rows", "dimPlant[Plant]"], ["Columns", "dimMeasure[Measure]"], ["Columns", "dimDate[MonthName]"], ["Values", "Unit Value"], ["Filters", "dimCategory[Category]  \u2192  is FG"], ["Filters", "Last 4 Months  \u2192  is 1"], ["X", "16"], ["Y", "168"], ["Width", "1248"], ["Height", "176"]], "note": "FG per plant in all three units at once \u2014 megawatts, crore rupees and days \u2014 with the last four months under each. One grid instead of three sheets."}, {"title": "FG 2 of 4 \u2014 FG by technology \u2014 MW \u00b7 In \u20b9 Cr \u00b7 In Days", "page": "FG", "do": ["Go to the FG page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Same column order: dimMeasure[Measure] then dimDate[MonthName].", "Format pane \u2192 Row headers \u2192 Stepped layout: Off."], "fields": [["Visual", "Matrix"], ["Title", "FG by technology \u2014 MW \u00b7 In \u20b9 Cr \u00b7 In Days"], ["Rows", "dimNature[Nature]"], ["Columns", "dimMeasure[Measure]"], ["Columns", "dimDate[MonthName]"], ["Values", "Unit Value"], ["Filters", "dimCategory[Category]  \u2192  is FG"], ["Filters", "Last 4 Months  \u2192  is 1"], ["X", "16"], ["Y", "356"], ["Width", "620"], ["Height", "356"]], "note": "The same three units by technology rather than by plant, which is where a build-up in one technology shows up."}, {"title": "FG 3 of 4 \u2014 FG MW by technology \u2014 click a bar", "page": "FG", "do": ["Go to the FG page.", "Ribbon: Insert \u2192 Clustered column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Clustered column chart"], ["Title", "FG MW by technology \u2014 click a bar"], ["X-axis", "dimNature[Nature]"], ["Y-axis", "MW"], ["Filters", "dimCategory[Category]  \u2192  is FG"], ["X", "644"], ["Y", "356"], ["Width", "620"], ["Height", "176"]], "note": "Clicking one technology filters both matrices to it; right-click drills through."}, {"title": "FG 4 of 4 \u2014 FG days \u2014 click a bar to drill in", "page": "FG", "do": ["Go to the FG page.", "Ribbon: Insert \u2192 Line and clustered column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Line and clustered column chart"], ["Title", "FG days \u2014 click a bar to drill in"], ["X-axis", "dimDate[MonthName]"], ["Column y-axis", "Days"], ["Line y-axis", "Days vs LM"], ["Filters", "dimCategory[Category]  \u2192  is FG"], ["X", "644"], ["Y", "544"], ["Width", "620"], ["Height", "168"]], "note": "Days month by month with the change on a line. Right-click any bar \u2192 Drill through \u2192 Detail for the technology and material split behind it."}, {"title": "RM 1 of 4 \u2014 RM by plant \u2014 In \u20b9 Cr \u00b7 In Days", "page": "RM", "do": ["Go to the RM page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "dimMeasure[Measure] in Columns first, then dimDate[MonthName].", "In the Filters pane, drag dimMeasure[Measure] in and untick MW.", "Format pane \u2192 Row headers \u2192 Stepped layout: Off."], "fields": [["Visual", "Matrix"], ["Title", "RM by plant \u2014 In \u20b9 Cr \u00b7 In Days"], ["Rows", "dimPlant[Plant]"], ["Columns", "dimMeasure[Measure]"], ["Columns", "dimDate[MonthName]"], ["Values", "Unit Value"], ["Filters", "dimCategory[Category]  \u2192  is RM"], ["Filters", "Last 4 Months  \u2192  is 1"], ["Filters", "dimMeasure[Measure]  \u2192  untick MW"], ["X", "16"], ["Y", "168"], ["Width", "1248"], ["Height", "176"]], "note": "RM by plant in crore rupees and days of cover, last four months under each. MW is unticked here because an RM megawatt figure is a derived number, not a measured one."}, {"title": "RM 2 of 4 \u2014 RM by group nature and nature", "page": "RM", "do": ["Go to the RM page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Row headers \u2192 Stepped layout: Off, +/- icons: On."], "fields": [["Visual", "Matrix"], ["Title", "RM by group nature and nature"], ["Rows", "factInventory[GroupNature]"], ["Rows", "dimNature[Nature]"], ["Columns", "dimMeasure[Measure]"], ["Columns", "dimDate[MonthName]"], ["Values", "Unit Value"], ["Filters", "dimCategory[Category]  \u2192  is RM"], ["Filters", "Last 4 Months  \u2192  is 1"], ["Filters", "dimMeasure[Measure]  \u2192  untick MW"], ["X", "16"], ["Y", "356"], ["Width", "620"], ["Height", "356"]], "note": "Then the same numbers down the material hierarchy: group nature, and nature inside it. The +/- arrow on each group row is the drill-in."}, {"title": "RM 3 of 4 \u2014 RM \u20b9 Cr by group nature \u2014 click a bar", "page": "RM", "do": ["Go to the RM page.", "Ribbon: Insert \u2192 Clustered column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Clustered column chart"], ["Title", "RM \u20b9 Cr by group nature \u2014 click a bar"], ["X-axis", "factInventory[GroupNature]"], ["Y-axis", "Value \u20b9 Cr"], ["Filters", "dimCategory[Category]  \u2192  is RM"], ["X", "644"], ["Y", "356"], ["Width", "620"], ["Height", "176"]], "note": "One click sets the whole page to a group nature; right-click drills through to the materials."}, {"title": "RM 4 of 4 \u2014 RM \u2014 click through any way you like", "page": "RM", "do": ["Go to the RM page.", "Ribbon: Insert \u2192 Decomposition tree.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Click the + on a node to choose which field to split by next."], "fields": [["Visual", "Decomposition tree"], ["Title", "RM \u2014 click through any way you like"], ["Analyze", "Value \u20b9 Cr"], ["Explain by", "dimPlant[Plant]"], ["Explain by", "factInventory[GroupNature]"], ["Explain by", "dimNature[Nature]"], ["Explain by", "factInventory[Material]"], ["Filters", "dimCategory[Category]  \u2192  is RM"], ["X", "644"], ["Y", "544"], ["Width", "620"], ["Height", "168"]], "note": "The interactive one: click a box and it opens the next level, in whatever order you click. This is what replaces filtering the RM sheet by hand."}, {"title": "Detail 1 of 8 \u2014 Value \u20b9 Cr of what you clicked", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Value \u20b9 Cr of what you clicked"], ["Fields", "Value \u20b9 Cr"], ["X", "16"], ["Y", "16"], ["Width", "296"], ["Height", "92"]], "note": "The drill-through page opens already filtered to the bar or row you came from, so this card is that one number."}, {"title": "Detail 2 of 8 \u2014 MW", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "MW"], ["Fields", "MW"], ["X", "320"], ["Y", "16"], ["Width", "296"], ["Height", "92"]], "note": "Same slice in megawatts."}, {"title": "Detail 3 of 8 \u2014 Days of inventory", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Days of inventory"], ["Fields", "Days of Inventory"], ["X", "624"], ["Y", "16"], ["Width", "296"], ["Height", "92"]], "note": "Blank unless the slice is FG \u2014 that is deliberate."}, {"title": "Detail 4 of 8 \u2014 Share of the total", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Share of the total"], ["Fields", "Share of Total %"], ["X", "928"], ["Y", "16"], ["Width", "336"], ["Height", "92"]], "note": "How big this slice is against the whole."}, {"title": "Detail 5 of 8 \u2014 Split by category", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Pie chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Detail labels \u2192 Label contents: Category, percent of total."], "fields": [["Visual", "Pie chart"], ["Title", "Split by category"], ["Legend", "dimCategory[Category]"], ["Values", "Value \u20b9 Cr"], ["X", "16"], ["Y", "120"], ["Width", "404"], ["Height", "296"]], "note": "RM / FG / consumables for exactly what you clicked."}, {"title": "Detail 6 of 8 \u2014 Split by technology / nature", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Donut chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Detail labels \u2192 Label contents: Category, percent of total."], "fields": [["Visual", "Donut chart"], ["Title", "Split by technology / nature"], ["Legend", "dimNature[Nature]"], ["Values", "Value \u20b9 Cr"], ["X", "428"], ["Y", "120"], ["Width", "404"], ["Height", "296"]], "note": "Which technology or material nature the slice is made of."}, {"title": "Detail 7 of 8 \u2014 Split by plant", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Pie chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Detail labels \u2192 Label contents: Category, percent of total."], "fields": [["Visual", "Pie chart"], ["Title", "Split by plant"], ["Legend", "dimPlant[Plant]"], ["Values", "Value \u20b9 Cr"], ["X", "840"], ["Y", "120"], ["Width", "424"], ["Height", "296"]], "note": "Where the slice sits. A single-colour pie means it is one plant already."}, {"title": "Detail 8 of 8 \u2014 Materials behind this number", "page": "Detail", "do": ["Go to the Detail page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Click the Value \u20b9 Cr column header twice so it sorts largest first."], "fields": [["Visual", "Table"], ["Title", "Materials behind this number"], ["Columns", "factInventory[Material]"], ["Columns", "factInventory[MaterialDesc]"], ["Columns", "Value \u20b9 Cr"], ["Columns", "MW"], ["Columns", "INR per Wp"], ["Columns", "Share of Total %"], ["X", "16"], ["Y", "428"], ["Width", "1248"], ["Height", "284"]], "note": "The line-item detail: the question 'which materials is that made of?' answered by clicking, instead of by another Excel sheet."}, {"title": "Data Quality 1 of 7 \u2014 Rows missing master attributes (want 0)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Rows missing master attributes (want 0)"], ["Fields", "Rows Missing Attr"], ["X", "16"], ["Y", "168"], ["Width", "300"], ["Height", "100"]], "note": "Materials with no row in the master sheets."}, {"title": "Data Quality 2 of 7 \u2014 Stock reconciliation \u20b9 Cr (must be 0)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Stock reconciliation \u20b9 Cr (must be 0)"], ["Fields", "Stock Recon \u20b9 Cr"], ["X", "324"], ["Y", "168"], ["Width", "300"], ["Height", "100"]], "note": "Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited."}, {"title": "Data Quality 3 of 7 \u2014 GLs in TB but not in TB Master (want empty)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "GLs in TB but not in TB Master (want empty)"], ["Columns", "factTB_Unmapped[GLAccount]"], ["Columns", "factTB_Unmapped[GLDesc]"], ["Columns", "Unmapped TB \u20b9 Cr"], ["X", "632"], ["Y", "168"], ["Width", "632"], ["Height", "100"]], "note": "Catches a new GL account nobody added to TB Master \u2014 otherwise it vanishes silently."}, {"title": "Data Quality 4 of 7 \u2014 FG technologies with no capacity row (want empty)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "FG technologies with no capacity row (want empty)"], ["Columns", "qcNatureNoCapacity[Nature]"], ["X", "16"], ["Y", "276"], ["Width", "608"], ["Height", "210"]], "note": "Anything listed here gets blank days. This is the check that catches a Nature/Tech typo."}, {"title": "Data Quality 5 of 7 \u2014 Actual headers of every source file", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "Actual headers of every source file"], ["Columns", "qcHeaders[Folder]"], ["Columns", "qcHeaders[Name]"], ["Columns", "qcHeaders[SheetNames]"], ["Columns", "qcHeaders[Headers]"], ["X", "632"], ["Y", "276"], ["Width", "632"], ["Height", "210"]], "note": "Read this when a column comes through blank \u2014 it shows what the file really says."}, {"title": "Data Quality 6 of 7 \u2014 Variables workbook sheets", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "Variables workbook sheets"], ["Columns", "qcVarHeaders[SheetName]"], ["Columns", "qcVarHeaders[Headers]"], ["Columns", "qcVarHeaders[DataRows]"], ["X", "16"], ["Y", "494"], ["Width", "608"], ["Height", "218"]], "note": "DataRows = 0 means a sheet is empty."}, {"title": "Data Quality 7 of 7 \u2014 Files loaded this refresh", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "Files loaded this refresh"], ["Columns", "factInventory[SourceFile]"], ["Columns", "factInventory[Month]"], ["Columns", "factInventory[Category]"], ["Columns", "Value \u20b9 Cr"], ["X", "632"], ["Y", "494"], ["Width", "632"], ["Height", "218"]], "note": "Check after every refresh: a missing month looks like a real fall in inventory, not like an error."}, {"title": "Make clicking a bar open the pie charts", "page": "Detail", "do": ["Go to the Detail page and click the empty grey area around the visuals, so that nothing is selected.", "In the Visualizations pane, find the well called Drill through (scroll down; it is below Filters on this page).", "Drag each field below from the Fields pane into that Drill through well, one at a time.", "Leave 'Keep all filters' ON \u2014 it is on by default."], "fields": [["Drill through", "dimPlant[Plant]"], ["Drill through", "dimDate[MonthName]"], ["Drill through", "dimCategory[Category]"], ["Drill through", "dimNature[Nature]"]], "note": "This is what makes the report clickable: a Back arrow appears on this page automatically, and every bar, row and slice on the other pages now offers Drill through \u2192 Detail."}, {"title": "Try it \u2014 click a bar, get the pies", "page": "Overview", "do": ["Go to the Overview page.", "Right-click one bar of the 'Value \u20b9 Cr by plant' chart.", "Choose Drill through \u2192 Detail.", "The Detail page opens showing only that plant: cards, three pies and the material list.", "Click the circled Back arrow at the top-left of the Detail page to return."], "fields": [], "note": "A left-click filters the rest of the page instead (that is Power BI's built-in cross-filtering, nothing to set up). Right-click is the one that opens the pies."}, {"title": "Choose what a click filters", "page": "Overview", "do": ["Click any chart once to select it.", "Ribbon: Format \u2192 Edit interactions. Small icons appear on every other visual.", "Each other visual now offers filter (funnel), highlight (chart) or none (circle with a line). Click the one you want.", "Click Edit interactions again to turn the mode off."], "fields": [], "note": "Default is highlight, which greys out the rest of a bar rather than removing it. Set the matrices to filter instead, so a click makes their totals match what you clicked. Set the header cards to none, so the band always shows the company total."}, {"title": "Save", "page": "\u2014", "do": ["Ctrl+S. If it asks for a name, call it Inventory Model.pbix."], "fields": [], "note": "Power BI does not autosave. Save every few steps, not just at the end."}, {"title": "Check it actually works", "page": "Data Quality", "do": ["Look at the Data Quality page.", "Stock reconciliation must read 0.", "Rows missing master attributes should read 0.", "Both tables (unmapped GLs, Natures with no capacity) should be empty.", "Then pick a month in the header slicer and confirm every page changes."], "fields": [], "note": "If any of those four is wrong, the numbers on the other pages are wrong too \u2014 fix it before showing anyone."}];</script>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 $$('nav.tabs button[data-tab]').forEach(b=>b.onclick=()=>{

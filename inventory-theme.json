@@ -1,47 +1,47 @@
 {
   "name": "Inventory Report",
   "dataColors": [
-    "#2E5AAC",
-    "#3EA46B",
-    "#E0A33E",
+    "#1E6B3A",
+    "#4FA45F",
+    "#8CC63F",
     "#C0504D",
+    "#2E7D6B",
+    "#A7C957",
+    "#155E38",
     "#6C6F76",
-    "#7B5EA7",
-    "#3B8FA8",
-    "#B4693C",
-    "#5B8C3E",
+    "#7FB069",
     "#8A8F98"
   ],
   "background": "#FFFFFF",
   "foreground": "#1B1F26",
-  "tableAccent": "#2E5AAC",
-  "good": "#3EA46B",
-  "neutral": "#E0A33E",
+  "tableAccent": "#1E6B3A",
+  "good": "#1E6B3A",
+  "neutral": "#8CC63F",
   "bad": "#C0504D",
   "textClasses": {
     "title": {
       "fontSize": 13,
-      "fontFace": "Segoe UI Semibold",
+      "fontFace": "Arial Bold",
       "color": "#1B1F26"
     },
     "header": {
       "fontSize": 12,
-      "fontFace": "Segoe UI Semibold",
+      "fontFace": "Arial Bold",
       "color": "#1B1F26"
     },
     "label": {
       "fontSize": 10,
-      "fontFace": "Segoe UI",
+      "fontFace": "Arial",
       "color": "#3C424C"
     },
     "callout": {
       "fontSize": 26,
-      "fontFace": "Segoe UI Semibold",
+      "fontFace": "Arial Bold",
       "color": "#1B1F26"
     },
     "largeTitle": {
       "fontSize": 16,
-      "fontFace": "Segoe UI Semibold",
+      "fontFace": "Arial Bold",
       "color": "#1B1F26"
     }
   },
@@ -79,7 +79,7 @@
           {
             "show": true,
             "fontSize": 13,
-            "fontFamily": "Segoe UI Semibold",
+            "fontFamily": "Arial Bold",
             "fontColor": {
               "solid": {
                 "color": "#1B1F26"
@@ -95,7 +95,7 @@
         ],
         "categoryAxis": [
           {
-            "fontFamily": "Segoe UI",
+            "fontFamily": "Arial",
             "fontSize": 10,
             "labelColor": {
               "solid": {
@@ -107,7 +107,7 @@
         ],
         "valueAxis": [
           {
-            "fontFamily": "Segoe UI",
+            "fontFamily": "Arial",
             "fontSize": 10,
             "labelColor": {
               "solid": {
@@ -123,7 +123,7 @@
         ],
         "legend": [
           {
-            "fontFamily": "Segoe UI",
+            "fontFamily": "Arial",
             "fontSize": 10,
             "labelColor": {
               "solid": {
@@ -135,7 +135,7 @@
         ],
         "labels": [
           {
-            "fontFamily": "Segoe UI",
+            "fontFamily": "Arial",
             "fontSize": 9,
             "color": {
               "solid": {
@@ -150,7 +150,7 @@
       "*": {
         "labels": [
           {
-            "fontFamily": "Segoe UI Semibold",
+            "fontFamily": "Arial Bold",
             "fontSize": 22,
             "color": {
               "solid": {
@@ -161,7 +161,7 @@
         ],
         "categoryLabels": [
           {
-            "fontFamily": "Segoe UI",
+            "fontFamily": "Arial",
             "fontSize": 10,
             "color": {
               "solid": {
@@ -196,7 +196,7 @@
         ],
         "items": [
           {
-            "fontFamily": "Segoe UI",
+            "fontFamily": "Arial",
             "fontSize": 11,
             "fontColor": {
               "solid": {
@@ -207,7 +207,7 @@
         ],
         "header": [
           {
-            "fontFamily": "Segoe UI Semibold",
+            "fontFamily": "Arial Bold",
             "fontSize": 11
           }
         ]
@@ -234,7 +234,7 @@
         ],
         "columnHeaders": [
           {
-            "fontFamily": "Segoe UI Semibold",
+            "fontFamily": "Arial Bold",
             "fontSize": 11,
             "fontColor": {
               "solid": {
@@ -250,20 +250,20 @@
         ],
         "subTotals": [
           {
-            "fontFamily": "Segoe UI Semibold",
+            "fontFamily": "Arial Bold",
             "rowSubtotals": true,
             "columnSubtotals": true
           }
         ],
         "values": [
           {
-            "fontFamily": "Segoe UI",
+            "fontFamily": "Arial",
             "fontSize": 11
           }
         ],
         "rowHeaders": [
           {
-            "fontFamily": "Segoe UI",
+            "fontFamily": "Arial",
             "fontSize": 11
           }
         ]
@@ -278,7 +278,7 @@
         ],
         "columnHeaders": [
           {
-            "fontFamily": "Segoe UI Semibold",
+            "fontFamily": "Arial Bold",
             "fontSize": 11,
             "backColor": {
               "solid": {
@@ -289,7 +289,7 @@
         ],
         "values": [
           {
-            "fontFamily": "Segoe UI",
+            "fontFamily": "Arial",
             "fontSize": 11
           }
         ]

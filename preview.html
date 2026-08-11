@@ -1,91 +1,794 @@
-<!doctype html><html><head><meta charset="utf-8">
-<title>Inventory report — design mock</title><style>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Inventory report — interactive design mock</title>
+<style>
+:root{
+  --g1:#1E6B3A; --g2:#4FA45F; --g3:#8CC63F; --g4:#2E7D6B; --g5:#155E38;
+  --bad:#C0504D; --grey:#6C6F76; --ink:#1B1F26; --line:#E3E7EC; --head:#F2F6F3;
+}
 *{box-sizing:border-box}
-body{margin:0;background:#20242c;font-family:'Segoe UI',system-ui,Roboto,sans-serif}
-.top{display:flex;gap:6px;padding:14px 24px 0;flex-wrap:wrap;align-items:center}
-.top b{color:#e6e9ef;font-size:14px;font-weight:600;margin-right:10px}
-.top button{background:#2b3140;color:#dfe3ea;border:1px solid #39414f;border-radius:6px;
-  padding:7px 14px;font-size:13px;cursor:pointer;font-family:inherit}
-.top button.on{background:#2E5AAC;border-color:#2E5AAC;color:#fff}
-.hint{color:#8b93a1;font-size:12px;padding:8px 24px 0}
-.canvas{position:relative;width:1280px;height:720px;
-  background:#F2F4F8;
-  margin:38px 24px 24px;border-radius:6px;display:none}
+body{margin:0;background:#1d211f;color:var(--ink);
+  font-family:Arial,Helvetica,sans-serif;font-size:12px}
+.top{display:flex;align-items:center;gap:8px;padding:12px 24px;color:#e8ece9}
+.top b{font-size:14px;margin-right:8px}
+.top button{font:inherit;font-size:12px;padding:6px 14px;border-radius:4px;cursor:pointer;
+  border:1px solid #48524b;background:#2a302c;color:#dfe5e0}
+.top button.on{background:var(--g1);border-color:var(--g1);color:#fff;font-weight:bold}
+.hint{margin:0 24px 6px;color:#9aa79e;font-size:11.5px;line-height:1.5}
+.hint b{color:#e8ece9}
+.canvas{position:relative;width:1280px;height:720px;background:#F6F8F7;
+  margin:10px 24px 24px;border-radius:4px;display:none}
 .canvas.on{display:block}
-.card,.slicer,.vis{position:absolute;background:#fff;border:1px solid #E3E6EB;border-radius:6px}
-.card{background:#F6F8FB;padding:9px 13px}
-.cl{color:#6C6F76;font-size:10px}
-.cv{color:#1B1F26;font-size:22px;font-weight:600;margin-top:8px;
-  font-family:'Segoe UI Semibold','Segoe UI'}
-.cv.up{color:#3EA46B}
-.slicer{background:#F6F8FB;color:#3C424C;font-size:11px;padding:13px 12px}
-.chev{float:right;color:#6C6F76}
-.vt{color:#1B1F26;font-size:12.5px;font-weight:600;padding:8px 12px 0;
-  font-family:'Segoe UI Semibold','Segoe UI'}
-.vb{position:absolute;left:0;right:0;top:27px;bottom:0;overflow:hidden}
-.vb.p{padding:4px 10px 10px}
-.bar{position:absolute;border-radius:2px 2px 0 0}
-.gl{position:absolute;left:40px;right:12px;border-top:1px solid #EDEFF3}
-.xl{position:absolute;bottom:9px;text-align:center;color:#3C424C;font-size:9.5px}
-.lg{position:absolute;right:12px;top:3px;display:flex;gap:10px;font-size:9.5px;color:#3C424C}
-.lg i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}
-table.mx{width:100%;border-collapse:collapse;font-size:10.5px;color:#1B1F26}
-table.mx th{background:#F0F3F8;text-align:left;padding:5px 7px;font-weight:600;
-  border-bottom:1px solid #EDEFF3;font-family:'Segoe UI Semibold','Segoe UI';white-space:nowrap}
-table.mx td{padding:4px 7px;border-bottom:1px solid #EDEFF3;white-space:nowrap}
-table.mx td:not(:first-child),table.mx th:not(:first-child){text-align:right}
-table.mx tr.tot td{font-weight:600;border-top:1px solid #E3E6EB;font-family:'Segoe UI Semibold','Segoe UI'}
-td.hot{background:#f4cfcc}
-td.cool{background:#fdf0ef}
-.big{font-size:34px;font-weight:600;color:#3EA46B;text-align:center;margin-top:14px;
-  font-family:'Segoe UI Semibold','Segoe UI'}
-.empty{color:#6C6F76;font-size:11px;text-align:center;margin-top:26px}
-.tree{display:flex;align-items:flex-start;gap:8px;padding:10px}
-.tree .col{display:flex;flex-direction:column;gap:5px}
-.node{border:1px solid #E3E6EB;border-radius:5px;padding:5px 8px;min-width:118px;
-  display:flex;flex-direction:column;background:#FBFCFE}
-.node.on{border-color:#2E5AAC;box-shadow:0 0 0 1px #2E5AAC}
-.nl{font-size:9.5px;color:#6C6F76}
-.nv{font-size:13px;font-weight:600;color:#1B1F26;font-family:'Segoe UI Semibold','Segoe UI'}
-.arrow{color:#9aa4b2;font-size:17px;margin-top:16px}
-.bar.clickable{cursor:pointer}
-.bar.clickable:hover{outline:2px solid #1B1F26;outline-offset:1px}
-.pkey{position:absolute;right:8px;top:14px;width:150px;font-size:9.5px;color:#3C424C}
-.pk{display:flex;align-items:center;gap:5px;padding:2px 0}
-.pk i{width:8px;height:8px;border-radius:2px;flex:0 0 8px}
-.pk b{margin-left:auto;font-family:'Segoe UI Semibold','Segoe UI'}
-.dwrap{display:none}
-.dwrap.on{display:block}
-.drill{position:absolute;left:16px;top:-30px;display:flex;align-items:center;gap:10px}
-.drill .back{width:24px;height:24px;border-radius:50%;border:1px solid #55606f;
-  background:#2b3140;color:#dfe3ea;cursor:pointer;font-size:13px;line-height:1}
-.dlab{color:#8b93a1;font-size:12px}
-.dlab b{color:#e6e9ef}
-</style></head><body>
-<div class="top"><b>Design mock — click a page</b><button data-p='0' class=on>Overview</button><button data-p='1'>Summary</button><button data-p='2'>FG</button><button data-p='3'>RM</button><button data-p='4'>Detail</button><button data-p='5'>Data Quality</button></div>
-<p class="hint">Numbers are made up. Layout, wording, fonts and colours are exactly what the
-theme and the build steps produce — 1280 &times; 720 canvas, six header cards, three slicers.
-<b style="color:#dfe3ea">Try it: on Overview, click a bar of "Value ₹ Cr by plant" — it opens
-the Detail page with pie charts for that plant.</b> In Power BI that is right-click &rarr;
-Drill through.</p>
-<div class='canvas on' id='p-0'><div class='card' style='left:16px;top:12px;width:200px;height:88px'><div class='cl'>Total value ₹ Cr</div><div class='cv'>412.85</div></div><div class='card' style='left:224px;top:12px;width:200px;height:88px'><div class='cl'>Raw materials ₹ Cr</div><div class='cv'>236.14</div></div><div class='card' style='left:432px;top:12px;width:200px;height:88px'><div class='cl'>Finished goods ₹ Cr</div><div class='cv'>151.42</div></div><div class='card' style='left:640px;top:12px;width:200px;height:88px'><div class='cl'>Consumables ₹ Cr</div><div class='cv'>25.29</div></div><div class='card' style='left:848px;top:12px;width:200px;height:88px'><div class='cl'>FG days of inventory</div><div class='cv'>34.6</div></div><div class='card' style='left:1056px;top:12px;width:208px;height:88px'><div class='cl'>Change vs last month</div><div class='cv up'>+2.4%</div></div><div class='slicer' style='left:16px;top:108px;width:300px;height:44px'>Month: All<span class='chev'>&#9662;</span></div><div class='slicer' style='left:324px;top:108px;width:300px;height:44px'>Plant: All<span class='chev'>&#9662;</span></div><div class='slicer' style='left:632px;top:108px;width:300px;height:44px'>Category: All<span class='chev'>&#9662;</span></div><div class='vis' style='left:16px;top:168px;width:764px;height:264px'><div class='vt'>Value ₹ Cr by month and category</div><div class='vb'><div class='lg'><span><i style='background:#2E5AAC'></i>RM</span><span><i style='background:#3EA46B'></i>FG</span><span><i style='background:#E0A33E'></i>Consumables</span></div><div class='gl' style='bottom:30px'></div><div class='gl' style='bottom:76px'></div><div class='gl' style='bottom:123px'></div><div class='gl' style='bottom:170px'></div><div class='gl' style='bottom:216px'></div><div class='xl' style='left:44px;width:118px'>Apr'26</div><div class='xl' style='left:162px;width:118px'>May'26</div><div class='xl' style='left:280px;width:118px'>Jun'26</div><div class='xl' style='left:398px;width:118px'>Jul'26</div><div class='xl' style='left:516px;width:118px'>Aug'26</div><div class='xl' style='left:634px;width:118px'>Sep'26</div><div class='bar' style='left:85px;bottom:30px;width:36px;height:78px;background:#2E5AAC'></div><div class='bar' style='left:85px;bottom:108px;width:36px;height:48px;background:#3EA46B'></div><div class='bar' style='left:85px;bottom:156px;width:36px;height:11px;background:#E0A33E'></div><div class='bar' style='left:203px;bottom:30px;width:36px;height:84px;background:#2E5AAC'></div><div class='bar' style='left:203px;bottom:114px;width:36px;height:45px;background:#3EA46B'></div><div class='bar' style='left:203px;bottom:158px;width:36px;height:13px;background:#E0A33E'></div><div class='bar' style='left:321px;bottom:30px;width:36px;height:74px;background:#2E5AAC'></div><div class='bar' style='left:321px;bottom:104px;width:36px;height:52px;background:#3EA46B'></div><div class='bar' style='left:321px;bottom:156px;width:36px;height:11px;background:#E0A33E'></div><div class='bar' style='left:439px;bottom:30px;width:36px;height:87px;background:#2E5AAC'></div><div class='bar' style='left:439px;bottom:117px;width:36px;height:46px;background:#3EA46B'></div><div class='bar' style='left:439px;bottom:164px;width:36px;height:9px;background:#E0A33E'></div><div class='bar' style='left:557px;bottom:30px;width:36px;height:93px;background:#2E5AAC'></div><div class='bar' style='left:557px;bottom:123px;width:36px;height:43px;background:#3EA46B'></div><div class='bar' style='left:557px;bottom:166px;width:36px;height:13px;background:#E0A33E'></div><div class='bar' style='left:675px;bottom:30px;width:36px;height:86px;background:#2E5AAC'></div><div class='bar' style='left:675px;bottom:116px;width:36px;height:50px;background:#3EA46B'></div><div class='bar' style='left:675px;bottom:166px;width:36px;height:11px;background:#E0A33E'></div></div></div><div class='vis' style='left:788px;top:168px;width:476px;height:264px'><div class='vt'>Value ₹ Cr by plant</div><div class='vb'><div class='lg'><span><i style='background:#2E5AAC'></i>RM</span><span><i style='background:#3EA46B'></i>FG</span><span><i style='background:#E0A33E'></i>Consumables</span></div><div class='gl' style='bottom:30px'></div><div class='gl' style='bottom:76px'></div><div class='gl' style='bottom:123px'></div><div class='gl' style='bottom:170px'></div><div class='gl' style='bottom:216px'></div><div class='xl' style='left:44px;width:140px'>Jaipur Mod</div><div class='xl' style='left:184px;width:140px'>Dholera Mod</div><div class='xl' style='left:324px;width:140px'>Dholera Cell</div><div class='bar clickable' data-drill="Jaipur Module" title="Click to drill through to Detail" style='left:84px;bottom:30px;width:18px;height:134px;background:#2E5AAC'></div><div class='bar clickable' data-drill="Jaipur Module" title="Click to drill through to Detail" style='left:104px;bottom:30px;width:18px;height:89px;background:#3EA46B'></div><div class='bar clickable' data-drill="Jaipur Module" title="Click to drill through to Detail" style='left:124px;bottom:30px;width:18px;height:22px;background:#E0A33E'></div><div class='bar clickable' data-drill="Dholera Module" title="Click to drill through to Detail" style='left:224px;bottom:30px;width:18px;height:102px;background:#2E5AAC'></div><div class='bar clickable' data-drill="Dholera Module" title="Click to drill through to Detail" style='left:244px;bottom:30px;width:18px;height:63px;background:#3EA46B'></div><div class='bar clickable' data-drill="Dholera Module" title="Click to drill through to Detail" style='left:264px;bottom:30px;width:18px;height:15px;background:#E0A33E'></div><div class='bar clickable' data-drill="Dholera Cell" title="Click to drill through to Detail" style='left:364px;bottom:30px;width:18px;height:37px;background:#2E5AAC'></div><div class='bar clickable' data-drill="Dholera Cell" title="Click to drill through to Detail" style='left:384px;bottom:30px;width:18px;height:19px;background:#3EA46B'></div><div class='bar clickable' data-drill="Dholera Cell" title="Click to drill through to Detail" style='left:404px;bottom:30px;width:18px;height:7px;background:#E0A33E'></div></div></div><div class='vis' style='left:16px;top:444px;width:764px;height:268px'><div class='vt'>Value ₹ Cr — this month vs last month</div><div class='vb'><div class='lg'><span><i style='background:#2E5AAC'></i>Value ₹ Cr</span><span><i style='background:#6C6F76'></i>Value ₹ Cr LM</span><span><i style='background:#C0504D'></i>% vs LM</span></div><div class='gl' style='bottom:30px'></div><div class='gl' style='bottom:78px'></div><div class='gl' style='bottom:125px'></div><div class='gl' style='bottom:172px'></div><div class='gl' style='bottom:220px'></div><div class='xl' style='left:44px;width:118px'>Apr'26</div><div class='xl' style='left:162px;width:118px'>May'26</div><div class='xl' style='left:280px;width:118px'>Jun'26</div><div class='xl' style='left:398px;width:118px'>Jul'26</div><div class='xl' style='left:516px;width:118px'>Aug'26</div><div class='xl' style='left:634px;width:118px'>Sep'26</div><div class='bar' style='left:83px;bottom:30px;width:18px;height:105px;background:#2E5AAC'></div><div class='bar' style='left:103px;bottom:30px;width:18px;height:95px;background:#6C6F76'></div><div class='bar' style='left:201px;bottom:30px;width:18px;height:110px;background:#2E5AAC'></div><div class='bar' style='left:221px;bottom:30px;width:18px;height:105px;background:#6C6F76'></div><div class='bar' style='left:319px;bottom:30px;width:18px;height:99px;background:#2E5AAC'></div><div class='bar' style='left:339px;bottom:30px;width:18px;height:110px;background:#6C6F76'></div><div class='bar' style='left:437px;bottom:30px;width:18px;height:118px;background:#2E5AAC'></div><div class='bar' style='left:457px;bottom:30px;width:18px;height:99px;background:#6C6F76'></div><div class='bar' style='left:555px;bottom:30px;width:18px;height:125px;background:#2E5AAC'></div><div class='bar' style='left:575px;bottom:30px;width:18px;height:118px;background:#6C6F76'></div><div class='bar' style='left:673px;bottom:30px;width:18px;height:114px;background:#2E5AAC'></div><div class='bar' style='left:693px;bottom:30px;width:18px;height:125px;background:#6C6F76'></div><svg width='764' height='268' style='position:absolute;left:0;top:0'><polyline points='103,163 221,140 339,178 457,106 575,121 693,148' fill='none' stroke='#C0504D' stroke-width='2.5'/><circle cx='103' cy='163' r='3.5' fill='#C0504D'/><circle cx='221' cy='140' r='3.5' fill='#C0504D'/><circle cx='339' cy='178' r='3.5' fill='#C0504D'/><circle cx='457' cy='106' r='3.5' fill='#C0504D'/><circle cx='575' cy='121' r='3.5' fill='#C0504D'/><circle cx='693' cy='148' r='3.5' fill='#C0504D'/></svg></div></div><div class='vis' style='left:788px;top:444px;width:476px;height:268px'><div class='vt'>Months side by side</div><div class='vb p'><table class='mx'><tr><th>Category</th><th>Apr'26</th><th>May'26</th><th>Jun'26</th><th>Jul'26</th><th>Aug'26</th><th>Sep'26</th></tr><tr><td class=''>RM</td><td class=''>212.40</td><td class=''>228.10</td><td class=''>205.60</td><td class=''>236.10</td><td class=''>251.00</td><td class=''>236.10</td></tr><tr><td class=''>FG</td><td class=''>131.20</td><td class=''>122.40</td><td class=''>141.80</td><td class=''>128.50</td><td class=''>118.90</td><td class=''>151.40</td></tr><tr><td class=''>Consumables</td><td class=''>30.10</td><td class=''>33.40</td><td class=''>29.80</td><td class=''>26.20</td><td class=''>34.10</td><td class=''>25.30</td></tr><tr class='tot'><td>Total</td><td>373.70</td><td>383.90</td><td>377.20</td><td>390.80</td><td>404.00</td><td>412.80</td></tr></table></div></div></div><div class='canvas' id='p-1'><div class='card' style='left:16px;top:12px;width:200px;height:88px'><div class='cl'>Total value ₹ Cr</div><div class='cv'>412.85</div></div><div class='card' style='left:224px;top:12px;width:200px;height:88px'><div class='cl'>Raw materials ₹ Cr</div><div class='cv'>236.14</div></div><div class='card' style='left:432px;top:12px;width:200px;height:88px'><div class='cl'>Finished goods ₹ Cr</div><div class='cv'>151.42</div></div><div class='card' style='left:640px;top:12px;width:200px;height:88px'><div class='cl'>Consumables ₹ Cr</div><div class='cv'>25.29</div></div><div class='card' style='left:848px;top:12px;width:200px;height:88px'><div class='cl'>FG days of inventory</div><div class='cv'>34.6</div></div><div class='card' style='left:1056px;top:12px;width:208px;height:88px'><div class='cl'>Change vs last month</div><div class='cv up'>+2.4%</div></div><div class='slicer' style='left:16px;top:108px;width:300px;height:44px'>Month: All<span class='chev'>&#9662;</span></div><div class='slicer' style='left:324px;top:108px;width:300px;height:44px'>Plant: All<span class='chev'>&#9662;</span></div><div class='slicer' style='left:632px;top:108px;width:300px;height:44px'>Category: All<span class='chev'>&#9662;</span></div><div class='vis' style='left:16px;top:168px;width:1248px;height:264px'><div class='vt'>Value ₹ Cr by month, category and plant</div><div class='vb p'><table class='mx'><tr><th>Category / Plant</th><th>Apr'26</th><th>May'26</th><th>Jun'26</th><th>Jul'26</th><th>Aug'26</th><th>Sep'26</th><th>Total</th></tr><tr><td class=''>RM — Jaipur Module</td><td class=''>88.2</td><td class=''>94.1</td><td class=''>86.4</td><td class=''>97.0</td><td class=''>102.4</td><td class=''>96.8</td><td class=''>564.9</td></tr><tr><td class=''>RM — Dholera Module</td><td class=''>72.6</td><td class=''>78.5</td><td class=''>70.1</td><td class=''>81.4</td><td class=''>86.2</td><td class=''>80.9</td><td class=''>469.7</td></tr><tr><td class=''>RM — Dholera Cell</td><td class=''>51.6</td><td class=''>55.5</td><td class=''>49.1</td><td class=''>57.7</td><td class=''>62.4</td><td class=''>58.4</td><td class=''>334.7</td></tr><tr><td class=''>FG — Jaipur Module</td><td class=''>62.1</td><td class=''>58.4</td><td class=''>67.2</td><td class=''>60.9</td><td class=''>56.3</td><td class=''>71.6</td><td class=''>376.5</td></tr><tr><td class=''>FG — Dholera Module</td><td class=''>69.1</td><td class=''>64.0</td><td class=''>74.6</td><td class=''>67.6</td><td class=''>62.6</td><td class=''>79.8</td><td class=''>417.7</td></tr><tr><td class=''>Consumables — all plants</td><td class=''>30.1</td><td class=''>33.4</td><td class=''>29.8</td><td class=''>26.2</td><td class=''>34.1</td><td class=''>25.3</td><td class=''>178.9</td></tr><tr class='tot'><td>Total</td><td>373.7</td><td>383.9</td><td>377.2</td><td>390.8</td><td>404.0</td><td>412.8</td><td>2342.4</td></tr></table></div></div><div class='vis' style='left:16px;top:444px;width:620px;height:268px'><div class='vt'>MW and days by month</div><div class='vb p'><table class='mx'><tr><th>Month</th><th>MW</th><th>FG MW</th><th>Capacity MW</th><th>Days</th><th>Days vs LM</th></tr><tr><td class=''>Apr'26</td><td class=''>41.2</td><td class=''>30.8</td><td class=''>11.0</td><td class=''>33.6</td><td class=''>+1.2</td></tr><tr><td class=''>May'26</td><td class=''>38.9</td><td class=''>28.4</td><td class=''>11.0</td><td class=''>31.0</td><td class=''>-2.6</td></tr><tr><td class=''>Jun'26</td><td class=''>44.1</td><td class=''>33.6</td><td class=''>11.0</td><td class=''>36.7</td><td class=''>+5.7</td></tr><tr><td class=''>Jul'26</td><td class=''>40.2</td><td class=''>29.9</td><td class=''>11.0</td><td class=''>32.6</td><td class=''>-4.1</td></tr><tr><td class=''>Aug'26</td><td class=''>37.6</td><td class=''>27.1</td><td class=''>11.0</td><td class=''>29.6</td><td class=''>-3.0</td></tr><tr><td class=''>Sep'26</td><td class=''>46.3</td><td class=''>35.4</td><td class=''>11.0</td><td class=''>34.6</td><td class=''>+5.0</td></tr></table></div></div><div class='vis' style='left:644px;top:444px;width:620px;height:268px'><div class='vt'>Trial balance vs MB5B</div><div class='vb p'><table class='mx'><tr><th>Plant</th><th>TB ₹ Cr</th><th>Value ₹ Cr</th><th>Difference ₹ Cr</th><th>Difference %</th></tr><tr><td class=''>Jaipur Module</td><td class=''>168.40</td><td class=''>166.90</td><td class='hot'>1.50</td><td class=''>0.9%</td></tr><tr><td class=''>Dholera Module</td><td class=''>142.00</td><td class=''>141.20</td><td class='cool'>0.80</td><td class=''>0.6%</td></tr><tr><td class=''>Dholera Cell</td><td class=''>102.45</td><td class=''>104.75</td><td class='hot'>-2.30</td><td class=''>-2.2%</td></tr><tr class='tot'><td>Total</td><td>412.85</td><td>412.85</td><td>0.00</td><td>0.0%</td></tr></table></div></div></div><div class='canvas' id='p-2'><div class='card' style='left:16px;top:12px;width:200px;height:88px'><div class='cl'>Total value ₹ Cr</div><div class='cv'>412.85</div></div><div class='card' style='left:224px;top:12px;width:200px;height:88px'><div class='cl'>Raw materials ₹ Cr</div><div class='cv'>236.14</div></div><div class='card' style='left:432px;top:12px;width:200px;height:88px'><div class='cl'>Finished goods ₹ Cr</div><div class='cv'>151.42</div></div><div class='card' style='left:640px;top:12px;width:200px;height:88px'><div class='cl'>Consumables ₹ Cr</div><div class='cv'>25.29</div></div><div class='card' style='left:848px;top:12px;width:200px;height:88px'><div class='cl'>FG days of inventory</div><div class='cv'>34.6</div></div><div class='card' style='left:1056px;top:12px;width:208px;height:88px'><div class='cl'>Change vs last month</div><div class='cv up'>+2.4%</div></div><div class='slicer' style='left:16px;top:108px;width:300px;height:44px'>Month: All<span class='chev'>&#9662;</span></div><div class='slicer' style='left:324px;top:108px;width:300px;height:44px'>Plant: All<span class='chev'>&#9662;</span></div><div class='slicer' style='left:632px;top:108px;width:300px;height:44px'>Category: All<span class='chev'>&#9662;</span></div><div class='vis' style='left:16px;top:168px;width:764px;height:264px'><div class='vt'>FG by technology</div><div class='vb p'><table class='mx'><tr><th>Technology</th><th>Value ₹ Cr</th><th>FG MW</th><th>Capacity MW</th><th>Days</th><th>INR/Wp</th><th>% vs LM</th></tr><tr><td class=''>G12 Perc Module</td><td class=''>34.10</td><td class=''>8.2</td><td class=''>2.0</td><td class=''>30.1</td><td class=''>4.16</td><td class=''>+3.1%</td></tr><tr><td class=''>G12R Topcon Module</td><td class=''>28.60</td><td class=''>6.9</td><td class=''>4.0</td><td class=''>25.7</td><td class=''>4.14</td><td class=''>-1.8%</td></tr><tr><td class=''>M10 Perc Module</td><td class=''>25.40</td><td class=''>6.1</td><td class=''>6.0</td><td class=''>22.6</td><td class=''>4.16</td><td class=''>+0.9%</td></tr><tr><td class=''>M10 Topcon Module</td><td class=''>22.80</td><td class=''>5.4</td><td class=''>2.0</td><td class=''>19.9</td><td class=''>4.22</td><td class=''>+4.4%</td></tr><tr><td class=''>M10R Perc Module</td><td class=''>21.30</td><td class=''>5.1</td><td class=''>4.0</td><td class=''>18.8</td><td class=''>4.18</td><td class=''>-2.2%</td></tr><tr><td class=''>M10R Topcon Module</td><td class=''>19.22</td><td class=''>3.7</td><td class=''>4.0</td><td class=''>13.7</td><td class=''>5.19</td><td class=''>+1.2%</td></tr></table></div></div><div class='vis' style='left:788px;top:168px;width:476px;height:264px'><div class='vt'>FG MW by technology, months side by side</div><div class='vb p'><table class='mx'><tr><th>Technology</th><th>Jun'26</th><th>Jul'26</th><th>Aug'26</th><th>Sep'26</th></tr><tr><td class=''>G12 Perc</td><td class=''>7.1</td><td class=''>7.8</td><td class=''>6.4</td><td class=''>8.2</td></tr><tr><td class=''>G12R Topcon</td><td class=''>6.2</td><td class=''>5.9</td><td class=''>7.0</td><td class=''>6.9</td></tr><tr><td class=''>M10 Perc</td><td class=''>5.4</td><td class=''>5.8</td><td class=''>6.3</td><td class=''>6.1</td></tr><tr><td class=''>M10 Topcon</td><td class=''>4.9</td><td class=''>5.2</td><td class=''>5.0</td><td class=''>5.4</td></tr><tr><td class=''>M10R Perc</td><td class=''>4.6</td><td class=''>4.8</td><td class=''>5.2</td><td class=''>5.1</td></tr><tr><td class=''>M10R Topcon</td><td class=''>3.2</td><td class=''>3.5</td><td class=''>3.4</td><td class=''>3.7</td></tr><tr class='tot'><td>Total</td><td>31.4</td><td>33.0</td><td>33.3</td><td>35.4</td></tr></table></div></div><div class='vis' style='left:16px;top:444px;width:764px;height:268px'><div class='vt'>FG value ₹ Cr by technology over time</div><div class='vb'><div class='lg'><span><i style='background:#2E5AAC'></i>G12 Perc Module</span><span><i style='background:#3EA46B'></i>G12R Topcon Module</span><span><i style='background:#E0A33E'></i>M10 Perc Module</span><span><i style='background:#C0504D'></i>M10 Topcon Module</span></div><div class='gl' style='bottom:30px'></div><div class='gl' style='bottom:78px'></div><div class='gl' style='bottom:125px'></div><div class='gl' style='bottom:172px'></div><div class='gl' style='bottom:220px'></div><div class='xl' style='left:44px;width:118px'>Apr'26</div><div class='xl' style='left:162px;width:118px'>May'26</div><div class='xl' style='left:280px;width:118px'>Jun'26</div><div class='xl' style='left:398px;width:118px'>Jul'26</div><div class='xl' style='left:516px;width:118px'>Aug'26</div><div class='xl' style='left:634px;width:118px'>Sep'26</div><svg width='764' height='268' style='position:absolute;left:0;top:0'><polygon points='44,192 183,193 322,189 462,192 601,194 740,188 740,220 601,220 462,220 322,220 183,220 44,220' fill='#2E5AAC' fill-opacity='.75'/><polygon points='44,169 183,172 322,164 462,169 601,174 740,162 740,188 601,194 462,192 322,189 183,193 44,192' fill='#3EA46B' fill-opacity='.75'/><polygon points='44,150 183,154 322,143 462,150 601,157 740,140 740,162 601,174 462,169 322,164 183,172 44,169' fill='#E0A33E' fill-opacity='.75'/><polygon points='44,134 183,140 322,126 462,134 601,144 740,122 740,140 601,157 462,150 322,143 183,154 44,150' fill='#C0504D' fill-opacity='.75'/></svg></div></div><div class='vis' style='left:788px;top:444px;width:476px;height:268px'><div class='vt'>FG days of inventory vs last month</div><div class='vb'><div class='lg'><span><i style='background:#3EA46B'></i>Days of Inventory</span><span><i style='background:#C0504D'></i>Days vs LM</span></div><div class='gl' style='bottom:30px'></div><div class='gl' style='bottom:78px'></div><div class='gl' style='bottom:125px'></div><div class='gl' style='bottom:172px'></div><div class='gl' style='bottom:220px'></div><div class='xl' style='left:44px;width:70px'>Apr'26</div><div class='xl' style='left:114px;width:70px'>May'26</div><div class='xl' style='left:184px;width:70px'>Jun'26</div><div class='xl' style='left:254px;width:70px'>Jul'26</div><div class='xl' style='left:324px;width:70px'>Aug'26</div><div class='xl' style='left:394px;width:70px'>Sep'26</div><div class='bar' style='left:69px;bottom:30px;width:18px;height:118px;background:#3EA46B'></div><div class='bar' style='left:139px;bottom:30px;width:18px;height:105px;background:#3EA46B'></div><div class='bar' style='left:209px;bottom:30px;width:18px;height:133px;background:#3EA46B'></div><div class='bar' style='left:279px;bottom:30px;width:18px;height:110px;background:#3EA46B'></div><div class='bar' style='left:349px;bottom:30px;width:18px;height:95px;background:#3EA46B'></div><div class='bar' style='left:419px;bottom:30px;width:18px;height:125px;background:#3EA46B'></div><svg width='476' height='268' style='position:absolute;left:0;top:0'><polyline points='79,121 149,155 219,79 289,144 359,159 429,87' fill='none' stroke='#C0504D' stroke-width='2.5'/><circle cx='79' cy='121' r='3.5' fill='#C0504D'/><circle cx='149' cy='155' r='3.5' fill='#C0504D'/><circle cx='219' cy='79' r='3.5' fill='#C0504D'/><circle cx='289' cy='144' r='3.5' fill='#C0504D'/><circle cx='359' cy='159' r='3.5' fill='#C0504D'/><circle cx='429' cy='87' r='3.5' fill='#C0504D'/></svg></div></div></div><div class='canvas' id='p-3'><div class='card' style='left:16px;top:12px;width:200px;height:88px'><div class='cl'>Total value ₹ Cr</div><div class='cv'>412.85</div></div><div class='card' style='left:224px;top:12px;width:200px;height:88px'><div class='cl'>Raw materials ₹ Cr</div><div class='cv'>236.14</div></div><div class='card' style='left:432px;top:12px;width:200px;height:88px'><div class='cl'>Finished goods ₹ Cr</div><div class='cv'>151.42</div></div><div class='card' style='left:640px;top:12px;width:200px;height:88px'><div class='cl'>Consumables ₹ Cr</div><div class='cv'>25.29</div></div><div class='card' style='left:848px;top:12px;width:200px;height:88px'><div class='cl'>FG days of inventory</div><div class='cv'>34.6</div></div><div class='card' style='left:1056px;top:12px;width:208px;height:88px'><div class='cl'>Change vs last month</div><div class='cv up'>+2.4%</div></div><div class='slicer' style='left:16px;top:108px;width:300px;height:44px'>Month: All<span class='chev'>&#9662;</span></div><div class='slicer' style='left:324px;top:108px;width:300px;height:44px'>Plant: All<span class='chev'>&#9662;</span></div><div class='slicer' style='left:632px;top:108px;width:300px;height:44px'>Category: All<span class='chev'>&#9662;</span></div><div class='vis' style='left:16px;top:168px;width:620px;height:544px'><div class='vt'>RM by plant and nature</div><div class='vb p'><table class='mx'><tr><th>Plant / Nature</th><th>Value ₹ Cr</th><th>MW</th><th>% vs LM</th></tr><tr><td class=''>Jaipur Module</td><td class=''>96.80</td><td class=''>18.4</td><td class=''>+2.1%</td></tr><tr><td class=''>  Cell</td><td class=''>54.20</td><td class=''>12.1</td><td class=''>+3.4%</td></tr><tr><td class=''>  Glass</td><td class=''>18.60</td><td class=''>3.2</td><td class=''>-1.1%</td></tr><tr><td class=''>  Encapsulant</td><td class=''>12.40</td><td class=''>1.9</td><td class=''>+0.8%</td></tr><tr><td class=''>  Frame</td><td class=''>11.60</td><td class=''>1.2</td><td class=''>+2.6%</td></tr><tr><td class=''>Dholera Module</td><td class=''>80.90</td><td class=''>15.2</td><td class=''>-1.4%</td></tr><tr><td class=''>  Cell</td><td class=''>44.10</td><td class=''>9.8</td><td class=''>-2.2%</td></tr><tr><td class=''>  Glass</td><td class=''>16.20</td><td class=''>2.6</td><td class=''>+0.4%</td></tr><tr><td class=''>  Encapsulant</td><td class=''>11.30</td><td class=''>1.7</td><td class=''>-1.9%</td></tr><tr><td class=''>  Frame</td><td class=''>9.30</td><td class=''>1.1</td><td class=''>+1.2%</td></tr><tr><td class=''>Dholera Cell</td><td class=''>58.44</td><td class=''>7.6</td><td class=''>+0.6%</td></tr><tr><td class=''>  Wafer</td><td class=''>38.20</td><td class=''>5.4</td><td class=''>+1.1%</td></tr><tr><td class=''>  Paste</td><td class=''>12.14</td><td class=''>1.4</td><td class=''>-0.9%</td></tr><tr><td class=''>  Chemicals</td><td class=''>8.10</td><td class=''>0.8</td><td class=''>+2.0%</td></tr><tr class='tot'><td>Total</td><td>236.14</td><td>41.2</td><td>+0.4%</td></tr></table></div></div><div class='vis' style='left:644px;top:168px;width:620px;height:264px'><div class='vt'>RM by month</div><div class='vb p'><table class='mx'><tr><th>Nature</th><th>Jun'26</th><th>Jul'26</th><th>Aug'26</th><th>Sep'26</th></tr><tr><td class=''>Cell</td><td class=''>86.4</td><td class=''>97.0</td><td class=''>102.4</td><td class=''>98.3</td></tr><tr><td class=''>Wafer</td><td class=''>34.1</td><td class=''>36.8</td><td class=''>39.2</td><td class=''>38.2</td></tr><tr><td class=''>Glass</td><td class=''>31.2</td><td class=''>33.4</td><td class=''>35.8</td><td class=''>34.8</td></tr><tr><td class=''>Encapsulant</td><td class=''>22.6</td><td class=''>24.1</td><td class=''>25.9</td><td class=''>23.7</td></tr><tr><td class=''>Frame</td><td class=''>19.4</td><td class=''>20.8</td><td class=''>22.1</td><td class=''>20.9</td></tr><tr><td class=''>Paste / Chemicals</td><td class=''>18.2</td><td class=''>19.4</td><td class=''>20.6</td><td class=''>20.2</td></tr><tr class='tot'><td>Total</td><td>211.9</td><td>231.5</td><td>246.0</td><td>236.1</td></tr></table></div></div><div class='vis' style='left:644px;top:444px;width:620px;height:268px'><div class='vt'>RM breakdown</div><div class='vb p'><div class='tree'><div class='node'><span class='nl'>Value ₹ Cr</span><span class='nv'>236.14</span></div><div class='arrow'>&#8250;</div><div class='col'><div class='node on'><span class='nl'>Jaipur Module</span><span class='nv'>96.80</span></div><div class='node'><span class='nl'>Dholera Module</span><span class='nv'>80.90</span></div><div class='node'><span class='nl'>Dholera Cell</span><span class='nv'>58.44</span></div></div><div class='arrow'>&#8250;</div><div class='col'><div class='node on'><span class='nl'>Cell</span><span class='nv'>54.20</span></div><div class='node'><span class='nl'>Glass</span><span class='nv'>18.60</span></div><div class='node'><span class='nl'>Encapsulant</span><span class='nv'>12.40</span></div><div class='node'><span class='nl'>Frame</span><span class='nv'>11.60</span></div></div></div></div></div></div><div class='canvas' id='p-4'><div class='dwrap' data-plant="Jaipur Module"><div class='drill'><button class='back' data-back='1'>&#8592;</button><span class='dlab'>Drilled through from a bar: <b>Jaipur Module</b></span></div><div class='card' style='left:16px;top:16px;width:296px;height:92px'><div class='cl'>Value ₹ Cr</div><div class='cv'>166.90</div></div><div class='card' style='left:320px;top:16px;width:296px;height:92px'><div class='cl'>MW</div><div class='cv'>18.4</div></div><div class='card' style='left:624px;top:16px;width:296px;height:92px'><div class='cl'>Days of inventory</div><div class='cv'>30.1</div></div><div class='card' style='left:928px;top:16px;width:336px;height:92px'><div class='cl'>Share of total</div><div class='cv'>40.4%</div></div><div class='vis' style='left:16px;top:120px;width:404px;height:296px'><div class='vt'>Split by category</div><div class='vb'><svg width='404' height='263' style='position:absolute;left:0;top:0'><path d='M162.0,128.5 L162.0,26.5 A102.0,102.0 0 1 1 112.9,217.9 Z' fill='#2E5AAC' stroke='#fff' stroke-width='1.5'/><path d='M162.0,128.5 L112.9,217.9 A102.0,102.0 0 0 1 131.7,31.1 Z' fill='#3EA46B' stroke='#fff' stroke-width='1.5'/><path d='M162.0,128.5 L131.7,31.1 A102.0,102.0 0 0 1 162.0,26.5 Z' fill='#E0A33E' stroke='#fff' stroke-width='1.5'/><text x='223.3' y='144.2' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>58%</text><text x='99.1' y='122.1' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>37%</text><text x='152.5' y='66.0' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>5%</text></svg><div class='pkey'><div class='pk'><i style='background:#2E5AAC'></i>RM<b>96.80</b></div><div class='pk'><i style='background:#3EA46B'></i>FG<b>62.10</b></div><div class='pk'><i style='background:#E0A33E'></i>Consumables<b>8.00</b></div></div></div></div><div class='vis' style='left:428px;top:120px;width:404px;height:296px'><div class='vt'>Split by technology / nature</div><div class='vb'><svg width='404' height='263' style='position:absolute;left:0;top:0'><path d='M162.0,26.5 A102.0,102.0 0 0 1 253.0,174.7 L212.0,153.9 A56.1,56.1 0 0 0 162.0,72.4 Z' fill='#2E5AAC' stroke='#fff' stroke-width='1.5'/><path d='M253.0,174.7 A102.0,102.0 0 0 1 201.8,222.4 L183.9,180.2 A56.1,56.1 0 0 0 212.0,153.9 Z' fill='#3EA46B' stroke='#fff' stroke-width='1.5'/><path d='M201.8,222.4 A102.0,102.0 0 0 1 155.3,230.3 L158.3,184.5 A56.1,56.1 0 0 0 183.9,180.2 Z' fill='#E0A33E' stroke='#fff' stroke-width='1.5'/><path d='M155.3,230.3 A102.0,102.0 0 0 1 112.9,217.9 L135.0,177.7 A56.1,56.1 0 0 0 158.3,184.5 Z' fill='#C0504D' stroke='#fff' stroke-width='1.5'/><path d='M112.9,217.9 A102.0,102.0 0 0 1 162.0,26.5 L162.0,72.4 A56.1,56.1 0 0 0 135.0,177.7 Z' fill='#6C6F76' stroke='#fff' stroke-width='1.5'/><text x='229.8' y='86.9' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>32%</text><text x='216.3' y='186.7' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>11%</text><text x='175.3' y='206.9' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>7%</text><text x='139.7' y='204.9' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>7%</text><text x='84.9' y='108.7' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>42%</text></svg><div class='pkey'><div class='pk'><i style='background:#2E5AAC'></i>Cell<b>54.20</b></div><div class='pk'><i style='background:#3EA46B'></i>Glass<b>18.60</b></div><div class='pk'><i style='background:#E0A33E'></i>Encapsulant<b>12.40</b></div><div class='pk'><i style='background:#C0504D'></i>Frame<b>11.60</b></div><div class='pk'><i style='background:#6C6F76'></i>Other<b>70.10</b></div></div></div></div><div class='vis' style='left:840px;top:120px;width:424px;height:296px'><div class='vt'>Split by plant</div><div class='vb'><svg width='424' height='263' style='position:absolute;left:0;top:0'><path d='M172.0,128.5 L172.0,20.0 A108.5,108.5 0 1 1 172.0,20.0 Z' fill='#2E5AAC' stroke='#fff' stroke-width='1.5'/><text x='172.0' y='195.8' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>100%</text></svg><div class='pkey'><div class='pk'><i style='background:#2E5AAC'></i>Jaipur Module<b>166.90</b></div></div></div></div><div class='vis' style='left:16px;top:428px;width:1248px;height:284px'><div class='vt'>Materials behind this number</div><div class='vb p'><table class='mx'><tr><th>Material</th><th>Description</th><th>Value ₹ Cr</th><th>MW</th><th>INR/Wp</th><th>Share</th></tr><tr><td class=''>1010001</td><td class=''>Cell G12 Perc bin H4</td><td class=''>54.20</td><td class=''>12.1</td><td class=''>4.16</td><td class=''>32.5%</td></tr><tr><td class=''>1010044</td><td class=''>Glass 2.0mm AR coated</td><td class=''>18.60</td><td class=''>3.2</td><td class=''>4.10</td><td class=''>11.1%</td></tr><tr><td class=''>1010081</td><td class=''>EVA encapsulant 500µm</td><td class=''>12.40</td><td class=''>1.9</td><td class=''>4.18</td><td class=''>7.4%</td></tr><tr><td class=''>1010120</td><td class=''>Frame 35mm anodised</td><td class=''>11.60</td><td class=''>1.2</td><td class=''>4.22</td><td class=''>6.9%</td></tr><tr><td class=''>2010007</td><td class=''>FG G12 Perc Module 590W</td><td class=''>34.10</td><td class=''>8.2</td><td class=''>4.16</td><td class=''>20.4%</td></tr></table></div></div></div><div class='dwrap' data-plant="Dholera Module"><div class='drill'><button class='back' data-back='1'>&#8592;</button><span class='dlab'>Drilled through from a bar: <b>Dholera Module</b></span></div><div class='card' style='left:16px;top:16px;width:296px;height:92px'><div class='cl'>Value ₹ Cr</div><div class='cv'>141.20</div></div><div class='card' style='left:320px;top:16px;width:296px;height:92px'><div class='cl'>MW</div><div class='cv'>15.2</div></div><div class='card' style='left:624px;top:16px;width:296px;height:92px'><div class='cl'>Days of inventory</div><div class='cv'>25.7</div></div><div class='card' style='left:928px;top:16px;width:336px;height:92px'><div class='cl'>Share of total</div><div class='cv'>34.2%</div></div><div class='vis' style='left:16px;top:120px;width:404px;height:296px'><div class='vt'>Split by category</div><div class='vb'><svg width='404' height='263' style='position:absolute;left:0;top:0'><path d='M162.0,128.5 L162.0,26.5 A102.0,102.0 0 1 1 116.9,220.0 Z' fill='#2E5AAC' stroke='#fff' stroke-width='1.5'/><path d='M162.0,128.5 L116.9,220.0 A102.0,102.0 0 0 1 126.5,32.9 Z' fill='#3EA46B' stroke='#fff' stroke-width='1.5'/><path d='M162.0,128.5 L126.5,32.9 A102.0,102.0 0 0 1 162.0,26.5 Z' fill='#E0A33E' stroke='#fff' stroke-width='1.5'/><text x='223.6' y='142.9' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>57%</text><text x='98.8' y='125.3' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>37%</text><text x='150.8' y='66.3' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>6%</text></svg><div class='pkey'><div class='pk'><i style='background:#2E5AAC'></i>RM<b>80.90</b></div><div class='pk'><i style='background:#3EA46B'></i>FG<b>52.30</b></div><div class='pk'><i style='background:#E0A33E'></i>Consumables<b>8.00</b></div></div></div></div><div class='vis' style='left:428px;top:120px;width:404px;height:296px'><div class='vt'>Split by technology / nature</div><div class='vb'><svg width='404' height='263' style='position:absolute;left:0;top:0'><path d='M162.0,26.5 A102.0,102.0 0 0 1 256.3,167.4 L213.9,149.9 A56.1,56.1 0 0 0 162.0,72.4 Z' fill='#2E5AAC' stroke='#fff' stroke-width='1.5'/><path d='M256.3,167.4 A102.0,102.0 0 0 1 207.1,220.0 L186.8,178.8 A56.1,56.1 0 0 0 213.9,149.9 Z' fill='#3EA46B' stroke='#fff' stroke-width='1.5'/><path d='M207.1,220.0 A102.0,102.0 0 0 1 157.5,230.4 L159.5,184.5 A56.1,56.1 0 0 0 186.8,178.8 Z' fill='#E0A33E' stroke='#fff' stroke-width='1.5'/><path d='M157.5,230.4 A102.0,102.0 0 0 1 116.9,220.0 L137.2,178.8 A56.1,56.1 0 0 0 159.5,184.5 Z' fill='#C0504D' stroke='#fff' stroke-width='1.5'/><path d='M116.9,220.0 A102.0,102.0 0 0 1 162.0,26.5 L162.0,72.4 A56.1,56.1 0 0 0 137.2,178.8 Z' fill='#6C6F76' stroke='#fff' stroke-width='1.5'/><text x='228.1' y='84.3' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>31%</text><text x='220.1' y='182.8' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>11%</text><text x='178.3' y='206.4' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>8%</text><text x='142.2' y='205.6' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>7%</text><text x='84.5' y='110.4' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>43%</text></svg><div class='pkey'><div class='pk'><i style='background:#2E5AAC'></i>Cell<b>44.10</b></div><div class='pk'><i style='background:#3EA46B'></i>Glass<b>16.20</b></div><div class='pk'><i style='background:#E0A33E'></i>Encapsulant<b>11.30</b></div><div class='pk'><i style='background:#C0504D'></i>Frame<b>9.30</b></div><div class='pk'><i style='background:#6C6F76'></i>Other<b>60.30</b></div></div></div></div><div class='vis' style='left:840px;top:120px;width:424px;height:296px'><div class='vt'>Split by plant</div><div class='vb'><svg width='424' height='263' style='position:absolute;left:0;top:0'><path d='M172.0,128.5 L172.0,20.0 A108.5,108.5 0 1 1 172.0,20.0 Z' fill='#2E5AAC' stroke='#fff' stroke-width='1.5'/><text x='172.0' y='195.8' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>100%</text></svg><div class='pkey'><div class='pk'><i style='background:#2E5AAC'></i>Dholera Module<b>141.20</b></div></div></div></div><div class='vis' style='left:16px;top:428px;width:1248px;height:284px'><div class='vt'>Materials behind this number</div><div class='vb p'><table class='mx'><tr><th>Material</th><th>Description</th><th>Value ₹ Cr</th><th>MW</th><th>INR/Wp</th><th>Share</th></tr><tr><td class=''>1010001</td><td class=''>Cell G12 Perc bin H4</td><td class=''>44.10</td><td class=''>9.8</td><td class=''>4.14</td><td class=''>31.2%</td></tr><tr><td class=''>1010044</td><td class=''>Glass 2.0mm AR coated</td><td class=''>16.20</td><td class=''>2.6</td><td class=''>4.11</td><td class=''>11.5%</td></tr><tr><td class=''>1010081</td><td class=''>EVA encapsulant 500µm</td><td class=''>11.30</td><td class=''>1.7</td><td class=''>4.19</td><td class=''>8.0%</td></tr><tr><td class=''>2010012</td><td class=''>FG M10 Topcon Module 575W</td><td class=''>28.60</td><td class=''>6.9</td><td class=''>4.14</td><td class=''>20.3%</td></tr><tr><td class=''>2010019</td><td class=''>FG M10R Perc Module 555W</td><td class=''>23.70</td><td class=''>5.1</td><td class=''>4.18</td><td class=''>16.8%</td></tr></table></div></div></div><div class='dwrap' data-plant="Dholera Cell"><div class='drill'><button class='back' data-back='1'>&#8592;</button><span class='dlab'>Drilled through from a bar: <b>Dholera Cell</b></span></div><div class='card' style='left:16px;top:16px;width:296px;height:92px'><div class='cl'>Value ₹ Cr</div><div class='cv'>104.75</div></div><div class='card' style='left:320px;top:16px;width:296px;height:92px'><div class='cl'>MW</div><div class='cv'>7.6</div></div><div class='card' style='left:624px;top:16px;width:296px;height:92px'><div class='cl'>Days of inventory</div><div class='cv'>(blank — not FG)</div></div><div class='card' style='left:928px;top:16px;width:336px;height:92px'><div class='cl'>Share of total</div><div class='cv'>25.4%</div></div><div class='vis' style='left:16px;top:120px;width:404px;height:296px'><div class='vt'>Split by category</div><div class='vb'><svg width='404' height='263' style='position:absolute;left:0;top:0'><path d='M162.0,128.5 L162.0,26.5 A102.0,102.0 0 1 1 125.7,223.8 Z' fill='#2E5AAC' stroke='#fff' stroke-width='1.5'/><path d='M162.0,128.5 L125.7,223.8 A102.0,102.0 0 0 1 108.0,42.0 Z' fill='#3EA46B' stroke='#fff' stroke-width='1.5'/><path d='M162.0,128.5 L108.0,42.0 A102.0,102.0 0 0 1 162.0,26.5 Z' fill='#E0A33E' stroke='#fff' stroke-width='1.5'/><text x='224.2' y='139.9' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>56%</text><text x='99.1' y='134.6' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>35%</text><text x='144.6' y='67.7' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>9%</text></svg><div class='pkey'><div class='pk'><i style='background:#2E5AAC'></i>RM<b>58.44</b></div><div class='pk'><i style='background:#3EA46B'></i>FG<b>37.01</b></div><div class='pk'><i style='background:#E0A33E'></i>Consumables<b>9.30</b></div></div></div></div><div class='vis' style='left:428px;top:120px;width:404px;height:296px'><div class='vt'>Split by technology / nature</div><div class='vb'><svg width='404' height='263' style='position:absolute;left:0;top:0'><path d='M162.0,26.5 A102.0,102.0 0 0 1 238.6,195.8 L204.2,165.5 A56.1,56.1 0 0 0 162.0,72.4 Z' fill='#2E5AAC' stroke='#fff' stroke-width='1.5'/><path d='M238.6,195.8 A102.0,102.0 0 0 1 174.4,229.7 L168.8,184.2 A56.1,56.1 0 0 0 204.2,165.5 Z' fill='#3EA46B' stroke='#fff' stroke-width='1.5'/><path d='M174.4,229.7 A102.0,102.0 0 0 1 125.7,223.8 L142.0,180.9 A56.1,56.1 0 0 0 168.8,184.2 Z' fill='#E0A33E' stroke='#fff' stroke-width='1.5'/><path d='M125.7,223.8 A102.0,102.0 0 0 1 162.0,26.5 L162.0,72.4 A56.1,56.1 0 0 0 142.0,180.9 Z' fill='#C0504D' stroke='#fff' stroke-width='1.5'/><text x='234.5' y='95.7' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>36%</text><text x='199.2' y='198.8' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>12%</text><text x='152.4' y='207.5' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>8%</text><text x='83.8' y='114.1' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>44%</text></svg><div class='pkey'><div class='pk'><i style='background:#2E5AAC'></i>Wafer<b>38.20</b></div><div class='pk'><i style='background:#3EA46B'></i>Paste<b>12.14</b></div><div class='pk'><i style='background:#E0A33E'></i>Chemicals<b>8.10</b></div><div class='pk'><i style='background:#C0504D'></i>Other<b>46.31</b></div></div></div></div><div class='vis' style='left:840px;top:120px;width:424px;height:296px'><div class='vt'>Split by plant</div><div class='vb'><svg width='424' height='263' style='position:absolute;left:0;top:0'><path d='M172.0,128.5 L172.0,20.0 A108.5,108.5 0 1 1 172.0,20.0 Z' fill='#2E5AAC' stroke='#fff' stroke-width='1.5'/><text x='172.0' y='195.8' text-anchor='middle' fill='#fff' font-size='10' font-weight='600' font-family='Segoe UI Semibold'>100%</text></svg><div class='pkey'><div class='pk'><i style='background:#2E5AAC'></i>Dholera Cell<b>104.75</b></div></div></div></div><div class='vis' style='left:16px;top:428px;width:1248px;height:284px'><div class='vt'>Materials behind this number</div><div class='vb p'><table class='mx'><tr><th>Material</th><th>Description</th><th>Value ₹ Cr</th><th>MW</th><th>INR/Wp</th><th>Share</th></tr><tr><td class=''>1020003</td><td class=''>Wafer M10R 182mm n-type</td><td class=''>38.20</td><td class=''>5.4</td><td class=''>3.98</td><td class=''>36.5%</td></tr><tr><td class=''>1020031</td><td class=''>Silver paste front</td><td class=''>12.14</td><td class=''>1.4</td><td class=''>4.02</td><td class=''>11.6%</td></tr><tr><td class=''>1020049</td><td class=''>Chemicals — texturing</td><td class=''>8.10</td><td class=''>0.8</td><td class=''>3.90</td><td class=''>7.7%</td></tr><tr><td class=''>2020004</td><td class=''>FG Cell M10R Topcon</td><td class=''>26.11</td><td class=''>3.6</td><td class=''>4.06</td><td class=''>24.9%</td></tr><tr><td class=''>2020009</td><td class=''>FG Cell M10 Perc</td><td class=''>10.90</td><td class=''>1.4</td><td class=''>4.01</td><td class=''>10.4%</td></tr></table></div></div></div></div><div class='canvas' id='p-5'><div class='card' style='left:16px;top:12px;width:200px;height:88px'><div class='cl'>Total value ₹ Cr</div><div class='cv'>412.85</div></div><div class='card' style='left:224px;top:12px;width:200px;height:88px'><div class='cl'>Raw materials ₹ Cr</div><div class='cv'>236.14</div></div><div class='card' style='left:432px;top:12px;width:200px;height:88px'><div class='cl'>Finished goods ₹ Cr</div><div class='cv'>151.42</div></div><div class='card' style='left:640px;top:12px;width:200px;height:88px'><div class='cl'>Consumables ₹ Cr</div><div class='cv'>25.29</div></div><div class='card' style='left:848px;top:12px;width:200px;height:88px'><div class='cl'>FG days of inventory</div><div class='cv'>34.6</div></div><div class='card' style='left:1056px;top:12px;width:208px;height:88px'><div class='cl'>Change vs last month</div><div class='cv up'>+2.4%</div></div><div class='slicer' style='left:16px;top:108px;width:300px;height:44px'>Month: All<span class='chev'>&#9662;</span></div><div class='slicer' style='left:324px;top:108px;width:300px;height:44px'>Plant: All<span class='chev'>&#9662;</span></div><div class='slicer' style='left:632px;top:108px;width:300px;height:44px'>Category: All<span class='chev'>&#9662;</span></div><div class='vis' style='left:16px;top:168px;width:300px;height:100px'><div class='vt'>Rows missing master attributes (want 0)</div><div class='vb'><div class='big ok'>0</div></div></div><div class='vis' style='left:324px;top:168px;width:300px;height:100px'><div class='vt'>Stock reconciliation ₹ Cr (must be 0)</div><div class='vb'><div class='big ok'>0.00</div></div></div><div class='vis' style='left:632px;top:168px;width:632px;height:100px'><div class='vt'>GLs in TB but not in TB Master (want empty)</div><div class='vb'><div class='empty'>No rows — every GL in the TB is mapped</div></div></div><div class='vis' style='left:16px;top:276px;width:608px;height:210px'><div class='vt'>FG technologies with no capacity row (want empty)</div><div class='vb'><div class='empty'>No rows — every Nature matches a Tech</div></div></div><div class='vis' style='left:632px;top:276px;width:632px;height:210px'><div class='vt'>Actual headers of every source file</div><div class='vb p'><table class='mx'><tr><th>Folder</th><th>Name</th><th>Sheet</th><th>Headers</th></tr><tr><td class=''>RM Raw</td><td class=''>RM_202609.xlsx</td><td class=''>Sheet1</td><td class=''>Valuation Area, Material, …</td></tr><tr><td class=''>FG Raw</td><td class=''>FG_202609.xlsx</td><td class=''>Sheet1</td><td class=''>valuation area, Material, …</td></tr><tr><td class=''>Consble Raw</td><td class=''>CN_202609.xlsx</td><td class=''>Sheet1</td><td class=''>Valuation Area, Material, …</td></tr><tr><td class=''>TB</td><td class=''>TB_202609.xlsx</td><td class=''>Sheet1</td><td class=''>gl Account Number, Amount, …</td></tr></table></div></div><div class='vis' style='left:16px;top:494px;width:608px;height:218px'><div class='vt'>Variables workbook sheets</div><div class='vb p'><table class='mx'><tr><th>Sheet</th><th>Headers</th><th>Rows</th></tr><tr><td class=''>RM Nature</td><td class=''>Valuation Area, Material, Nature…</td><td class=''>1,284</td></tr><tr><td class=''>FG Master</td><td class=''>Valuation Area, Material, Nature</td><td class=''>412</td></tr><tr><td class=''>MW Capacity</td><td class=''>Effective From, Tech, Valuation…</td><td class=''>18</td></tr><tr><td class=''>Constants</td><td class=''>Constant Name, Value</td><td class=''>1</td></tr><tr><td class=''>TB Master</td><td class=''>GL Account Number, Nature, Plant</td><td class=''>96</td></tr></table></div></div><div class='vis' style='left:632px;top:494px;width:632px;height:218px'><div class='vt'>Files loaded this refresh</div><div class='vb p'><table class='mx'><tr><th>Source file</th><th>Month</th><th>Category</th><th>Value ₹ Cr</th></tr><tr><td class=''>RM_202609.xlsx</td><td class=''>Sep'26</td><td class=''>RM</td><td class=''>236.14</td></tr><tr><td class=''>FG_202609.xlsx</td><td class=''>Sep'26</td><td class=''>FG</td><td class=''>151.42</td></tr><tr><td class=''>CN_202609.xlsx</td><td class=''>Sep'26</td><td class=''>Consumables</td><td class=''>25.29</td></tr><tr><td class=''>RM_202608.xlsx</td><td class=''>Aug'26</td><td class=''>RM</td><td class=''>251.03</td></tr><tr><td class=''>FG_202608.xlsx</td><td class=''>Aug'26</td><td class=''>FG</td><td class=''>118.92</td></tr></table></div></div></div>
-<script>
-function show(i){
-  document.querySelectorAll('.top button').forEach(x=>
-    x.classList.toggle('on', x.dataset.p===String(i)));
-  document.querySelectorAll('.canvas').forEach(c=>
-    c.classList.toggle('on', c.id==='p-'+i));
-}
-document.querySelectorAll('.top button').forEach(b=>b.onclick=()=>show(b.dataset.p));
 
-const DETAIL_PAGE = 4;
-function openDetail(name){
-  document.querySelectorAll('.dwrap').forEach(d=>
-    d.classList.toggle('on', d.dataset.plant===name));
-  show(DETAIL_PAGE);
+.card,.vis{position:absolute;background:#fff;border:1px solid var(--line);border-radius:3px}
+.card{background:#F2F6F3;padding:10px 12px}
+.cl{font-size:10.5px;color:#5b6660}
+.cv{font-size:22px;font-weight:bold;margin-top:4px;color:var(--ink)}
+.cv.up{color:var(--g1)} .cv.dn{color:var(--bad)}
+.vt{font-size:11.5px;font-weight:bold;padding:7px 10px 5px;color:var(--ink)}
+.vb{position:absolute;left:0;right:0;top:26px;bottom:0;overflow:auto}
+.slicer{position:absolute;background:#fff;border:1px solid var(--line);border-radius:3px;
+  display:flex;align-items:center;padding:0 10px;gap:6px;cursor:pointer}
+.slicer span{font-size:11px;color:#3d4742}
+.slicer select{font:inherit;font-size:11px;border:0;background:transparent;outline:none;
+  flex:1;cursor:pointer;color:var(--ink)}
+
+table{border-collapse:collapse;width:100%;font-size:10.5px}
+th,td{padding:3px 7px;border-bottom:1px solid #EEF1F4;white-space:nowrap}
+th{background:var(--head);font-weight:bold;text-align:right;color:#33403a;
+  position:sticky;top:0}
+th.l,td.l{text-align:left}
+td{text-align:right;font-variant-numeric:tabular-nums}
+tr.master>td{font-weight:bold;background:#FAFCFA}
+tr.tot>td{font-weight:bold;background:var(--head);border-top:1px solid #cfd6d1}
+tr.click{cursor:pointer}
+tr.click:hover>td{background:#EAF3EC}
+tr.sel>td{background:#DDEEE2}
+.exp{display:inline-block;width:12px;color:var(--g1);font-weight:bold;cursor:pointer}
+td.neg{color:var(--bad)} .sub{padding-left:22px !important;color:#42504a}
+.hot{background:#FBE7E6}
+
+.bar{position:absolute;bottom:26px}
+.bar.click{cursor:pointer}
+.bar.click:hover{filter:brightness(1.15);outline:1px solid var(--ink)}
+.xl{position:absolute;bottom:6px;font-size:9px;color:#5b6660;text-align:center;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gl{position:absolute;left:40px;right:8px;border-top:1px dashed #E7EBEF}
+.yl{position:absolute;left:4px;font-size:9px;color:#8a938d}
+.lg{position:absolute;right:8px;top:4px;display:flex;gap:9px;font-size:9.5px;color:#42504a}
+.lg i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:3px}
+.chips{position:absolute;left:16px;top:152px;display:flex;gap:6px;align-items:center;
+  font-size:10.5px;color:#42504a;height:14px}
+.chip{background:#E4EFE7;border:1px solid #BFD8C6;border-radius:10px;padding:1px 8px;
+  cursor:pointer}
+.chip b{color:var(--g1)}
+.chip:hover{background:#D3E6D9}
+.drillbar{position:absolute;left:12px;right:12px;top:10px;display:flex;align-items:center;gap:10px;
+  color:#9aa79e;font-size:11.5px}
+.drillbar b{color:var(--ink)}
+.back{font:inherit;font-size:12px;width:24px;height:24px;border-radius:50%;cursor:pointer;
+  border:1px solid #48524b;background:#2a302c;color:#dfe5e0}
+.dnode{border:1px solid var(--line);border-radius:3px;padding:2px 7px;margin-bottom:4px;
+  cursor:pointer;background:#FCFDFC}
+.dnode:hover{border-color:var(--g2)}
+.dnode.on{border-color:var(--g1);box-shadow:0 0 0 1px var(--g1);background:#F1F8F3}
+.dnl{font-size:9.5px;color:#5b6660}
+.dnv{font-size:11.5px;font-weight:bold}
+.dcol{position:absolute;top:6px;width:150px}
+.pkey{position:absolute;right:6px;top:8px;width:132px;font-size:9.5px;color:#33403a}
+.pk{display:flex;gap:5px;padding:2px 0;cursor:pointer;align-items:center}
+.pk:hover{color:var(--g1)}
+.pk i{width:8px;height:8px;border-radius:2px;flex:0 0 8px}
+.pk b{margin-left:auto}
+svg text{pointer-events:none}
+.note{position:absolute;left:10px;right:10px;bottom:6px;font-size:9.5px;color:#8a938d}
+</style>
+</head>
+<body>
+
+<div class="top"><b>Interactive design mock</b>
+  <button data-p="0" class="on">Overview</button>
+  <button data-p="1">Summary</button>
+  <button data-p="2">FG</button>
+  <button data-p="3">RM</button>
+  <button data-p="4">Detail</button>
+  <button data-p="5">Data Quality</button>
+</div>
+<p class="hint">Numbers are invented; every interaction is real, and is one Power BI does out
+of the box. <b>Click a bar or a row to filter the page. Click a plant bar on Overview to drill
+plant → category → material nature. Right-click any bar for the Detail page.
+Click +/&minus; in a matrix to open sub-rows. The three dropdowns filter everything.</b>
+Arial throughout, company green, all money in crore rupees.</p>
+
+<div class="canvas on" id="p0"></div>
+<div class="canvas" id="p1"></div>
+<div class="canvas" id="p2"></div>
+<div class="canvas" id="p3"></div>
+<div class="canvas" id="p4"></div>
+<div class="canvas" id="p5"></div>
+
+<script>
+// ---------------------------------------------------------------- invented data
+const G = {g1:'#1E6B3A', g2:'#4FA45F', g3:'#8CC63F', g4:'#2E7D6B', g5:'#155E38',
+           bad:'#C0504D', grey:'#6C6F76'};
+const CATC = {RM:G.g1, FG:G.g2, Consumables:G.g3};
+const MONTHS = ["Jun'26","Jul'26","Aug'26","Sep'26","Oct'26","Nov'26"];
+const LAST4 = MONTHS.slice(-4);
+const PLANTS = [{c:'1900', n:'Jaipur Module'},
+                {c:'1902', n:'Dholera Module'},
+                {c:'1905', n:'Dholera Cell'}];
+const CATS = ['RM','FG','Consumables'];
+const NAT = {
+  '1900':{RM:['Cell','Glass','Encapsulant','Frame','Backsheet'],
+          FG:['G12 Perc Module','M10 Topcon Module'],
+          Consumables:['Consumables']},
+  '1902':{RM:['Cell','Glass','Encapsulant','Frame','Junction box'],
+          FG:['M10 Topcon Module','M10R Perc Module'],
+          Consumables:['Consumables']},
+  '1905':{RM:['Wafer','Silver paste','Chemicals','Gases'],
+          FG:['M10R Topcon Cell','M10 Perc Cell'],
+          Consumables:['Consumables']}};
+const GROUP = {Cell:'Cells & wafers', Wafer:'Cells & wafers',
+  Glass:'Module BOM', Encapsulant:'Module BOM', Frame:'Module BOM',
+  Backsheet:'Module BOM', 'Junction box':'Module BOM',
+  'Silver paste':'Process chemicals', Chemicals:'Process chemicals',
+  Gases:'Process chemicals', Consumables:'Stores & spares'};
+// monthly module/cell capacity in MW, per plant
+const CAP = {'1900':22, '1902':18, '1905':0};   // MW of module output per month
+
+let seed = 7;
+const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
+
+const ROWS = [];
+PLANTS.forEach((p, pi) => CATS.forEach(c => NAT[p.c][c].forEach((nt, ni) => {
+  const base = (c === 'RM' ? 26 : c === 'FG' ? 21 : 9) * (1 - pi * 0.16)
+             * (1 - ni * 0.13) + 3;
+  MONTHS.forEach((m, mi) => {
+    const v = base * (0.9 + 0.06 * mi + rnd() * 0.16);
+    ROWS.push({m, mi, plant: p.n, code: p.c, cat: c, nat: nt,
+      grp: GROUP[nt] || 'Other',
+      val: v,
+      mw: c === 'FG' ? v / 4.1 : (c === 'RM' ? v / 5.8 : 0),
+      iss: v * (0.42 + rnd() * 0.2),
+      tb: v * (1 + (rnd() - 0.45) * 0.035)});
+  });
+})));
+
+// ---------------------------------------------------------------- state + maths
+const S = {page:0, month:MONTHS[MONTHS.length - 1], plant:'All', cat:'All',
+           picks:[],                        // cross-filter chips from clicks
+           drill:{lvl:0, plant:null, cat:null},
+           open:{}, detail:null, dpick:null};
+
+function rows(ignore){
+  ignore = ignore || {};
+  return ROWS.filter(r =>
+    (ignore.month || S.month === 'All' || r.m === S.month) &&
+    (ignore.plant || S.plant === 'All' || r.plant === S.plant) &&
+    (ignore.cat   || S.cat === 'All'   || r.cat === S.cat) &&
+    S.picks.every(p => ignore[p.dim] || r[p.dim] === p.val));
 }
-document.querySelectorAll('.bar.clickable').forEach(b=>
-  b.onclick=()=>openDetail(b.dataset.drill));
-document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>show(0));
-document.querySelector('.dwrap').classList.add('on');
-</script></body></html>
+const sum = (rs, f) => rs.reduce((a, r) => a + f(r), 0);
+const val = rs => sum(rs, r => r.val);
+const mw  = rs => sum(rs, r => r.mw);
+const tb  = rs => sum(rs, r => r.tb);
+// FG: MW against monthly capacity. Everything else: cover on consumption.
+function days(rs){
+  if (!rs.length) return null;
+  const fg = rs.filter(r => r.cat === 'FG');
+  if (fg.length && fg.length === rs.length){
+    const months = new Set(fg.map(r => r.m)).size || 1;
+    const cap = [...new Set(fg.map(r => r.code))]
+                  .reduce((a, c) => a + CAP[c], 0) * months;
+    return cap ? mw(fg) / (cap / 30) : null;
+  }
+  const iss = sum(rs, r => r.iss);
+  return iss ? val(rs) / (iss / 30) : null;
+}
+const f2 = v => v == null ? '' : v.toFixed(2);
+const f1 = v => v == null ? '' : v.toFixed(1);
+const pc = v => v == null ? '' : (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + '%';
+function prevMonthRows(){
+  if (S.month === 'All') return [];
+  const i = MONTHS.indexOf(S.month);
+  if (i < 1) return [];
+  const keep = S.month; S.month = MONTHS[i - 1];
+  const r = rows(); S.month = keep; return r;
+}
+
+// ---------------------------------------------------------------- tiny builders
+function el(tag, cls, css, html){
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (css) e.style.cssText = css;
+  if (html != null) e.innerHTML = html;
+  return e;
+}
+function vis(page, x, y, w, h, title, note){
+  const v = el('div', 'vis', `left:${x}px;top:${y}px;width:${w}px;height:${h}px`);
+  v.appendChild(el('div', 'vt', '', title));
+  const b = el('div', 'vb');
+  b.style.overflow = 'hidden';
+  v.appendChild(b); page.appendChild(v);
+  if (note) v.appendChild(el('div', 'note', '', note));
+  b.W = w; b.H = h - 26 - (note ? 16 : 0);
+  return b;
+}
+function card(page, x, y, w, label, value, tone){
+  const c = el('div', 'card', `left:${x}px;top:${y}px;width:${w}px;height:88px`);
+  c.appendChild(el('div', 'cl', '', label));
+  c.appendChild(el('div', 'cv' + (tone || ''), '', value));
+  page.appendChild(c);
+}
+function slicer(page, x, y, w, label, opts, cur, on){
+  const s = el('div', 'slicer', `left:${x}px;top:${y}px;width:${w}px;height:40px`);
+  s.appendChild(el('span', '', '', label + ':'));
+  const sel = el('select');
+  opts.forEach(o => {
+    const op = el('option', '', '', o); op.value = o;
+    if (o === cur) op.selected = true; sel.appendChild(op);
+  });
+  sel.onchange = () => on(sel.value);
+  s.appendChild(sel); page.appendChild(s);
+}
+function legend(b, items){
+  b.appendChild(el('div', 'lg', '', items.map(i =>
+    `<span><i style="background:${i[1]}"></i>${i[0]}</span>`).join('')));
+}
+function grid(b, max){
+  for (let i = 0; i <= 4; i++){
+    const y = 26 + (b.H - 52) * i / 4;
+    b.appendChild(el('div', 'gl', `bottom:${y}px`));
+    b.appendChild(el('div', 'yl', `bottom:${y - 5}px`, (max * i / 4).toFixed(0)));
+  }
+}
+
+// bars: cats = x labels, series = [{name,color,vals}], mode 'stack'|'group'
+function chart(b, cats, series, mode, click, rclick){
+  const plot = b.H - 52, x0 = 40, wAll = b.W - x0 - 12;
+  const totals = cats.map((_, i) => mode === 'stack'
+      ? series.reduce((a, s) => a + s.vals[i], 0)
+      : Math.max(...series.map(s => s.vals[i])));
+  const max = Math.max(1, ...totals) * 1.15;
+  grid(b, max);
+  const step = wAll / cats.length;
+  cats.forEach((c, i) => {
+    const bw = Math.min(mode === 'stack' ? 34 : 30, step * 0.62 / (mode === 'stack' ? 1 : series.length));
+    let acc = 0;
+    series.forEach((s, j) => {
+      const h = Math.max(1, s.vals[i] / max * plot);
+      const left = x0 + i * step + (step - bw * (mode === 'stack' ? 1 : series.length)) / 2
+                 + (mode === 'stack' ? 0 : j * bw);
+      const d = el('div', 'bar' + (click ? ' click' : ''),
+        `left:${left}px;width:${bw - 2}px;height:${h}px;bottom:${26 + (mode === 'stack' ? acc : 0)}px;` +
+        `background:${s.color}`);
+      d.title = `${c} · ${s.name}: ${s.vals[i].toFixed(2)} ₹ Cr` +
+                (click ? '  —  click to filter, right-click to drill' : '');
+      if (click) d.onclick = () => click(c, s.name);
+      if (rclick) d.oncontextmenu = e => { e.preventDefault(); rclick(c, s.name); };
+      b.appendChild(d);
+      acc += h;
+    });
+    b.appendChild(el('div', 'xl', `left:${x0 + i * step}px;width:${step}px`, c));
+  });
+  return max;
+}
+// draws a line on its own scale, ignoring nulls (Power BI's secondary y-axis)
+function lineOver(b, vals, colour){
+  const plot = b.H - 52, x0 = 40, wAll = b.W - x0 - 12, step = wAll / vals.length;
+  const real = vals.filter(v => v != null);
+  const lo = Math.min(0, ...real), hi = Math.max(...real, 0.0001), span = (hi - lo) || 1;
+  const pts = vals.map((v, i) => v == null ? null :
+    `${x0 + step * (i + 0.5)},${b.H - 26 - ((v - lo) / span * plot * 0.8 + plot * 0.1)}`)
+    .filter(Boolean).join(' ');
+  b.insertAdjacentHTML('beforeend',
+    `<svg width="${b.W}" height="${b.H}" style="position:absolute;left:0;top:0;pointer-events:none">
+       <polyline points="${pts}" fill="none" stroke="${colour}" stroke-width="2"/></svg>`);
+}
+function pie(b, parts, hole, click){
+  const w = b.W - 140, h = b.H - 8, cx = w / 2, cy = h / 2,
+        r = Math.min(w / 2 - 10, h / 2 - 10);
+  const tot = parts.reduce((a, p) => a + p[1], 0) || 1;
+  // only dim slices in the pie that actually holds the clicked slice
+  const dim = parts.some(p => p[0] === S.dpick);
+  const live = parts.filter(p => p[1] > 0);
+  let a = -Math.PI / 2, seg = '', lab = '';
+  if (live.length === 1){
+    const p = live[0], on = S.dpick === p[0];
+    seg = hole
+      ? `<circle cx="${cx}" cy="${cy}" r="${(r + r * hole) / 2}" fill="none"
+           stroke="${p[2]}" stroke-width="${r - r * hole}" data-slice="${p[0]}"
+           style="cursor:pointer" opacity="${dim && !on ? .35 : 1}"/>`
+      : `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${p[2]}" data-slice="${p[0]}"
+           style="cursor:pointer" opacity="${dim && !on ? .35 : 1}"/>`;
+    lab = `<text x="${cx}" y="${cy + (hole ? -r * .85 : 4)}" text-anchor="middle"
+             fill="${hole ? '#33403a' : '#fff'}" font-size="10" font-weight="bold"
+             font-family="Arial">100%</text>`;
+    parts = live;
+  } else parts.forEach(p => {
+    const sw = 2 * Math.PI * p[1] / tot, big = sw > Math.PI ? 1 : 0;
+    const x1 = cx + r * Math.cos(a), y1 = cy + r * Math.sin(a);
+    const x2 = cx + r * Math.cos(a + sw), y2 = cy + r * Math.sin(a + sw);
+    let d;
+    if (hole){
+      const ri = r * hole;
+      d = `M${x1},${y1} A${r},${r} 0 ${big} 1 ${x2},${y2} ` +
+          `L${cx + ri * Math.cos(a + sw)},${cy + ri * Math.sin(a + sw)} ` +
+          `A${ri},${ri} 0 ${big} 0 ${cx + ri * Math.cos(a)},${cy + ri * Math.sin(a)} Z`;
+    } else {
+      d = `M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${big} 1 ${x2},${y2} Z`;
+    }
+    const on = S.dpick === p[0];
+    seg += `<path d="${d}" fill="${p[2]}" stroke="#fff" stroke-width="1.5"
+             opacity="${dim && !on ? .35 : 1}" style="cursor:pointer"
+             data-slice="${p[0]}"><title>${p[0]}: ${p[1].toFixed(2)} ₹ Cr</title></path>`;
+    if (p[1] / tot > .05){
+      const mid = a + sw / 2, lr = r * (hole ? .78 : .62);
+      lab += `<text x="${cx + lr * Math.cos(mid)}" y="${cy + lr * Math.sin(mid)}"
+               text-anchor="middle" fill="#fff" font-size="10" font-weight="bold"
+               font-family="Arial">${(100 * p[1] / tot).toFixed(0)}%</text>`;
+    }
+    a += sw;
+  });
+  b.insertAdjacentHTML('beforeend',
+    `<svg width="${w}" height="${h}" style="position:absolute;left:0;top:0">${seg}${lab}</svg>`);
+  const key = el('div', 'pkey');
+  parts.forEach(p => {
+    const k = el('div', 'pk', '', `<i style="background:${p[2]}"></i>${p[0]}<b>${f2(p[1])}</b>`);
+    if (click) k.onclick = () => click(p[0]);
+    key.appendChild(k);
+  });
+  b.appendChild(key);
+  if (click) b.querySelectorAll('[data-slice]').forEach(s =>
+    s.onclick = () => click(s.dataset.slice));
+}
+
+/* matrix:
+   rowsDef  [{key,label,kids:[{key,label}]}]
+   colTop   ['Inventory (TB)', ...]   (master columns, may be [''] for none)
+   colSub   ['Jun 26', ...]           (sub columns under each master column)
+   cell(rowKey, kidKey, top, sub) -> {v, txt, neg, hot}
+*/
+function matrix(b, id, rowsDef, colTop, colSub, cell, opts){
+  opts = opts || {};
+  b.style.overflow = 'auto';
+  const t = el('table');
+  let h1 = `<tr><th class="l" rowspan="2">${opts.corner || ''}</th>`;
+  colTop.forEach(c => h1 += `<th colspan="${colSub.length}">${c}</th>`);
+  let h2 = '<tr>';
+  colTop.forEach(() => colSub.forEach(s => h2 += `<th>${s}</th>`));
+  t.insertAdjacentHTML('beforeend', h1 + '</tr>' + h2 + '</tr>');
+
+  const line = (label, cls, rowKey, kidKey, indent, expandable) => {
+    const tr = el('tr', cls);
+    const td = el('td', 'l' + (indent ? ' sub' : ''));
+    if (expandable){
+      const e = el('span', 'exp', '', S.open[id + rowKey] ? '−' : '+');
+      e.onclick = ev => { ev.stopPropagation();
+        S.open[id + rowKey] = !S.open[id + rowKey]; draw(); };
+      td.appendChild(e);
+    }
+    td.appendChild(document.createTextNode(label));
+    tr.appendChild(td);
+    colTop.forEach(top => colSub.forEach(sub => {
+      const c = cell(rowKey, kidKey, top, sub) || {};
+      const cl = (c.neg ? 'neg ' : '') + (c.hot ? 'hot' : '');
+      tr.appendChild(el('td', cl.trim(), '', c.txt != null ? c.txt : f2(c.v)));
+    }));
+    if (opts.click && rowKey){
+      tr.classList.add('click');
+      if (opts.isSel && opts.isSel(rowKey, kidKey)) tr.classList.add('sel');
+      tr.onclick = () => opts.click(rowKey, kidKey);
+      tr.oncontextmenu = ev => { ev.preventDefault();
+        if (opts.rclick) opts.rclick(rowKey, kidKey); };
+    }
+    t.appendChild(tr);
+  };
+  rowsDef.forEach(r => {
+    line(r.label, r.kids ? 'master' : '', r.key, null, false, !!r.kids);
+    if (r.kids && S.open[id + r.key])
+      r.kids.forEach(k => line(k.label, '', r.key, k.key, true, false));
+  });
+  if (opts.total) line(opts.total, 'tot', null, null, false, false);
+  b.appendChild(t);
+}
+
+// ---------------------------------------------------------------- pages
+function band(page){
+  const r = rows(), p = prevMonthRows();
+  const v = val(r), pv = val(p);
+  const chg = pv ? (v - pv) / pv : null;
+  card(page, 16, 12, 200, 'Value ₹ Cr', f2(v));
+  card(page, 224, 12, 200, 'RM ₹ Cr', f2(val(r.filter(x => x.cat === 'RM'))));
+  card(page, 432, 12, 200, 'FG ₹ Cr', f2(val(r.filter(x => x.cat === 'FG'))));
+  card(page, 640, 12, 200, 'Consumables ₹ Cr',
+       f2(val(r.filter(x => x.cat === 'Consumables'))));
+  card(page, 848, 12, 200, 'FG days of inventory',
+       f1(days(r.filter(x => x.cat === 'FG'))));
+  card(page, 1056, 12, 208, 'Change vs last month',
+       chg == null ? '—' : pc(chg), chg == null ? '' : (chg >= 0 ? ' up' : ' dn'));
+  slicer(page, 16, 108, 300, 'Month', ['All', ...MONTHS], S.month,
+         v2 => { S.month = v2; draw(); });
+  slicer(page, 324, 108, 300, 'Plant', ['All', ...PLANTS.map(p2 => p2.n)], S.plant,
+         v2 => { S.plant = v2; draw(); });
+  slicer(page, 632, 108, 300, 'Category', ['All', ...CATS], S.cat,
+         v2 => { S.cat = v2; draw(); });
+  // cross-filter chips
+  const c = el('div', 'chips');
+  if (S.picks.length){
+    c.appendChild(document.createTextNode('Filtered by your clicks:'));
+    S.picks.forEach((p2, i) => {
+      const ch = el('div', 'chip', '', `${p2.val} <b>&times;</b>`);
+      ch.title = 'Click to remove';
+      ch.onclick = () => { S.picks.splice(i, 1); draw(); };
+      c.appendChild(ch);
+    });
+  } else {
+    c.appendChild(document.createTextNode(
+      'Nothing clicked yet — click a bar or a row and every visual follows it.'));
+  }
+  page.appendChild(c);
+}
+function pick(dim, v){
+  const i = S.picks.findIndex(p => p.dim === dim && p.val === v);
+  if (i >= 0) S.picks.splice(i, 1); else S.picks.push({dim, val: v});
+  draw();
+}
+function toDetail(ctx){ S.detail = ctx; S.dpick = null; S.page = 4; draw(); }
+
+function pageOverview(page){
+  band(page);
+  // stacked by month and category
+  let b = vis(page, 16, 168, 764, 264, 'Value ₹ Cr by month and category');
+  legend(b, CATS.map(c => [c, CATC[c]]));
+  chart(b, MONTHS, CATS.map(c => ({name: c, color: CATC[c],
+      vals: MONTHS.map(m => val(rows({month: 1}).filter(r => r.m === m && r.cat === c)))})),
+    'stack', (m, c) => pick('cat', c), (m, c) => toDetail({month: m, cat: c}));
+
+  // drillable plant chart
+  const d = S.drill;
+  const title = d.lvl === 0 ? 'Value ₹ Cr by plant — click a bar to go deeper'
+              : d.lvl === 1 ? `${d.plant} — by category (click again for natures)`
+              : `${d.plant} · ${d.cat} — by material nature`;
+  b = vis(page, 788, 168, 476, 264, title,
+          d.lvl ? null : 'Drill: plant → category → nature. Right-click = Detail page.');
+  if (d.lvl){
+    const bar = el('div', '', 'position:absolute;right:8px;top:-20px;z-index:2');
+    const up = el('button', 'back', 'width:auto;padding:1px 8px;border-radius:3px', '↑ up');
+    up.onclick = () => { if (d.lvl === 2){ d.lvl = 1; d.cat = null; }
+                         else { d.lvl = 0; d.plant = null; } draw(); };
+    bar.appendChild(up); b.parentNode.appendChild(bar);
+  }
+  let cats, vals;
+  if (d.lvl === 0){
+    cats = PLANTS.map(p => p.n);
+    vals = cats.map(p => val(rows({plant: 1}).filter(r => r.plant === p)));
+  } else if (d.lvl === 1){
+    cats = CATS;
+    vals = cats.map(c => val(rows({cat: 1}).filter(r => r.plant === d.plant && r.cat === c)));
+  } else {
+    cats = [...new Set(ROWS.filter(r => r.plant === d.plant && r.cat === d.cat)
+                           .map(r => r.nat))];
+    vals = cats.map(n => val(rows().filter(r =>
+      r.plant === d.plant && r.cat === d.cat && r.nat === n)));
+  }
+  chart(b, cats, [{name: 'Value ₹ Cr', color: G.g1, vals}], 'group',
+    lab => {
+      if (d.lvl === 0){ d.lvl = 1; d.plant = lab; }
+      else if (d.lvl === 1){ d.lvl = 2; d.cat = lab; }
+      else pick('nat', lab);
+      draw();
+    },
+    lab => toDetail(d.lvl === 0 ? {plant: lab}
+                  : d.lvl === 1 ? {plant: d.plant, cat: lab}
+                  : {plant: d.plant, cat: d.cat, nat: lab}));
+
+  // this month vs last month
+  b = vis(page, 16, 444, 764, 268, 'Value ₹ Cr — this month vs last month');
+  legend(b, [['Value ₹ Cr', G.g1], ['Last month', G.g3], ['% vs LM', G.g4]]);
+  const cur = MONTHS.map(m => val(rows({month: 1}).filter(r => r.m === m)));
+  const lm = MONTHS.map((m, i) => i ? cur[i - 1] : 0);
+  chart(b, MONTHS, [{name: 'Value ₹ Cr', color: G.g1, vals: cur},
+                    {name: 'Last month', color: G.g3, vals: lm.map((v, i) => i ? v : 0)}],
+    'group', (m) => pick('m', m), m => toDetail({month: m}));
+  lineOver(b, cur.map((v, i) => i ? (v - lm[i]) / (lm[i] || 1) : null), G.g4);
+
+  // months side by side
+  b = vis(page, 788, 444, 476, 268, 'Months side by side — ₹ Cr');
+  matrix(b, 'ov', CATS.map(c => ({key: c, label: c})), [''], MONTHS,
+    (rk, kk, top, sub) => ({v: val(rows({month: 1, cat: 1})
+                                     .filter(r => r.cat === rk && r.m === sub))}),
+    {corner: 'Category', total: 'Total',
+     click: rk => pick('cat', rk), isSel: rk => S.picks.some(p => p.val === rk),
+     rclick: rk => toDetail({cat: rk})});
+  // total row values
+  fixTotal(b, (sub, ti) => val(rows({month: 1, cat: 1}).filter(r => r.m === sub)));
+}
+
+// fills the last row of the most recent matrix (grand total)
+function fixTotal(b, fn){
+  const tr = b.querySelector('tr.tot'); if (!tr) return;
+  [...tr.children].slice(1).forEach((td, i) => {
+    const heads = [...b.querySelectorAll('tr:nth-child(2) th')];
+    td.textContent = f2(fn(heads[i] ? heads[i].textContent : '', i));
+  });
+}
+
+function pageSummary(page){
+  band(page);
+  const b = vis(page, 16, 168, 1248, 300,
+    'Inventory (TB) · Inventory (MB5B) · Difference — ₹ Cr, last four months',
+    'Click a plant row to filter; +/− opens RM, FG and consumables underneath it.');
+  const rowsDef = PLANTS.map(p => ({key: p.n, label: `${p.c} — ${p.n}`,
+    kids: CATS.map(c => ({key: c, label: c}))}));
+  const cellVal = (plant, cat, top, sub) => {
+    const rs = rows({month: 1, plant: 1, cat: 1}).filter(r =>
+      r.m === sub && (!plant || r.plant === plant) && (!cat || r.cat === cat));
+    if (top === 'Inventory (TB)') return {v: tb(rs)};
+    if (top === 'Inventory (MB5B)') return {v: val(rs)};
+    const d = tb(rs) - val(rs);
+    return {v: d, txt: (d >= 0 ? '' : '') + d.toFixed(2), neg: d < 0, hot: Math.abs(d) > 1.2};
+  };
+  matrix(b, 'sm', rowsDef, ['Inventory (TB)', 'Inventory (MB5B)', 'Difference'], LAST4,
+    cellVal, {corner: 'Plant / category', total: 'Total',
+      click: (p, c) => pick(c ? 'cat' : 'plant', c || p),
+      isSel: (p, c) => S.picks.some(x => x.val === (c || p)),
+      rclick: (p, c) => toDetail({plant: p, cat: c})});
+  const tr = b.querySelector('tr.tot');
+  [...tr.children].slice(1).forEach((td, i) => {
+    const top = ['Inventory (TB)', 'Inventory (MB5B)', 'Difference'][Math.floor(i / 4)];
+    const c = cellVal(null, null, top, LAST4[i % 4]);
+    td.textContent = c.txt != null ? c.txt : f2(c.v);
+    if (c.neg) td.classList.add('neg');
+  });
+
+  // difference by plant — click a bar to filter the matrix above
+  let c2 = vis(page, 16, 480, 620, 232, 'Difference ₹ Cr by plant — click a bar',
+               'Red is the books above MB5B; either direction is equally wrong.');
+  const dif = PLANTS.map(p2 => {
+    const rs = rows({plant: 1}).filter(r => r.plant === p2.n);
+    return tb(rs) - val(rs);
+  });
+  chart(c2, PLANTS.map(p2 => p2.c), [{name: 'Difference ₹ Cr', color: G.g1,
+      vals: dif.map(Math.abs)}], 'group',
+    (lab) => pick('plant', PLANTS.find(p2 => p2.c === lab).n),
+    (lab) => toDetail({plant: PLANTS.find(p2 => p2.c === lab).n}));
+  c2.querySelectorAll('.bar').forEach((el2, i) => {
+    if (dif[i] < 0) el2.style.background = G.bad;
+  });
+
+  // TB against MB5B, month by month
+  c2 = vis(page, 644, 480, 620, 232, 'Inventory (TB) vs Inventory (MB5B) by month');
+  legend(c2, [['TB', G.g1], ['MB5B', G.g3]]);
+  chart(c2, MONTHS,
+    [{name: 'TB', color: G.g1, vals: MONTHS.map(m => tb(rows({month: 1}).filter(r => r.m === m)))},
+     {name: 'MB5B', color: G.g3, vals: MONTHS.map(m => val(rows({month: 1}).filter(r => r.m === m)))}],
+    'group', m => pick('m', m), m => toDetail({month: m}));
+}
+
+function unitCell(filterFn, measure, sub){
+  const rs = rows({month: 1, cat: 1, plant: 1}).filter(r => r.m === sub && filterFn(r));
+  if (measure === 'MW') return {v: mw(rs), txt: f1(mw(rs))};
+  if (measure === 'In ₹ Cr') return {v: val(rs)};
+  return {txt: f1(days(rs))};
+}
+
+function pageFG(page){
+  band(page);
+  let b = vis(page, 16, 168, 1248, 176, 'FG by plant — MW · In ₹ Cr · In Days',
+    '1905 has no module capacity, so its Days cell is deliberately blank.');
+  matrix(b, 'fgp', PLANTS.map(p => ({key: p.n, label: `${p.c} — ${p.n}`})),
+    ['MW', 'In ₹ Cr', 'In Days'], LAST4,
+    (rk, kk, top, sub) => unitCell(r => r.cat === 'FG' && r.plant === rk, top, sub),
+    {corner: 'Plant', total: 'Total',
+     click: rk => pick('plant', rk), isSel: rk => S.picks.some(p => p.val === rk),
+     rclick: rk => toDetail({plant: rk, cat: 'FG'})});
+  let tr = b.querySelector('tr.tot');
+  [...tr.children].slice(1).forEach((td, i) => {
+    const top = ['MW', 'In ₹ Cr', 'In Days'][Math.floor(i / 4)];
+    const c = unitCell(r => r.cat === 'FG', top, LAST4[i % 4]);
+    td.textContent = c.txt != null ? c.txt : f2(c.v);
+  });
+
+  b = vis(page, 16, 356, 764, 356, 'FG by technology — MW · In ₹ Cr · In Days');
+  const techs = [...new Set(ROWS.filter(r => r.cat === 'FG').map(r => r.nat))];
+  matrix(b, 'fgt', techs.map(t => ({key: t, label: t})),
+    ['MW', 'In ₹ Cr', 'In Days'], LAST4,
+    (rk, kk, top, sub) => unitCell(r => r.cat === 'FG' && r.nat === rk, top, sub),
+    {corner: 'Technology',
+     click: rk => pick('nat', rk), isSel: rk => S.picks.some(p => p.val === rk),
+     rclick: rk => toDetail({cat: 'FG', nat: rk})});
+
+  b = vis(page, 788, 356, 476, 176, 'FG MW by technology — click a bar');
+  const tvals = techs.map(x => mw(rows().filter(r => r.cat === 'FG' && r.nat === x)));
+  chart(b, techs.map(x => x.split(' ')[0]), [{name: 'MW', color: G.g2, vals: tvals}],
+    'group', (lab, _s) => pick('nat', techs.find(x => x.startsWith(lab))),
+    lab => toDetail({cat: 'FG', nat: techs.find(x => x.startsWith(lab))}));
+
+  b = vis(page, 788, 544, 476, 168, 'FG days — click a bar to drill in');
+  legend(b, [['Days', G.g1], ['vs LM', G.g4]]);
+  const dv = MONTHS.map(m =>
+    days(rows({month: 1}).filter(r => r.cat === 'FG' && r.m === m)) || 0);
+  chart(b, MONTHS, [{name: 'Days', color: G.g1, vals: dv}], 'group',
+    m => pick('m', m), m => toDetail({month: m, cat: 'FG'}));
+  lineOver(b, dv.map((v, i) => i ? v - dv[i - 1] : null), G.g4);
+}
+
+function pageRM(page){
+  band(page);
+  let b = vis(page, 16, 168, 1248, 176, 'RM by plant — In ₹ Cr · In Days');
+  matrix(b, 'rmp', PLANTS.map(p => ({key: p.n, label: `${p.c} — ${p.n}`})),
+    ['In ₹ Cr', 'In Days'], LAST4,
+    (rk, kk, top, sub) => unitCell(r => r.cat === 'RM' && r.plant === rk, top, sub),
+    {corner: 'Plant', total: 'Total',
+     click: rk => pick('plant', rk), isSel: rk => S.picks.some(p => p.val === rk),
+     rclick: rk => toDetail({plant: rk, cat: 'RM'})});
+  const tr = b.querySelector('tr.tot');
+  [...tr.children].slice(1).forEach((td, i) => {
+    const top = ['In ₹ Cr', 'In Days'][Math.floor(i / 4)];
+    const c = unitCell(r => r.cat === 'RM', top, LAST4[i % 4]);
+    td.textContent = c.txt != null ? c.txt : f2(c.v);
+  });
+
+  b = vis(page, 16, 356, 620, 356, 'RM by group nature and nature',
+          '+/− opens the natures inside a group.');
+  const groups = [...new Set(ROWS.filter(r => r.cat === 'RM').map(r => r.grp))];
+  matrix(b, 'rmg', groups.map(g => ({key: g, label: g,
+      kids: [...new Set(ROWS.filter(r => r.cat === 'RM' && r.grp === g).map(r => r.nat))]
+              .map(n => ({key: n, label: n}))})),
+    ['In ₹ Cr', 'In Days'], LAST4,
+    (rk, kk, top, sub) => unitCell(r => r.cat === 'RM' && r.grp === rk &&
+                                        (!kk || r.nat === kk), top, sub),
+    {corner: 'Group nature / nature',
+     click: (g, n) => pick(n ? 'nat' : 'grp', n || g),
+     isSel: (g, n) => S.picks.some(p => p.val === (n || g)),
+     rclick: (g, n) => toDetail({cat: 'RM', grp: g, nat: n})});
+
+  // decomposition tree
+  b = vis(page, 644, 356, 620, 176, 'RM ₹ Cr by group nature — click a bar');
+  chart(b, groups.map(g => g.split(' ')[0]),
+    [{name: 'RM ₹ Cr', color: G.g1,
+      vals: groups.map(g => val(rows().filter(r => r.cat === 'RM' && r.grp === g)))}],
+    'group', lab => pick('grp', groups.find(g => g.startsWith(lab))),
+    lab => toDetail({cat: 'RM', grp: groups.find(g => g.startsWith(lab))}));
+
+  b = vis(page, 644, 544, 620, 168, 'RM — click through any way you like');
+  const t = S.tree = S.tree || {};
+  const mk = (x, label, items, onClick, selected) => {
+    const c = el('div', 'dcol', `left:${x}px`);
+    c.appendChild(el('div', 'dnl', 'margin-bottom:4px', label));
+    items.forEach(i => {
+      const n = el('div', 'dnode' + (selected === i[0] ? ' on' : ''), '',
+        `<div class="dnl">${i[0]}</div><div class="dnv">${f2(i[1])}</div>`);
+      n.onclick = () => { onClick(i[0]); draw(); };
+      c.appendChild(n);
+    });
+    b.appendChild(c);
+  };
+  const rm = rows({cat: 1}).filter(r => r.cat === 'RM');
+  mk(6, 'RM total', [['Value ₹ Cr', val(rm)]], () => { t.plant = null; t.grp = null; },
+     'Value ₹ Cr');
+  mk(160, 'by plant', PLANTS.map(p => [p.n, val(rm.filter(r => r.plant === p.n))]),
+     v => { t.plant = v; t.grp = null; }, t.plant);
+  if (t.plant){
+    const inP = rm.filter(r => r.plant === t.plant);
+    mk(310, 'by group nature',
+       [...new Set(inP.map(r => r.grp))].map(g => [g, val(inP.filter(r => r.grp === g))]),
+       v => { t.grp = v; }, t.grp);
+  }
+  if (t.plant && t.grp){
+    const inG = rm.filter(r => r.plant === t.plant && r.grp === t.grp);
+    mk(462, 'by nature',
+       [...new Set(inG.map(r => r.nat))].map(n => [n, val(inG.filter(r => r.nat === n))]),
+       v => pick('nat', v), null);
+  }
+}
+
+function pageDetail(page){
+  const d = S.detail || {};
+  const bar = el('div', 'drillbar');
+  const back = el('button', 'back', '', '←');
+  back.onclick = () => { S.page = 0; S.detail = null; S.dpick = null; draw(); };
+  bar.appendChild(back);
+  const what = ['plant', 'cat', 'nat', 'month', 'grp'].map(k => d[k]).filter(Boolean);
+  bar.style.color = '#5b6660';
+  bar.appendChild(el('span', '', '', what.length
+    ? 'Drilled through from a click: <b>' + what.join(' · ') + '</b>'
+    : 'Nothing drilled into yet — right-click a bar or a row on another page.'));
+  page.appendChild(bar);
+
+  let rs = ROWS.filter(r =>
+    (!d.plant || r.plant === d.plant) && (!d.cat || r.cat === d.cat) &&
+    (!d.nat || r.nat === d.nat) && (!d.grp || r.grp === d.grp) &&
+    (!d.month || r.m === d.month) && (S.month === 'All' || !d.month || true));
+  if (!d.month && S.month !== 'All') rs = rs.filter(r => r.m === S.month);
+  if (S.dpick) rs = rs.filter(r => r.nat === S.dpick || r.cat === S.dpick ||
+                                   r.plant === S.dpick);
+  const tot = val(ROWS.filter(r => !d.month || r.m === d.month));
+  card(page, 16, 46, 296, 'Value ₹ Cr', f2(val(rs)));
+  card(page, 320, 46, 296, 'MW', f1(mw(rs)));
+  card(page, 624, 46, 296, 'Days', f1(days(rs)));
+  card(page, 928, 46, 336, 'Share of total', pc(val(rs) / (tot || 1)).replace('+', ''));
+
+  let b = vis(page, 16, 148, 404, 288, 'Split by category — click a slice');
+  pie(b, CATS.map(c => [c, val(rs.filter(r => r.cat === c)), CATC[c]]), 0,
+      v => { S.dpick = S.dpick === v ? null : v; draw(); });
+
+  b = vis(page, 428, 148, 404, 288, 'Split by technology / nature');
+  const nats = [...new Set(rs.map(r => r.nat))].slice(0, 6);
+  const pal = [G.g1, G.g2, G.g3, G.g4, G.g5, G.grey];
+  pie(b, nats.map((n, i) => [n, val(rs.filter(r => r.nat === n)), pal[i % 6]]), .55,
+      v => { S.dpick = S.dpick === v ? null : v; draw(); });
+
+  b = vis(page, 840, 148, 424, 288, 'Split by plant');
+  pie(b, PLANTS.filter(p => rs.some(r => r.plant === p.n))
+        .map((p, i) => [p.n, val(rs.filter(r => r.plant === p.n)), pal[i % 6]]), 0,
+      v => { S.dpick = S.dpick === v ? null : v; draw(); });
+
+  b = vis(page, 16, 448, 1248, 264, 'Materials behind this number');
+  const keys = [...new Set(rs.map(r => r.plant + '|' + r.cat + '|' + r.nat))];
+  const t = el('table');
+  t.insertAdjacentHTML('beforeend',
+    '<tr><th class="l">Plant</th><th class="l">Category</th><th class="l">Nature</th>' +
+    '<th>Value ₹ Cr</th><th>MW</th><th>Days</th><th>Share</th></tr>');
+  keys.map(k => {
+    const [p, c, n] = k.split('|');
+    const g = rs.filter(r => r.plant === p && r.cat === c && r.nat === n);
+    return [p, c, n, val(g), mw(g), days(g), val(g) / (val(rs) || 1)];
+  }).sort((a, b2) => b2[3] - a[3]).forEach(r => {
+    t.insertAdjacentHTML('beforeend',
+      `<tr><td class="l">${r[0]}</td><td class="l">${r[1]}</td><td class="l">${r[2]}</td>` +
+      `<td>${f2(r[3])}</td><td>${f1(r[4])}</td><td>${f1(r[5])}</td>` +
+      `<td>${(r[6] * 100).toFixed(1)}%</td></tr>`);
+  });
+  b.appendChild(t);
+}
+
+function pageDQ(page){
+  card(page, 16, 16, 300, 'Rows missing master attributes', '0');
+  card(page, 324, 16, 300, 'Stock reconciliation ₹ Cr', '0.00');
+  card(page, 632, 16, 300, 'Unmapped TB ₹ Cr', '0.00');
+  card(page, 940, 16, 324, 'Files loaded this refresh', String(MONTHS.length * 12));
+  let b = vis(page, 16, 120, 624, 290, 'GLs in TB but not in TB Master (want empty)');
+  b.appendChild(el('div', '', 'padding:12px;color:#5b6660',
+    'Empty — every GL account in the trial balance is whitelisted on TB Master.'));
+  b = vis(page, 648, 120, 616, 290, 'FG natures with no capacity row (want empty)');
+  b.appendChild(el('div', '', 'padding:12px;color:#5b6660',
+    'Empty — every FG Nature matches a Tech on MW Capacity, so Days is never blank.'));
+  b = vis(page, 16, 420, 1248, 292, 'Files loaded this refresh');
+  const t = el('table');
+  t.insertAdjacentHTML('beforeend',
+    '<tr><th class="l">File</th><th class="l">Month</th><th class="l">Category</th>' +
+    '<th>Value ₹ Cr</th></tr>');
+  MONTHS.slice().reverse().forEach(m => CATS.forEach(c => {
+    const v = val(ROWS.filter(r => r.m === m && r.cat === c));
+    const f = (c === 'RM' ? 'RM_' : c === 'FG' ? 'FG_' : 'Consble_') +
+              '20' + m.slice(-2) + String(MONTHS.indexOf(m) + 6).padStart(2, '0') + '.xlsx';
+    t.insertAdjacentHTML('beforeend',
+      `<tr><td class="l">${f}</td><td class="l">${m}</td><td class="l">${c}</td>` +
+      `<td>${f2(v)}</td></tr>`);
+  }));
+  b.appendChild(t);
+}
+
+// ---------------------------------------------------------------- draw
+const BUILD = [pageOverview, pageSummary, pageFG, pageRM, pageDetail, pageDQ];
+function draw(){
+  BUILD.forEach((fn, i) => {
+    const p = document.getElementById('p' + i);
+    p.innerHTML = '';
+    p.classList.toggle('on', i === S.page);
+    if (i === S.page) fn(p);
+  });
+  document.querySelectorAll('.top button').forEach(b =>
+    b.classList.toggle('on', +b.dataset.p === S.page));
+}
+document.querySelectorAll('.top button').forEach(b =>
+  b.onclick = () => { S.page = +b.dataset.p; draw(); });
+if (!S.open['sm' + 'Jaipur Module']) S.open['smJaipur Module'] = true;
+draw();
+</script>
+</body>
+</html>
