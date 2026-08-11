@@ -222,10 +222,18 @@ def steps():
                         else:
                             src = ("type %s into the search box at the top of the Data pane, "
                                    "then drag it" % fld)
+                        v = (val or "").strip()
+                        if v.lower().startswith("untick "):
+                            act = ("Then untick %s in the list and leave everything else "
+                                   "ticked." % v[7:])
+                        elif v.lower().startswith("is "):
+                            act = ("Then tick %s in the list and untick everything else."
+                                   % v[3:])
+                        else:
+                            act = "Then tick the value shown below and untick everything else."
                         do.append("Now the filter: %s into the Filters pane (that is the pane "
                                   "just to the LEFT of Visualizations), dropping it under the "
-                                  "words 'Filters on this visual'. Then tick %s and untick "
-                                  "everything else." % (src, val or "the value shown below"))
+                                  "words 'Filters on this visual'. %s" % (src, act))
                 else:
                     for f in fl:
                         do.append(_drag(f, wl))
