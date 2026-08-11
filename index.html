@@ -48,21 +48,49 @@ blockquote{margin:12px 0;padding:8px 14px;border-left:3px solid var(--acc);backg
 .bar .track{flex:1;height:7px;background:#232936;border-radius:5px;overflow:hidden}
 .bar .fill{height:100%;background:var(--ok);width:0}
 footer{color:var(--dim);font-size:12px;margin-top:40px;text-align:center}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:10px 0}
+.step .pagetag{display:inline-block;background:#232936;border:1px solid var(--line);border-radius:20px;
+  padding:3px 12px;font-size:12px;color:var(--dim);margin-bottom:10px}
+.step h2{border:0;margin:0 0 14px;font-size:22px;padding:0}
+.step ol{margin:0 0 4px;padding-left:22px}
+.step ol li{margin:8px 0;font-size:16px}
+.step .why{margin:16px 0 0;color:var(--dim);font-size:14px;border-left:2px solid var(--acc);padding-left:12px}
+.kv{margin:16px 0 0;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.kv .row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-top:1px solid var(--line)}
+.kv .row:first-child{border-top:0}
+.kv .k{color:var(--dim);font-size:13px;min-width:104px}
+.kv .v{flex:1;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;word-break:break-all}
+.kv .row.pos .v{color:#8fd3a3}
+button.mini{border:1px solid var(--line);background:#232936;color:var(--fg);border-radius:6px;
+  padding:4px 10px;font-size:12px;cursor:pointer}
+button.mini:hover{border-color:var(--acc)}
+button.mini.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.navrow{display:flex;gap:10px;align-items:center;margin:16px 0 0;position:sticky;bottom:0;
+  background:var(--bg);padding:12px 0}
+.navrow button{border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:8px;
+  padding:11px 20px;font-size:15px;cursor:pointer}
+.navrow button.primary{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+.navrow button:disabled{opacity:.4;cursor:default}
+.navrow #sreset{margin-left:auto;font-size:13px;padding:8px 12px}
+a.dl{display:inline-block;margin:14px 0 0;background:#232936;border:1px solid var(--acc);
+  border-radius:7px;padding:9px 14px;text-decoration:none;font-size:14px}
 </style></head><body>
 <div class="wrap">
 <h1>Inventory Power BI — build guide</h1>
 <p class="sub">Click <strong>Copy</strong> on a block, then paste it into Power Query's Advanced Editor.
-Tick <strong>Done</strong> to keep your place — it is remembered in this browser.</p>
+Tick <strong>Done</strong> to keep your place — it is remembered in this browser.
+Building the pages? Use <strong>Build it</strong> — one instruction per screen.</p>
 
 <nav class="tabs">
   <button data-tab="q" class="on">Queries (28)</button>
   <button data-tab="m">Measures (22)</button>
+  <button data-tab="b">Build it (33)</button>
   <button data-tab="g">Walkthrough</button>
   <input id="search" placeholder="Search a query name or code…">
   <button id="reset" title="Clear progress">Reset</button>
 </nav>
 
-<div class="bar"><span id="ptext"></span><span class="track"><span class="fill" id="pfill"></span></span></div>
+<div class="bar" id="qbar"><span id="ptext"></span><span class="track"><span class="fill" id="pfill"></span></span></div>
 
 <div class="panel on" id="tab-q">
   <p class="sub">One query per box, in this order. For each: <strong>Home → New Source → Blank Query</strong>,
@@ -1235,6 +1263,16 @@ RETURN CALCULATE([Closing Value], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)</
 </section>
 </div>
 
+<div class="panel" id="tab-b">
+  <div class="bar"><span id="stext"></span><span class="track"><span class="fill" id="sfill"></span></span></div>
+  <section class="step" id="stepbox"></section>
+  <div class="navrow">
+    <button id="sprev">&larr; Back</button>
+    <button id="snext" class="primary">Next &rarr;</button>
+    <button id="sreset" title="Back to step 1">Start over</button>
+  </div>
+</div>
+
 <div class="panel" id="tab-g"><h1>Build guide — click by click</h1>
 <p>Follow top to bottom. Don&#x27;t skip ahead; each query references the ones before it. Every code block you need is in <strong>Appendix A</strong> at the end of this file, under the same name as the step that asks for it.</p>
 <p>Rough time: Part 1–3 about 40 minutes, Part 4 (visuals) about 2 hours.</p>
@@ -1354,149 +1392,199 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <p><strong>3.6</strong> Format the money ones. Click each of <code>Closing Value</code>, <code>Opening Value</code>, <code>Receipts Value</code>, <code>Issues Value</code>, <code>TB Value</code>, <code>Difference</code> → ribbon <strong>Measure tools</strong> → <strong>Format: Currency</strong>, <strong>Decimal places: 0</strong>. For <code>Difference %</code>, set <strong>Format: Percentage</strong>, 1 decimal. For <code>Days</code>, <code>MW</code>, <code>Capacity MW</code>, set <strong>Decimal places: 1</strong>.</p>
 <hr>
 <h1>PART 4 — Build the pages</h1>
-<p>Every visual below is spelled out the same way: what to insert, exactly which field goes in which well, and the four numbers that place it. Nothing is left to taste.</p>
-<p><strong>How to place a visual precisely</strong> (do this for every one): select it, open the <strong>Format</strong> pane (paintbrush icon) → <strong>General</strong> → <strong>Properties</strong> → <strong>Size and style</strong>, and type the four numbers. X and Y are the top-left corner, in pixels, on a 1280 × 720 canvas.</p>
-<p><strong>4.0 — Set the canvas and the theme first.</strong> Doing this after building means re-doing it.</p>
+<p>Each visual is spelled out the same way: what to insert, which field goes in which well, and the four numbers that place it on a 1280 x 720 canvas.</p>
+<blockquote>Prefer one instruction at a time? Use the <strong>Build it</strong> tab — same content, one step per screen, with a Next button.</blockquote>
+<p><strong>To place any visual:</strong> select it → Format pane → General → Properties → <strong>Size and style</strong> → type X, Y, Width, Height.</p>
+<p><strong>4.0 Canvas and theme, before anything else.</strong></p>
 <ol>
-<li>Click empty canvas → <strong>Format</strong> pane → <strong>Canvas settings</strong> → <strong>Type: 16:9</strong>,</li>
+<li>Click empty canvas → Format pane → Canvas settings → Type 16:9, Height 720, Width 1280.</li>
+<li>Download <a href="inventory-theme.json">inventory-theme.json</a> (right-click → Save link as).</li>
+<li>Ribbon <strong>View</strong> → <strong>Themes</strong> → <strong>Browse for themes</strong> → pick that file.</li>
 </ol>
-<p>Height 720, Width 1280.</p>
-<ol>
-<li>Download the theme: <a href="inventory-theme.json">inventory-theme.json</a></li>
-</ol>
-<p>(right-click → Save link as, into your <code>Inventory Report</code> folder).</p>
-<ol>
-<li>Ribbon <strong>View</strong> → <strong>Themes</strong> dropdown → <strong>Browse for themes</strong> → pick that file.</li>
-</ol>
-<p>Colours, fonts, card styling, matrix gridlines and rounded borders all come from the theme, so no visual below needs manual colouring — only the conditional formatting in 4.10, which is data-driven and can&#x27;t live in a theme.</p>
-<p><strong>Make the five pages now</strong>, so you can copy the header band into them: click the <strong>+</strong> at the bottom five times, then double-click each tab and name them <code>Overview</code> · <code>Summary</code> · <code>FG</code> · <code>RM</code> · <code>Data Quality</code>.</p>
+<p>Colours, fonts, borders and card styling all come from the theme, so nothing below asks you to colour anything.</p>
+<p><strong>Create the five pages</strong> with the <strong>+</strong> at the bottom, named: <code>Overview</code> · <code>Summary</code> · <code>FG</code> · <code>RM</code> · <code>Data Quality</code>.</p>
 <hr>
-<h2>The header band — build once on Overview, then copy to all five</h2>
-<p><strong>4.1</strong> Insert five <strong>Card</strong> visuals. For each: <strong>Insert</strong> → <strong>Card</strong>, drop the measure into the <strong>Fields</strong> well, then set the position.</p>
+<h2>The header band — build once on Overview, then copy</h2>
+<p><strong>4.1</strong> Five <strong>Card</strong> visuals (<strong>Insert → Card</strong>), one measure each:</p>
 <table>
-<tr><th>Card</th><th>Measure in Fields</th><th>X</th><th>Y</th><th>Width</th><th>Height</th></tr>
-<tr><td>1</td><td><code>Inventory Total</code></td><td>16</td><td>12</td><td>240</td><td>88</td></tr>
-<tr><td>2</td><td><code>Inv RM</code></td><td>264</td><td>12</td><td>240</td><td>88</td></tr>
-<tr><td>3</td><td><code>Inv FG</code></td><td>512</td><td>12</td><td>240</td><td>88</td></tr>
-<tr><td>4</td><td><code>Inv Consumables</code></td><td>760</td><td>12</td><td>240</td><td>88</td></tr>
-<tr><td>5</td><td><code>Difference</code></td><td>1008</td><td>12</td><td>240</td><td>88</td></tr>
+<tr><th>Card</th><th>Measure</th><th>X</th><th>Y</th><th>Width</th><th>Height</th></tr>
+<tr><td>1 — Total inventory</td><td><code>Inventory Total</code></td><td>16</td><td>12</td><td>240</td><td>88</td></tr>
+<tr><td>2 — Raw materials</td><td><code>Inv RM</code></td><td>264</td><td>12</td><td>240</td><td>88</td></tr>
+<tr><td>3 — Finished goods</td><td><code>Inv FG</code></td><td>512</td><td>12</td><td>240</td><td>88</td></tr>
+<tr><td>4 — Consumables</td><td><code>Inv Consumables</code></td><td>760</td><td>12</td><td>240</td><td>88</td></tr>
+<tr><td>5 — TB vs MB5B difference</td><td><code>Difference</code></td><td>1008</td><td>12</td><td>240</td><td>88</td></tr>
 </table>
-<p><strong>4.2</strong> Insert two <strong>Slicer</strong> visuals. For each: <strong>Insert</strong> → <strong>Slicer</strong>, drag the field in, then <strong>Format</strong> → <strong>Slicer settings</strong> → <strong>Style: Dropdown</strong>.</p>
+<p><strong>4.2</strong> Two <strong>Slicer</strong> visuals (<strong>Insert → Slicer</strong>), each set to <strong>Format → Slicer settings → Style: Dropdown</strong>:</p>
 <table>
 <tr><th>Slicer</th><th>Field</th><th>X</th><th>Y</th><th>Width</th><th>Height</th></tr>
 <tr><td>Month</td><td><code>dimDate[MonthName]</code></td><td>16</td><td>108</td><td>300</td><td>44</td></tr>
 <tr><td>Plant</td><td><code>dimPlant[Plant]</code></td><td>324</td><td>108</td><td>300</td><td>44</td></tr>
 </table>
-<p><strong>4.3</strong> Select all seven (click the first, Ctrl+click the rest) → <strong>Ctrl+C</strong> → go to each of the other four pages → <strong>Ctrl+V</strong>. Positions come with them, so the band lands identically.</p>
-<p><strong>4.4</strong> Ribbon <strong>View</strong> → tick <strong>Sync slicers</strong>. In the pane that opens, click the Month slicer and tick <strong>Sync</strong> and <strong>Visible</strong> for all five pages; repeat for the Plant slicer. Without this, each page filters independently and two pages will disagree.</p>
-<blockquote>Everything below sits between Y=168 and Y=712, which is the space under the band.</blockquote>
+<p><strong>4.3</strong> Select all seven → <strong>Ctrl+C</strong> → on each other page <strong>Ctrl+V</strong>. Positions come with them.</p>
+<p><strong>4.4</strong> Ribbon <strong>View</strong> → tick <strong>Sync slicers</strong>; for each slicer tick <strong>Sync</strong> and <strong>Visible</strong> on all five pages. Without it, two pages can disagree about the same month.</p>
 <hr>
-<h2>Page 1 — Overview</h2>
-<p><strong>4.5</strong> <strong>Stacked column chart</strong> — inventory mix by month.</p>
+<h2>Page — Overview</h2>
+<p><strong>4.5</strong> <strong>Stacked column chart</strong> — Shows the whole inventory month by month, split RM / FG / consumables.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
 <tr><td>Y-axis</td><td><code>Closing Value</code></td></tr>
 <tr><td>Legend</td><td><code>factInventory[Category]</code></td></tr>
 </table>
-<p>Position: X 16, Y 168, W 764, H 272. Title: <code>Inventory by month and category</code>.</p>
-<p><strong>4.6</strong> <strong>Clustered column chart</strong> — where the stock sits.</p>
+<p>Title: <code>Inventory by month and category</code></p>
+<p>Position: X 16, Y 168, W 764, H 272.</p>
+<p><strong>4.6</strong> <strong>Clustered column chart</strong> — Shows which plant is holding the stock.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>X-axis</td><td><code>dimPlant[Plant]</code></td></tr>
 <tr><td>Y-axis</td><td><code>Closing Value</code></td></tr>
 <tr><td>Legend</td><td><code>factInventory[Category]</code></td></tr>
 </table>
-<p>Position: X 788, Y 168, W 476, H 272. Title: <code>Inventory by plant</code>.</p>
-<p><strong>4.7</strong> <strong>Line chart</strong> — this month against last.</p>
+<p>Title: <code>Inventory by plant</code></p>
+<p>Position: X 788, Y 168, W 476, H 272.</p>
+<p><strong>4.7</strong> <strong>Line chart</strong> — Two lines: this month and last month, so a jump is obvious.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
-<tr><td>Y-axis</td><td><code>Closing Value</code>, then <code>Prev Month</code></td></tr>
+<tr><td>Y-axis</td><td><code>Closing Value</code>, <code>Prev Month</code></td></tr>
 </table>
-<p>Position: X 16, Y 452, W 1248, H 260. Title: <code>Closing value vs previous month</code>.</p>
+<p>Title: <code>Closing value vs previous month</code></p>
+<p>Position: X 16, Y 452, W 1248, H 260.</p>
 <hr>
-<h2>Page 2 — Summary (TB vs MB5B)</h2>
-<p><strong>4.8</strong> <strong>Matrix</strong> — the reconciliation itself.</p>
+<h2>Page — Summary</h2>
+<p><strong>4.8</strong> <strong>Matrix</strong> — The reconciliation itself: what the books say vs what the stock report says.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Rows</td><td><code>dimPlant[Plant]</code></td></tr>
 <tr><td>Values</td><td><code>TB Value</code>, <code>Closing Value</code>, <code>Difference</code>, <code>Difference %</code></td></tr>
 </table>
-<p>Position: X 16, Y 168, W 764, H 300. Title: <code>Trial balance vs MB5B</code>.</p>
-<p><strong>4.9</strong> <strong>Waterfall chart</strong> — which plant causes the gap.</p>
+<p>Title: <code>Trial balance vs MB5B</code></p>
+<p>Position: X 16, Y 168, W 764, H 300.</p>
+<ul>
+<li>In the Values well click the little arrow next to Difference → Conditional formatting → Background color.</li>
+<li>Set Format style to Diverging. Minimum red, Centre white with Centre = 0, Maximum red.</li>
+<li>Both ends red on purpose: a difference either direction is equally wrong.</li>
+</ul>
+<p><strong>4.9</strong> <strong>Waterfall chart</strong> — Shows which plant creates the gap, rather than just that a gap exists.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Category</td><td><code>dimPlant[Plant]</code></td></tr>
 <tr><td>Y-axis</td><td><code>Difference</code></td></tr>
 </table>
-<p>Position: X 788, Y 168, W 476, H 300. Title: <code>Difference by plant</code>.</p>
-<p><strong>4.10</strong> Conditional formatting on the matrix (the one thing the theme can&#x27;t do): click the matrix → in the <strong>Values</strong> well click the dropdown on <code>Difference</code> → <strong>Conditional formatting</strong> → <strong>Background color</strong> → <strong>Format style: Diverging</strong> → Minimum red, Centre white with <strong>Centre = 0</strong>, Maximum red. Both directions red because a difference either way is equally wrong.</p>
-<p><strong>4.11</strong> <strong>Line chart</strong> — is the gap closing or widening?</p>
+<p>Title: <code>Difference by plant</code></p>
+<p>Position: X 788, Y 168, W 476, H 300.</p>
+<p><strong>4.10</strong> <strong>Line chart</strong> — Tells you whether the gap is being cleaned up or getting worse.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
 <tr><td>Y-axis</td><td><code>Difference</code></td></tr>
 </table>
-<p>Position: X 16, Y 480, W 1248, H 232. Title: <code>Difference trend</code>.</p>
+<p>Title: <code>Difference trend</code></p>
+<p>Position: X 16, Y 480, W 1248, H 232.</p>
 <hr>
-<h2>Page 3 — FG</h2>
-<p><strong>4.12</strong> <strong>Matrix</strong> — FG down to material, with MW and Days.</p>
+<h2>Page — FG</h2>
+<p><strong>4.11</strong> <strong>Matrix</strong> — The main FG table: value, MW, capacity, days and rupees per watt in one grid.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
-<tr><td>Rows</td><td><code>dimNature[Nature]</code>, then <code>factInventory[Material]</code> below it</td></tr>
+<tr><td>Rows</td><td><code>dimNature[Nature]</code>, <code>factInventory[Material]</code></td></tr>
 <tr><td>Values</td><td><code>Closing Value</code>, <code>FG MW</code>, <code>Capacity MW</code>, <code>Days</code>, <code>INR per Wp</code></td></tr>
-<tr><td>Filters pane</td><td><code>factInventory[Category]</code> → <strong>is FG</strong></td></tr>
+<tr><td>Filters</td><td><code>factInventory[Category]  →  is FG</code></td></tr>
 </table>
-<p>Position: X 16, Y 168, W 1248, H 288. Title: <code>FG by tech and material</code>. Turn <strong>Format</strong> → <strong>Row headers</strong> → <strong>Stepped layout: Off</strong> so Nature and Material sit in their own columns.</p>
-<p><strong>4.13</strong> <strong>Area chart</strong> — FG history by tech.</p>
+<p>Title: <code>FG by tech and material</code></p>
+<p>Position: X 16, Y 168, W 1248, H 288.</p>
+<ul>
+<li>Format pane → Row headers → turn Stepped layout OFF, so Nature and Material get their own columns.</li>
+</ul>
+<p><strong>4.12</strong> <strong>Area chart</strong> — History of FG stock, split by technology.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
 <tr><td>Y-axis</td><td><code>Closing Value</code></td></tr>
 <tr><td>Legend</td><td><code>dimNature[Nature]</code></td></tr>
-<tr><td>Filters pane</td><td><code>factInventory[Category]</code> → <strong>is FG</strong></td></tr>
+<tr><td>Filters</td><td><code>factInventory[Category]  →  is FG</code></td></tr>
 </table>
-<p>Position: X 16, Y 468, W 828, H 244. Title: <code>FG value by tech over time</code>.</p>
-<p><strong>4.14</strong> <strong>Line chart</strong> — days of inventory, the number your superior will ask for.</p>
+<p>Title: <code>FG value by tech over time</code></p>
+<p>Position: X 16, Y 468, W 828, H 244.</p>
+<p><strong>4.13</strong> <strong>Line chart</strong> — Days of inventory — the number your superior will ask for first.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
 <tr><td>Y-axis</td><td><code>Days</code></td></tr>
-<tr><td>Filters pane</td><td><code>factInventory[Category]</code> → <strong>is FG</strong></td></tr>
+<tr><td>Filters</td><td><code>factInventory[Category]  →  is FG</code></td></tr>
 </table>
-<p>Position: X 852, Y 468, W 412, H 244. Title: <code>FG inventory days</code>.</p>
+<p>Title: <code>FG inventory days</code></p>
+<p>Position: X 852, Y 468, W 412, H 244.</p>
 <hr>
-<h2>Page 4 — RM</h2>
-<p><strong>4.15</strong> <strong>Matrix</strong> — RM by plant and nature.</p>
+<h2>Page — RM</h2>
+<p><strong>4.14</strong> <strong>Matrix</strong> — The RM equivalent of the FG grid.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Rows</td><td><code>dimPlant[Plant]</code>, <code>dimNature[Nature]</code>, <code>factInventory[GroupNature]</code></td></tr>
 <tr><td>Values</td><td><code>Closing Value</code>, <code>MW</code></td></tr>
-<tr><td>Filters pane</td><td><code>factInventory[Category]</code> → <strong>is RM</strong></td></tr>
+<tr><td>Filters</td><td><code>factInventory[Category]  →  is RM</code></td></tr>
 </table>
-<p>Position: X 16, Y 168, W 620, H 544. Title: <code>RM by plant and nature</code>.</p>
-<p><strong>4.16</strong> <strong>Decomposition tree</strong> — replaces most of what the RM sheet does by hand, and drills in whatever order you click.</p>
+<p>Title: <code>RM by plant and nature</code></p>
+<p>Position: X 16, Y 168, W 620, H 544.</p>
+<p><strong>4.15</strong> <strong>Decomposition tree</strong> — Replaces most of what the RM sheet does by hand, and drills in any order you click.</p>
 <table>
 <tr><th>Well</th><th>Field</th></tr>
 <tr><td>Analyze</td><td><code>Closing Value</code></td></tr>
 <tr><td>Explain by</td><td><code>dimPlant[Plant]</code>, <code>dimNature[Nature]</code>, <code>factInventory[GroupNature]</code></td></tr>
-<tr><td>Filters pane</td><td><code>factInventory[Category]</code> → <strong>is RM</strong></td></tr>
+<tr><td>Filters</td><td><code>factInventory[Category]  →  is RM</code></td></tr>
 </table>
-<p>Position: X 644, Y 168, W 620, H 544. Title: <code>RM breakdown</code>.</p>
+<p>Title: <code>RM breakdown</code></p>
+<p>Position: X 644, Y 168, W 620, H 544.</p>
 <hr>
-<h2>Page 5 — Data Quality</h2>
-<p>Not decoration. This page is how you find out something is wrong before your superior does. Glance at it after every refresh: the two cards should read 0, the two tables should be empty.</p>
-<p><strong>4.17</strong> <strong>Card</strong>: <code>Rows Missing Attr</code> — materials with no row in the master sheets. X 16, Y 168, W 300, H 100. Title: <code>Rows missing master attributes (want 0)</code>.</p>
-<p><strong>4.18</strong> <strong>Card</strong>: <code>Stock Recon</code> — Opening + Receipts − Issues − Closing. X 324, Y 168, W 300, H 100. Title: <code>Stock reconciliation (must be 0)</code>.</p>
-<p>Anything other than 0 means a file is duplicated, truncated, or hand-edited.</p>
-<p><strong>4.19</strong> <strong>Table</strong>: <code>factTB_Unmapped</code> → <code>GLAccount</code>, <code>GLDesc</code>, <code>Amount</code>. X 632, Y 168, W 632, H 100. Title: <code>GLs in TB but not in TB Master (want empty)</code>.</p>
-<p><strong>4.20</strong> <strong>Table</strong>: <code>qcNatureNoCapacity</code> → <code>Nature</code>. X 16, Y 276, W 608, H 210. Title: <code>FG Natures with no capacity row (want empty)</code>.</p>
-<p>Anything here silently gets blank Days — this is the check that catches a Nature/Tech typo.</p>
-<p><strong>4.21</strong> <strong>Table</strong>: <code>qcHeaders</code> → <code>Folder</code>, <code>Name</code>, <code>SheetNames</code>, <code>Headers</code>. X 632, Y 276, W 632, H 210. Title: <code>Actual headers of every source file</code>.</p>
-<p><strong>4.22</strong> <strong>Table</strong>: <code>qcVarHeaders</code> → <code>SheetName</code>, <code>Headers</code>, <code>DataRows</code>. X 16, Y 494, W 608, H 218. Title: <code>Variables workbook sheets</code>. <code>DataRows = 0</code> = empty sheet.</p>
-<p><strong>4.23</strong> <strong>Table</strong>: <code>factInventory</code> → <code>SourceFile</code>, <code>Month</code>, <code>Category</code>, <code>Closing Value</code>. X 632, Y 494, W 632, H 218. Title: <code>Files loaded this refresh</code>.</p>
-<p>Read this one after each monthly refresh to confirm every file actually came in — a missing month looks like a real fall in inventory, not like an error.</p>
+<h2>Page — Data Quality</h2>
+<p><strong>4.16</strong> <strong>Card</strong> — Materials with no row in the master sheets. Should read 0.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Fields</td><td><code>Rows Missing Attr</code></td></tr>
+</table>
+<p>Title: <code>Rows missing master attributes (want 0)</code></p>
+<p>Position: X 16, Y 168, W 300, H 100.</p>
+<p><strong>4.17</strong> <strong>Card</strong> — Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Fields</td><td><code>Stock Recon</code></td></tr>
+</table>
+<p>Title: <code>Stock reconciliation (must be 0)</code></p>
+<p>Position: X 324, Y 168, W 300, H 100.</p>
+<p><strong>4.18</strong> <strong>Table</strong> — Catches a new GL account nobody added to TB Master — otherwise it vanishes silently.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Columns</td><td><code>factTB_Unmapped[GLAccount]</code>, <code>factTB_Unmapped[GLDesc]</code>, <code>factTB_Unmapped[Amount]</code></td></tr>
+</table>
+<p>Title: <code>GLs in TB but not in TB Master (want empty)</code></p>
+<p>Position: X 632, Y 168, W 632, H 100.</p>
+<p><strong>4.19</strong> <strong>Table</strong> — Anything listed here gets blank Days. This is the check that catches a Nature/Tech typo.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Columns</td><td><code>qcNatureNoCapacity[Nature]</code></td></tr>
+</table>
+<p>Title: <code>FG Natures with no capacity row (want empty)</code></p>
+<p>Position: X 16, Y 276, W 608, H 210.</p>
+<p><strong>4.20</strong> <strong>Table</strong> — Read this when a column comes through blank — it shows what the file really says.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Columns</td><td><code>qcHeaders[Folder]</code>, <code>qcHeaders[Name]</code>, <code>qcHeaders[SheetNames]</code>, <code>qcHeaders[Headers]</code></td></tr>
+</table>
+<p>Title: <code>Actual headers of every source file</code></p>
+<p>Position: X 632, Y 276, W 632, H 210.</p>
+<p><strong>4.21</strong> <strong>Table</strong> — DataRows = 0 means a sheet is empty.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Columns</td><td><code>qcVarHeaders[SheetName]</code>, <code>qcVarHeaders[Headers]</code>, <code>qcVarHeaders[DataRows]</code></td></tr>
+</table>
+<p>Title: <code>Variables workbook sheets</code></p>
+<p>Position: X 16, Y 494, W 608, H 218.</p>
+<p><strong>4.22</strong> <strong>Table</strong> — Check after every refresh: a missing month looks like a real fall in inventory, not like an error.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Columns</td><td><code>factInventory[SourceFile]</code>, <code>factInventory[Month]</code>, <code>factInventory[Category]</code>, <code>Closing Value</code></td></tr>
+</table>
+<p>Title: <code>Files loaded this refresh</code></p>
+<p>Position: X 632, Y 494, W 632, H 218.</p>
 <hr>
 <h1>PART 5 — Publish and hand over</h1>
 <p><strong>5.1</strong> Ribbon <strong>Home</strong> → <strong>Publish</strong> → sign in → pick or create a workspace.</p>
@@ -1524,13 +1612,15 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 </ol>
 <p>That&#x27;s it. No formulas to drag down, no SUMIFS to extend.</p></div>
 
-<footer>Updated 11 Aug 2026 08:38 UTC</footer>
+<footer>Updated 11 Aug 2026 08:43 UTC</footer>
 </div>
+<script>const STEPS = [{"title": "Before you start", "page": "\u2014", "do": ["You should already have: the queries loaded (Part 1), the relationships made (Part 2) and the measures added (Part 3).", "If a name below does not exist in the Fields pane on the right, that part is not finished \u2014 go back to the guide's Part 1-3 rather than guessing."], "fields": [], "note": ""}, {"title": "Set the canvas size", "page": "\u2014", "do": ["Click on the empty white area of the report (not on a visual).", "Open the Format pane: the paintbrush icon on the right.", "Open Canvas settings.", "Set Type to 16:9, then type the height and width below."], "fields": [["Height", "720"], ["Width", "1280"]], "note": "Every position in these steps assumes this canvas, so do it before anything else \u2014 changing it later moves everything."}, {"title": "Load the colour theme", "page": "\u2014", "do": ["Click the download link just below these steps to save inventory-theme.json (put it in your Inventory Report folder).", "Ribbon: View \u2192 Themes (dropdown) \u2192 Browse for themes.", "Pick the file you just saved."], "fields": [], "note": "This sets all colours, fonts, borders and card styling, so no step below asks you to colour anything.", "link": "inventory-theme.json"}, {"title": "Create the five pages", "page": "\u2014", "do": ["At the bottom of the window, click the + button five times.", "Double-click each tab and rename it, in this order."], "fields": [["Page 1", "Overview"], ["Page 2", "Summary"], ["Page 3", "FG"], ["Page 4", "RM"], ["Page 5", "Data Quality"]], "note": "Names must match, because later steps say which page to work on."}, {"title": "Header card 1 of 5 \u2014 Total inventory", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Inventory Total"], ["X", "16"], ["Y", "12"], ["Width", "240"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 2 of 5 \u2014 Raw materials", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Inv RM"], ["X", "264"], ["Y", "12"], ["Width", "240"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 3 of 5 \u2014 Finished goods", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Inv FG"], ["X", "512"], ["Y", "12"], ["Width", "240"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 4 of 5 \u2014 Consumables", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Inv Consumables"], ["X", "760"], ["Y", "12"], ["Width", "240"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header card 5 of 5 \u2014 TB vs MB5B difference", "page": "Overview", "do": ["Ribbon: Insert \u2192 Card. A blank card appears.", "In the Fields pane on the right, find the measure named below and tick it (or drag it onto the card).", "With the card still selected: Format pane \u2192 General \u2192 Properties \u2192 Size and style, and type the four numbers."], "fields": [["Measure", "Difference"], ["X", "1008"], ["Y", "12"], ["Width", "240"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon."}, {"title": "Header slicer \u2014 Month", "page": "Overview", "do": ["Ribbon: Insert \u2192 Slicer.", "Drag the field below into it.", "Format pane \u2192 Slicer settings \u2192 Style: Dropdown.", "Then set the position numbers."], "fields": [["Field", "dimDate[MonthName]"], ["X", "16"], ["Y", "108"], ["Width", "300"], ["Height", "44"]], "note": ""}, {"title": "Header slicer \u2014 Plant", "page": "Overview", "do": ["Ribbon: Insert \u2192 Slicer.", "Drag the field below into it.", "Format pane \u2192 Slicer settings \u2192 Style: Dropdown.", "Then set the position numbers."], "fields": [["Field", "dimPlant[Plant]"], ["X", "324"], ["Y", "108"], ["Width", "300"], ["Height", "44"]], "note": ""}, {"title": "Copy the header band to every page", "page": "Overview", "do": ["Click the first card, then Ctrl+click the other four cards and both slicers (seven things selected).", "Ctrl+C.", "Go to each of the other four pages and press Ctrl+V."], "fields": [], "note": "Positions travel with the copy, so the band lands in exactly the same place on every page."}, {"title": "Sync the slicers across pages", "page": "\u2014", "do": ["Ribbon: View \u2192 tick Sync slicers. A pane opens on the right.", "Click the Month slicer, then tick both Sync and Visible for all five pages.", "Do the same for the Plant slicer."], "fields": [], "note": "Skip this and each page filters on its own, so two pages will show different totals for the same month."}, {"title": "Overview 1 of 3 \u2014 Inventory by month and category", "page": "Overview", "do": ["Go to the Overview page.", "Ribbon: Insert \u2192 Stacked column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Stacked column chart"], ["Title", "Inventory by month and category"], ["X-axis", "dimDate[MonthName]"], ["Y-axis", "Closing Value"], ["Legend", "factInventory[Category]"], ["X", "16"], ["Y", "168"], ["Width", "764"], ["Height", "272"]], "note": "Shows the whole inventory month by month, split RM / FG / consumables."}, {"title": "Overview 2 of 3 \u2014 Inventory by plant", "page": "Overview", "do": ["Go to the Overview page.", "Ribbon: Insert \u2192 Clustered column chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Clustered column chart"], ["Title", "Inventory by plant"], ["X-axis", "dimPlant[Plant]"], ["Y-axis", "Closing Value"], ["Legend", "factInventory[Category]"], ["X", "788"], ["Y", "168"], ["Width", "476"], ["Height", "272"]], "note": "Shows which plant is holding the stock."}, {"title": "Overview 3 of 3 \u2014 Closing value vs previous month", "page": "Overview", "do": ["Go to the Overview page.", "Ribbon: Insert \u2192 Line chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Line chart"], ["Title", "Closing value vs previous month"], ["X-axis", "dimDate[MonthName]"], ["Y-axis", "Closing Value"], ["Y-axis", "Prev Month"], ["X", "16"], ["Y", "452"], ["Width", "1248"], ["Height", "260"]], "note": "Two lines: this month and last month, so a jump is obvious."}, {"title": "Summary 1 of 3 \u2014 Trial balance vs MB5B", "page": "Summary", "do": ["Go to the Summary page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "In the Values well click the little arrow next to Difference \u2192 Conditional formatting \u2192 Background color.", "Set Format style to Diverging. Minimum red, Centre white with Centre = 0, Maximum red.", "Both ends red on purpose: a difference either direction is equally wrong."], "fields": [["Visual", "Matrix"], ["Title", "Trial balance vs MB5B"], ["Rows", "dimPlant[Plant]"], ["Values", "TB Value"], ["Values", "Closing Value"], ["Values", "Difference"], ["Values", "Difference %"], ["X", "16"], ["Y", "168"], ["Width", "764"], ["Height", "300"]], "note": "The reconciliation itself: what the books say vs what the stock report says."}, {"title": "Summary 2 of 3 \u2014 Difference by plant", "page": "Summary", "do": ["Go to the Summary page.", "Ribbon: Insert \u2192 Waterfall chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Waterfall chart"], ["Title", "Difference by plant"], ["Category", "dimPlant[Plant]"], ["Y-axis", "Difference"], ["X", "788"], ["Y", "168"], ["Width", "476"], ["Height", "300"]], "note": "Shows which plant creates the gap, rather than just that a gap exists."}, {"title": "Summary 3 of 3 \u2014 Difference trend", "page": "Summary", "do": ["Go to the Summary page.", "Ribbon: Insert \u2192 Line chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Line chart"], ["Title", "Difference trend"], ["X-axis", "dimDate[MonthName]"], ["Y-axis", "Difference"], ["X", "16"], ["Y", "480"], ["Width", "1248"], ["Height", "232"]], "note": "Tells you whether the gap is being cleaned up or getting worse."}, {"title": "FG 1 of 3 \u2014 FG by tech and material", "page": "FG", "do": ["Go to the FG page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style.", "Format pane \u2192 Row headers \u2192 turn Stepped layout OFF, so Nature and Material get their own columns."], "fields": [["Visual", "Matrix"], ["Title", "FG by tech and material"], ["Rows", "dimNature[Nature]"], ["Rows", "factInventory[Material]"], ["Values", "Closing Value"], ["Values", "FG MW"], ["Values", "Capacity MW"], ["Values", "Days"], ["Values", "INR per Wp"], ["Filters", "factInventory[Category]  \u2192  is FG"], ["X", "16"], ["Y", "168"], ["Width", "1248"], ["Height", "288"]], "note": "The main FG table: value, MW, capacity, days and rupees per watt in one grid."}, {"title": "FG 2 of 3 \u2014 FG value by tech over time", "page": "FG", "do": ["Go to the FG page.", "Ribbon: Insert \u2192 Area chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Area chart"], ["Title", "FG value by tech over time"], ["X-axis", "dimDate[MonthName]"], ["Y-axis", "Closing Value"], ["Legend", "dimNature[Nature]"], ["Filters", "factInventory[Category]  \u2192  is FG"], ["X", "16"], ["Y", "468"], ["Width", "828"], ["Height", "244"]], "note": "History of FG stock, split by technology."}, {"title": "FG 3 of 3 \u2014 FG inventory days", "page": "FG", "do": ["Go to the FG page.", "Ribbon: Insert \u2192 Line chart.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Line chart"], ["Title", "FG inventory days"], ["X-axis", "dimDate[MonthName]"], ["Y-axis", "Days"], ["Filters", "factInventory[Category]  \u2192  is FG"], ["X", "852"], ["Y", "468"], ["Width", "412"], ["Height", "244"]], "note": "Days of inventory \u2014 the number your superior will ask for first."}, {"title": "RM 1 of 2 \u2014 RM by plant and nature", "page": "RM", "do": ["Go to the RM page.", "Ribbon: Insert \u2192 Matrix.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Matrix"], ["Title", "RM by plant and nature"], ["Rows", "dimPlant[Plant]"], ["Rows", "dimNature[Nature]"], ["Rows", "factInventory[GroupNature]"], ["Values", "Closing Value"], ["Values", "MW"], ["Filters", "factInventory[Category]  \u2192  is RM"], ["X", "16"], ["Y", "168"], ["Width", "620"], ["Height", "544"]], "note": "The RM equivalent of the FG grid."}, {"title": "RM 2 of 2 \u2014 RM breakdown", "page": "RM", "do": ["Go to the RM page.", "Ribbon: Insert \u2192 Decomposition tree.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "For the Filters row: drag that field into the Filters pane (right edge), then tick the value shown.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Decomposition tree"], ["Title", "RM breakdown"], ["Analyze", "Closing Value"], ["Explain by", "dimPlant[Plant]"], ["Explain by", "dimNature[Nature]"], ["Explain by", "factInventory[GroupNature]"], ["Filters", "factInventory[Category]  \u2192  is RM"], ["X", "644"], ["Y", "168"], ["Width", "620"], ["Height", "544"]], "note": "Replaces most of what the RM sheet does by hand, and drills in any order you click."}, {"title": "Data Quality 1 of 7 \u2014 Rows missing master attributes (want 0)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Rows missing master attributes (want 0)"], ["Fields", "Rows Missing Attr"], ["X", "16"], ["Y", "168"], ["Width", "300"], ["Height", "100"]], "note": "Materials with no row in the master sheets. Should read 0."}, {"title": "Data Quality 2 of 7 \u2014 Stock reconciliation (must be 0)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Card.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Card"], ["Title", "Stock reconciliation (must be 0)"], ["Fields", "Stock Recon"], ["X", "324"], ["Y", "168"], ["Width", "300"], ["Height", "100"]], "note": "Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited."}, {"title": "Data Quality 3 of 7 \u2014 GLs in TB but not in TB Master (want empty)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "GLs in TB but not in TB Master (want empty)"], ["Columns", "factTB_Unmapped[GLAccount]"], ["Columns", "factTB_Unmapped[GLDesc]"], ["Columns", "factTB_Unmapped[Amount]"], ["X", "632"], ["Y", "168"], ["Width", "632"], ["Height", "100"]], "note": "Catches a new GL account nobody added to TB Master \u2014 otherwise it vanishes silently."}, {"title": "Data Quality 4 of 7 \u2014 FG Natures with no capacity row (want empty)", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "FG Natures with no capacity row (want empty)"], ["Columns", "qcNatureNoCapacity[Nature]"], ["X", "16"], ["Y", "276"], ["Width", "608"], ["Height", "210"]], "note": "Anything listed here gets blank Days. This is the check that catches a Nature/Tech typo."}, {"title": "Data Quality 5 of 7 \u2014 Actual headers of every source file", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "Actual headers of every source file"], ["Columns", "qcHeaders[Folder]"], ["Columns", "qcHeaders[Name]"], ["Columns", "qcHeaders[SheetNames]"], ["Columns", "qcHeaders[Headers]"], ["X", "632"], ["Y", "276"], ["Width", "632"], ["Height", "210"]], "note": "Read this when a column comes through blank \u2014 it shows what the file really says."}, {"title": "Data Quality 6 of 7 \u2014 Variables workbook sheets", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "Variables workbook sheets"], ["Columns", "qcVarHeaders[SheetName]"], ["Columns", "qcVarHeaders[Headers]"], ["Columns", "qcVarHeaders[DataRows]"], ["X", "16"], ["Y", "494"], ["Width", "608"], ["Height", "218"]], "note": "DataRows = 0 means a sheet is empty."}, {"title": "Data Quality 7 of 7 \u2014 Files loaded this refresh", "page": "Data Quality", "do": ["Go to the Data Quality page.", "Ribbon: Insert \u2192 Table.", "Drop each field below into the well named next to it. Fields come from the Fields pane on the right; drag them into the wells in the Visualizations pane.", "Set the title: Format pane \u2192 General \u2192 Title \u2192 type the title below.", "Set the position: Format pane \u2192 General \u2192 Properties \u2192 Size and style."], "fields": [["Visual", "Table"], ["Title", "Files loaded this refresh"], ["Columns", "factInventory[SourceFile]"], ["Columns", "factInventory[Month]"], ["Columns", "factInventory[Category]"], ["Columns", "Closing Value"], ["X", "632"], ["Y", "494"], ["Width", "632"], ["Height", "218"]], "note": "Check after every refresh: a missing month looks like a real fall in inventory, not like an error."}, {"title": "Save", "page": "\u2014", "do": ["Ctrl+S. If it asks for a name, call it Inventory Model.pbix."], "fields": [], "note": "Power BI does not autosave. Save every few steps, not just at the end."}, {"title": "Check it actually works", "page": "Data Quality", "do": ["Look at the Data Quality page.", "Stock reconciliation must read 0.", "Rows missing master attributes should read 0.", "Both tables (unmapped GLs, Natures with no capacity) should be empty.", "Then pick a month in the header slicer and confirm every page changes."], "fields": [], "note": "If any of those four is wrong, the numbers on the other pages are wrong too \u2014 fix it before showing anyone."}];</script>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 $$('nav.tabs button[data-tab]').forEach(b=>b.onclick=()=>{
   $$('nav.tabs button[data-tab]').forEach(x=>x.classList.toggle('on',x===b));
   $$('.panel').forEach(p=>p.classList.toggle('on',p.id==='tab-'+b.dataset.tab));
+  $('#qbar').style.display = (b.dataset.tab==='q'||b.dataset.tab==='m') ? '' : 'none';
   window.scrollTo(0,0);
 });
 $$('button.copy').forEach(b=>b.onclick=async()=>{
@@ -1564,5 +1654,46 @@ $('#search').oninput=e=>{
 $('#reset').onclick=()=>{if(confirm('Clear all Done ticks?')){done.clear();
   localStorage.setItem(KEY,'[]');paint();}};
 paint();
+</script>
+<script>
+const SKEY='invGuideStep';
+let si=Math.min(parseInt(localStorage.getItem(SKEY)||'0',10)||0, STEPS.length-1);
+function copyText(t,b){
+  (async()=>{try{await navigator.clipboard.writeText(t);}
+  catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);
+    a.select();document.execCommand('copy');a.remove();}
+  const o=b.textContent;b.textContent='Copied';b.classList.add('ok');
+  setTimeout(()=>{b.textContent=o;b.classList.remove('ok');},1000);})();
+}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function drawStep(){
+  const s=STEPS[si];
+  const pos=['X','Y','Width','Height'];
+  let rows='';
+  for(const [k,v] of s.fields){
+    rows+='<div class="row'+(pos.includes(k)?' pos':'')+'"><span class="k">'+esc(k)+'</span>'+
+          '<span class="v">'+esc(v)+'</span>'+
+          '<button class="mini" data-copy="'+esc(v)+'">Copy</button></div>';
+  }
+  document.getElementById('stepbox').innerHTML =
+    (s.page && s.page!=='—' ? '<span class="pagetag">Page: '+esc(s.page)+'</span>' : '')+
+    '<h2>'+esc(s.title)+'</h2>'+
+    '<ol>'+s.do.map(d=>'<li>'+esc(d)+'</li>').join('')+'</ol>'+
+    (rows?'<div class="kv">'+rows+'</div>':'')+
+    (s.link?'<p><a class="dl" href="'+s.link+'" download>Download '+esc(s.link)+'</a></p>':'')+
+    (s.note?'<p class="why">'+esc(s.note)+'</p>':'');
+  document.querySelectorAll('#stepbox button.mini').forEach(b=>
+    b.onclick=()=>copyText(b.dataset.copy,b));
+  document.getElementById('sprev').disabled = si===0;
+  document.getElementById('snext').disabled = si===STEPS.length-1;
+  document.getElementById('snext').textContent = si===STEPS.length-1?'Finished':'Next →';
+  document.getElementById('stext').textContent='Step '+(si+1)+' of '+STEPS.length;
+  document.getElementById('sfill').style.width=(100*(si+1)/STEPS.length)+'%';
+  localStorage.setItem(SKEY,si);
+}
+document.getElementById('snext').onclick=()=>{if(si<STEPS.length-1){si++;drawStep();window.scrollTo(0,0);}};
+document.getElementById('sprev').onclick=()=>{if(si>0){si--;drawStep();window.scrollTo(0,0);}};
+document.getElementById('sreset').onclick=()=>{si=0;drawStep();window.scrollTo(0,0);};
+drawStep();
 </script>
 </body></html>

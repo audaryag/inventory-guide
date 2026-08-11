@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
 """Generates index.html from BUILD_GUIDE.md. Re-run after editing the guide."""
-import json, re, html, pathlib, datetime
+import json, re, html, pathlib, datetime, sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+from steps import steps, part4_markdown
 
 SRC = pathlib.Path("/home/ubuntu/BUILD_GUIDE.md")
 OUT = pathlib.Path(__file__).with_name("index.html")
 
 md = SRC.read_text()
+
+# PART 4 is generated from spec.py so the guided steps and the written guide cannot diverge
+_p4s, _p4e = md.index("# PART 4 "), md.index("# PART 5 ")
+md = md[:_p4s] + part4_markdown() + "\n" + md[_p4e:]
+SRC.write_text(md)
 appA = md[md.index("# Appendix A"):md.index("# Appendix B")]
 appB = md[md.index("# Appendix B"):]
 guide = md[:md.index("# Appendix A")].rstrip().rstrip("-").rstrip()
@@ -113,6 +121,7 @@ def md_to_html(text):
 
 
 queries, measures = parse_queries(appA), parse_measures(appB)
+STEPS = steps()
 
 
 def cards(items, kind):
@@ -179,6 +188,74 @@ blockquote{margin:12px 0;padding:8px 14px;border-left:3px solid var(--acc);backg
 .bar .track{flex:1;height:7px;background:#232936;border-radius:5px;overflow:hidden}
 .bar .fill{height:100%;background:var(--ok);width:0}
 footer{color:var(--dim);font-size:12px;margin-top:40px;text-align:center}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:10px 0}
+.step .pagetag{display:inline-block;background:#232936;border:1px solid var(--line);border-radius:20px;
+  padding:3px 12px;font-size:12px;color:var(--dim);margin-bottom:10px}
+.step h2{border:0;margin:0 0 14px;font-size:22px;padding:0}
+.step ol{margin:0 0 4px;padding-left:22px}
+.step ol li{margin:8px 0;font-size:16px}
+.step .why{margin:16px 0 0;color:var(--dim);font-size:14px;border-left:2px solid var(--acc);padding-left:12px}
+.kv{margin:16px 0 0;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.kv .row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-top:1px solid var(--line)}
+.kv .row:first-child{border-top:0}
+.kv .k{color:var(--dim);font-size:13px;min-width:104px}
+.kv .v{flex:1;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;word-break:break-all}
+.kv .row.pos .v{color:#8fd3a3}
+button.mini{border:1px solid var(--line);background:#232936;color:var(--fg);border-radius:6px;
+  padding:4px 10px;font-size:12px;cursor:pointer}
+button.mini:hover{border-color:var(--acc)}
+button.mini.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.navrow{display:flex;gap:10px;align-items:center;margin:16px 0 0;position:sticky;bottom:0;
+  background:var(--bg);padding:12px 0}
+.navrow button{border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:8px;
+  padding:11px 20px;font-size:15px;cursor:pointer}
+.navrow button.primary{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+.navrow button:disabled{opacity:.4;cursor:default}
+.navrow #sreset{margin-left:auto;font-size:13px;padding:8px 12px}
+a.dl{display:inline-block;margin:14px 0 0;background:#232936;border:1px solid var(--acc);
+  border-radius:7px;padding:9px 14px;text-decoration:none;font-size:14px}
+"""
+
+STEPJS = """
+const SKEY='invGuideStep';
+let si=Math.min(parseInt(localStorage.getItem(SKEY)||'0',10)||0, STEPS.length-1);
+function copyText(t,b){
+  (async()=>{try{await navigator.clipboard.writeText(t);}
+  catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);
+    a.select();document.execCommand('copy');a.remove();}
+  const o=b.textContent;b.textContent='Copied';b.classList.add('ok');
+  setTimeout(()=>{b.textContent=o;b.classList.remove('ok');},1000);})();
+}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function drawStep(){
+  const s=STEPS[si];
+  const pos=['X','Y','Width','Height'];
+  let rows='';
+  for(const [k,v] of s.fields){
+    rows+='<div class="row'+(pos.includes(k)?' pos':'')+'"><span class="k">'+esc(k)+'</span>'+
+          '<span class="v">'+esc(v)+'</span>'+
+          '<button class="mini" data-copy="'+esc(v)+'">Copy</button></div>';
+  }
+  document.getElementById('stepbox').innerHTML =
+    (s.page && s.page!=='\u2014' ? '<span class="pagetag">Page: '+esc(s.page)+'</span>' : '')+
+    '<h2>'+esc(s.title)+'</h2>'+
+    '<ol>'+s.do.map(d=>'<li>'+esc(d)+'</li>').join('')+'</ol>'+
+    (rows?'<div class="kv">'+rows+'</div>':'')+
+    (s.link?'<p><a class="dl" href="'+s.link+'" download>Download '+esc(s.link)+'</a></p>':'')+
+    (s.note?'<p class="why">'+esc(s.note)+'</p>':'');
+  document.querySelectorAll('#stepbox button.mini').forEach(b=>
+    b.onclick=()=>copyText(b.dataset.copy,b));
+  document.getElementById('sprev').disabled = si===0;
+  document.getElementById('snext').disabled = si===STEPS.length-1;
+  document.getElementById('snext').textContent = si===STEPS.length-1?'Finished':'Next \u2192';
+  document.getElementById('stext').textContent='Step '+(si+1)+' of '+STEPS.length;
+  document.getElementById('sfill').style.width=(100*(si+1)/STEPS.length)+'%';
+  localStorage.setItem(SKEY,si);
+}
+document.getElementById('snext').onclick=()=>{if(si<STEPS.length-1){si++;drawStep();window.scrollTo(0,0);}};
+document.getElementById('sprev').onclick=()=>{if(si>0){si--;drawStep();window.scrollTo(0,0);}};
+document.getElementById('sreset').onclick=()=>{si=0;drawStep();window.scrollTo(0,0);};
+drawStep();
 """
 
 JS = """
@@ -186,6 +263,7 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 $$('nav.tabs button[data-tab]').forEach(b=>b.onclick=()=>{
   $$('nav.tabs button[data-tab]').forEach(x=>x.classList.toggle('on',x===b));
   $$('.panel').forEach(p=>p.classList.toggle('on',p.id==='tab-'+b.dataset.tab));
+  $('#qbar').style.display = (b.dataset.tab==='q'||b.dataset.tab==='m') ? '' : 'none';
   window.scrollTo(0,0);
 });
 $$('button.copy').forEach(b=>b.onclick=async()=>{
@@ -229,17 +307,19 @@ HTML = f"""<!doctype html>
 <div class="wrap">
 <h1>Inventory Power BI — build guide</h1>
 <p class="sub">Click <strong>Copy</strong> on a block, then paste it into Power Query's Advanced Editor.
-Tick <strong>Done</strong> to keep your place — it is remembered in this browser.</p>
+Tick <strong>Done</strong> to keep your place — it is remembered in this browser.
+Building the pages? Use <strong>Build it</strong> — one instruction per screen.</p>
 
 <nav class="tabs">
   <button data-tab="q" class="on">Queries ({len(queries)})</button>
   <button data-tab="m">Measures ({len(measures)})</button>
+  <button data-tab="b">Build it ({len(STEPS)})</button>
   <button data-tab="g">Walkthrough</button>
   <input id="search" placeholder="Search a query name or code…">
   <button id="reset" title="Clear progress">Reset</button>
 </nav>
 
-<div class="bar"><span id="ptext"></span><span class="track"><span class="fill" id="pfill"></span></span></div>
+<div class="bar" id="qbar"><span id="ptext"></span><span class="track"><span class="fill" id="pfill"></span></span></div>
 
 <div class="panel on" id="tab-q">
   <p class="sub">One query per box, in this order. For each: <strong>Home → New Source → Blank Query</strong>,
@@ -254,11 +334,23 @@ Tick <strong>Done</strong> to keep your place — it is remembered in this brows
   {cards(measures, 'm')}
 </div>
 
+<div class="panel" id="tab-b">
+  <div class="bar"><span id="stext"></span><span class="track"><span class="fill" id="sfill"></span></span></div>
+  <section class="step" id="stepbox"></section>
+  <div class="navrow">
+    <button id="sprev">&larr; Back</button>
+    <button id="snext" class="primary">Next &rarr;</button>
+    <button id="sreset" title="Back to step 1">Start over</button>
+  </div>
+</div>
+
 <div class="panel" id="tab-g">{md_to_html(guide)}</div>
 
 <footer>Updated {datetime.datetime.utcnow():%d %b %Y %H:%M} UTC</footer>
 </div>
+<script>const STEPS = {json.dumps(STEPS)};</script>
 <script>{JS}</script>
+<script>{STEPJS}</script>
 </body></html>
 """
 
