@@ -55,8 +55,8 @@ footer{color:var(--dim);font-size:12px;margin-top:40px;text-align:center}
 Tick <strong>Done</strong> to keep your place — it is remembered in this browser.</p>
 
 <nav class="tabs">
-  <button data-tab="q" class="on">Queries (27)</button>
-  <button data-tab="m">Measures (23)</button>
+  <button data-tab="q" class="on">Queries (28)</button>
+  <button data-tab="m">Measures (22)</button>
   <button data-tab="g">Walkthrough</button>
   <input id="search" placeholder="Search a query name or code…">
   <button id="reset" title="Clear progress">Reset</button>
@@ -68,7 +68,7 @@ Tick <strong>Done</strong> to keep your place — it is remembered in this brows
   <p class="sub">One query per box, in this order. For each: <strong>Home → New Source → Blank Query</strong>,
   then <strong>Home → Advanced Editor</strong>, Ctrl+A, Delete, paste, <strong>Done</strong>,
   then right-click the query → <strong>Rename</strong> and type the name shown.
-  Never paste two boxes into one editor. Errors are normal until all 27 exist.</p>
+  Never paste two boxes into one editor. Errors are normal until all 28 exist.</p>
   
 <section class="card" id="q-1" data-name="proot">
   <header>
@@ -887,6 +887,29 @@ in
 in
     T</pre>
 </section>
+
+<section class="card" id="q-28" data-name="qcmwsheet">
+  <header>
+    <span class="num">28</span>
+    <h3>qcMWSheet</h3>
+    <button class="copy" data-target="qcode28">Copy</button>
+    <button class="done" data-key="q-28">Done</button>
+  </header>
+  <p class='note'>Diagnostic. Shows the MW sheet exactly as it sits in Excel, cell for cell, with no interpretation. If `varMWCapacity` complains, look here and read me the layout. Leave Enable load ON.</p>
+  <pre id="qcode28">let
+    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
+    Sh      = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
+    Norm    = (n as any) as text =&gt;
+                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? &quot;&quot;)), {&quot; &quot;,&quot;.&quot;,&quot;_&quot;,&quot;-&quot;})),
+    Hit     = Table.SelectRows(Sh, each
+                  List.Contains({&quot;MW&quot;,&quot;MWCAPACITY&quot;,&quot;CAPACITY&quot;,&quot;MWCAP&quot;}, Norm([Item]))),
+    Data    = Hit{0}[Data],
+    AsText  = Table.TransformColumns(Data,
+                  List.Transform(Table.ColumnNames(Data),
+                      (c) =&gt; {c, each Text.From(_ ?? &quot;&quot;), type text}))
+in
+    AsText</pre>
+</section>
 </div>
 
 <div class="panel" id="tab-m">
@@ -1132,31 +1155,6 @@ in
   </header>
   
   <pre id="mcode22">Unmapped TB     = SUM(factTB_Unmapped[Amount])</pre>
-</section>
-
-<section class="card" id="m-23" data-name="let
-    wb">
-  <header>
-    <span class="num">23</span>
-    <h3>let
-    Wb</h3>
-    <button class="copy" data-target="mcode23">Copy</button>
-    <button class="done" data-key="m-23">Done</button>
-  </header>
-  
-  <pre id="mcode23">let
-    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
-    Sh      = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
-    Norm    = (n as any) as text =&gt;
-                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? &quot;&quot;)), {&quot; &quot;,&quot;.&quot;,&quot;_&quot;,&quot;-&quot;})),
-    Hit     = Table.SelectRows(Sh, each
-                  List.Contains({&quot;MW&quot;,&quot;MWCAPACITY&quot;,&quot;CAPACITY&quot;,&quot;MWCAP&quot;}, Norm([Item]))),
-    Data    = Hit{0}[Data],
-    AsText  = Table.TransformColumns(Data,
-                  List.Transform(Table.ColumnNames(Data),
-                      (c) =&gt; {c, each Text.From(_ ?? &quot;&quot;), type text}))
-in
-    AsText</pre>
 </section>
 </div>
 
