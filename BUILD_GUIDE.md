@@ -43,7 +43,7 @@ fail with a file-lock error. This applies every time you refresh, forever.
 **1.2** Ribbon: **Home** → **Transform data**. The Power Query Editor window opens.
 Everything in Part 1 happens in this window.
 
-### How to add each query (you will repeat this 27 times)
+### How to add each query (you will repeat this 28 times)
 
 1. In Power Query, ribbon: **Home** → **New Source** → **Blank Query**.
 2. Ribbon: **Home** → **Advanced Editor**.
@@ -88,6 +88,7 @@ Everything in Part 1 happens in this window.
 | 25 | `qcHeaders` | self-check |
 | 26 | `qcVarHeaders` | self-check |
 | 27 | `qcNatureNoCapacity` | self-check |
+| 28 | `qcMWSheet` | self-check — shows the MW sheet raw |
 
 **1.4** If Power BI asks about **privacy levels** or **credentials**, choose
 **Organizational** for OneDrive and click through. If it warns about combining data
@@ -106,7 +107,7 @@ Leave these ticked (they become your tables):
 ```
 factInventory, factTB, factTB_Unmapped, dimPlant, dimDate,
 dimNature, dimCapacity, dimTBMaster, dimMaterialAttr, dimFGAttr,
-qcHeaders, qcVarHeaders, qcNatureNoCapacity
+qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet
 ```
 
 **1.6** Ribbon: **Home** → **Close & Apply**. Wait for it to load.
@@ -121,7 +122,8 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity
 | "The file is being used by another process" | an Excel file is open | close all Excel files; check Task Manager for a stray EXCEL.EXE; delete any `~$` file |
 | "Illegal characters in path" | `pRoot` is not your real path | open the folder in File Explorer, click the address bar, copy it in — keep the quote marks |
 | "Token Literal expected" | a text value lost its quote marks | `pRoot` must be `"C:\...\Inventory Report"`, quotes included |
-| "Expression.Syntax Error" right after pasting | the whole appendix went into one query | one query per Blank Query, 27 times |
+| "Not enough elements in the enumeration" | a query assumed more columns than the sheet has | you are on an old version of the query — refresh the guide page and re-copy |
+| "Expression.Syntax Error" right after pasting | the whole appendix went into one query | one query per Blank Query, 28 times |
 
 Send me the exact error text and I'll tell you the one-line fix.
 
@@ -759,33 +761,74 @@ in
 
 ## varMWCapacity
 
-> This version reads the ORIGINAL two-block MW sheet and unpivots the three plant columns. Expect 18 rows (6 Techs x 3 plants), MW = 0 for every 1905.
+> Layout-proof: it searches the MW sheet for the row holding the plant codes 1900/1902/1905, then reads each Tech row underneath. Works whether or not there is a total column, and whatever order the plants sit in. `-` becomes 0. Expect 3 rows per Tech (one per plant), MW = 0 on every 1905.
 
 ```
 let
     Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
     Sh      = Table.SelectRows(Wb, each [Kind] = "Sheet"),
-    Norm    = (n as any) as text => Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")), {" ","."})),
-    Hit     = Table.SelectRows(Sh, each List.Contains({"MW","MWCAPACITY","CAPACITY"}, Norm([Item]))),
-    Data    = Hit{0}[Data],
-    C       = Table.ColumnNames(Data),
-    // keep only rows whose first cell is text: that is the Tech block, not the Plant block
-    TechRow = Table.SelectRows(Data, each
-                  [Column1] <> null and [Column1] <> "" and Value.Is([Column1], type text)
-                  and not Text.StartsWith(Text.From([Column1]), "Plant", Comparer.OrdinalIgnoreCase)),
-    Pick    = Table.SelectColumns(TechRow, {C{0}, C{2}, C{3}, C{4}}),
-    Named   = Table.RenameColumns(Pick, {
-                  {C{0}, "Tech"}, {C{2}, "1900"}, {C{3}, "1902"}, {C{4}, "1905"}}),
-    Unpiv   = Table.UnpivotOtherColumns(Named, {"Tech"}, "ValuationArea", "MWRaw"),
-    MWNum   = Table.AddColumn(Unpiv, "MW", each try Number.From([MWRaw]) otherwise 0, type number),
-    Dated   = Table.AddColumn(MWNum, "EffectiveFrom", each #date(1900,1,1), type date),
-    Keys    = Table.TransformColumns(Dated, {
-                  {"Tech",          each Text.Trim(Text.From(_ ?? "")), type text},
-                  {"ValuationArea", each Text.Trim(Text.From(_ ?? "")), type text}}),
-    Out     = Table.Buffer(Table.SelectColumns(Keys,
-                  {"EffectiveFrom","Tech","ValuationArea","MW"}))
+    Norm    = (n as any) as text =>
+                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")), {" ",".","_","-"})),
+    Hit     = Table.SelectRows(Sh, each
+                  List.Contains({"MW","MWCAPACITY","CAPACITY","MWCAP"}, Norm([Item]))),
+    Data    = if Table.IsEmpty(Hit)
+                  then error "No sheet called MW / MW Capacity in the Variables workbook."
+                  else Hit{0}[Data],
+    Rows    = Table.ToRows(Data),
+    Codes   = {"1900","1902","1905"},
+    AsTxt   = (v as any) as text => Text.Trim(Text.From(v ?? "")),
+    IsCode  = (v as any) as logical => List.Contains(Codes, AsTxt(v)),
+
+    // the plant-code row is whichever row holds two or more of 1900 / 1902 / 1905
+    HdrIdx  = List.PositionOf(
+                  List.Transform(Rows, (r) => List.Count(List.Select(r, IsCode)) >= 2), true),
+    Header  = if HdrIdx < 0
+                  then error "Could not find a row on the MW sheet containing at least two of "
+                           & "1900, 1902, 1905. Read the qcMWSheet query and tell me the layout."
+                  else Rows{HdrIdx},
+
+    // which column holds which plant code — position is discovered, not assumed
+    Map     = List.Select(
+                  List.Transform({0..List.Count(Header) - 1},
+                      (i) => [Idx = i, Code = AsTxt(Header{i})]),
+                  (m) => List.Contains(Codes, m[Code])),
+
+    // Tech rows are the ones below it whose first cell is filled and is not itself a plant code
+    Body    = List.Skip(Rows, HdrIdx + 1),
+    TechRow = List.Select(Body, (r) =>
+                  AsTxt(List.First(r)) <> "" and not IsCode(List.First(r))
+                  and List.AnyTrue(List.Transform(Map, (m) => (try r{m[Idx]} otherwise null) <> null))),
+
+    Pairs   = List.TransformMany(TechRow, (r) => Map, (r, m) =>
+                  [ EffectiveFrom = #date(1900, 1, 1),
+                    Tech          = AsTxt(List.First(r)),
+                    ValuationArea = m[Code],
+                    MW            = (try Number.From(r{m[Idx]}) otherwise 0) ]),
+    T       = Table.FromRecords(Pairs,
+                  type table [EffectiveFrom = date, Tech = text, ValuationArea = text, MW = number]),
+    Out     = Table.Buffer(T)
 in
     Out
+```
+
+## qcMWSheet
+
+> Diagnostic. Shows the MW sheet exactly as it sits in Excel, cell for cell, with no interpretation. If `varMWCapacity` complains, look here and read me the layout. Leave Enable load ON.
+
+```
+let
+    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
+    Sh      = Table.SelectRows(Wb, each [Kind] = "Sheet"),
+    Norm    = (n as any) as text =>
+                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")), {" ",".","_","-"})),
+    Hit     = Table.SelectRows(Sh, each
+                  List.Contains({"MW","MWCAPACITY","CAPACITY","MWCAP"}, Norm([Item]))),
+    Data    = Hit{0}[Data],
+    AsText  = Table.TransformColumns(Data,
+                  List.Transform(Table.ColumnNames(Data),
+                      (c) => {c, each Text.From(_ ?? ""), type text}))
+in
+    AsText
 ```
 
 ## dimCapacity
