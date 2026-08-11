@@ -100,13 +100,16 @@ VISUALS = [
       "Format pane → Row headers → Stepped layout: Off (so Plant and Category get their "
       "own columns).",
       "Format pane → Row headers → +/- icons: On (that is the click-to-expand control).",
-      "Format pane → Subtotals → Row subtotals On, Column subtotals Off, and set "
-      "'Per row level' so each plant shows its own total. Grand total row = the Total row.",
-      "In the Values well, arrow next to Summary Value ₹ Cr → Conditional formatting → "
-      "Background color → Format style Diverging, centre 0, both ends red: a difference "
-      "either direction is equally wrong.",
-      "Expand all plants once with the arrow at the top-left of the matrix, then save — "
-      "the expansion state is remembered."]),
+      "Format pane → Subtotals → Row subtotals: On. Then switch Column subtotals to Off, "
+      "and turn on 'Per row level' so each plant shows its own total. The grand total row "
+      "at the bottom is the Total row you asked for.",
+      "Colour the differences: in the Values box, click the small down-arrow next to "
+      "Summary Value ₹ Cr, click 'Conditional formatting', then 'Background color'. Set "
+      "Format style to Diverging, tick 'Add a middle colour', set the middle number to 0, "
+      "and make both the Minimum and Maximum colours red. A difference either direction is "
+      "equally wrong, so both ends are red.",
+      "Right-click any plant row in the matrix, click 'Expand', then 'All', so RM, FG and "
+      "consumables show under every plant. Then press Ctrl+S — Power BI remembers it."]),
 
     ("Summary", "Clustered column chart", "Difference ₹ Cr by plant — click a bar",
      [("X-axis", ["dimPlant[Plant]"]),
