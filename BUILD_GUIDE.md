@@ -43,7 +43,7 @@ fail with a file-lock error. This applies every time you refresh, forever.
 **1.2** Ribbon: **Home** → **Transform data**. The Power Query Editor window opens.
 Everything in Part 1 happens in this window.
 
-### How to add each query (you will repeat this 28 times)
+### How to add each query (you will repeat this 31 times)
 
 1. In Power Query, ribbon: **Home** → **New Source** → **Blank Query**.
 2. Ribbon: **Home** → **Advanced Editor**.
@@ -89,6 +89,9 @@ Everything in Part 1 happens in this window.
 | 26 | `qcVarHeaders` | self-check |
 | 27 | `qcNatureNoCapacity` | self-check |
 | 28 | `qcMWSheet` | self-check — shows the MW sheet raw |
+| 29 | `dimCategory` | lets TB and MB5B share one RM/FG/Consumables row |
+| 30 | `dimMetric` | makes Inventory (TB) / Inventory (MB5B) / Difference into columns |
+| 31 | `dimMeasure` | makes MW / In ₹ Cr / In Days into columns |
 
 **1.4** If Power BI asks about **privacy levels** or **credentials**, choose
 **Organizational** for OneDrive and click through. If it warns about combining data
@@ -107,6 +110,7 @@ Leave these ticked (they become your tables):
 ```
 factInventory, factTB, factTB_Unmapped, dimPlant, dimDate,
 dimNature, dimCapacity, dimTBMaster, dimMaterialAttr, dimFGAttr,
+dimCategory, dimMetric, dimMeasure,
 qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet
 ```
 
@@ -123,7 +127,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet
 | "Illegal characters in path" | `pRoot` is not your real path | open the folder in File Explorer, click the address bar, copy it in — keep the quote marks |
 | "Token Literal expected" | a text value lost its quote marks | `pRoot` must be `"C:\...\Inventory Report"`, quotes included |
 | "Not enough elements in the enumeration" | a query assumed more columns than the sheet has | you are on an old version of the query — refresh the guide page and re-copy |
-| "Expression.Syntax Error" right after pasting | the whole appendix went into one query | one query per Blank Query, 28 times |
+| "Expression.Syntax Error" right after pasting | the whole appendix went into one query | one query per Blank Query, 31 times |
 
 Send me the exact error text and I'll tell you the one-line fix.
 
@@ -136,7 +140,7 @@ Send me the exact error text and I'll tell you the one-line fix.
 **2.2** Power BI will have guessed some relationships. **Delete all of them**: click each
 connecting line and press Delete. Cleaner to start blank.
 
-**2.3** Create these 8 relationships. To create one: click and drag the **from** field onto
+**2.3** Create these 11 relationships. To create one: click and drag the **from** field onto
 the **to** field. Then double-click the line and confirm the settings.
 
 | From (the "one" side) | To (the "many" side) | Cardinality | Direction |
@@ -150,6 +154,16 @@ the **to** field. Then double-click the line and confirm the settings.
 | `dimNature[Nature]` | `factInventory[Nature]` | One to many | Single |
 | `dimNature[Nature]` | `dimCapacity[Tech]` | One to many | Single |
 | `dimTBMaster[GLAccount]` | `factTB[GLAccount]` | One to many | Single |
+| `dimCategory[Category]` | `factInventory[Category]` | One to many | Single |
+| `dimCategory[Category]` | `factTB[Category]` | One to many | Single |
+
+The last two are what let one matrix show the trial balance and MB5B on the **same**
+RM / FG / Consumables row. Without them the TB column repeats the same total against every
+row, which is the classic wrong-looking reconciliation.
+
+`dimMetric` and `dimMeasure` get **no relationship at all** — they are deliberately
+disconnected. They exist to give a matrix its master columns, and the measures read them
+with `SELECTEDVALUE`. If you connect them, the matrix goes blank.
 
 Every one is **Single** direction. If Power BI offers "Both", don't take it — bidirectional
 relationships cause wrong totals in ways that are very hard to spot later.
@@ -161,7 +175,10 @@ purpose. None of the measures need it; `Value ₹ Cr LM` uses `MonthIndex` inste
 **Column tools** → **Sort by column** → pick `MonthSort`. Without this, months sort
 alphabetically (Apr, Aug, Dec…) and every chart reads as nonsense.
 
-**2.6** Do the same for `dimPlant`: click `Plant` → **Sort by column** → `PlantSort`.
+**2.6** Do the same for: `dimPlant[Plant]` → `PlantSort`, `dimCategory[Category]` →
+`CategorySort`, `dimMetric[Metric]` → `MetricSort`, `dimMeasure[Measure]` → `MeasureSort`.
+The last two matter — without them your master columns come out alphabetically
+(Difference first), which reads backwards.
 
 **2.7** Hide the plumbing so the Fields list stays usable. Right-click → **Hide** on:
 `factInventory[MatKey]`, `factTB[PlantCode]`, `dimDate[MonthSort]`, `dimPlant[PlantSort]`.
@@ -238,7 +255,7 @@ asks you to colour anything.
 |---|---|---|---|---|---|
 | Month | `dimDate[MonthName]` | 16 | 108 | 300 | 44 |
 | Plant | `dimPlant[Plant]` | 324 | 108 | 300 | 44 |
-| Category | `factInventory[Category]` | 632 | 108 | 300 | 44 |
+| Category | `dimCategory[Category]` | 632 | 108 | 300 | 44 |
 
 **4.3** Select all 9 → **Ctrl+C** → **Ctrl+V** on `Summary`, `FG`, `RM`. Positions come with them.
 
@@ -252,29 +269,31 @@ pages can disagree about the same month.
 
 ## Page — Overview
 
-**4.5** **Stacked column chart** — Every month side by side, split RM / FG / consumables.
+**4.5** **Stacked column chart** — Every month side by side, split RM / FG / consumables. Click one segment and the rest of the page follows it; right-click → Drill through → Detail for the pies behind it.
 
 | Well | Field |
 |---|---|
 | X-axis | `dimDate[MonthName]` |
 | Y-axis | `Value ₹ Cr` |
-| Legend | `factInventory[Category]` |
+| Legend | `dimCategory[Category]` |
 
 Title: `Value ₹ Cr by month and category`
 
 Position: X 16, Y 168, W 764, H 264.
 
-**4.6** **Clustered column chart** — Which plant is holding the stock, and of what kind.
+**4.6** **Clustered column chart** — Three fields in the X-axis makes it a hierarchy, so the little arrows appear in the visual's top-right corner: plant, then category inside a plant, then nature inside that. Clicking is the whole point — nobody has to build three charts.
 
 | Well | Field |
 |---|---|
-| X-axis | `dimPlant[Plant]` |
+| X-axis | `dimPlant[Plant]`, `dimCategory[Category]`, `dimNature[Nature]` |
 | Y-axis | `Value ₹ Cr` |
-| Legend | `factInventory[Category]` |
 
-Title: `Value ₹ Cr by plant`
+Title: `Value ₹ Cr by plant — click to go deeper`
 
 Position: X 788, Y 168, W 476, H 264.
+
+- The double-down-arrow in the header turns on drill mode; after that a single click on a bar opens the next level, and the up-arrow goes back.
+- Right-click a bar → Drill through → Detail for the pie-chart page instead.
 
 **4.7** **Line and clustered column chart** — Bars compare the two months directly; the line is the percentage swing, which is what people argue about.
 
@@ -292,7 +311,7 @@ Position: X 16, Y 444, W 764, H 268.
 
 | Well | Field |
 |---|---|
-| Rows | `factInventory[Category]` |
+| Rows | `dimCategory[Category]` |
 | Columns | `dimDate[MonthName]` |
 | Values | `Value ₹ Cr` |
 
@@ -307,152 +326,179 @@ Position: X 788, Y 444, W 476, H 268.
 
 ## Page — Summary
 
-**4.9** **Matrix** — The whole model in one grid: months across, category and plant down. Click a row's arrow to expand plants under a category.
+**4.9** **Matrix** — The whole reconciliation in one grid, exactly as it is read out: three master columns (TB, MB5B, Difference), the last four months under each, one row per plant with RM, FG and consumables beneath it, and a Total row. Everything in crore rupees.
 
 | Well | Field |
 |---|---|
-| Rows | `factInventory[Category]`, `dimPlant[Plant]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `Value ₹ Cr` |
+| Rows | `dimPlant[Plant]`, `dimCategory[Category]` |
+| Columns | `dimMetric[Metric]`, `dimDate[MonthName]` |
+| Values | `Summary Value ₹ Cr` |
+| Filters | `Last 4 Months  →  is 1` |
 
-Title: `Value ₹ Cr by month, category and plant`
+Title: `Inventory (TB) · Inventory (MB5B) · Difference — ₹ Cr`
 
-Position: X 16, Y 168, W 1248, H 264.
+Position: X 16, Y 168, W 1248, H 300.
 
-- Format pane → Row headers → Stepped layout: Off.
-- Format pane → Subtotals → turn on both Row subtotals and Column subtotals.
+- Order of the two Columns fields matters: dimMetric[Metric] FIRST, then dimDate[MonthName]. That is what makes TB / MB5B / Difference the master columns with months nested inside.
+- Format pane → Row headers → Stepped layout: Off (so Plant and Category get their own columns).
+- Format pane → Row headers → +/- icons: On (that is the click-to-expand control).
+- Format pane → Subtotals → Row subtotals On, Column subtotals Off, and set 'Per row level' so each plant shows its own total. Grand total row = the Total row.
+- In the Values well, arrow next to Summary Value ₹ Cr → Conditional formatting → Background color → Format style Diverging, centre 0, both ends red: a difference either direction is equally wrong.
+- Expand all plants once with the arrow at the top-left of the matrix, then save — the expansion state is remembered.
 
-**4.10** **Matrix** — The MW view of the same months, with days of inventory and how it moved.
-
-| Well | Field |
-|---|---|
-| Rows | `dimDate[MonthName]` |
-| Values | `MW`, `FG MW`, `Capacity MW`, `Days of Inventory`, `Days vs LM` |
-
-Title: `MW and days by month`
-
-Position: X 16, Y 444, W 620, H 268.
-
-**4.11** **Matrix** — The reconciliation: what the books say against what the stock report says.
+**4.10** **Clustered column chart** — The reconciliation as a picture. Click a bar and the matrix above filters to that plant; right-click → Drill through → Detail for the materials behind it.
 
 | Well | Field |
 |---|---|
-| Rows | `dimPlant[Plant]` |
-| Values | `TB ₹ Cr`, `Value ₹ Cr`, `Difference ₹ Cr`, `Difference %` |
+| X-axis | `dimPlant[Plant]` |
+| Y-axis | `Difference ₹ Cr` |
 
-Title: `Trial balance vs MB5B`
+Title: `Difference ₹ Cr by plant — click a bar`
 
-Position: X 644, Y 444, W 620, H 268.
+Position: X 16, Y 480, W 620, H 232.
 
-- In the Values well click the arrow next to Difference ₹ Cr → Conditional formatting → Background color.
-- Format style: Diverging. Minimum red, Centre white with Centre = 0, Maximum red.
-- Both ends red on purpose: a difference either direction is equally wrong.
+- Format pane → Columns → Colour → fx → Format style: Rules, and colour any negative value red. A difference either direction is equally wrong.
+
+**4.11** **Clustered column chart** — Two bars per month, books against stock report — a gap that is opening up shows here before anyone notices it in the numbers.
+
+| Well | Field |
+|---|---|
+| X-axis | `dimDate[MonthName]` |
+| Y-axis | `TB ₹ Cr`, `Value ₹ Cr` |
+
+Title: `Inventory (TB) vs Inventory (MB5B) by month`
+
+Position: X 644, Y 480, W 620, H 232.
 
 ---
 
 ## Page — FG
 
-**4.12** **Matrix** — Technology by technology: value, MW, capacity, days, rupees per watt and the month's movement.
+**4.12** **Matrix** — FG per plant in all three units at once — megawatts, crore rupees and days — with the last four months under each. One grid instead of three sheets.
+
+| Well | Field |
+|---|---|
+| Rows | `dimPlant[Plant]` |
+| Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
+| Values | `Unit Value` |
+| Filters | `dimCategory[Category]  →  is FG`, `Last 4 Months  →  is 1` |
+
+Title: `FG by plant — MW · In ₹ Cr · In Days`
+
+Position: X 16, Y 168, W 1248, H 176.
+
+- dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName].
+- Format pane → Row headers → Stepped layout: Off.
+- Click a plant row to filter the technology table below it.
+
+**4.13** **Matrix** — The same three units by technology rather than by plant, which is where a build-up in one technology shows up.
 
 | Well | Field |
 |---|---|
 | Rows | `dimNature[Nature]` |
-| Values | `Value ₹ Cr`, `FG MW`, `Capacity MW`, `Days of Inventory`, `INR per Wp`, `Value ₹ Cr % vs LM` |
-| Filters | `factInventory[Category]  →  is FG` |
+| Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
+| Values | `Unit Value` |
+| Filters | `dimCategory[Category]  →  is FG`, `Last 4 Months  →  is 1` |
 
-Title: `FG by technology`
+Title: `FG by technology — MW · In ₹ Cr · In Days`
 
-Position: X 16, Y 168, W 764, H 264.
+Position: X 16, Y 356, W 620, H 356.
 
+- Same column order: dimMeasure[Measure] then dimDate[MonthName].
 - Format pane → Row headers → Stepped layout: Off.
 
-**4.13** **Matrix** — MW per technology with the months side by side, so a build-up in one tech is obvious.
+**4.14** **Clustered column chart** — Clicking one technology filters both matrices to it; right-click drills through.
 
 | Well | Field |
 |---|---|
-| Rows | `dimNature[Nature]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `FG MW` |
-| Filters | `factInventory[Category]  →  is FG` |
+| X-axis | `dimNature[Nature]` |
+| Y-axis | `MW` |
+| Filters | `dimCategory[Category]  →  is FG` |
 
-Title: `FG technology by month`
+Title: `FG MW by technology — click a bar`
 
-Position: X 788, Y 168, W 476, H 264.
+Position: X 644, Y 356, W 620, H 176.
 
-**4.14** **Area chart** — History of FG stock, split by technology.
-
-| Well | Field |
-|---|---|
-| X-axis | `dimDate[MonthName]` |
-| Y-axis | `Value ₹ Cr` |
-| Legend | `dimNature[Nature]` |
-| Filters | `factInventory[Category]  →  is FG` |
-
-Title: `FG value ₹ Cr by technology over time`
-
-Position: X 16, Y 444, W 764, H 268.
-
-**4.15** **Line and clustered column chart** — Days of inventory month by month, with the change on a line — the number your superior asks for first.
+**4.15** **Line and clustered column chart** — Days month by month with the change on a line. Right-click any bar → Drill through → Detail for the technology and material split behind it.
 
 | Well | Field |
 |---|---|
 | X-axis | `dimDate[MonthName]` |
-| Column y-axis | `Days of Inventory` |
+| Column y-axis | `Days` |
 | Line y-axis | `Days vs LM` |
-| Filters | `factInventory[Category]  →  is FG` |
+| Filters | `dimCategory[Category]  →  is FG` |
 
-Title: `FG days of inventory vs last month`
+Title: `FG days — click a bar to drill in`
 
-Position: X 788, Y 444, W 476, H 268.
+Position: X 644, Y 544, W 620, H 168.
 
 ---
 
 ## Page — RM
 
-**4.16** **Matrix** — The RM equivalent of the FG grid.
+**4.16** **Matrix** — RM by plant in crore rupees and days of cover, last four months under each. MW is unticked here because an RM megawatt figure is a derived number, not a measured one.
 
 | Well | Field |
 |---|---|
-| Rows | `dimPlant[Plant]`, `dimNature[Nature]`, `factInventory[GroupNature]` |
-| Values | `Value ₹ Cr`, `MW`, `Value ₹ Cr % vs LM` |
-| Filters | `factInventory[Category]  →  is RM` |
+| Rows | `dimPlant[Plant]` |
+| Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
+| Values | `Unit Value` |
+| Filters | `dimCategory[Category]  →  is RM`, `Last 4 Months  →  is 1`, `dimMeasure[Measure]  →  untick MW` |
 
-Title: `RM by plant and nature`
+Title: `RM by plant — In ₹ Cr · In Days`
 
-Position: X 16, Y 168, W 620, H 544.
+Position: X 16, Y 168, W 1248, H 176.
 
+- dimMeasure[Measure] in Columns first, then dimDate[MonthName].
+- In the Filters pane, drag dimMeasure[Measure] in and untick MW.
 - Format pane → Row headers → Stepped layout: Off.
 
-**4.17** **Matrix** — RM months side by side.
+**4.17** **Matrix** — Then the same numbers down the material hierarchy: group nature, and nature inside it. The +/- arrow on each group row is the drill-in.
 
 | Well | Field |
 |---|---|
-| Rows | `dimNature[Nature]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `Value ₹ Cr` |
-| Filters | `factInventory[Category]  →  is RM` |
+| Rows | `factInventory[GroupNature]`, `dimNature[Nature]` |
+| Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
+| Values | `Unit Value` |
+| Filters | `dimCategory[Category]  →  is RM`, `Last 4 Months  →  is 1`, `dimMeasure[Measure]  →  untick MW` |
 
-Title: `RM by month`
+Title: `RM by group nature and nature`
 
-Position: X 644, Y 168, W 620, H 264.
+Position: X 16, Y 356, W 620, H 356.
 
-**4.18** **Decomposition tree** — Replaces most of what the RM sheet does by hand, and drills in any order you click.
+- Format pane → Row headers → Stepped layout: Off, +/- icons: On.
+
+**4.18** **Clustered column chart** — One click sets the whole page to a group nature; right-click drills through to the materials.
+
+| Well | Field |
+|---|---|
+| X-axis | `factInventory[GroupNature]` |
+| Y-axis | `Value ₹ Cr` |
+| Filters | `dimCategory[Category]  →  is RM` |
+
+Title: `RM ₹ Cr by group nature — click a bar`
+
+Position: X 644, Y 356, W 620, H 176.
+
+**4.19** **Decomposition tree** — The interactive one: click a box and it opens the next level, in whatever order you click. This is what replaces filtering the RM sheet by hand.
 
 | Well | Field |
 |---|---|
 | Analyze | `Value ₹ Cr` |
-| Explain by | `dimPlant[Plant]`, `dimNature[Nature]`, `factInventory[GroupNature]` |
-| Filters | `factInventory[Category]  →  is RM` |
+| Explain by | `dimPlant[Plant]`, `factInventory[GroupNature]`, `dimNature[Nature]`, `factInventory[Material]` |
+| Filters | `dimCategory[Category]  →  is RM` |
 
-Title: `RM breakdown`
+Title: `RM — click through any way you like`
 
-Position: X 644, Y 444, W 620, H 268.
+Position: X 644, Y 544, W 620, H 168.
+
+- Click the + on a node to choose which field to split by next.
 
 ---
 
 ## Page — Detail
 
-**4.19** **Card** — The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.
+**4.20** **Card** — The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.
 
 | Well | Field |
 |---|---|
@@ -462,7 +508,7 @@ Title: `Value ₹ Cr of what you clicked`
 
 Position: X 16, Y 16, W 296, H 92.
 
-**4.20** **Card** — Same slice in megawatts.
+**4.21** **Card** — Same slice in megawatts.
 
 | Well | Field |
 |---|---|
@@ -472,7 +518,7 @@ Title: `MW`
 
 Position: X 320, Y 16, W 296, H 92.
 
-**4.21** **Card** — Blank unless the slice is FG — that is deliberate.
+**4.22** **Card** — Blank unless the slice is FG — that is deliberate.
 
 | Well | Field |
 |---|---|
@@ -482,7 +528,7 @@ Title: `Days of inventory`
 
 Position: X 624, Y 16, W 296, H 92.
 
-**4.22** **Card** — How big this slice is against the whole.
+**4.23** **Card** — How big this slice is against the whole.
 
 | Well | Field |
 |---|---|
@@ -492,11 +538,11 @@ Title: `Share of the total`
 
 Position: X 928, Y 16, W 336, H 92.
 
-**4.23** **Pie chart** — RM / FG / consumables for exactly what you clicked.
+**4.24** **Pie chart** — RM / FG / consumables for exactly what you clicked.
 
 | Well | Field |
 |---|---|
-| Legend | `factInventory[Category]` |
+| Legend | `dimCategory[Category]` |
 | Values | `Value ₹ Cr` |
 
 Title: `Split by category`
@@ -505,7 +551,7 @@ Position: X 16, Y 120, W 404, H 296.
 
 - Format pane → Detail labels → Label contents: Category, percent of total.
 
-**4.24** **Donut chart** — Which technology or material nature the slice is made of.
+**4.25** **Donut chart** — Which technology or material nature the slice is made of.
 
 | Well | Field |
 |---|---|
@@ -518,7 +564,7 @@ Position: X 428, Y 120, W 404, H 296.
 
 - Format pane → Detail labels → Label contents: Category, percent of total.
 
-**4.25** **Pie chart** — Where the slice sits. A single-colour pie means it is one plant already.
+**4.26** **Pie chart** — Where the slice sits. A single-colour pie means it is one plant already.
 
 | Well | Field |
 |---|---|
@@ -531,7 +577,7 @@ Position: X 840, Y 120, W 424, H 296.
 
 - Format pane → Detail labels → Label contents: Category, percent of total.
 
-**4.26** **Table** — The line-item detail: the question 'which materials is that made of?' answered by clicking, instead of by another Excel sheet.
+**4.27** **Table** — The line-item detail: the question 'which materials is that made of?' answered by clicking, instead of by another Excel sheet.
 
 | Well | Field |
 |---|---|
@@ -547,7 +593,7 @@ Position: X 16, Y 428, W 1248, H 284.
 
 ## Page — Data Quality
 
-**4.27** **Card** — Materials with no row in the master sheets.
+**4.28** **Card** — Materials with no row in the master sheets.
 
 | Well | Field |
 |---|---|
@@ -557,7 +603,7 @@ Title: `Rows missing master attributes (want 0)`
 
 Position: X 16, Y 168, W 300, H 100.
 
-**4.28** **Card** — Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited.
+**4.29** **Card** — Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited.
 
 | Well | Field |
 |---|---|
@@ -567,7 +613,7 @@ Title: `Stock reconciliation ₹ Cr (must be 0)`
 
 Position: X 324, Y 168, W 300, H 100.
 
-**4.29** **Table** — Catches a new GL account nobody added to TB Master — otherwise it vanishes silently.
+**4.30** **Table** — Catches a new GL account nobody added to TB Master — otherwise it vanishes silently.
 
 | Well | Field |
 |---|---|
@@ -577,7 +623,7 @@ Title: `GLs in TB but not in TB Master (want empty)`
 
 Position: X 632, Y 168, W 632, H 100.
 
-**4.30** **Table** — Anything listed here gets blank days. This is the check that catches a Nature/Tech typo.
+**4.31** **Table** — Anything listed here gets blank days. This is the check that catches a Nature/Tech typo.
 
 | Well | Field |
 |---|---|
@@ -587,7 +633,7 @@ Title: `FG technologies with no capacity row (want empty)`
 
 Position: X 16, Y 276, W 608, H 210.
 
-**4.31** **Table** — Read this when a column comes through blank — it shows what the file really says.
+**4.32** **Table** — Read this when a column comes through blank — it shows what the file really says.
 
 | Well | Field |
 |---|---|
@@ -597,7 +643,7 @@ Title: `Actual headers of every source file`
 
 Position: X 632, Y 276, W 632, H 210.
 
-**4.32** **Table** — DataRows = 0 means a sheet is empty.
+**4.33** **Table** — DataRows = 0 means a sheet is empty.
 
 | Well | Field |
 |---|---|
@@ -607,7 +653,7 @@ Title: `Variables workbook sheets`
 
 Position: X 16, Y 494, W 608, H 218.
 
-**4.33** **Table** — Check after every refresh: a missing month looks like a real fall in inventory, not like an error.
+**4.34** **Table** — Check after every refresh: a missing month looks like a real fall in inventory, not like an error.
 
 | Well | Field |
 |---|---|
@@ -621,20 +667,20 @@ Position: X 632, Y 494, W 632, H 218.
 
 ## Making it clickable
 
-**4.34 Drill through.** On the `Detail` page click the empty area around the visuals so
+**4.35 Drill through.** On the `Detail` page click the empty area around the visuals so
 nothing is selected, then drag these into the **Drill through** well of the
 Visualizations pane (leave *Keep all filters* on):
 
 - `dimPlant[Plant]`
 - `dimDate[MonthName]`
-- `factInventory[Category]`
+- `dimCategory[Category]`
 - `dimNature[Nature]`
 
 That is the whole trick. A **Back** arrow appears on `Detail` by itself, and every bar,
 row and slice on the other pages now offers **right-click → Drill through → `Detail`**,
 which opens the pies filtered to whatever was clicked.
 
-**4.35 Interactions.** A *left*-click needs no setup — it already cross-filters the rest
+**4.36 Interactions.** A *left*-click needs no setup — it already cross-filters the rest
 of the page. To change what it does: select a visual → ribbon **Format** →
 **Edit interactions**, then on each other visual pick **filter** (funnel),
 **highlight** (chart) or **none**.
@@ -1355,15 +1401,29 @@ in
 
 ## factTB
 
-> The inner join to dimTBMaster IS the trial-balance cleaning - only whitelisted GL accounts survive.
+> The inner join to dimTBMaster IS the trial-balance cleaning - only whitelisted GL accounts survive. `Category` is worked out from the Nature text on TB Master, so the trial balance and MB5B can be compared on the same RM / FG / Consumables row.
 
 ```
 let
     Mapped  = Table.NestedJoin(factTB_Staged, {"GLAccount"}, dimTBMaster, {"GLAccount"},
                   "tpl", JoinKind.Inner),
-    Expand  = Table.ExpandTableColumn(Mapped, "tpl", {"Nature","TBPlant","TBSort"})
+    Expand  = Table.ExpandTableColumn(Mapped, "tpl", {"Nature","TBPlant","TBSort"}),
+    // RM / FG / Consumables from whatever the Nature (or GL description) says
+    Bucket  = (n as any, d as any) as text =>
+                  let T = Text.Upper(Text.From(n ?? "") & " " & Text.From(d ?? "")) in
+                  if Text.Contains(T, "FINISH") or Text.Contains(T, "FG")
+                      then "FG"
+                  else if Text.Contains(T, "CONSUM") or Text.Contains(T, "STORE")
+                      or Text.Contains(T, "SPARE") or Text.Contains(T, "PACK")
+                      then "Consumables"
+                  else if Text.Contains(T, "RAW") or Text.Contains(T, "RM")
+                      or Text.Contains(T, "WIP") or Text.Contains(T, "SEMI")
+                      then "RM"
+                  else "RM",
+    Cat     = Table.AddColumn(Expand, "Category",
+                  each Bucket([Nature], [GLDesc]), type text)
 in
-    Expand
+    Cat
 ```
 
 ## factTB_Unmapped
@@ -1494,6 +1554,57 @@ let
                       (c) => {c, each Text.From(_ ?? ""), type text}))
 in
     AsText
+```
+
+## dimCategory
+
+> The shared RM / FG / Consumables list. Both `factInventory` and `factTB` join to it, which is what puts the trial balance and MB5B on the same row of the Summary matrix.
+
+```
+let
+    Src = #table(
+        type table [Category = text, CategorySort = Int64.Type],
+        {
+            {"RM",          1},
+            {"FG",          2},
+            {"Consumables", 3}
+        })
+in
+    Src
+```
+
+## dimMetric
+
+> Deliberately disconnected — no relationship to anything. It exists so a matrix can have `Inventory (TB)`, `Inventory (MB5B)` and `Difference` as its three master columns, with months underneath them. The `Summary Value ₹ Cr` measure reads which one a cell is in.
+
+```
+let
+    Src = #table(
+        type table [Metric = text, MetricSort = Int64.Type],
+        {
+            {"Inventory (TB)",    1},
+            {"Inventory (MB5B)",  2},
+            {"Difference",        3}
+        })
+in
+    Src
+```
+
+## dimMeasure
+
+> Also disconnected. Gives the FG and RM matrices their `MW` / `In ₹ Cr` / `In Days` master columns.
+
+```
+let
+    Src = #table(
+        type table [Measure = text, MeasureSort = Int64.Type],
+        {
+            {"MW",       1},
+            {"In ₹ Cr",  2},
+            {"In Days",  3}
+        })
+in
+    Src
 ```
 
 ---
@@ -1671,6 +1782,66 @@ Rows Missing Attr = CALCULATE(COUNTROWS(factInventory), factInventory[AttrMissin
 ```
 Unmapped TB ₹ Cr = DIVIDE(SUM(factTB_Unmapped[Amount]), 10000000)
 ```
+
+*days — two different questions, so two different measures*
+
+`Days of Inventory` (above) answers "how many days of output is this FG worth", and only FG
+has a capacity denominator. RM and consumables need the other question: "at the rate we are
+consuming this, how long does the stock last." That is issues-based, so it works for every
+category.
+
+```
+Days of Cover =
+VAR MonthlyIssues = [Issues ₹ Cr]
+RETURN DIVIDE([Value ₹ Cr], DIVIDE(MonthlyIssues, 30))
+```
+
+```
+Days =
+IF(SELECTEDVALUE(dimCategory[Category]) = "FG",
+   [Days of Inventory],
+   [Days of Cover])
+```
+
+`Days` is the one to put on a visual: FG rows get capacity days, RM and consumables rows get
+cover days, and nothing shows a number that has no meaning.
+
+*the switch measures — these are what give a matrix its master columns*
+
+`dimMetric` and `dimMeasure` have no relationship to anything, so a measure has to read the
+column a cell sits in with `SELECTEDVALUE` and return the right number. That is the whole
+trick behind `Inventory (TB) | Inventory (MB5B) | Difference` sitting side by side with
+months underneath.
+
+```
+Summary Value ₹ Cr =
+SWITCH(SELECTEDVALUE(dimMetric[Metric]),
+    "Inventory (TB)",   [TB ₹ Cr],
+    "Inventory (MB5B)", [Value ₹ Cr],
+    "Difference",       [Difference ₹ Cr],
+    [Value ₹ Cr])
+```
+
+```
+Unit Value =
+SWITCH(SELECTEDVALUE(dimMeasure[Measure]),
+    "MW",      [MW],
+    "In ₹ Cr", [Value ₹ Cr],
+    "In Days", [Days],
+    [Value ₹ Cr])
+```
+
+*keeping a matrix to the last four months*
+
+```
+Last 4 Months =
+VAR LastIdx = CALCULATE(MAX(dimDate[MonthIndex]), ALL(dimDate))
+RETURN IF(MAX(dimDate[MonthIndex]) > LastIdx - 4, 1, 0)
+```
+
+Put `Last 4 Months` in a matrix's Filters pane and set it to **is 1**. The matrix then always
+shows the four most recent months and never needs editing again — a new month of files
+appears on its own and the oldest drops off.
 
 *formatting, once all of the above exist*
 
