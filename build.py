@@ -143,9 +143,9 @@ def cards(items, kind):
 
 
 CSS = """
-:root{--bg:#0f1115;--panel:#171a21;--line:#262b36;--fg:#e6e9ef;--dim:#9aa4b2;--acc:#4c8dff;--ok:#2ea043}
+:root{--bg:#0f1115;--panel:#171a21;--line:#262b36;--fg:#e6e9ef;--dim:#9aa4b2;--acc:#4FA45F;--ok:#8CC63F}
 *{box-sizing:border-box}
-body{margin:0;font:15px/1.55 -apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--fg)}
+body{margin:0;font:15px/1.55 Arial,Helvetica,sans-serif;background:var(--bg);color:var(--fg)}
 a{color:var(--acc)}
 .wrap{max-width:1000px;margin:0 auto;padding:0 20px 80px}
 h1{font-size:26px;margin:28px 0 6px}
