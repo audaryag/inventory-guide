@@ -89,9 +89,8 @@ def steps():
             "Ctrl+C.",
             "Go to each page listed below and press Ctrl+V."],
         fields=[("Paste on", p) for p in others],
-        note="Not on %s or %s: %s is filtered by whatever you clicked to get there, and "
-             "%s must never be filtered or it stops being a check."
-             % (DRILL_PAGE, "Data Quality", DRILL_PAGE, "Data Quality")))
+        note="Not on %s — that page is filtered by whatever you clicked to get there, so a "
+             "slicer on it would fight the drill-through." % DRILL_PAGE))
 
     S.append(dict(
         title="Sync the slicers across pages",
@@ -181,14 +180,17 @@ def steps():
 
     S.append(dict(
         title="Check it actually works",
-        page="Data Quality",
-        do=["Look at the Data Quality page.",
-            "Stock reconciliation must read 0.",
-            "Rows missing master attributes should read 0.",
-            "Both tables (unmapped GLs, Natures with no capacity) should be empty.",
-            "Then pick a month in the header slicer and confirm every page changes."],
-        fields=[], note="If any of those four is wrong, the numbers on the other pages are "
-                        "wrong too — fix it before showing anyone."))
+        page="—",
+        do=["Pick a month in the header slicer and confirm every page changes with it.",
+            "On Summary, the Difference column should be 0.00 (or very close) for every "
+            "plant — that is the books agreeing with the stock report.",
+            "On FG, 1905 should show blank Days, because it has no capacity row.",
+            "Right-click a bar → Drill through → Detail, and check the cards match the bar.",
+            "Then Ctrl+S."],
+        fields=[], note="If Difference is large, a source file is missing, duplicated or "
+                        "hand-edited — the numbers on every page are wrong until that is "
+                        "fixed. The qc* queries are still in the model if you want to put "
+                        "them on a page of their own to see why."))
     return S
 
 
@@ -224,8 +226,7 @@ def part4_markdown():
     L += ["", "**4.3** Select all %d → **Ctrl+C** → **Ctrl+V** on %s. Positions come with "
           "them." % (len(CARDS) + len(SLICERS),
                      ", ".join("`%s`" % p for p in BAND_PAGES if p != PAGES[0])), "",
-          "Not on `%s` (it is filtered by whatever you clicked to get there) or "
-          "`Data Quality` (a filtered check is not a check)." % DRILL_PAGE, "",
+          "Not on `%s` — it is filtered by whatever you clicked to get there." % DRILL_PAGE, "",
           "**4.4** Ribbon **View** → tick **Sync slicers**; for each slicer tick **Sync** and",
           "**Visible** on " + ", ".join("`%s`" % p for p in BAND_PAGES) + ". Without it, two",
           "pages can disagree about the same month.", ""]

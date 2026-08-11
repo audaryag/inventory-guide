@@ -6,7 +6,7 @@ steps.py turns this into (a) the guided click-by-click steps on the web page and
 
 CANVAS = (1280, 720)
 
-PAGES = ["Overview", "Summary", "FG", "RM", "Detail", "Data Quality"]
+PAGES = ["Overview", "Summary", "FG", "RM", "Detail"]
 
 # The drill-through page: right-click any bar, row or slice on the other pages and choose
 # Drill through → Detail, and these fields carry the clicked context across.
@@ -15,7 +15,7 @@ DRILL_FIELDS = ["dimPlant[Plant]", "dimDate[MonthName]", "dimCategory[Category]"
                 "dimNature[Nature]"]
 
 # Pages that get a copy of the header band. Detail is driven by what you clicked rather
-# than by slicers, and Data Quality should never be filtered.
+# than by slicers, so it gets no slicers of its own.
 BAND_PAGES = ["Overview", "Summary", "FG", "RM"]
 
 # ---- header band, built once on Overview then copied ------------------------------------
@@ -253,54 +253,21 @@ VISUALS = [
      "Where the slice sits. A single-colour pie means it is one plant already.",
      ["Format pane → Detail labels → Label contents: Category, percent of total."]),
 
-    ("Detail", "Table", "Materials behind this number",
-     [("Columns", ["factInventory[Material]", "factInventory[MaterialDesc]", "Value ₹ Cr", "MW",
-                   "INR per Wp", "Share of Total %"])],
+    ("Detail", "Matrix", "Materials behind this number — click + to open a nature",
+     [("Rows", ["dimNature[Nature]", "factInventory[Material]",
+                "factInventory[MaterialDesc]"]),
+      ("Values", ["Value ₹ Cr", "MW", "Days", "INR per Wp", "Share of Total %"])],
      (16, 428, 1248, 284),
-     "The line-item detail: the question 'which materials is that made of?' answered by "
-     "clicking, instead of by another Excel sheet.",
-     ["Click the Value ₹ Cr column header twice so it sorts largest first."]),
+     "The line-item detail. A Matrix rather than a Table, so it opens nature → material "
+     "instead of being one long flat list — that is the difference between clicking and "
+     "scrolling.",
+     ["Format pane → Row headers → +/- icons: On, Stepped layout: Off. That is the click-to-"
+      "open control.",
+      "Format pane → Grid → Options → Keep column headers visible: On. The headings then "
+      "stay put while the rows scroll inside the visual, so a long list never makes the "
+      "visual (or the page) grow.",
+      "Format pane → Subtotals → Row subtotals: On, so a closed nature row still shows its "
+      "total.",
+      "Click the Value ₹ Cr column header once so it sorts largest first."]),
 
-    ("Data Quality", "Card", "Rows missing master attributes (want 0)",
-     [("Fields", ["Rows Missing Attr"])],
-     (16, 168, 300, 100),
-     "Materials with no row in the master sheets.", []),
-
-    ("Data Quality", "Card", "Stock reconciliation ₹ Cr (must be 0)",
-     [("Fields", ["Stock Recon ₹ Cr"])],
-     (324, 168, 300, 100),
-     "Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, "
-     "truncated or hand-edited.", []),
-
-    ("Data Quality", "Table", "GLs in TB but not in TB Master (want empty)",
-     [("Columns", ["factTB_Unmapped[GLAccount]", "factTB_Unmapped[GLDesc]",
-                   "Unmapped TB ₹ Cr"])],
-     (632, 168, 632, 100),
-     "Catches a new GL account nobody added to TB Master — otherwise it vanishes silently.",
-     []),
-
-    ("Data Quality", "Table", "FG technologies with no capacity row (want empty)",
-     [("Columns", ["qcNatureNoCapacity[Nature]"])],
-     (16, 276, 608, 210),
-     "Anything listed here gets blank days. This is the check that catches a Nature/Tech typo.",
-     []),
-
-    ("Data Quality", "Table", "Actual headers of every source file",
-     [("Columns", ["qcHeaders[Folder]", "qcHeaders[Name]", "qcHeaders[SheetNames]",
-                   "qcHeaders[Headers]"])],
-     (632, 276, 632, 210),
-     "Read this when a column comes through blank — it shows what the file really says.", []),
-
-    ("Data Quality", "Table", "Variables workbook sheets",
-     [("Columns", ["qcVarHeaders[SheetName]", "qcVarHeaders[Headers]",
-                   "qcVarHeaders[DataRows]"])],
-     (16, 494, 608, 218),
-     "DataRows = 0 means a sheet is empty.", []),
-
-    ("Data Quality", "Table", "Files loaded this refresh",
-     [("Columns", ["factInventory[SourceFile]", "factInventory[Month]",
-                   "factInventory[Category]", "Value ₹ Cr"])],
-     (632, 494, 632, 218),
-     "Check after every refresh: a missing month looks like a real fall in inventory, "
-     "not like an error.", []),
 ]

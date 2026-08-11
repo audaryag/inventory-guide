@@ -237,7 +237,7 @@ well, and the four numbers that place it on a 1280 x 720 canvas.
 Colours, fonts, borders and card styling all come from the theme, so nothing below
 asks you to colour anything.
 
-**Create the 6 pages** with the **+** at the bottom, named: `Overview` · `Summary` · `FG` · `RM` · `Detail` · `Data Quality`.
+**Create the 5 pages** with the **+** at the bottom, named: `Overview` · `Summary` · `FG` · `RM` · `Detail`.
 
 ---
 
@@ -266,7 +266,7 @@ asks you to colour anything.
 
 **4.3** Select all 10 → **Ctrl+C** → **Ctrl+V** on `Summary`, `FG`, `RM`. Positions come with them.
 
-Not on `Detail` (it is filtered by whatever you clicked to get there) or `Data Quality` (a filtered check is not a check).
+Not on `Detail` — it is filtered by whatever you clicked to get there.
 
 **4.4** Ribbon **View** → tick **Sync slicers**; for each slicer tick **Sync** and
 **Visible** on `Overview`, `Summary`, `FG`, `RM`. Without it, two
@@ -297,7 +297,7 @@ Position: X 16, Y 168, W 764, H 264.
 
 Title: `Value ₹ Cr by plant — click to go deeper`
 
-Position: X 788, Y 168, W 476, H 264.
+Position: X 788, Y 168, W 476, H 216.
 
 - The double-down-arrow in the header turns on drill mode; after that a single click on a bar opens the next level, and the up-arrow goes back.
 - Right-click a bar → Drill through → Detail for the pie-chart page instead.
@@ -314,7 +314,20 @@ Title: `Value ₹ Cr — this month vs last month`
 
 Position: X 16, Y 444, W 764, H 268.
 
-**4.8** **Matrix** — The same numbers as a table, because some readers only trust a table.
+**4.8** **Donut chart** — Where the money actually sits. Clicking a slice filters the page to that category, which is quicker than the Category slicer.
+
+| Well | Field |
+|---|---|
+| Legend | `dimCategory[Category]` |
+| Values | `Value ₹ Cr` |
+
+Title: `Share of value — click a slice`
+
+Position: X 788, Y 396, W 476, H 172.
+
+- Format pane → Detail labels → Label contents: Percent of total.
+
+**4.9** **Matrix** — The same numbers as a table, because some readers only trust a table.
 
 | Well | Field |
 |---|---|
@@ -324,7 +337,7 @@ Position: X 16, Y 444, W 764, H 268.
 
 Title: `Months side by side`
 
-Position: X 788, Y 444, W 476, H 268.
+Position: X 788, Y 580, W 476, H 132.
 
 - Format pane → Row headers → Stepped layout: Off.
 - Turn Format pane → Subtotals → Row subtotals: On, so each column has a total.
@@ -333,7 +346,7 @@ Position: X 788, Y 444, W 476, H 268.
 
 ## Page — Summary
 
-**4.9** **Matrix** — The whole reconciliation in one grid, exactly as it is read out: three master columns (TB, MB5B, Difference), the last four months under each, one row per plant with RM, FG and consumables beneath it, and a Total row. Everything in crore rupees.
+**4.10** **Matrix** — The whole reconciliation in one grid, exactly as it is read out: three master columns (TB, MB5B, Difference), the last four months under each, one row per plant with RM, FG and consumables beneath it, and a Total row. Everything in crore rupees.
 
 | Well | Field |
 |---|---|
@@ -353,7 +366,7 @@ Position: X 16, Y 168, W 1248, H 300.
 - In the Values well, arrow next to Summary Value ₹ Cr → Conditional formatting → Background color → Format style Diverging, centre 0, both ends red: a difference either direction is equally wrong.
 - Expand all plants once with the arrow at the top-left of the matrix, then save — the expansion state is remembered.
 
-**4.10** **Clustered column chart** — The reconciliation as a picture. Click a bar and the matrix above filters to that plant; right-click → Drill through → Detail for the materials behind it.
+**4.11** **Clustered column chart** — The reconciliation as a picture. Click a bar and the matrix above filters to that plant; right-click → Drill through → Detail for the materials behind it.
 
 | Well | Field |
 |---|---|
@@ -366,7 +379,7 @@ Position: X 16, Y 480, W 620, H 232.
 
 - Format pane → Columns → Colour → fx → Format style: Rules, and colour any negative value red. A difference either direction is equally wrong.
 
-**4.11** **Clustered column chart** — Two bars per month, books against stock report — a gap that is opening up shows here before anyone notices it in the numbers.
+**4.12** **Clustered column chart** — Two bars per month, books against stock report — a gap that is opening up shows here before anyone notices it in the numbers.
 
 | Well | Field |
 |---|---|
@@ -381,7 +394,7 @@ Position: X 644, Y 480, W 620, H 232.
 
 ## Page — FG
 
-**4.12** **Matrix** — FG per plant in all three units at once — megawatts, crore rupees and days — with the months you tick under each. Days is MW ÷ capacity MW, so 1905 is blank on purpose.
+**4.13** **Matrix** — FG per plant in all three units at once — megawatts, crore rupees and days — with the months you tick under each. Days is MW ÷ capacity MW, so 1905 is blank on purpose.
 
 | Well | Field |
 |---|---|
@@ -399,7 +412,7 @@ Position: X 16, Y 168, W 1248, H 176.
 - No month filter on this one — the Month slicer decides which months are columns. Tick any four to compare, or pick a Quarter and it shows that quarter's three.
 - Click a plant row to filter the technology table below it.
 
-**4.13** **Matrix** — The same three units by technology rather than by plant, which is where a build-up in one technology shows up.
+**4.14** **Matrix** — The same three units by technology rather than by plant, which is where a build-up in one technology shows up.
 
 | Well | Field |
 |---|---|
@@ -415,7 +428,7 @@ Position: X 16, Y 356, W 620, H 356.
 - Same column order: dimMeasure[Measure] then dimDate[MonthName].
 - Format pane → Row headers → Stepped layout: Off.
 
-**4.14** **Clustered column chart** — Clicking one technology filters both matrices to it; right-click drills through.
+**4.15** **Clustered column chart** — Clicking one technology filters both matrices to it; right-click drills through.
 
 | Well | Field |
 |---|---|
@@ -427,7 +440,7 @@ Title: `FG MW by technology — click a bar`
 
 Position: X 644, Y 356, W 620, H 176.
 
-**4.15** **Line and clustered column chart** — Days month by month with the change on a line. Right-click any bar → Drill through → Detail for the technology and material split behind it.
+**4.16** **Line and clustered column chart** — Days month by month with the change on a line. Right-click any bar → Drill through → Detail for the technology and material split behind it.
 
 | Well | Field |
 |---|---|
@@ -444,7 +457,7 @@ Position: X 644, Y 544, W 620, H 168.
 
 ## Page — RM
 
-**4.16** **Matrix** — RM by plant in crore rupees and days, the months you tick under each. MW is unticked here because an RM megawatt figure is a derived number, not a measured one.
+**4.17** **Matrix** — RM by plant in crore rupees and days, the months you tick under each. MW is unticked here because an RM megawatt figure is a derived number, not a measured one.
 
 | Well | Field |
 |---|---|
@@ -461,7 +474,7 @@ Position: X 16, Y 168, W 1248, H 176.
 - In the Filters pane, drag dimMeasure[Measure] in and untick MW.
 - Format pane → Row headers → Stepped layout: Off.
 
-**4.17** **Matrix** — Then the same numbers down the material hierarchy: group nature, and nature inside it. The +/- arrow on each group row is the drill-in.
+**4.18** **Matrix** — Then the same numbers down the material hierarchy: group nature, and nature inside it. The +/- arrow on each group row is the drill-in.
 
 | Well | Field |
 |---|---|
@@ -476,7 +489,7 @@ Position: X 16, Y 356, W 620, H 356.
 
 - Format pane → Row headers → Stepped layout: Off, +/- icons: On.
 
-**4.18** **Clustered column chart** — One click sets the whole page to a group nature; right-click drills through to the materials.
+**4.19** **Clustered column chart** — One click sets the whole page to a group nature; right-click drills through to the materials.
 
 | Well | Field |
 |---|---|
@@ -488,7 +501,7 @@ Title: `RM ₹ Cr by group nature — click a bar`
 
 Position: X 644, Y 356, W 620, H 176.
 
-**4.19** **Decomposition tree** — The interactive one: click a box and it opens the next level, in whatever order you click. This is what replaces filtering the RM sheet by hand.
+**4.20** **Decomposition tree** — The interactive one: click a box and it opens the next level, in whatever order you click. This is what replaces filtering the RM sheet by hand.
 
 | Well | Field |
 |---|---|
@@ -506,7 +519,7 @@ Position: X 644, Y 544, W 620, H 168.
 
 ## Page — Detail
 
-**4.20** **Card** — The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.
+**4.21** **Card** — The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.
 
 | Well | Field |
 |---|---|
@@ -516,7 +529,7 @@ Title: `Value ₹ Cr of what you clicked`
 
 Position: X 16, Y 16, W 296, H 92.
 
-**4.21** **Card** — Same slice in megawatts.
+**4.22** **Card** — Same slice in megawatts.
 
 | Well | Field |
 |---|---|
@@ -526,7 +539,7 @@ Title: `MW`
 
 Position: X 320, Y 16, W 296, H 92.
 
-**4.22** **Card** — Stock in MW divided by the MW capacity on the Variables sheet. Blank where the plant has no capacity row — 1905.
+**4.23** **Card** — Stock in MW divided by the MW capacity on the Variables sheet. Blank where the plant has no capacity row — 1905.
 
 | Well | Field |
 |---|---|
@@ -536,7 +549,7 @@ Title: `Days of inventory`
 
 Position: X 624, Y 16, W 296, H 92.
 
-**4.23** **Card** — How big this slice is against the whole.
+**4.24** **Card** — How big this slice is against the whole.
 
 | Well | Field |
 |---|---|
@@ -546,7 +559,7 @@ Title: `Share of the total`
 
 Position: X 928, Y 16, W 336, H 92.
 
-**4.24** **Pie chart** — RM / FG / consumables for exactly what you clicked.
+**4.25** **Pie chart** — RM / FG / consumables for exactly what you clicked.
 
 | Well | Field |
 |---|---|
@@ -559,7 +572,7 @@ Position: X 16, Y 120, W 404, H 296.
 
 - Format pane → Detail labels → Label contents: Category, percent of total.
 
-**4.25** **Donut chart** — Which technology or material nature the slice is made of.
+**4.26** **Donut chart** — Which technology or material nature the slice is made of.
 
 | Well | Field |
 |---|---|
@@ -572,7 +585,7 @@ Position: X 428, Y 120, W 404, H 296.
 
 - Format pane → Detail labels → Label contents: Category, percent of total.
 
-**4.26** **Pie chart** — Where the slice sits. A single-colour pie means it is one plant already.
+**4.27** **Pie chart** — Where the slice sits. A single-colour pie means it is one plant already.
 
 | Well | Field |
 |---|---|
@@ -585,97 +598,27 @@ Position: X 840, Y 120, W 424, H 296.
 
 - Format pane → Detail labels → Label contents: Category, percent of total.
 
-**4.27** **Table** — The line-item detail: the question 'which materials is that made of?' answered by clicking, instead of by another Excel sheet.
+**4.28** **Matrix** — The line-item detail. A Matrix rather than a Table, so it opens nature → material instead of being one long flat list — that is the difference between clicking and scrolling.
 
 | Well | Field |
 |---|---|
-| Columns | `factInventory[Material]`, `factInventory[MaterialDesc]`, `Value ₹ Cr`, `MW`, `INR per Wp`, `Share of Total %` |
+| Rows | `dimNature[Nature]`, `factInventory[Material]`, `factInventory[MaterialDesc]` |
+| Values | `Value ₹ Cr`, `MW`, `Days`, `INR per Wp`, `Share of Total %` |
 
-Title: `Materials behind this number`
+Title: `Materials behind this number — click + to open a nature`
 
 Position: X 16, Y 428, W 1248, H 284.
 
-- Click the Value ₹ Cr column header twice so it sorts largest first.
-
----
-
-## Page — Data Quality
-
-**4.28** **Card** — Materials with no row in the master sheets.
-
-| Well | Field |
-|---|---|
-| Fields | `Rows Missing Attr` |
-
-Title: `Rows missing master attributes (want 0)`
-
-Position: X 16, Y 168, W 300, H 100.
-
-**4.29** **Card** — Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited.
-
-| Well | Field |
-|---|---|
-| Fields | `Stock Recon ₹ Cr` |
-
-Title: `Stock reconciliation ₹ Cr (must be 0)`
-
-Position: X 324, Y 168, W 300, H 100.
-
-**4.30** **Table** — Catches a new GL account nobody added to TB Master — otherwise it vanishes silently.
-
-| Well | Field |
-|---|---|
-| Columns | `factTB_Unmapped[GLAccount]`, `factTB_Unmapped[GLDesc]`, `Unmapped TB ₹ Cr` |
-
-Title: `GLs in TB but not in TB Master (want empty)`
-
-Position: X 632, Y 168, W 632, H 100.
-
-**4.31** **Table** — Anything listed here gets blank days. This is the check that catches a Nature/Tech typo.
-
-| Well | Field |
-|---|---|
-| Columns | `qcNatureNoCapacity[Nature]` |
-
-Title: `FG technologies with no capacity row (want empty)`
-
-Position: X 16, Y 276, W 608, H 210.
-
-**4.32** **Table** — Read this when a column comes through blank — it shows what the file really says.
-
-| Well | Field |
-|---|---|
-| Columns | `qcHeaders[Folder]`, `qcHeaders[Name]`, `qcHeaders[SheetNames]`, `qcHeaders[Headers]` |
-
-Title: `Actual headers of every source file`
-
-Position: X 632, Y 276, W 632, H 210.
-
-**4.33** **Table** — DataRows = 0 means a sheet is empty.
-
-| Well | Field |
-|---|---|
-| Columns | `qcVarHeaders[SheetName]`, `qcVarHeaders[Headers]`, `qcVarHeaders[DataRows]` |
-
-Title: `Variables workbook sheets`
-
-Position: X 16, Y 494, W 608, H 218.
-
-**4.34** **Table** — Check after every refresh: a missing month looks like a real fall in inventory, not like an error.
-
-| Well | Field |
-|---|---|
-| Columns | `factInventory[SourceFile]`, `factInventory[Month]`, `factInventory[Category]`, `Value ₹ Cr` |
-
-Title: `Files loaded this refresh`
-
-Position: X 632, Y 494, W 632, H 218.
+- Format pane → Row headers → +/- icons: On, Stepped layout: Off. That is the click-to-open control.
+- Format pane → Grid → Options → Keep column headers visible: On. The headings then stay put while the rows scroll inside the visual, so a long list never makes the visual (or the page) grow.
+- Format pane → Subtotals → Row subtotals: On, so a closed nature row still shows its total.
+- Click the Value ₹ Cr column header once so it sorts largest first.
 
 ---
 
 ## Making it clickable
 
-**4.35 Drill through.** On the `Detail` page click the empty area around the visuals so
+**4.29 Drill through.** On the `Detail` page click the empty area around the visuals so
 nothing is selected, then drag these into the **Drill through** well of the
 Visualizations pane (leave *Keep all filters* on):
 
@@ -688,7 +631,7 @@ That is the whole trick. A **Back** arrow appears on `Detail` by itself, and eve
 row and slice on the other pages now offers **right-click → Drill through → `Detail`**,
 which opens the pies filtered to whatever was clicked.
 
-**4.36 Interactions.** A *left*-click needs no setup — it already cross-filters the rest
+**4.30 Interactions.** A *left*-click needs no setup — it already cross-filters the rest
 of the page. To change what it does: select a visual → ribbon **Format** →
 **Edit interactions**, then on each other visual pick **filter** (funnel),
 **highlight** (chart) or **none**.
@@ -725,7 +668,7 @@ and the header cards to **none** (so the band always shows the company total).
 2. Drop the new TB in as `TB_YYYYMM.xlsx`.
 3. Add any new materials to `RM Nature` / `FG Master`.
 4. If capacity or a constant changed, add a **new row** with the effective date.
-5. Open the .pbix → **Refresh**. Check the Data Quality page.
+5. Open the .pbix → **Refresh**. Check Summary: the Difference column should stay at 0.00.
 
 That's it. No formulas to drag down, no SUMIFS to extend.
 

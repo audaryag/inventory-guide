@@ -29,6 +29,7 @@ body{margin:0;background:#1d211f;color:var(--ink);
 .cv.up{color:var(--g1)} .cv.dn{color:var(--bad)}
 .vt{font-size:11.5px;font-weight:bold;padding:7px 10px 5px;color:var(--ink)}
 .vb{position:absolute;left:0;right:0;top:26px;bottom:0;overflow:auto}
+.vb table th{position:sticky;top:0;z-index:2;background:#eef3ef}
 .slicer{position:absolute;background:#fff;border:1px solid var(--line);border-radius:3px;
   display:flex;align-items:center;padding:0 10px;gap:6px;cursor:pointer}
 .slicer span{font-size:11px;color:#3d4742}
@@ -94,7 +95,6 @@ svg text{pointer-events:none}
   <button data-p="2">FG</button>
   <button data-p="3">RM</button>
   <button data-p="4">Detail</button>
-  <button data-p="5">Data Quality</button>
 </div>
 <p class="hint">Numbers are invented; every interaction here is one Power BI does out of the
 box. <b>Click a bar or a row to filter · right-click a bar for the Detail page · +/&minus;
@@ -106,7 +106,6 @@ opens sub-rows · Compare switches between the last four months and a quarter (y
 <div class="canvas" id="p2"></div>
 <div class="canvas" id="p3"></div>
 <div class="canvas" id="p4"></div>
-<div class="canvas" id="p5"></div>
 
 <script>
 // ---------------------------------------------------------------- invented data
@@ -741,54 +740,43 @@ function pageDetail(page){
         .map((p, i) => [p.n, val(rs.filter(r => r.plant === p.n)), pal[i % 6]]), 0,
       v => { S.dpick = S.dpick === v ? null : v; draw(); });
 
-  b = vis(page, 16, 448, 1248, 264, 'Materials behind this number');
+  b = vis(page, 16, 448, 1248, 264,
+          'Materials behind this number — click a row to open its materials');
   const keys = [...new Set(rs.map(r => r.plant + '|' + r.cat + '|' + r.nat))];
   const t = el('table');
   t.insertAdjacentHTML('beforeend',
-    '<tr><th class="l">Plant</th><th class="l">Category</th><th class="l">Nature</th>' +
-    '<th>Value ₹ Cr</th><th>MW</th><th>Days</th><th>Share</th></tr>');
+    '<tr><th class="l">Plant · category · nature</th><th class="l">Material</th>' +
+    '<th>Value \u20b9 Cr</th><th>MW</th><th>Days</th><th>Share</th></tr>');
   keys.map(k => {
-    const [p, c, n] = k.split('|');
-    const g = rs.filter(r => r.plant === p && r.cat === c && r.nat === n);
-    return [p, c, n, val(g), mw(g), days(g), val(g) / (val(rs) || 1)];
-  }).sort((a, b2) => b2[3] - a[3]).forEach(r => {
-    t.insertAdjacentHTML('beforeend',
-      `<tr><td class="l">${r[0]}</td><td class="l">${r[1]}</td><td class="l">${r[2]}</td>` +
-      `<td>${f2(r[3])}</td><td>${f1(r[4])}</td><td>${f1(r[5])}</td>` +
-      `<td>${(r[6] * 100).toFixed(1)}%</td></tr>`);
+    const [pl, c, n] = k.split('|');
+    const g = rs.filter(r => r.plant === pl && r.cat === c && r.nat === n);
+    return {k, pl, c, n, v: val(g), w: mw(g), d: days(g)};
+  }).sort((a, b2) => b2.v - a.v).forEach(r => {
+    const key = 'dt|' + r.k, isOpen = !!S.open[key], tot = val(rs) || 1;
+    const tr = el('tr');
+    tr.insertAdjacentHTML('beforeend',
+      '<td class="l"><span class="pm">' + (isOpen ? '\u2212' : '+') + '</span> ' +
+      r.pl + ' \u00b7 ' + r.c + ' \u00b7 ' + r.n + '</td><td class="l"></td><td>' +
+      f2(r.v) + '</td><td>' + f1(r.w) + '</td><td>' + f1(r.d) + '</td><td>' +
+      (r.v / tot * 100).toFixed(1) + '%</td>');
+    tr.style.cursor = 'pointer';
+    tr.onclick = () => { S.open[key] = !isOpen; draw(); };
+    t.appendChild(tr);
+    if (!isOpen) return;
+    [['Grade A', .5], ['Grade B', .3], ['Grade C', .2]].forEach((gs, i) => {
+      const code = String(100000 + (r.k.length * 977 + i * 131 + r.n.length * 53) % 899999);
+      t.insertAdjacentHTML('beforeend',
+        '<tr><td class="l" style="padding-left:30px;color:#5b6660">' + r.n + '</td>' +
+        '<td class="l">' + code + ' \u2014 ' + r.n + ' ' + gs[0] + '</td><td>' +
+        f2(r.v * gs[1]) + '</td><td>' + f1(r.w * gs[1]) + '</td><td>' + f1(r.d) +
+        '</td><td>' + (r.v * gs[1] / tot * 100).toFixed(1) + '%</td></tr>');
+    });
   });
   b.appendChild(t);
 }
 
-function pageDQ(page){
-  card(page, 16, 16, 300, 'Rows missing master attributes', '0');
-  card(page, 324, 16, 300, 'Stock reconciliation ₹ Cr', '0.00');
-  card(page, 632, 16, 300, 'Unmapped TB ₹ Cr', '0.00');
-  card(page, 940, 16, 324, 'Files loaded this refresh', String(MONTHS.length * 12));
-  let b = vis(page, 16, 120, 624, 290, 'GLs in TB but not in TB Master (want empty)');
-  b.appendChild(el('div', '', 'padding:12px;color:#5b6660',
-    'Empty — every GL account in the trial balance is whitelisted on TB Master.'));
-  b = vis(page, 648, 120, 616, 290, 'FG natures with no capacity row (want empty)');
-  b.appendChild(el('div', '', 'padding:12px;color:#5b6660',
-    'Empty — every FG Nature matches a Tech on MW Capacity, so Days is never blank.'));
-  b = vis(page, 16, 420, 1248, 292, 'Files loaded this refresh');
-  const t = el('table');
-  t.insertAdjacentHTML('beforeend',
-    '<tr><th class="l">File</th><th class="l">Month</th><th class="l">Category</th>' +
-    '<th>Value ₹ Cr</th></tr>');
-  MONTHS.slice().reverse().forEach(m => CATS.forEach(c => {
-    const v = val(ROWS.filter(r => r.m === m && r.cat === c));
-    const f = (c === 'RM' ? 'RM_' : c === 'FG' ? 'FG_' : 'Consble_') +
-              '20' + m.slice(-2) + String(MONTHS.indexOf(m) + 6).padStart(2, '0') + '.xlsx';
-    t.insertAdjacentHTML('beforeend',
-      `<tr><td class="l">${f}</td><td class="l">${m}</td><td class="l">${c}</td>` +
-      `<td>${f2(v)}</td></tr>`);
-  }));
-  b.appendChild(t);
-}
-
 // ---------------------------------------------------------------- draw
-const BUILD = [pageOverview, pageSummary, pageFG, pageRM, pageDetail, pageDQ];
+const BUILD = [pageOverview, pageSummary, pageFG, pageRM, pageDetail];
 function draw(){
   BUILD.forEach((fn, i) => {
     const p = document.getElementById('p' + i);
