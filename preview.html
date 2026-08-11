@@ -603,9 +603,11 @@ function pageFG(page){
 
   b = vis(page, 788, 356, 476, 176, 'FG MW by technology — click a bar');
   const tvals = techs.map(x => mw(rows().filter(r => r.cat === 'FG' && r.nat === x)));
-  chart(b, techs.map(x => x.split(' ')[0]), [{name: 'MW', color: G.g2, vals: tvals}],
-    'group', (lab, _s) => pick('nat', techs.find(x => x.startsWith(lab))),
-    lab => toDetail({cat: 'FG', nat: techs.find(x => x.startsWith(lab))}));
+  const short = x => x.replace(' Module', ' Mod');
+  const back = lab => techs.find(x => short(x) === lab);
+  chart(b, techs.map(short), [{name: 'MW', color: G.g2, vals: tvals}],
+    'group', lab => pick('nat', back(lab)),
+    lab => toDetail({cat: 'FG', nat: back(lab)}));
 
   b = vis(page, 788, 544, 476, 168, 'FG days — click a bar to drill in');
   legend(b, [['Days', G.g1], ['vs LM', G.g4]]);
@@ -648,11 +650,10 @@ function pageRM(page){
 
   // decomposition tree
   b = vis(page, 644, 356, 620, 176, 'RM ₹ Cr by group nature — click a bar');
-  chart(b, groups.map(g => g.split(' ')[0]),
+  chart(b, groups,
     [{name: 'RM ₹ Cr', color: G.g1,
       vals: groups.map(g => val(rows().filter(r => r.cat === 'RM' && r.grp === g)))}],
-    'group', lab => pick('grp', groups.find(g => g.startsWith(lab))),
-    lab => toDetail({cat: 'RM', grp: groups.find(g => g.startsWith(lab))}));
+    'group', lab => pick('grp', lab), lab => toDetail({cat: 'RM', grp: lab}));
 
   b = vis(page, 644, 544, 620, 168, 'RM — click through any way you like');
   const t = S.tree = S.tree || {};
