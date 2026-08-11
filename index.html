@@ -1354,86 +1354,149 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <p><strong>3.6</strong> Format the money ones. Click each of <code>Closing Value</code>, <code>Opening Value</code>, <code>Receipts Value</code>, <code>Issues Value</code>, <code>TB Value</code>, <code>Difference</code> → ribbon <strong>Measure tools</strong> → <strong>Format: Currency</strong>, <strong>Decimal places: 0</strong>. For <code>Difference %</code>, set <strong>Format: Percentage</strong>, 1 decimal. For <code>Days</code>, <code>MW</code>, <code>Capacity MW</code>, set <strong>Decimal places: 1</strong>.</p>
 <hr>
 <h1>PART 4 — Build the pages</h1>
-<p>Five pages. Add a page with the <strong>+</strong> at the bottom of the window; rename by double-clicking the tab.</p>
-<h2>The header band (do this once, then copy to every page)</h2>
-<p><strong>4.1</strong> On page 1, add five <strong>Card</strong> visuals across the top. To add one: <strong>Insert</strong> → <strong>Card</strong> (or click Card in the Visualizations pane), then drag it into place. Drop one measure into each card&#x27;s <strong>Fields</strong> well: <code>Inventory Total</code> · <code>Inv RM</code> · <code>Inv FG</code> · <code>Inv Consumables</code> · <code>Difference</code></p>
-<p><strong>4.2</strong> Add two slicers below them: <strong>Insert</strong> → <strong>Slicer</strong>.</p>
-<ul>
-<li>Slicer 1: drag <code>dimDate[MonthName]</code> into it. In <strong>Format</strong> → <strong>Slicer settings</strong> →</li>
-</ul>
-<p><strong>Style: Dropdown</strong>.</p>
-<ul>
-<li>Slicer 2: drag <code>dimPlant[Plant]</code> into it. Same dropdown style.</li>
-</ul>
-<p><strong>4.3</strong> Select all seven visuals (click one, Ctrl+click the rest) → <strong>Ctrl+C</strong>. On each other page, <strong>Ctrl+V</strong>. Now the band is identical everywhere.</p>
-<p><strong>4.4</strong> Sync the slicers so picking a month on one page applies everywhere: ribbon <strong>View</strong> → tick <strong>Sync slicers</strong>. A pane opens on the right. Click the Month slicer, then tick both <strong>Sync</strong> and <strong>Visible</strong> for all five pages. Repeat for the Plant slicer.</p>
+<p>Every visual below is spelled out the same way: what to insert, exactly which field goes in which well, and the four numbers that place it. Nothing is left to taste.</p>
+<p><strong>How to place a visual precisely</strong> (do this for every one): select it, open the <strong>Format</strong> pane (paintbrush icon) → <strong>General</strong> → <strong>Properties</strong> → <strong>Size and style</strong>, and type the four numbers. X and Y are the top-left corner, in pixels, on a 1280 × 720 canvas.</p>
+<p><strong>4.0 — Set the canvas and the theme first.</strong> Doing this after building means re-doing it.</p>
+<ol>
+<li>Click empty canvas → <strong>Format</strong> pane → <strong>Canvas settings</strong> → <strong>Type: 16:9</strong>,</li>
+</ol>
+<p>Height 720, Width 1280.</p>
+<ol>
+<li>Download the theme: <a href="inventory-theme.json">inventory-theme.json</a></li>
+</ol>
+<p>(right-click → Save link as, into your <code>Inventory Report</code> folder).</p>
+<ol>
+<li>Ribbon <strong>View</strong> → <strong>Themes</strong> dropdown → <strong>Browse for themes</strong> → pick that file.</li>
+</ol>
+<p>Colours, fonts, card styling, matrix gridlines and rounded borders all come from the theme, so no visual below needs manual colouring — only the conditional formatting in 4.10, which is data-driven and can&#x27;t live in a theme.</p>
+<p><strong>Make the five pages now</strong>, so you can copy the header band into them: click the <strong>+</strong> at the bottom five times, then double-click each tab and name them <code>Overview</code> · <code>Summary</code> · <code>FG</code> · <code>RM</code> · <code>Data Quality</code>.</p>
+<hr>
+<h2>The header band — build once on Overview, then copy to all five</h2>
+<p><strong>4.1</strong> Insert five <strong>Card</strong> visuals. For each: <strong>Insert</strong> → <strong>Card</strong>, drop the measure into the <strong>Fields</strong> well, then set the position.</p>
+<table>
+<tr><th>Card</th><th>Measure in Fields</th><th>X</th><th>Y</th><th>Width</th><th>Height</th></tr>
+<tr><td>1</td><td><code>Inventory Total</code></td><td>16</td><td>12</td><td>240</td><td>88</td></tr>
+<tr><td>2</td><td><code>Inv RM</code></td><td>264</td><td>12</td><td>240</td><td>88</td></tr>
+<tr><td>3</td><td><code>Inv FG</code></td><td>512</td><td>12</td><td>240</td><td>88</td></tr>
+<tr><td>4</td><td><code>Inv Consumables</code></td><td>760</td><td>12</td><td>240</td><td>88</td></tr>
+<tr><td>5</td><td><code>Difference</code></td><td>1008</td><td>12</td><td>240</td><td>88</td></tr>
+</table>
+<p><strong>4.2</strong> Insert two <strong>Slicer</strong> visuals. For each: <strong>Insert</strong> → <strong>Slicer</strong>, drag the field in, then <strong>Format</strong> → <strong>Slicer settings</strong> → <strong>Style: Dropdown</strong>.</p>
+<table>
+<tr><th>Slicer</th><th>Field</th><th>X</th><th>Y</th><th>Width</th><th>Height</th></tr>
+<tr><td>Month</td><td><code>dimDate[MonthName]</code></td><td>16</td><td>108</td><td>300</td><td>44</td></tr>
+<tr><td>Plant</td><td><code>dimPlant[Plant]</code></td><td>324</td><td>108</td><td>300</td><td>44</td></tr>
+</table>
+<p><strong>4.3</strong> Select all seven (click the first, Ctrl+click the rest) → <strong>Ctrl+C</strong> → go to each of the other four pages → <strong>Ctrl+V</strong>. Positions come with them, so the band lands identically.</p>
+<p><strong>4.4</strong> Ribbon <strong>View</strong> → tick <strong>Sync slicers</strong>. In the pane that opens, click the Month slicer and tick <strong>Sync</strong> and <strong>Visible</strong> for all five pages; repeat for the Plant slicer. Without this, each page filters independently and two pages will disagree.</p>
+<blockquote>Everything below sits between Y=168 and Y=712, which is the space under the band.</blockquote>
+<hr>
 <h2>Page 1 — Overview</h2>
-<p><strong>4.5</strong> <strong>Stacked column chart</strong>:</p>
-<ul>
-<li>X-axis: <code>dimDate[MonthName]</code></li>
-<li>Y-axis: <code>Closing Value</code></li>
-<li>Legend: <code>factInventory[Category]</code></li>
-</ul>
-<p><strong>4.6</strong> <strong>Line chart</strong>:</p>
-<ul>
-<li>X-axis: <code>dimDate[MonthName]</code></li>
-<li>Y-axis: <code>Closing Value</code> and <code>Prev Month</code> (drag both in)</li>
-</ul>
-<p><strong>4.7</strong> <strong>Clustered column chart</strong>:</p>
-<ul>
-<li>X-axis: <code>dimPlant[Plant]</code></li>
-<li>Y-axis: <code>Closing Value</code></li>
-<li>Legend: <code>factInventory[Category]</code></li>
-</ul>
+<p><strong>4.5</strong> <strong>Stacked column chart</strong> — inventory mix by month.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
+<tr><td>Y-axis</td><td><code>Closing Value</code></td></tr>
+<tr><td>Legend</td><td><code>factInventory[Category]</code></td></tr>
+</table>
+<p>Position: X 16, Y 168, W 764, H 272. Title: <code>Inventory by month and category</code>.</p>
+<p><strong>4.6</strong> <strong>Clustered column chart</strong> — where the stock sits.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>X-axis</td><td><code>dimPlant[Plant]</code></td></tr>
+<tr><td>Y-axis</td><td><code>Closing Value</code></td></tr>
+<tr><td>Legend</td><td><code>factInventory[Category]</code></td></tr>
+</table>
+<p>Position: X 788, Y 168, W 476, H 272. Title: <code>Inventory by plant</code>.</p>
+<p><strong>4.7</strong> <strong>Line chart</strong> — this month against last.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
+<tr><td>Y-axis</td><td><code>Closing Value</code>, then <code>Prev Month</code></td></tr>
+</table>
+<p>Position: X 16, Y 452, W 1248, H 260. Title: <code>Closing value vs previous month</code>.</p>
+<hr>
 <h2>Page 2 — Summary (TB vs MB5B)</h2>
-<p><strong>4.8</strong> <strong>Matrix</strong>:</p>
-<ul>
-<li>Rows: <code>dimPlant[Plant]</code></li>
-<li>Values: <code>TB Value</code>, <code>Closing Value</code>, <code>Difference</code>, <code>Difference %</code></li>
-</ul>
-<p><strong>4.9</strong> Colour the Difference column: click the matrix, in the <strong>Values</strong> well click the dropdown on <code>Difference</code> → <strong>Conditional formatting</strong> → <strong>Background color</strong> → choose diverging, centred on 0. Now a bad reconciliation is visible at a glance instead of something you have to read.</p>
-<p><strong>4.10</strong> <strong>Waterfall chart</strong>:</p>
-<ul>
-<li>Category: <code>dimPlant[Plant]</code></li>
-<li>Y-axis: <code>Difference</code></li>
-</ul>
+<p><strong>4.8</strong> <strong>Matrix</strong> — the reconciliation itself.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Rows</td><td><code>dimPlant[Plant]</code></td></tr>
+<tr><td>Values</td><td><code>TB Value</code>, <code>Closing Value</code>, <code>Difference</code>, <code>Difference %</code></td></tr>
+</table>
+<p>Position: X 16, Y 168, W 764, H 300. Title: <code>Trial balance vs MB5B</code>.</p>
+<p><strong>4.9</strong> <strong>Waterfall chart</strong> — which plant causes the gap.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Category</td><td><code>dimPlant[Plant]</code></td></tr>
+<tr><td>Y-axis</td><td><code>Difference</code></td></tr>
+</table>
+<p>Position: X 788, Y 168, W 476, H 300. Title: <code>Difference by plant</code>.</p>
+<p><strong>4.10</strong> Conditional formatting on the matrix (the one thing the theme can&#x27;t do): click the matrix → in the <strong>Values</strong> well click the dropdown on <code>Difference</code> → <strong>Conditional formatting</strong> → <strong>Background color</strong> → <strong>Format style: Diverging</strong> → Minimum red, Centre white with <strong>Centre = 0</strong>, Maximum red. Both directions red because a difference either way is equally wrong.</p>
+<p><strong>4.11</strong> <strong>Line chart</strong> — is the gap closing or widening?</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
+<tr><td>Y-axis</td><td><code>Difference</code></td></tr>
+</table>
+<p>Position: X 16, Y 480, W 1248, H 232. Title: <code>Difference trend</code>.</p>
+<hr>
 <h2>Page 3 — FG</h2>
-<p><strong>4.11</strong> <strong>Matrix</strong>:</p>
-<ul>
-<li>Rows: <code>dimNature[Nature]</code>, then <code>factInventory[Material]</code> underneath it</li>
-<li>Values: <code>Closing Value</code>, <code>FG MW</code>, <code>Capacity MW</code>, <code>Days</code>, <code>INR per Wp</code></li>
-<li><strong>Filters</strong> pane: drag <code>factInventory[Category]</code> → set to <strong>is FG</strong></li>
-</ul>
-<p><strong>4.12</strong> <strong>Area chart</strong>:</p>
-<ul>
-<li>X-axis: <code>dimDate[MonthName]</code></li>
-<li>Y-axis: <code>Closing Value</code></li>
-<li>Legend: <code>dimNature[Nature]</code></li>
-<li>Same Category = FG filter</li>
-</ul>
+<p><strong>4.12</strong> <strong>Matrix</strong> — FG down to material, with MW and Days.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Rows</td><td><code>dimNature[Nature]</code>, then <code>factInventory[Material]</code> below it</td></tr>
+<tr><td>Values</td><td><code>Closing Value</code>, <code>FG MW</code>, <code>Capacity MW</code>, <code>Days</code>, <code>INR per Wp</code></td></tr>
+<tr><td>Filters pane</td><td><code>factInventory[Category]</code> → <strong>is FG</strong></td></tr>
+</table>
+<p>Position: X 16, Y 168, W 1248, H 288. Title: <code>FG by tech and material</code>. Turn <strong>Format</strong> → <strong>Row headers</strong> → <strong>Stepped layout: Off</strong> so Nature and Material sit in their own columns.</p>
+<p><strong>4.13</strong> <strong>Area chart</strong> — FG history by tech.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
+<tr><td>Y-axis</td><td><code>Closing Value</code></td></tr>
+<tr><td>Legend</td><td><code>dimNature[Nature]</code></td></tr>
+<tr><td>Filters pane</td><td><code>factInventory[Category]</code> → <strong>is FG</strong></td></tr>
+</table>
+<p>Position: X 16, Y 468, W 828, H 244. Title: <code>FG value by tech over time</code>.</p>
+<p><strong>4.14</strong> <strong>Line chart</strong> — days of inventory, the number your superior will ask for.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>X-axis</td><td><code>dimDate[MonthName]</code></td></tr>
+<tr><td>Y-axis</td><td><code>Days</code></td></tr>
+<tr><td>Filters pane</td><td><code>factInventory[Category]</code> → <strong>is FG</strong></td></tr>
+</table>
+<p>Position: X 852, Y 468, W 412, H 244. Title: <code>FG inventory days</code>.</p>
+<hr>
 <h2>Page 4 — RM</h2>
-<p><strong>4.13</strong> <strong>Matrix</strong>:</p>
-<ul>
-<li>Rows: <code>dimPlant[Plant]</code>, <code>dimNature[Nature]</code>, <code>factInventory[GroupNature]</code></li>
-<li>Values: <code>Closing Value</code>, <code>MW</code></li>
-<li>Filter: <code>factInventory[Category]</code> is <strong>RM</strong></li>
-</ul>
-<p><strong>4.14</strong> <strong>Decomposition tree</strong>:</p>
-<ul>
-<li>Analyze: <code>Closing Value</code></li>
-<li>Explain by: <code>dimPlant[Plant]</code>, <code>dimNature[Nature]</code>, <code>factInventory[GroupNature]</code></li>
-<li>Same RM filter</li>
-</ul>
-<p>This one visual replaces most of what your RM sheet does by hand, and it drills in any order you click.</p>
+<p><strong>4.15</strong> <strong>Matrix</strong> — RM by plant and nature.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Rows</td><td><code>dimPlant[Plant]</code>, <code>dimNature[Nature]</code>, <code>factInventory[GroupNature]</code></td></tr>
+<tr><td>Values</td><td><code>Closing Value</code>, <code>MW</code></td></tr>
+<tr><td>Filters pane</td><td><code>factInventory[Category]</code> → <strong>is RM</strong></td></tr>
+</table>
+<p>Position: X 16, Y 168, W 620, H 544. Title: <code>RM by plant and nature</code>.</p>
+<p><strong>4.16</strong> <strong>Decomposition tree</strong> — replaces most of what the RM sheet does by hand, and drills in whatever order you click.</p>
+<table>
+<tr><th>Well</th><th>Field</th></tr>
+<tr><td>Analyze</td><td><code>Closing Value</code></td></tr>
+<tr><td>Explain by</td><td><code>dimPlant[Plant]</code>, <code>dimNature[Nature]</code>, <code>factInventory[GroupNature]</code></td></tr>
+<tr><td>Filters pane</td><td><code>factInventory[Category]</code> → <strong>is RM</strong></td></tr>
+</table>
+<p>Position: X 644, Y 168, W 620, H 544. Title: <code>RM breakdown</code>.</p>
+<hr>
 <h2>Page 5 — Data Quality</h2>
-<p>Not decoration. This page is how you find out something&#x27;s wrong before your superior does.</p>
-<p><strong>4.15</strong> <strong>Card</strong>: <code>Rows Missing Attr</code> — materials with no row in the master sheets.</p>
-<p><strong>4.16</strong> <strong>Card</strong>: <code>Stock Recon</code> — should always read <strong>0</strong>. Anything else means a bad or duplicated file.</p>
-<p><strong>4.17</strong> <strong>Table</strong>: <code>factTB_Unmapped</code> → fields <code>GLAccount</code>, <code>GLDesc</code>, <code>Amount</code>, <code>Rows</code> — GL accounts in the raw TB that <code>TB Master</code> doesn&#x27;t list. Empty is good.</p>
-<p><strong>4.18</strong> <strong>Table</strong>: <code>qcNatureNoCapacity</code> → field <code>Nature</code> — FG Natures with no matching Tech on <code>MW Capacity</code>. Empty is good; anything listed here has blank Days.</p>
-<p><strong>4.19</strong> <strong>Table</strong>: <code>qcHeaders</code> → fields <code>Folder</code>, <code>Name</code>, <code>SheetNames</code>, <code>Headers</code> — the real headers of every source file. This is what you read when a column comes through blank.</p>
-<p><strong>4.20</strong> <strong>Table</strong>: <code>qcVarHeaders</code> → fields <code>SheetName</code>, <code>Headers</code>, <code>DataRows</code> — same for the Variables workbook. <code>DataRows = 0</code> means a sheet is empty.</p>
-<p><strong>4.21</strong> <strong>Table</strong>: <code>factInventory</code> → <code>SourceFile</code>, <code>Month</code>, <code>Category</code>, with <code>Closing Value</code>. Scan it after each refresh to confirm every month&#x27;s file actually loaded.</p>
+<p>Not decoration. This page is how you find out something is wrong before your superior does. Glance at it after every refresh: the two cards should read 0, the two tables should be empty.</p>
+<p><strong>4.17</strong> <strong>Card</strong>: <code>Rows Missing Attr</code> — materials with no row in the master sheets. X 16, Y 168, W 300, H 100. Title: <code>Rows missing master attributes (want 0)</code>.</p>
+<p><strong>4.18</strong> <strong>Card</strong>: <code>Stock Recon</code> — Opening + Receipts − Issues − Closing. X 324, Y 168, W 300, H 100. Title: <code>Stock reconciliation (must be 0)</code>.</p>
+<p>Anything other than 0 means a file is duplicated, truncated, or hand-edited.</p>
+<p><strong>4.19</strong> <strong>Table</strong>: <code>factTB_Unmapped</code> → <code>GLAccount</code>, <code>GLDesc</code>, <code>Amount</code>. X 632, Y 168, W 632, H 100. Title: <code>GLs in TB but not in TB Master (want empty)</code>.</p>
+<p><strong>4.20</strong> <strong>Table</strong>: <code>qcNatureNoCapacity</code> → <code>Nature</code>. X 16, Y 276, W 608, H 210. Title: <code>FG Natures with no capacity row (want empty)</code>.</p>
+<p>Anything here silently gets blank Days — this is the check that catches a Nature/Tech typo.</p>
+<p><strong>4.21</strong> <strong>Table</strong>: <code>qcHeaders</code> → <code>Folder</code>, <code>Name</code>, <code>SheetNames</code>, <code>Headers</code>. X 632, Y 276, W 632, H 210. Title: <code>Actual headers of every source file</code>.</p>
+<p><strong>4.22</strong> <strong>Table</strong>: <code>qcVarHeaders</code> → <code>SheetName</code>, <code>Headers</code>, <code>DataRows</code>. X 16, Y 494, W 608, H 218. Title: <code>Variables workbook sheets</code>. <code>DataRows = 0</code> = empty sheet.</p>
+<p><strong>4.23</strong> <strong>Table</strong>: <code>factInventory</code> → <code>SourceFile</code>, <code>Month</code>, <code>Category</code>, <code>Closing Value</code>. X 632, Y 494, W 632, H 218. Title: <code>Files loaded this refresh</code>.</p>
+<p>Read this one after each monthly refresh to confirm every file actually came in — a missing month looks like a real fall in inventory, not like an error.</p>
 <hr>
 <h1>PART 5 — Publish and hand over</h1>
 <p><strong>5.1</strong> Ribbon <strong>Home</strong> → <strong>Publish</strong> → sign in → pick or create a workspace.</p>
@@ -1461,7 +1524,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 </ol>
 <p>That&#x27;s it. No formulas to drag down, no SUMIFS to extend.</p></div>
 
-<footer>Updated 11 Aug 2026 07:38 UTC</footer>
+<footer>Updated 11 Aug 2026 08:38 UTC</footer>
 </div>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];

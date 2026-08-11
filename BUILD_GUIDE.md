@@ -191,111 +191,227 @@ For `Days`, `MW`, `Capacity MW`, set **Decimal places: 1**.
 
 # PART 4 — Build the pages
 
-Five pages. Add a page with the **+** at the bottom of the window; rename by
-double-clicking the tab.
+Every visual below is spelled out the same way: what to insert, exactly which field goes in
+which well, and the four numbers that place it. Nothing is left to taste.
 
-## The header band (do this once, then copy to every page)
+**How to place a visual precisely** (do this for every one): select it, open the **Format**
+pane (paintbrush icon) → **General** → **Properties** → **Size and style**, and type the
+four numbers. X and Y are the top-left corner, in pixels, on a 1280 × 720 canvas.
 
-**4.1** On page 1, add five **Card** visuals across the top. To add one: **Insert** →
-**Card** (or click Card in the Visualizations pane), then drag it into place.
-Drop one measure into each card's **Fields** well:
-`Inventory Total` · `Inv RM` · `Inv FG` · `Inv Consumables` · `Difference`
+**4.0 — Set the canvas and the theme first.** Doing this after building means re-doing it.
 
-**4.2** Add two slicers below them: **Insert** → **Slicer**.
-- Slicer 1: drag `dimDate[MonthName]` into it. In **Format** → **Slicer settings** →
-  **Style: Dropdown**.
-- Slicer 2: drag `dimPlant[Plant]` into it. Same dropdown style.
+1. Click empty canvas → **Format** pane → **Canvas settings** → **Type: 16:9**,
+   Height 720, Width 1280.
+2. Download the theme: [inventory-theme.json](inventory-theme.json)
+   (right-click → Save link as, into your `Inventory Report` folder).
+3. Ribbon **View** → **Themes** dropdown → **Browse for themes** → pick that file.
 
-**4.3** Select all seven visuals (click one, Ctrl+click the rest) → **Ctrl+C**.
-On each other page, **Ctrl+V**. Now the band is identical everywhere.
+Colours, fonts, card styling, matrix gridlines and rounded borders all come from the theme,
+so no visual below needs manual colouring — only the conditional formatting in 4.10, which
+is data-driven and can't live in a theme.
 
-**4.4** Sync the slicers so picking a month on one page applies everywhere:
-ribbon **View** → tick **Sync slicers**. A pane opens on the right. Click the Month
-slicer, then tick both **Sync** and **Visible** for all five pages. Repeat for the
-Plant slicer.
+**Make the five pages now**, so you can copy the header band into them: click the **+** at
+the bottom five times, then double-click each tab and name them
+`Overview` · `Summary` · `FG` · `RM` · `Data Quality`.
+
+---
+
+## The header band — build once on Overview, then copy to all five
+
+**4.1** Insert five **Card** visuals. For each: **Insert** → **Card**, drop the measure into
+the **Fields** well, then set the position.
+
+| Card | Measure in Fields | X | Y | Width | Height |
+|---|---|---|---|---|---|
+| 1 | `Inventory Total` | 16 | 12 | 240 | 88 |
+| 2 | `Inv RM` | 264 | 12 | 240 | 88 |
+| 3 | `Inv FG` | 512 | 12 | 240 | 88 |
+| 4 | `Inv Consumables` | 760 | 12 | 240 | 88 |
+| 5 | `Difference` | 1008 | 12 | 240 | 88 |
+
+**4.2** Insert two **Slicer** visuals. For each: **Insert** → **Slicer**, drag the field in,
+then **Format** → **Slicer settings** → **Style: Dropdown**.
+
+| Slicer | Field | X | Y | Width | Height |
+|---|---|---|---|---|---|
+| Month | `dimDate[MonthName]` | 16 | 108 | 300 | 44 |
+| Plant | `dimPlant[Plant]` | 324 | 108 | 300 | 44 |
+
+**4.3** Select all seven (click the first, Ctrl+click the rest) → **Ctrl+C** → go to each of
+the other four pages → **Ctrl+V**. Positions come with them, so the band lands identically.
+
+**4.4** Ribbon **View** → tick **Sync slicers**. In the pane that opens, click the Month
+slicer and tick **Sync** and **Visible** for all five pages; repeat for the Plant slicer.
+Without this, each page filters independently and two pages will disagree.
+
+> Everything below sits between Y=168 and Y=712, which is the space under the band.
+
+---
 
 ## Page 1 — Overview
 
-**4.5** **Stacked column chart**:
-- X-axis: `dimDate[MonthName]`
-- Y-axis: `Closing Value`
-- Legend: `factInventory[Category]`
+**4.5** **Stacked column chart** — inventory mix by month.
 
-**4.6** **Line chart**:
-- X-axis: `dimDate[MonthName]`
-- Y-axis: `Closing Value` and `Prev Month` (drag both in)
+| Well | Field |
+|---|---|
+| X-axis | `dimDate[MonthName]` |
+| Y-axis | `Closing Value` |
+| Legend | `factInventory[Category]` |
 
-**4.7** **Clustered column chart**:
-- X-axis: `dimPlant[Plant]`
-- Y-axis: `Closing Value`
-- Legend: `factInventory[Category]`
+Position: X 16, Y 168, W 764, H 272. Title: `Inventory by month and category`.
+
+**4.6** **Clustered column chart** — where the stock sits.
+
+| Well | Field |
+|---|---|
+| X-axis | `dimPlant[Plant]` |
+| Y-axis | `Closing Value` |
+| Legend | `factInventory[Category]` |
+
+Position: X 788, Y 168, W 476, H 272. Title: `Inventory by plant`.
+
+**4.7** **Line chart** — this month against last.
+
+| Well | Field |
+|---|---|
+| X-axis | `dimDate[MonthName]` |
+| Y-axis | `Closing Value`, then `Prev Month` |
+
+Position: X 16, Y 452, W 1248, H 260. Title: `Closing value vs previous month`.
+
+---
 
 ## Page 2 — Summary (TB vs MB5B)
 
-**4.8** **Matrix**:
-- Rows: `dimPlant[Plant]`
-- Values: `TB Value`, `Closing Value`, `Difference`, `Difference %`
+**4.8** **Matrix** — the reconciliation itself.
 
-**4.9** Colour the Difference column: click the matrix, in the **Values** well click the
-dropdown on `Difference` → **Conditional formatting** → **Background color** →
-choose diverging, centred on 0. Now a bad reconciliation is visible at a glance instead of
-something you have to read.
+| Well | Field |
+|---|---|
+| Rows | `dimPlant[Plant]` |
+| Values | `TB Value`, `Closing Value`, `Difference`, `Difference %` |
 
-**4.10** **Waterfall chart**:
-- Category: `dimPlant[Plant]`
-- Y-axis: `Difference`
+Position: X 16, Y 168, W 764, H 300. Title: `Trial balance vs MB5B`.
+
+**4.9** **Waterfall chart** — which plant causes the gap.
+
+| Well | Field |
+|---|---|
+| Category | `dimPlant[Plant]` |
+| Y-axis | `Difference` |
+
+Position: X 788, Y 168, W 476, H 300. Title: `Difference by plant`.
+
+**4.10** Conditional formatting on the matrix (the one thing the theme can't do): click the
+matrix → in the **Values** well click the dropdown on `Difference` →
+**Conditional formatting** → **Background color** → **Format style: Diverging** →
+Minimum red, Centre white with **Centre = 0**, Maximum red. Both directions red because a
+difference either way is equally wrong.
+
+**4.11** **Line chart** — is the gap closing or widening?
+
+| Well | Field |
+|---|---|
+| X-axis | `dimDate[MonthName]` |
+| Y-axis | `Difference` |
+
+Position: X 16, Y 480, W 1248, H 232. Title: `Difference trend`.
+
+---
 
 ## Page 3 — FG
 
-**4.11** **Matrix**:
-- Rows: `dimNature[Nature]`, then `factInventory[Material]` underneath it
-- Values: `Closing Value`, `FG MW`, `Capacity MW`, `Days`, `INR per Wp`
-- **Filters** pane: drag `factInventory[Category]` → set to **is FG**
+**4.12** **Matrix** — FG down to material, with MW and Days.
 
-**4.12** **Area chart**:
-- X-axis: `dimDate[MonthName]`
-- Y-axis: `Closing Value`
-- Legend: `dimNature[Nature]`
-- Same Category = FG filter
+| Well | Field |
+|---|---|
+| Rows | `dimNature[Nature]`, then `factInventory[Material]` below it |
+| Values | `Closing Value`, `FG MW`, `Capacity MW`, `Days`, `INR per Wp` |
+| Filters pane | `factInventory[Category]` → **is FG** |
+
+Position: X 16, Y 168, W 1248, H 288. Title: `FG by tech and material`.
+Turn **Format** → **Row headers** → **Stepped layout: Off** so Nature and Material sit in
+their own columns.
+
+**4.13** **Area chart** — FG history by tech.
+
+| Well | Field |
+|---|---|
+| X-axis | `dimDate[MonthName]` |
+| Y-axis | `Closing Value` |
+| Legend | `dimNature[Nature]` |
+| Filters pane | `factInventory[Category]` → **is FG** |
+
+Position: X 16, Y 468, W 828, H 244. Title: `FG value by tech over time`.
+
+**4.14** **Line chart** — days of inventory, the number your superior will ask for.
+
+| Well | Field |
+|---|---|
+| X-axis | `dimDate[MonthName]` |
+| Y-axis | `Days` |
+| Filters pane | `factInventory[Category]` → **is FG** |
+
+Position: X 852, Y 468, W 412, H 244. Title: `FG inventory days`.
+
+---
 
 ## Page 4 — RM
 
-**4.13** **Matrix**:
-- Rows: `dimPlant[Plant]`, `dimNature[Nature]`, `factInventory[GroupNature]`
-- Values: `Closing Value`, `MW`
-- Filter: `factInventory[Category]` is **RM**
+**4.15** **Matrix** — RM by plant and nature.
 
-**4.14** **Decomposition tree**:
-- Analyze: `Closing Value`
-- Explain by: `dimPlant[Plant]`, `dimNature[Nature]`, `factInventory[GroupNature]`
-- Same RM filter
+| Well | Field |
+|---|---|
+| Rows | `dimPlant[Plant]`, `dimNature[Nature]`, `factInventory[GroupNature]` |
+| Values | `Closing Value`, `MW` |
+| Filters pane | `factInventory[Category]` → **is RM** |
 
-This one visual replaces most of what your RM sheet does by hand, and it drills in any
-order you click.
+Position: X 16, Y 168, W 620, H 544. Title: `RM by plant and nature`.
+
+**4.16** **Decomposition tree** — replaces most of what the RM sheet does by hand, and
+drills in whatever order you click.
+
+| Well | Field |
+|---|---|
+| Analyze | `Closing Value` |
+| Explain by | `dimPlant[Plant]`, `dimNature[Nature]`, `factInventory[GroupNature]` |
+| Filters pane | `factInventory[Category]` → **is RM** |
+
+Position: X 644, Y 168, W 620, H 544. Title: `RM breakdown`.
+
+---
 
 ## Page 5 — Data Quality
 
-Not decoration. This page is how you find out something's wrong before your superior does.
+Not decoration. This page is how you find out something is wrong before your superior does.
+Glance at it after every refresh: the two cards should read 0, the two tables should be empty.
 
-**4.15** **Card**: `Rows Missing Attr` — materials with no row in the master sheets.
+**4.17** **Card**: `Rows Missing Attr` — materials with no row in the master sheets.
+X 16, Y 168, W 300, H 100. Title: `Rows missing master attributes (want 0)`.
 
-**4.16** **Card**: `Stock Recon` — should always read **0**. Anything else means a bad or
-duplicated file.
+**4.18** **Card**: `Stock Recon` — Opening + Receipts − Issues − Closing.
+X 324, Y 168, W 300, H 100. Title: `Stock reconciliation (must be 0)`.
 
-**4.17** **Table**: `factTB_Unmapped` → fields `GLAccount`, `GLDesc`, `Amount`, `Rows` —
-GL accounts in the raw TB that `TB Master` doesn't list. Empty is good.
+Anything other than 0 means a file is duplicated, truncated, or hand-edited.
 
-**4.18** **Table**: `qcNatureNoCapacity` → field `Nature` — FG Natures with no matching Tech
-on `MW Capacity`. Empty is good; anything listed here has blank Days.
+**4.19** **Table**: `factTB_Unmapped` → `GLAccount`, `GLDesc`, `Amount`.
+X 632, Y 168, W 632, H 100. Title: `GLs in TB but not in TB Master (want empty)`.
 
-**4.19** **Table**: `qcHeaders` → fields `Folder`, `Name`, `SheetNames`, `Headers` — the real
-headers of every source file. This is what you read when a column comes through blank.
+**4.20** **Table**: `qcNatureNoCapacity` → `Nature`.
+X 16, Y 276, W 608, H 210. Title: `FG Natures with no capacity row (want empty)`.
 
-**4.20** **Table**: `qcVarHeaders` → fields `SheetName`, `Headers`, `DataRows` — same for the
-Variables workbook. `DataRows = 0` means a sheet is empty.
+Anything here silently gets blank Days — this is the check that catches a Nature/Tech typo.
 
-**4.21** **Table**: `factInventory` → `SourceFile`, `Month`, `Category`, with
-`Closing Value`. Scan it after each refresh to confirm every month's file actually loaded.
+**4.21** **Table**: `qcHeaders` → `Folder`, `Name`, `SheetNames`, `Headers`.
+X 632, Y 276, W 632, H 210. Title: `Actual headers of every source file`.
+
+**4.22** **Table**: `qcVarHeaders` → `SheetName`, `Headers`, `DataRows`.
+X 16, Y 494, W 608, H 218. Title: `Variables workbook sheets`. `DataRows = 0` = empty sheet.
+
+**4.23** **Table**: `factInventory` → `SourceFile`, `Month`, `Category`, `Closing Value`.
+X 632, Y 494, W 632, H 218. Title: `Files loaded this refresh`.
+
+Read this one after each monthly refresh to confirm every file actually came in — a missing
+month looks like a real fall in inventory, not like an error.
 
 ---
 
