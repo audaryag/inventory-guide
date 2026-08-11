@@ -154,8 +154,8 @@ the **to** field. Then double-click the line and confirm the settings.
 Every one is **Single** direction. If Power BI offers "Both", don't take it — bidirectional
 relationships cause wrong totals in ways that are very hard to spot later.
 
-**2.4** Mark the date table: click `dimDate` in the Fields list → ribbon **Table tools** →
-**Mark as date table** → choose the `Date` column.
+**2.4** Skip "Mark as date table" — it needs one row per *day*, and `dimDate` is monthly on
+purpose. None of the measures need it; `Prev Month` uses `MonthIndex` instead.
 
 **2.5** Fix month sorting: click the `MonthName` column in `dimDate` → ribbon
 **Column tools** → **Sort by column** → pick `MonthSort`. Without this, months sort
@@ -1039,23 +1039,27 @@ in
 
 ## dimDate
 
+> One row per month, because every fact is monthly. A daily calendar would repeat each Month value ~30 times and Power BI would refuse to put it on the "one" side of the relationship.
+
 ```
 let
-    MinD  = List.Min(factInventory[FromDate]),
-    MaxD  = List.Max(factInventory[ToDate]),
-    Start = #date(Date.Year(MinD) - (if Date.Month(MinD) < 4 then 1 else 0), 4, 1),
-    End   = #date(Date.Year(MaxD) + (if Date.Month(MaxD) >= 4 then 1 else 0), 3, 31),
-    Days  = List.Dates(Start, Duration.Days(End - Start) + 1, #duration(1,0,0,0)),
-    T     = Table.TransformColumnTypes(
-                Table.FromList(Days, Splitter.SplitByNothing(), {"Date"}),
-                {{"Date", type date}}),
-    M     = Table.AddColumn(T, "Month", each Date.StartOfMonth([Date]), type date),
-    MN    = Table.AddColumn(M, "MonthName", each Date.ToText([Date], "MMM''yy"), type text),
-    MS    = Table.AddColumn(MN, "MonthSort",
-                each Date.Year([Date]) * 100 + Date.Month([Date]), Int64.Type),
-    FY    = Table.AddColumn(MS, "FY", each
-                let y = if Date.Month([Date]) >= 4 then Date.Year([Date]) else Date.Year([Date]) - 1
-                in  "FY " & Text.From(y) & "-" & Text.End(Text.From(y + 1), 2), type text)
+    MinD   = Date.StartOfMonth(List.Min(factInventory[Month])),
+    MaxD   = Date.StartOfMonth(List.Max(factInventory[Month])),
+    Start  = #date(Date.Year(MinD) - (if Date.Month(MinD) < 4 then 1 else 0), 4, 1),
+    Count  = (Date.Year(MaxD) * 12 + Date.Month(MaxD))
+             - (Date.Year(Start) * 12 + Date.Month(Start)) + 1,
+    Months = List.Transform({0..Count - 1}, (i) => Date.AddMonths(Start, i)),
+    T      = Table.TransformColumnTypes(
+                 Table.FromList(Months, Splitter.SplitByNothing(), {"Month"}),
+                 {{"Month", type date}}),
+    MN     = Table.AddColumn(T, "MonthName", each Date.ToText([Month], "MMM''yy"), type text),
+    MS     = Table.AddColumn(MN, "MonthSort",
+                 each Date.Year([Month]) * 100 + Date.Month([Month]), Int64.Type),
+    MI     = Table.AddColumn(MS, "MonthIndex",
+                 each Date.Year([Month]) * 12 + Date.Month([Month]), Int64.Type),
+    FY     = Table.AddColumn(MI, "FY", each
+                 let y = if Date.Month([Month]) >= 4 then Date.Year([Month]) else Date.Year([Month]) - 1
+                 in  "FY " & Text.From(y) & "-" & Text.End(Text.From(y + 1), 2), type text)
 in
     FY
 ```
@@ -1228,7 +1232,9 @@ Difference %    = DIVIDE([Difference], [TB Value])
 ```
 
 ```
-Prev Month      = CALCULATE([Closing Value], DATEADD(dimDate[Date], -1, MONTH))
+Prev Month      =
+VAR PrevIdx = MAX(dimDate[MonthIndex]) - 1
+RETURN CALCULATE([Closing Value], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)
 ```
 
 ```

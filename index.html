@@ -864,23 +864,25 @@ in
     <button class="copy" data-target="qcode24">Copy</button>
     <button class="done" data-key="q-24">Done</button>
   </header>
-  
+  <p class='note'>One row per month, because every fact is monthly. A daily calendar would repeat each Month value ~30 times and Power BI would refuse to put it on the &quot;one&quot; side of the relationship.</p>
   <pre id="qcode24">let
-    MinD  = List.Min(factInventory[FromDate]),
-    MaxD  = List.Max(factInventory[ToDate]),
-    Start = #date(Date.Year(MinD) - (if Date.Month(MinD) &lt; 4 then 1 else 0), 4, 1),
-    End   = #date(Date.Year(MaxD) + (if Date.Month(MaxD) &gt;= 4 then 1 else 0), 3, 31),
-    Days  = List.Dates(Start, Duration.Days(End - Start) + 1, #duration(1,0,0,0)),
-    T     = Table.TransformColumnTypes(
-                Table.FromList(Days, Splitter.SplitByNothing(), {&quot;Date&quot;}),
-                {{&quot;Date&quot;, type date}}),
-    M     = Table.AddColumn(T, &quot;Month&quot;, each Date.StartOfMonth([Date]), type date),
-    MN    = Table.AddColumn(M, &quot;MonthName&quot;, each Date.ToText([Date], &quot;MMM&#x27;&#x27;yy&quot;), type text),
-    MS    = Table.AddColumn(MN, &quot;MonthSort&quot;,
-                each Date.Year([Date]) * 100 + Date.Month([Date]), Int64.Type),
-    FY    = Table.AddColumn(MS, &quot;FY&quot;, each
-                let y = if Date.Month([Date]) &gt;= 4 then Date.Year([Date]) else Date.Year([Date]) - 1
-                in  &quot;FY &quot; &amp; Text.From(y) &amp; &quot;-&quot; &amp; Text.End(Text.From(y + 1), 2), type text)
+    MinD   = Date.StartOfMonth(List.Min(factInventory[Month])),
+    MaxD   = Date.StartOfMonth(List.Max(factInventory[Month])),
+    Start  = #date(Date.Year(MinD) - (if Date.Month(MinD) &lt; 4 then 1 else 0), 4, 1),
+    Count  = (Date.Year(MaxD) * 12 + Date.Month(MaxD))
+             - (Date.Year(Start) * 12 + Date.Month(Start)) + 1,
+    Months = List.Transform({0..Count - 1}, (i) =&gt; Date.AddMonths(Start, i)),
+    T      = Table.TransformColumnTypes(
+                 Table.FromList(Months, Splitter.SplitByNothing(), {&quot;Month&quot;}),
+                 {{&quot;Month&quot;, type date}}),
+    MN     = Table.AddColumn(T, &quot;MonthName&quot;, each Date.ToText([Month], &quot;MMM&#x27;&#x27;yy&quot;), type text),
+    MS     = Table.AddColumn(MN, &quot;MonthSort&quot;,
+                 each Date.Year([Month]) * 100 + Date.Month([Month]), Int64.Type),
+    MI     = Table.AddColumn(MS, &quot;MonthIndex&quot;,
+                 each Date.Year([Month]) * 12 + Date.Month([Month]), Int64.Type),
+    FY     = Table.AddColumn(MI, &quot;FY&quot;, each
+                 let y = if Date.Month([Month]) &gt;= 4 then Date.Year([Month]) else Date.Year([Month]) - 1
+                 in  &quot;FY &quot; &amp; Text.From(y) &amp; &quot;-&quot; &amp; Text.End(Text.From(y + 1), 2), type text)
 in
     FY</pre>
 </section>
@@ -1183,7 +1185,9 @@ in
     <button class="done" data-key="m-18">Done</button>
   </header>
   
-  <pre id="mcode18">Prev Month      = CALCULATE([Closing Value], DATEADD(dimDate[Date], -1, MONTH))</pre>
+  <pre id="mcode18">Prev Month      =
+VAR PrevIdx = MAX(dimDate[MonthIndex]) - 1
+RETURN CALCULATE([Closing Value], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)</pre>
 </section>
 
 <section class="card" id="m-19" data-name="mom delta">
@@ -1336,7 +1340,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 <tr><td><code>dimTBMaster[GLAccount]</code></td><td><code>factTB[GLAccount]</code></td><td>One to many</td><td>Single</td></tr>
 </table>
 <p>Every one is <strong>Single</strong> direction. If Power BI offers &quot;Both&quot;, don&#x27;t take it — bidirectional relationships cause wrong totals in ways that are very hard to spot later.</p>
-<p><strong>2.4</strong> Mark the date table: click <code>dimDate</code> in the Fields list → ribbon <strong>Table tools</strong> → <strong>Mark as date table</strong> → choose the <code>Date</code> column.</p>
+<p><strong>2.4</strong> Skip &quot;Mark as date table&quot; — it needs one row per <em>day</em>, and <code>dimDate</code> is monthly on purpose. None of the measures need it; <code>Prev Month</code> uses <code>MonthIndex</code> instead.</p>
 <p><strong>2.5</strong> Fix month sorting: click the <code>MonthName</code> column in <code>dimDate</code> → ribbon <strong>Column tools</strong> → <strong>Sort by column</strong> → pick <code>MonthSort</code>. Without this, months sort alphabetically (Apr, Aug, Dec…) and every chart reads as nonsense.</p>
 <p><strong>2.6</strong> Do the same for <code>dimPlant</code>: click <code>Plant</code> → <strong>Sort by column</strong> → <code>PlantSort</code>.</p>
 <p><strong>2.7</strong> Hide the plumbing so the Fields list stays usable. Right-click → <strong>Hide</strong> on: <code>factInventory[MatKey]</code>, <code>factTB[PlantCode]</code>, <code>dimDate[MonthSort]</code>, <code>dimPlant[PlantSort]</code>.</p>
@@ -1457,7 +1461,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 </ol>
 <p>That&#x27;s it. No formulas to drag down, no SUMIFS to extend.</p></div>
 
-<footer>Updated 11 Aug 2026 07:12 UTC</footer>
+<footer>Updated 11 Aug 2026 07:38 UTC</footer>
 </div>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
