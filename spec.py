@@ -6,7 +6,17 @@ steps.py turns this into (a) the guided click-by-click steps on the web page and
 
 CANVAS = (1280, 720)
 
-PAGES = ["Overview", "Summary", "FG", "RM", "Data Quality"]
+PAGES = ["Overview", "Summary", "FG", "RM", "Detail", "Data Quality"]
+
+# The drill-through page: right-click any bar, row or slice on the other pages and choose
+# Drill through → Detail, and these fields carry the clicked context across.
+DRILL_PAGE = "Detail"
+DRILL_FIELDS = ["dimPlant[Plant]", "dimDate[MonthName]", "factInventory[Category]",
+                "dimNature[Nature]"]
+
+# Pages that get a copy of the header band. Detail is driven by what you clicked rather
+# than by slicers, and Data Quality should never be filtered.
+BAND_PAGES = ["Overview", "Summary", "FG", "RM"]
 
 # ---- header band, built once on Overview then copied ------------------------------------
 CARDS = [
@@ -144,6 +154,56 @@ VISUALS = [
      (644, 444, 620, 268),
      "Replaces most of what the RM sheet does by hand, and drills in any order you click.",
      []),
+
+    ("Detail", "Card", "Value ₹ Cr of what you clicked",
+     [("Fields", ["Value ₹ Cr"])],
+     (16, 16, 296, 92),
+     "The drill-through page opens already filtered to the bar or row you came from, so "
+     "this card is that one number.", []),
+
+    ("Detail", "Card", "MW",
+     [("Fields", ["MW"])],
+     (320, 16, 296, 92),
+     "Same slice in megawatts.", []),
+
+    ("Detail", "Card", "Days of inventory",
+     [("Fields", ["Days of Inventory"])],
+     (624, 16, 296, 92),
+     "Blank unless the slice is FG — that is deliberate.", []),
+
+    ("Detail", "Card", "Share of the total",
+     [("Fields", ["Share of Total %"])],
+     (928, 16, 336, 92),
+     "How big this slice is against the whole.", []),
+
+    ("Detail", "Pie chart", "Split by category",
+     [("Legend", ["factInventory[Category]"]),
+      ("Values", ["Value ₹ Cr"])],
+     (16, 120, 404, 296),
+     "RM / FG / consumables for exactly what you clicked.",
+     ["Format pane → Detail labels → Label contents: Category, percent of total."]),
+
+    ("Detail", "Donut chart", "Split by technology / nature",
+     [("Legend", ["dimNature[Nature]"]),
+      ("Values", ["Value ₹ Cr"])],
+     (428, 120, 404, 296),
+     "Which technology or material nature the slice is made of.",
+     ["Format pane → Detail labels → Label contents: Category, percent of total."]),
+
+    ("Detail", "Pie chart", "Split by plant",
+     [("Legend", ["dimPlant[Plant]"]),
+      ("Values", ["Value ₹ Cr"])],
+     (840, 120, 424, 296),
+     "Where the slice sits. A single-colour pie means it is one plant already.",
+     ["Format pane → Detail labels → Label contents: Category, percent of total."]),
+
+    ("Detail", "Table", "Materials behind this number",
+     [("Columns", ["factInventory[Material]", "factInventory[MaterialDesc]", "Value ₹ Cr", "MW",
+                   "INR per Wp", "Share of Total %"])],
+     (16, 428, 1248, 284),
+     "The line-item detail: the question 'which materials is that made of?' answered by "
+     "clicking, instead of by another Excel sheet.",
+     ["Click the Value ₹ Cr column header twice so it sorts largest first."]),
 
     ("Data Quality", "Card", "Rows missing master attributes (want 0)",
      [("Fields", ["Rows Missing Attr"])],

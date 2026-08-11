@@ -214,13 +214,13 @@ well, and the four numbers that place it on a 1280 x 720 canvas.
 Colours, fonts, borders and card styling all come from the theme, so nothing below
 asks you to colour anything.
 
-**Create the five pages** with the **+** at the bottom, named: `Overview` · `Summary` · `FG` · `RM` · `Data Quality`.
+**Create the 6 pages** with the **+** at the bottom, named: `Overview` · `Summary` · `FG` · `RM` · `Detail` · `Data Quality`.
 
 ---
 
 ## The header band — build once on Overview, then copy
 
-**4.1** Five **Card** visuals (**Insert → Card**), one measure each:
+**4.1** 6 **Card** visuals (**Insert → Card**), one measure each:
 
 | Card | Measure | X | Y | Width | Height |
 |---|---|---|---|---|---|
@@ -231,7 +231,7 @@ asks you to colour anything.
 | 5 — FG days of inventory | `Days of Inventory` | 848 | 12 | 200 | 88 |
 | 6 — Change vs last month | `Value ₹ Cr % vs LM` | 1056 | 12 | 208 | 88 |
 
-**4.2** Two **Slicer** visuals (**Insert → Slicer**), each set to
+**4.2** 3 **Slicer** visuals (**Insert → Slicer**), each set to
 **Format → Slicer settings → Style: Dropdown**:
 
 | Slicer | Field | X | Y | Width | Height |
@@ -240,10 +240,13 @@ asks you to colour anything.
 | Plant | `dimPlant[Plant]` | 324 | 108 | 300 | 44 |
 | Category | `factInventory[Category]` | 632 | 108 | 300 | 44 |
 
-**4.3** Select all seven → **Ctrl+C** → on each other page **Ctrl+V**. Positions come with them.
+**4.3** Select all 9 → **Ctrl+C** → **Ctrl+V** on `Summary`, `FG`, `RM`. Positions come with them.
+
+Not on `Detail` (it is filtered by whatever you clicked to get there) or `Data Quality` (a filtered check is not a check).
 
 **4.4** Ribbon **View** → tick **Sync slicers**; for each slicer tick **Sync** and
-**Visible** on all five pages. Without it, two pages can disagree about the same month.
+**Visible** on `Overview`, `Summary`, `FG`, `RM`. Without it, two
+pages can disagree about the same month.
 
 ---
 
@@ -447,9 +450,104 @@ Position: X 644, Y 444, W 620, H 268.
 
 ---
 
+## Page — Detail
+
+**4.19** **Card** — The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.
+
+| Well | Field |
+|---|---|
+| Fields | `Value ₹ Cr` |
+
+Title: `Value ₹ Cr of what you clicked`
+
+Position: X 16, Y 16, W 296, H 92.
+
+**4.20** **Card** — Same slice in megawatts.
+
+| Well | Field |
+|---|---|
+| Fields | `MW` |
+
+Title: `MW`
+
+Position: X 320, Y 16, W 296, H 92.
+
+**4.21** **Card** — Blank unless the slice is FG — that is deliberate.
+
+| Well | Field |
+|---|---|
+| Fields | `Days of Inventory` |
+
+Title: `Days of inventory`
+
+Position: X 624, Y 16, W 296, H 92.
+
+**4.22** **Card** — How big this slice is against the whole.
+
+| Well | Field |
+|---|---|
+| Fields | `Share of Total %` |
+
+Title: `Share of the total`
+
+Position: X 928, Y 16, W 336, H 92.
+
+**4.23** **Pie chart** — RM / FG / consumables for exactly what you clicked.
+
+| Well | Field |
+|---|---|
+| Legend | `factInventory[Category]` |
+| Values | `Value ₹ Cr` |
+
+Title: `Split by category`
+
+Position: X 16, Y 120, W 404, H 296.
+
+- Format pane → Detail labels → Label contents: Category, percent of total.
+
+**4.24** **Donut chart** — Which technology or material nature the slice is made of.
+
+| Well | Field |
+|---|---|
+| Legend | `dimNature[Nature]` |
+| Values | `Value ₹ Cr` |
+
+Title: `Split by technology / nature`
+
+Position: X 428, Y 120, W 404, H 296.
+
+- Format pane → Detail labels → Label contents: Category, percent of total.
+
+**4.25** **Pie chart** — Where the slice sits. A single-colour pie means it is one plant already.
+
+| Well | Field |
+|---|---|
+| Legend | `dimPlant[Plant]` |
+| Values | `Value ₹ Cr` |
+
+Title: `Split by plant`
+
+Position: X 840, Y 120, W 424, H 296.
+
+- Format pane → Detail labels → Label contents: Category, percent of total.
+
+**4.26** **Table** — The line-item detail: the question 'which materials is that made of?' answered by clicking, instead of by another Excel sheet.
+
+| Well | Field |
+|---|---|
+| Columns | `factInventory[Material]`, `factInventory[MaterialDesc]`, `Value ₹ Cr`, `MW`, `INR per Wp`, `Share of Total %` |
+
+Title: `Materials behind this number`
+
+Position: X 16, Y 428, W 1248, H 284.
+
+- Click the Value ₹ Cr column header twice so it sorts largest first.
+
+---
+
 ## Page — Data Quality
 
-**4.19** **Card** — Materials with no row in the master sheets.
+**4.27** **Card** — Materials with no row in the master sheets.
 
 | Well | Field |
 |---|---|
@@ -459,7 +557,7 @@ Title: `Rows missing master attributes (want 0)`
 
 Position: X 16, Y 168, W 300, H 100.
 
-**4.20** **Card** — Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited.
+**4.28** **Card** — Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited.
 
 | Well | Field |
 |---|---|
@@ -469,7 +567,7 @@ Title: `Stock reconciliation ₹ Cr (must be 0)`
 
 Position: X 324, Y 168, W 300, H 100.
 
-**4.21** **Table** — Catches a new GL account nobody added to TB Master — otherwise it vanishes silently.
+**4.29** **Table** — Catches a new GL account nobody added to TB Master — otherwise it vanishes silently.
 
 | Well | Field |
 |---|---|
@@ -479,7 +577,7 @@ Title: `GLs in TB but not in TB Master (want empty)`
 
 Position: X 632, Y 168, W 632, H 100.
 
-**4.22** **Table** — Anything listed here gets blank days. This is the check that catches a Nature/Tech typo.
+**4.30** **Table** — Anything listed here gets blank days. This is the check that catches a Nature/Tech typo.
 
 | Well | Field |
 |---|---|
@@ -489,7 +587,7 @@ Title: `FG technologies with no capacity row (want empty)`
 
 Position: X 16, Y 276, W 608, H 210.
 
-**4.23** **Table** — Read this when a column comes through blank — it shows what the file really says.
+**4.31** **Table** — Read this when a column comes through blank — it shows what the file really says.
 
 | Well | Field |
 |---|---|
@@ -499,7 +597,7 @@ Title: `Actual headers of every source file`
 
 Position: X 632, Y 276, W 632, H 210.
 
-**4.24** **Table** — DataRows = 0 means a sheet is empty.
+**4.32** **Table** — DataRows = 0 means a sheet is empty.
 
 | Well | Field |
 |---|---|
@@ -509,7 +607,7 @@ Title: `Variables workbook sheets`
 
 Position: X 16, Y 494, W 608, H 218.
 
-**4.25** **Table** — Check after every refresh: a missing month looks like a real fall in inventory, not like an error.
+**4.33** **Table** — Check after every refresh: a missing month looks like a real fall in inventory, not like an error.
 
 | Well | Field |
 |---|---|
@@ -518,6 +616,31 @@ Position: X 16, Y 494, W 608, H 218.
 Title: `Files loaded this refresh`
 
 Position: X 632, Y 494, W 632, H 218.
+
+---
+
+## Making it clickable
+
+**4.34 Drill through.** On the `Detail` page click the empty area around the visuals so
+nothing is selected, then drag these into the **Drill through** well of the
+Visualizations pane (leave *Keep all filters* on):
+
+- `dimPlant[Plant]`
+- `dimDate[MonthName]`
+- `factInventory[Category]`
+- `dimNature[Nature]`
+
+That is the whole trick. A **Back** arrow appears on `Detail` by itself, and every bar,
+row and slice on the other pages now offers **right-click → Drill through → `Detail`**,
+which opens the pies filtered to whatever was clicked.
+
+**4.35 Interactions.** A *left*-click needs no setup — it already cross-filters the rest
+of the page. To change what it does: select a visual → ribbon **Format** →
+**Edit interactions**, then on each other visual pick **filter** (funnel),
+**highlight** (chart) or **none**.
+
+Worth setting deliberately: matrices to **filter** (so their totals match the click),
+and the header cards to **none** (so the band always shows the company total).
 
 ---
 
