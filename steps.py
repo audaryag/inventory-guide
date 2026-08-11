@@ -72,6 +72,9 @@ def steps():
             do=["Ribbon: Insert → Slicer.",
                 "Drag the field below into it.",
                 "Format pane → Slicer settings → Style: Dropdown.",
+                "For the Month and Quarter slicers also turn on Format pane → Slicer "
+                "settings → Selection → Multi-select with Ctrl: Off, so ticking several "
+                "months needs no keyboard.",
                 "Then set the position numbers."],
             fields=[("Field", field)] + _pos_rows(x, y, w, h),
             note=""))
@@ -96,7 +99,7 @@ def steps():
         do=["Ribbon: View → tick Sync slicers. A pane opens on the right.",
             "Click the Month slicer, then tick both Sync and Visible for these pages: "
             + ", ".join(BAND_PAGES) + ".",
-            "Do the same for the Plant and Category slicers."],
+            "Do the same for the Quarter, Plant and Category slicers."],
         fields=[], note="Skip this and each page filters on its own, so two pages will show "
                         "different totals for the same month."))
 

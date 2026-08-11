@@ -96,11 +96,10 @@ svg text{pointer-events:none}
   <button data-p="4">Detail</button>
   <button data-p="5">Data Quality</button>
 </div>
-<p class="hint">Numbers are invented; every interaction is real, and is one Power BI does out
-of the box. <b>Click a bar or a row to filter the page. Click a plant bar on Overview to drill
-plant → category → material nature. Right-click any bar for the Detail page.
-Click +/&minus; in a matrix to open sub-rows. The three dropdowns filter everything.</b>
-Arial throughout, company green, all money in crore rupees.</p>
+<p class="hint">Numbers are invented; every interaction here is one Power BI does out of the
+box. <b>Click a bar or a row to filter · right-click a bar for the Detail page · +/&minus;
+opens sub-rows · Compare switches between the last four months and a quarter (year starts
+1 April).</b> Arial, company green, all money in crore rupees.</p>
 
 <div class="canvas on" id="p0"></div>
 <div class="canvas" id="p1"></div>
@@ -116,6 +115,20 @@ const G = {g1:'#1E6B3A', g2:'#4FA45F', g3:'#8CC63F', g4:'#2E7D6B', g5:'#155E38',
 const CATC = {RM:G.g1, FG:G.g2, Consumables:G.g3};
 const MONTHS = ["Jun'26","Jul'26","Aug'26","Sep'26","Oct'26","Nov'26"];
 const LAST4 = MONTHS.slice(-4);
+// the financial year starts on 1 April, so Apr-Jun is Q1 and Jan-Mar is Q4
+function quarterOf(m){
+  const mi = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+               .indexOf(m.slice(0, 3)) + 1;
+  const yy = +m.slice(-2), fy = mi >= 4 ? yy : yy - 1;
+  return 'Q' + (Math.floor(((mi - 4 + 12) % 12) / 3) + 1) + " FY " + (2000 + fy) + '-' + (fy + 1);
+}
+const QUARTERS = [...new Set(MONTHS.map(quarterOf))];
+const COMPARE = ['Last 4 months', ...QUARTERS];
+// which months become the columns of every matrix
+function cols(){
+  if (S.compare === 'Last 4 months') return LAST4;
+  return MONTHS.filter(m => quarterOf(m) === S.compare);
+}
 const PLANTS = [{c:'1900', n:'Jaipur Module'},
                 {c:'1902', n:'Dholera Module'},
                 {c:'1905', n:'Dholera Cell'}];
@@ -157,7 +170,7 @@ PLANTS.forEach((p, pi) => CATS.forEach(c => NAT[p.c][c].forEach((nt, ni) => {
 })));
 
 // ---------------------------------------------------------------- state + maths
-const S = {page:0, month:MONTHS[MONTHS.length - 1], plant:'All', cat:'All',
+const S = {page:0, month:MONTHS[MONTHS.length - 1], compare:'Last 4 months', plant:'All', cat:'All',
            picks:[],                        // cross-filter chips from clicks
            drill:{lvl:0, plant:null, cat:null},
            open:{}, detail:null, dpick:null};
@@ -402,11 +415,13 @@ function band(page){
   card(page, 848, 12, 200, 'Days of inventory', f1(days(r)));
   card(page, 1056, 12, 208, 'Change vs last month',
        chg == null ? '—' : pc(chg), chg == null ? '' : (chg >= 0 ? ' up' : ' dn'));
+  slicer(page, 324, 108, 300, 'Compare', COMPARE, S.compare,
+      v => { S.compare = v; draw(); });
   slicer(page, 16, 108, 300, 'Month', ['All', ...MONTHS], S.month,
          v2 => { S.month = v2; draw(); });
-  slicer(page, 324, 108, 300, 'Plant', ['All', ...PLANTS.map(p2 => p2.n)], S.plant,
+  slicer(page, 632, 108, 300, 'Plant', ['All', ...PLANTS.map(p2 => p2.n)], S.plant,
          v2 => { S.plant = v2; draw(); });
-  slicer(page, 632, 108, 300, 'Category', ['All', ...CATS], S.cat,
+  slicer(page, 940, 108, 324, 'Category', ['All', ...CATS], S.cat,
          v2 => { S.cat = v2; draw(); });
   // cross-filter chips
   const c = el('div', 'chips');
@@ -524,7 +539,7 @@ function pageSummary(page){
     const d = tb(rs) - val(rs);
     return {v: d, txt: (d >= 0 ? '' : '') + d.toFixed(2), neg: d < 0, hot: Math.abs(d) > 1.2};
   };
-  matrix(b, 'sm', rowsDef, ['Inventory (TB)', 'Inventory (MB5B)', 'Difference'], LAST4,
+  matrix(b, 'sm', rowsDef, ['Inventory (TB)', 'Inventory (MB5B)', 'Difference'], cols(),
     cellVal, {corner: 'Plant / category', total: 'Total',
       click: (p, c) => pick(c ? 'cat' : 'plant', c || p),
       isSel: (p, c) => S.picks.some(x => x.val === (c || p)),
@@ -532,7 +547,7 @@ function pageSummary(page){
   const tr = b.querySelector('tr.tot');
   [...tr.children].slice(1).forEach((td, i) => {
     const top = ['Inventory (TB)', 'Inventory (MB5B)', 'Difference'][Math.floor(i / 4)];
-    const c = cellVal(null, null, top, LAST4[i % 4]);
+    const c = cellVal(null, null, top, cols()[i % cols().length]);
     td.textContent = c.txt != null ? c.txt : f2(c.v);
     if (c.neg) td.classList.add('neg');
   });
@@ -573,7 +588,7 @@ function pageFG(page){
   let b = vis(page, 16, 168, 1248, 176, 'FG by plant — MW · In ₹ Cr · In Days',
     'Days = stock in MW ÷ the MW capacity on the Variables sheet. 1905 has no capacity, so its Days cell is blank on purpose.');
   matrix(b, 'fgp', PLANTS.map(p => ({key: p.n, label: `${p.c} — ${p.n}`})),
-    ['MW', 'In ₹ Cr', 'In Days'], LAST4,
+    ['MW', 'In ₹ Cr', 'In Days'], cols(),
     (rk, kk, top, sub) => unitCell(r => r.cat === 'FG' && r.plant === rk, top, sub),
     {corner: 'Plant', total: 'Total',
      click: rk => pick('plant', rk), isSel: rk => S.picks.some(p => p.val === rk),
@@ -581,14 +596,14 @@ function pageFG(page){
   let tr = b.querySelector('tr.tot');
   [...tr.children].slice(1).forEach((td, i) => {
     const top = ['MW', 'In ₹ Cr', 'In Days'][Math.floor(i / 4)];
-    const c = unitCell(r => r.cat === 'FG', top, LAST4[i % 4]);
+    const c = unitCell(r => r.cat === 'FG', top, cols()[i % cols().length]);
     td.textContent = c.txt != null ? c.txt : f2(c.v);
   });
 
   b = vis(page, 16, 356, 764, 356, 'FG by technology — MW · In ₹ Cr · In Days');
   const techs = [...new Set(ROWS.filter(r => r.cat === 'FG').map(r => r.nat))];
   matrix(b, 'fgt', techs.map(t => ({key: t, label: t})),
-    ['MW', 'In ₹ Cr', 'In Days'], LAST4,
+    ['MW', 'In ₹ Cr', 'In Days'], cols(),
     (rk, kk, top, sub) => unitCell(r => r.cat === 'FG' && r.nat === rk, top, sub),
     {corner: 'Technology',
      click: rk => pick('nat', rk), isSel: rk => S.picks.some(p => p.val === rk),
@@ -602,7 +617,7 @@ function pageFG(page){
     'group', lab => pick('nat', back(lab)),
     lab => toDetail({cat: 'FG', nat: back(lab)}));
 
-  b = vis(page, 788, 544, 476, 168, 'FG days — click a bar to drill in');
+  b = vis(page, 788, 544, 476, 168, 'Days of inventory by month — click a bar');
   legend(b, [['Days', G.g1], ['vs LM', G.g4]]);
   const dv = MONTHS.map(m =>
     days(rows({month: 1}).filter(r => r.cat === 'FG' && r.m === m)) || 0);
@@ -615,7 +630,7 @@ function pageRM(page){
   band(page);
   let b = vis(page, 16, 168, 1248, 176, 'RM by plant — In ₹ Cr · In Days');
   matrix(b, 'rmp', PLANTS.map(p => ({key: p.n, label: `${p.c} — ${p.n}`})),
-    ['In ₹ Cr', 'In Days'], LAST4,
+    ['In ₹ Cr', 'In Days'], cols(),
     (rk, kk, top, sub) => unitCell(r => r.cat === 'RM' && r.plant === rk, top, sub),
     {corner: 'Plant', total: 'Total',
      click: rk => pick('plant', rk), isSel: rk => S.picks.some(p => p.val === rk),
@@ -623,7 +638,7 @@ function pageRM(page){
   const tr = b.querySelector('tr.tot');
   [...tr.children].slice(1).forEach((td, i) => {
     const top = ['In ₹ Cr', 'In Days'][Math.floor(i / 4)];
-    const c = unitCell(r => r.cat === 'RM', top, LAST4[i % 4]);
+    const c = unitCell(r => r.cat === 'RM', top, cols()[i % cols().length]);
     td.textContent = c.txt != null ? c.txt : f2(c.v);
   });
 
@@ -633,7 +648,7 @@ function pageRM(page){
   matrix(b, 'rmg', groups.map(g => ({key: g, label: g,
       kids: [...new Set(ROWS.filter(r => r.cat === 'RM' && r.grp === g).map(r => r.nat))]
               .map(n => ({key: n, label: n}))})),
-    ['In ₹ Cr', 'In Days'], LAST4,
+    ['In ₹ Cr', 'In Days'], cols(),
     (rk, kk, top, sub) => unitCell(r => r.cat === 'RM' && r.grp === rk &&
                                         (!kk || r.nat === kk), top, sub),
     {corner: 'Group nature / nature',

@@ -176,12 +176,18 @@ purpose. None of the measures need it; `Value ₹ Cr LM` uses `MonthIndex` inste
 alphabetically (Apr, Aug, Dec…) and every chart reads as nonsense.
 
 **2.6** Do the same for: `dimPlant[Plant]` → `PlantSort`, `dimCategory[Category]` →
-`CategorySort`, `dimMetric[Metric]` → `MetricSort`, `dimMeasure[Measure]` → `MeasureSort`.
-The last two matter — without them your master columns come out alphabetically
-(Difference first), which reads backwards.
+`CategorySort`, `dimMetric[Metric]` → `MetricSort`, `dimMeasure[Measure]` → `MeasureSort`,
+`dimDate[Quarter]` → `QuarterSort`. The middle two matter — without them your master columns
+come out alphabetically (Difference first), which reads backwards. `Quarter` matters because
+alphabetical order puts Q1 of every year together.
 
 **2.7** Hide the plumbing so the Fields list stays usable. Right-click → **Hide** on:
-`factInventory[MatKey]`, `factTB[PlantCode]`, `dimDate[MonthSort]`, `dimPlant[PlantSort]`.
+`factInventory[MatKey]`, `factTB[PlantCode]`, `dimDate[MonthSort]`, `dimPlant[PlantSort]`,
+`dimDate[FYMonthNo]`, `dimDate[QuarterNo]`, `dimDate[QuarterSort]`.
+
+**2.8** Nothing else to set up for quarters — the `Quarter` column does it. The **Month**
+slicer lets you tick exactly which months a page compares, and the **Quarter** slicer picks
+`Q1 FY 2026-27` (April–June) and so on. Both are just slicers, built in Part 4.
 
 ---
 
@@ -248,16 +254,17 @@ asks you to colour anything.
 | 5 — Days of inventory | `Days of Inventory` | 848 | 12 | 200 | 88 |
 | 6 — Change vs last month | `Value ₹ Cr % vs LM` | 1056 | 12 | 208 | 88 |
 
-**4.2** 3 **Slicer** visuals (**Insert → Slicer**), each set to
+**4.2** 4 **Slicer** visuals (**Insert → Slicer**), each set to
 **Format → Slicer settings → Style: Dropdown**:
 
 | Slicer | Field | X | Y | Width | Height |
 |---|---|---|---|---|---|
-| Month | `dimDate[MonthName]` | 16 | 108 | 300 | 44 |
-| Plant | `dimPlant[Plant]` | 324 | 108 | 300 | 44 |
-| Category | `dimCategory[Category]` | 632 | 108 | 300 | 44 |
+| Month — tick the ones to compare | `dimDate[MonthName]` | 16 | 108 | 300 | 44 |
+| Quarter (FY starts 1 April) | `dimDate[Quarter]` | 324 | 108 | 300 | 44 |
+| Plant | `dimPlant[Plant]` | 632 | 108 | 300 | 44 |
+| Category | `dimCategory[Category]` | 940 | 108 | 324 | 44 |
 
-**4.3** Select all 9 → **Ctrl+C** → **Ctrl+V** on `Summary`, `FG`, `RM`. Positions come with them.
+**4.3** Select all 10 → **Ctrl+C** → **Ctrl+V** on `Summary`, `FG`, `RM`. Positions come with them.
 
 Not on `Detail` (it is filtered by whatever you clicked to get there) or `Data Quality` (a filtered check is not a check).
 
@@ -374,14 +381,14 @@ Position: X 644, Y 480, W 620, H 232.
 
 ## Page — FG
 
-**4.12** **Matrix** — FG per plant in all three units at once — megawatts, crore rupees and days — with the last four months under each. Days is MW ÷ capacity MW, so 1905 is blank on purpose.
+**4.12** **Matrix** — FG per plant in all three units at once — megawatts, crore rupees and days — with the months you tick under each. Days is MW ÷ capacity MW, so 1905 is blank on purpose.
 
 | Well | Field |
 |---|---|
 | Rows | `dimPlant[Plant]` |
 | Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
 | Values | `Unit Value` |
-| Filters | `dimCategory[Category]  →  is FG`, `Last 4 Months  →  is 1` |
+| Filters | `dimCategory[Category]  →  is FG` |
 
 Title: `FG by plant — MW · In ₹ Cr · In Days`
 
@@ -389,6 +396,7 @@ Position: X 16, Y 168, W 1248, H 176.
 
 - dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName].
 - Format pane → Row headers → Stepped layout: Off.
+- No month filter on this one — the Month slicer decides which months are columns. Tick any four to compare, or pick a Quarter and it shows that quarter's three.
 - Click a plant row to filter the technology table below it.
 
 **4.13** **Matrix** — The same three units by technology rather than by plant, which is where a build-up in one technology shows up.
@@ -398,7 +406,7 @@ Position: X 16, Y 168, W 1248, H 176.
 | Rows | `dimNature[Nature]` |
 | Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
 | Values | `Unit Value` |
-| Filters | `dimCategory[Category]  →  is FG`, `Last 4 Months  →  is 1` |
+| Filters | `dimCategory[Category]  →  is FG` |
 
 Title: `FG by technology — MW · In ₹ Cr · In Days`
 
@@ -436,14 +444,14 @@ Position: X 644, Y 544, W 620, H 168.
 
 ## Page — RM
 
-**4.16** **Matrix** — RM by plant in crore rupees and days of cover, last four months under each. MW is unticked here because an RM megawatt figure is a derived number, not a measured one.
+**4.16** **Matrix** — RM by plant in crore rupees and days, the months you tick under each. MW is unticked here because an RM megawatt figure is a derived number, not a measured one.
 
 | Well | Field |
 |---|---|
 | Rows | `dimPlant[Plant]` |
 | Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
 | Values | `Unit Value` |
-| Filters | `dimCategory[Category]  →  is RM`, `Last 4 Months  →  is 1`, `dimMeasure[Measure]  →  untick MW` |
+| Filters | `dimCategory[Category]  →  is RM`, `dimMeasure[Measure]  →  untick MW` |
 
 Title: `RM by plant — In ₹ Cr · In Days`
 
@@ -460,7 +468,7 @@ Position: X 16, Y 168, W 1248, H 176.
 | Rows | `factInventory[GroupNature]`, `dimNature[Nature]` |
 | Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
 | Values | `Unit Value` |
-| Filters | `dimCategory[Category]  →  is RM`, `Last 4 Months  →  is 1`, `dimMeasure[Measure]  →  untick MW` |
+| Filters | `dimCategory[Category]  →  is RM`, `dimMeasure[Measure]  →  untick MW` |
 
 Title: `RM by group nature and nature`
 
@@ -1464,10 +1472,27 @@ let
                  each Date.Year([Month]) * 12 + Date.Month([Month]), Int64.Type),
     FY     = Table.AddColumn(MI, "FY", each
                  let y = if Date.Month([Month]) >= 4 then Date.Year([Month]) else Date.Year([Month]) - 1
-                 in  "FY " & Text.From(y) & "-" & Text.End(Text.From(y + 1), 2), type text)
+                 in  "FY " & Text.From(y) & "-" & Text.End(Text.From(y + 1), 2), type text),
+    // the year starts on 1 April, so Apr-Jun is Q1 and Jan-Mar is Q4
+    FYMonth = Table.AddColumn(FY, "FYMonthNo",
+                 each Number.Mod(Date.Month([Month]) - 4, 12) + 1, Int64.Type),
+    Qtr    = Table.AddColumn(FYMonth, "QuarterNo",
+                 each Number.RoundUp([FYMonthNo] / 3), Int64.Type),
+    QName  = Table.AddColumn(Qtr, "Quarter",
+                 each "Q" & Text.From([QuarterNo]) & " " & [FY], type text),
+    QSort  = Table.AddColumn(QName, "QuarterSort", each
+                 let y = if Date.Month([Month]) >= 4 then Date.Year([Month]) else Date.Year([Month]) - 1
+                 in  y * 10 + [QuarterNo], Int64.Type),
+    Out    = Table.SelectColumns(QSort,
+                 {"Month","MonthName","MonthSort","MonthIndex","FY",
+                  "FYMonthNo","QuarterNo","Quarter","QuarterSort"})
 in
-    FY
+    Out
 ```
+
+`Quarter` reads `Q1 FY 2026-27` for April–June, `Q4 FY 2026-27` for January–March. Sort it by
+`QuarterSort` in step 2.5 or the slicer lists the quarters alphabetically, which puts Q1 of
+every year together.
 
 ## qcHeaders
 

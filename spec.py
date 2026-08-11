@@ -29,9 +29,10 @@ CARDS = [
 ]
 
 SLICERS = [
-    ("dimDate[MonthName]", 16, 108, 300, 44, "Month"),
-    ("dimPlant[Plant]",   324, 108, 300, 44, "Plant"),
-    ("dimCategory[Category]", 632, 108, 300, 44, "Category"),
+    ("dimDate[MonthName]", 16, 108, 300, 44, "Month — tick the ones to compare"),
+    ("dimDate[Quarter]",  324, 108, 300, 44, "Quarter (FY starts 1 April)"),
+    ("dimPlant[Plant]",   632, 108, 300, 44, "Plant"),
+    ("dimCategory[Category]", 940, 108, 324, 44, "Category"),
 ]
 
 # ---- one entry per visual ----------------------------------------------------------------
@@ -120,19 +121,21 @@ VISUALS = [
      [("Rows", ["dimPlant[Plant]"]),
       ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
       ("Values", ["Unit Value"]),
-      ("Filters", ["dimCategory[Category]  →  is FG", "Last 4 Months  →  is 1"])],
+      ("Filters", ["dimCategory[Category]  →  is FG"])],
      (16, 168, 1248, 176),
      "FG per plant in all three units at once — megawatts, crore rupees and days — with the "
-     "last four months under each. Days is MW ÷ capacity MW, so 1905 is blank on purpose.",
+     "months you tick under each. Days is MW ÷ capacity MW, so 1905 is blank on purpose.",
      ["dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName].",
       "Format pane → Row headers → Stepped layout: Off.",
+      "No month filter on this one — the Month slicer decides which months are columns. "
+      "Tick any four to compare, or pick a Quarter and it shows that quarter's three.",
       "Click a plant row to filter the technology table below it."]),
 
     ("FG", "Matrix", "FG by technology — MW · In ₹ Cr · In Days",
      [("Rows", ["dimNature[Nature]"]),
       ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
       ("Values", ["Unit Value"]),
-      ("Filters", ["dimCategory[Category]  →  is FG", "Last 4 Months  →  is 1"])],
+      ("Filters", ["dimCategory[Category]  →  is FG"])],
      (16, 356, 620, 356),
      "The same three units by technology rather than by plant, which is where a build-up in "
      "one technology shows up.",
@@ -161,10 +164,10 @@ VISUALS = [
      [("Rows", ["dimPlant[Plant]"]),
       ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
       ("Values", ["Unit Value"]),
-      ("Filters", ["dimCategory[Category]  →  is RM", "Last 4 Months  →  is 1",
+      ("Filters", ["dimCategory[Category]  →  is RM",
                    "dimMeasure[Measure]  →  untick MW"])],
      (16, 168, 1248, 176),
-     "RM by plant in crore rupees and days of cover, last four months under each. MW is "
+     "RM by plant in crore rupees and days, the months you tick under each. MW is "
      "unticked here because an RM megawatt figure is a derived number, not a measured one.",
      ["dimMeasure[Measure] in Columns first, then dimDate[MonthName].",
       "In the Filters pane, drag dimMeasure[Measure] in and untick MW.",
@@ -174,7 +177,7 @@ VISUALS = [
      [("Rows", ["factInventory[GroupNature]", "dimNature[Nature]"]),
       ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
       ("Values", ["Unit Value"]),
-      ("Filters", ["dimCategory[Category]  →  is RM", "Last 4 Months  →  is 1",
+      ("Filters", ["dimCategory[Category]  →  is RM",
                    "dimMeasure[Measure]  →  untick MW"])],
      (16, 356, 620, 356),
      "Then the same numbers down the material hierarchy: group nature, and nature inside it. "
