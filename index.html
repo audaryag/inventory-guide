@@ -563,12 +563,12 @@ in
     <button class="copy" data-target="qcode17">Copy</button>
     <button class="done" data-key="q-17">Done</button>
   </header>
-  <p class='note'>Layout-proof: it searches the MW sheet for the row holding the plant codes 1900/1902/1905, then reads each Tech row underneath. Works whether or not there is a total column, and whatever order the plants sit in. `-` becomes 0. Expect 3 rows per Tech (one per plant), MW = 0 on every 1905.</p>
+  <p class='note'>Handles either MW sheet layout and picks automatically: the long one (`Effective From | Tech | Valuation Area | MW`, one row per combination) or the original wide one (a `Tech` column with 1900/1902/1905 across the top). Headers are matched ignoring case, spaces and punctuation. A missing `Effective From` defaults to 1900-01-01, `-` becomes 0, and plant codes are forced to text so they join to `dimPlant`.</p>
   <pre id="qcode17">let
     Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
     Sh      = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
     Norm    = (n as any) as text =&gt;
-                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? &quot;&quot;)), {&quot; &quot;,&quot;.&quot;,&quot;_&quot;,&quot;-&quot;})),
+                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? &quot;&quot;)), {&quot; &quot;,&quot;.&quot;,&quot;_&quot;,&quot;-&quot;,&quot;/&quot;,&quot;(&quot;,&quot;)&quot;})),
     Hit     = Table.SelectRows(Sh, each
                   List.Contains({&quot;MW&quot;,&quot;MWCAPACITY&quot;,&quot;CAPACITY&quot;,&quot;MWCAP&quot;}, Norm([Item]))),
     Data    = if Table.IsEmpty(Hit)
@@ -579,31 +579,65 @@ in
     AsTxt   = (v as any) as text =&gt; Text.Trim(Text.From(v ?? &quot;&quot;)),
     IsCode  = (v as any) as logical =&gt; List.Contains(Codes, AsTxt(v)),
 
-    // the plant-code row is whichever row holds two or more of 1900 / 1902 / 1905
-    HdrIdx  = List.PositionOf(
+    // ---- decide which layout this sheet is -------------------------------------------------
+    // long layout is identified by an Effective From header; wide layout by a row of plant codes
+    DateHdr = {&quot;EFFECTIVEFROM&quot;,&quot;EFFECTIVEDATE&quot;,&quot;FROMDATE&quot;},
+    LongIdx = List.PositionOf(
+                  List.Transform(Rows, (r) =&gt;
+                      List.AnyTrue(List.Transform(r, (c) =&gt; List.Contains(DateHdr, Norm(c))))), true),
+    WideIdx = List.PositionOf(
                   List.Transform(Rows, (r) =&gt; List.Count(List.Select(r, IsCode)) &gt;= 2), true),
-    Header  = if HdrIdx &lt; 0
-                  then error &quot;Could not find a row on the MW sheet containing at least two of &quot;
-                           &amp; &quot;1900, 1902, 1905. Read the qcMWSheet query and tell me the layout.&quot;
-                  else Rows{HdrIdx},
 
-    // which column holds which plant code — position is discovered, not assumed
-    Map     = List.Select(
-                  List.Transform({0..List.Count(Header) - 1},
-                      (i) =&gt; [Idx = i, Code = AsTxt(Header{i})]),
-                  (m) =&gt; List.Contains(Codes, m[Code])),
+    // ---- long layout: one row per Tech per plant --------------------------------------------
+    Long    = let
+                  Hdr   = Rows{LongIdx},
+                  Find  = (alts as list) as number =&gt;
+                              let Idxs = List.Select({0..List.Count(Hdr) - 1},
+                                             (i) =&gt; List.Contains(alts, Norm(Hdr{i})))
+                              in  if List.IsEmpty(Idxs) then -1 else List.First(Idxs),
+                  iDate = Find({&quot;EFFECTIVEFROM&quot;,&quot;EFFECTIVEDATE&quot;,&quot;FROMDATE&quot;,&quot;DATE&quot;}),
+                  iTech = Find({&quot;TECH&quot;,&quot;TECHNOLOGY&quot;,&quot;NATURE&quot;}),
+                  iArea = Find({&quot;VALUATIONAREA&quot;,&quot;VALAREA&quot;,&quot;PLANT&quot;,&quot;PLANTCODE&quot;}),
+                  iMW   = Find({&quot;MW&quot;,&quot;CAPACITYMW&quot;,&quot;CAPACITY&quot;}),
+                  Chk   = if iTech &lt; 0 or iArea &lt; 0 or iMW &lt; 0
+                              then error &quot;The MW sheet has an Effective From column but I could not &quot;
+                                       &amp; &quot;find Tech, Valuation Area and MW next to it. Read qcMWSheet.&quot;
+                              else true,
+                  Body  = if Chk then List.Skip(Rows, LongIdx + 1) else {},
+                  Keep  = List.Select(Body, (r) =&gt;
+                              AsTxt(r{iTech}) &lt;&gt; &quot;&quot; and AsTxt(r{iArea}) &lt;&gt; &quot;&quot;),
+                  Recs  = List.Transform(Keep, (r) =&gt;
+                              [ EffectiveFrom = (if iDate &lt; 0 then #date(1900,1,1)
+                                                 else try DateTime.Date(DateTime.From(r{iDate}))
+                                                      otherwise #date(1900,1,1)),
+                                Tech          = AsTxt(r{iTech}),
+                                ValuationArea = AsTxt(r{iArea}),
+                                MW            = (try Number.From(r{iMW}) otherwise 0) ])
+              in  Recs,
 
-    // Tech rows are the ones below it whose first cell is filled and is not itself a plant code
-    Body    = List.Skip(Rows, HdrIdx + 1),
-    TechRow = List.Select(Body, (r) =&gt;
-                  AsTxt(List.First(r)) &lt;&gt; &quot;&quot; and not IsCode(List.First(r))
-                  and List.AnyTrue(List.Transform(Map, (m) =&gt; (try r{m[Idx]} otherwise null) &lt;&gt; null))),
+    // ---- wide layout: plant codes across the top --------------------------------------------
+    Wide    = let
+                  Hdr   = Rows{WideIdx},
+                  Map   = List.Select(
+                              List.Transform({0..List.Count(Hdr) - 1},
+                                  (i) =&gt; [Idx = i, Code = AsTxt(Hdr{i})]),
+                              (m) =&gt; List.Contains(Codes, m[Code])),
+                  Body  = List.Skip(Rows, WideIdx + 1),
+                  Keep  = List.Select(Body, (r) =&gt;
+                              AsTxt(List.First(r)) &lt;&gt; &quot;&quot; and not IsCode(List.First(r))
+                              and List.AnyTrue(List.Transform(Map,
+                                  (m) =&gt; (try r{m[Idx]} otherwise null) &lt;&gt; null))),
+                  Recs  = List.TransformMany(Keep, (r) =&gt; Map, (r, m) =&gt;
+                              [ EffectiveFrom = #date(1900,1,1),
+                                Tech          = AsTxt(List.First(r)),
+                                ValuationArea = m[Code],
+                                MW            = (try Number.From(r{m[Idx]}) otherwise 0) ])
+              in  Recs,
 
-    Pairs   = List.TransformMany(TechRow, (r) =&gt; Map, (r, m) =&gt;
-                  [ EffectiveFrom = #date(1900, 1, 1),
-                    Tech          = AsTxt(List.First(r)),
-                    ValuationArea = m[Code],
-                    MW            = (try Number.From(r{m[Idx]}) otherwise 0) ]),
+    Pairs   = if LongIdx &gt;= 0 then Long
+              else if WideIdx &gt;= 0 then Wide
+              else error &quot;The MW sheet is neither layout I recognise: no Effective From/Tech header &quot;
+                       &amp; &quot;row, and no row containing two of 1900/1902/1905. Read qcMWSheet.&quot;,
     T       = Table.FromRecords(Pairs,
                   type table [EffectiveFrom = date, Tech = text, ValuationArea = text, MW = number]),
     Out     = Table.Buffer(T)
@@ -1384,7 +1418,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 </ol>
 <p>That&#x27;s it. No formulas to drag down, no SUMIFS to extend.</p></div>
 
-<footer>Updated 11 Aug 2026 06:49 UTC</footer>
+<footer>Updated 11 Aug 2026 07:04 UTC</footer>
 </div>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];

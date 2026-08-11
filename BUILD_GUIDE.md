@@ -761,14 +761,14 @@ in
 
 ## varMWCapacity
 
-> Layout-proof: it searches the MW sheet for the row holding the plant codes 1900/1902/1905, then reads each Tech row underneath. Works whether or not there is a total column, and whatever order the plants sit in. `-` becomes 0. Expect 3 rows per Tech (one per plant), MW = 0 on every 1905.
+> Handles either MW sheet layout and picks automatically: the long one (`Effective From | Tech | Valuation Area | MW`, one row per combination) or the original wide one (a `Tech` column with 1900/1902/1905 across the top). Headers are matched ignoring case, spaces and punctuation. A missing `Effective From` defaults to 1900-01-01, `-` becomes 0, and plant codes are forced to text so they join to `dimPlant`.
 
 ```
 let
     Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
     Sh      = Table.SelectRows(Wb, each [Kind] = "Sheet"),
     Norm    = (n as any) as text =>
-                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")), {" ",".","_","-"})),
+                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")), {" ",".","_","-","/","(",")"})),
     Hit     = Table.SelectRows(Sh, each
                   List.Contains({"MW","MWCAPACITY","CAPACITY","MWCAP"}, Norm([Item]))),
     Data    = if Table.IsEmpty(Hit)
@@ -779,37 +779,72 @@ let
     AsTxt   = (v as any) as text => Text.Trim(Text.From(v ?? "")),
     IsCode  = (v as any) as logical => List.Contains(Codes, AsTxt(v)),
 
-    // the plant-code row is whichever row holds two or more of 1900 / 1902 / 1905
-    HdrIdx  = List.PositionOf(
+    // ---- decide which layout this sheet is -------------------------------------------------
+    // long layout is identified by an Effective From header; wide layout by a row of plant codes
+    DateHdr = {"EFFECTIVEFROM","EFFECTIVEDATE","FROMDATE"},
+    LongIdx = List.PositionOf(
+                  List.Transform(Rows, (r) =>
+                      List.AnyTrue(List.Transform(r, (c) => List.Contains(DateHdr, Norm(c))))), true),
+    WideIdx = List.PositionOf(
                   List.Transform(Rows, (r) => List.Count(List.Select(r, IsCode)) >= 2), true),
-    Header  = if HdrIdx < 0
-                  then error "Could not find a row on the MW sheet containing at least two of "
-                           & "1900, 1902, 1905. Read the qcMWSheet query and tell me the layout."
-                  else Rows{HdrIdx},
 
-    // which column holds which plant code — position is discovered, not assumed
-    Map     = List.Select(
-                  List.Transform({0..List.Count(Header) - 1},
-                      (i) => [Idx = i, Code = AsTxt(Header{i})]),
-                  (m) => List.Contains(Codes, m[Code])),
+    // ---- long layout: one row per Tech per plant --------------------------------------------
+    Long    = let
+                  Hdr   = Rows{LongIdx},
+                  Find  = (alts as list) as number =>
+                              let Idxs = List.Select({0..List.Count(Hdr) - 1},
+                                             (i) => List.Contains(alts, Norm(Hdr{i})))
+                              in  if List.IsEmpty(Idxs) then -1 else List.First(Idxs),
+                  iDate = Find({"EFFECTIVEFROM","EFFECTIVEDATE","FROMDATE","DATE"}),
+                  iTech = Find({"TECH","TECHNOLOGY","NATURE"}),
+                  iArea = Find({"VALUATIONAREA","VALAREA","PLANT","PLANTCODE"}),
+                  iMW   = Find({"MW","CAPACITYMW","CAPACITY"}),
+                  Chk   = if iTech < 0 or iArea < 0 or iMW < 0
+                              then error "The MW sheet has an Effective From column but I could not "
+                                       & "find Tech, Valuation Area and MW next to it. Read qcMWSheet."
+                              else true,
+                  Body  = if Chk then List.Skip(Rows, LongIdx + 1) else {},
+                  Keep  = List.Select(Body, (r) =>
+                              AsTxt(r{iTech}) <> "" and AsTxt(r{iArea}) <> ""),
+                  Recs  = List.Transform(Keep, (r) =>
+                              [ EffectiveFrom = (if iDate < 0 then #date(1900,1,1)
+                                                 else try DateTime.Date(DateTime.From(r{iDate}))
+                                                      otherwise #date(1900,1,1)),
+                                Tech          = AsTxt(r{iTech}),
+                                ValuationArea = AsTxt(r{iArea}),
+                                MW            = (try Number.From(r{iMW}) otherwise 0) ])
+              in  Recs,
 
-    // Tech rows are the ones below it whose first cell is filled and is not itself a plant code
-    Body    = List.Skip(Rows, HdrIdx + 1),
-    TechRow = List.Select(Body, (r) =>
-                  AsTxt(List.First(r)) <> "" and not IsCode(List.First(r))
-                  and List.AnyTrue(List.Transform(Map, (m) => (try r{m[Idx]} otherwise null) <> null))),
+    // ---- wide layout: plant codes across the top --------------------------------------------
+    Wide    = let
+                  Hdr   = Rows{WideIdx},
+                  Map   = List.Select(
+                              List.Transform({0..List.Count(Hdr) - 1},
+                                  (i) => [Idx = i, Code = AsTxt(Hdr{i})]),
+                              (m) => List.Contains(Codes, m[Code])),
+                  Body  = List.Skip(Rows, WideIdx + 1),
+                  Keep  = List.Select(Body, (r) =>
+                              AsTxt(List.First(r)) <> "" and not IsCode(List.First(r))
+                              and List.AnyTrue(List.Transform(Map,
+                                  (m) => (try r{m[Idx]} otherwise null) <> null))),
+                  Recs  = List.TransformMany(Keep, (r) => Map, (r, m) =>
+                              [ EffectiveFrom = #date(1900,1,1),
+                                Tech          = AsTxt(List.First(r)),
+                                ValuationArea = m[Code],
+                                MW            = (try Number.From(r{m[Idx]}) otherwise 0) ])
+              in  Recs,
 
-    Pairs   = List.TransformMany(TechRow, (r) => Map, (r, m) =>
-                  [ EffectiveFrom = #date(1900, 1, 1),
-                    Tech          = AsTxt(List.First(r)),
-                    ValuationArea = m[Code],
-                    MW            = (try Number.From(r{m[Idx]}) otherwise 0) ]),
+    Pairs   = if LongIdx >= 0 then Long
+              else if WideIdx >= 0 then Wide
+              else error "The MW sheet is neither layout I recognise: no Effective From/Tech header "
+                       & "row, and no row containing two of 1900/1902/1905. Read qcMWSheet.",
     T       = Table.FromRecords(Pairs,
                   type table [EffectiveFrom = date, Tech = text, ValuationArea = text, MW = number]),
     Out     = Table.Buffer(T)
 in
     Out
 ```
+
 
 ## dimCapacity
 
