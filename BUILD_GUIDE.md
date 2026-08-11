@@ -155,7 +155,7 @@ Every one is **Single** direction. If Power BI offers "Both", don't take it — 
 relationships cause wrong totals in ways that are very hard to spot later.
 
 **2.4** Skip "Mark as date table" — it needs one row per *day*, and `dimDate` is monthly on
-purpose. None of the measures need it; `Prev Month` uses `MonthIndex` instead.
+purpose. None of the measures need it; `Value ₹ Cr LM` uses `MonthIndex` instead.
 
 **2.5** Fix month sorting: click the `MonthName` column in `dimDate` → ribbon
 **Column tools** → **Sort by column** → pick `MonthSort`. Without this, months sort
@@ -181,11 +181,17 @@ alphabetically (Apr, Aug, Dec…) and every chart reads as nonsense.
 **3.5** Repeat 3.3–3.4 for every measure in Appendix B. One at a time — Power BI takes one
 measure per box.
 
-**3.6** Format the money ones. Click each of `Closing Value`, `Opening Value`,
-`Receipts Value`, `Issues Value`, `TB Value`, `Difference` → ribbon **Measure tools** →
-**Format: Currency**, **Decimal places: 0**.
-For `Difference %`, set **Format: Percentage**, 1 decimal.
-For `Days`, `MW`, `Capacity MW`, set **Decimal places: 1**.
+**3.6** Everything money is already in **crore rupees** and named to say so
+(`Value ₹ Cr`, `TB ₹ Cr`, …), so no currency symbol is needed. Click each ₹ Cr measure →
+ribbon **Measure tools** → **Format: Decimal number**, **Decimal places: 2**.
+For `MW`, `FG MW`, `Capacity MW`, `Days of Inventory`, use **Decimal places: 1**.
+For every `%` measure use **Format: Percentage**, 1 decimal.
+
+**3.7** If you built an earlier version of this file, the old names are gone: `Closing Value`
+became `Value ₹ Cr`, `Inv RM/FG/Consumables` became `RM/FG/Consumables ₹ Cr`, `TB Value`
+became `TB ₹ Cr`, `Days` became `Days of Inventory`, `Prev Month` became `Value ₹ Cr LM`.
+Delete the old measures (right-click → Delete) after the new ones exist, or visuals will
+still point at the old ones.
 
 ---
 
@@ -218,11 +224,12 @@ asks you to colour anything.
 
 | Card | Measure | X | Y | Width | Height |
 |---|---|---|---|---|---|
-| 1 — Total inventory | `Inventory Total` | 16 | 12 | 240 | 88 |
-| 2 — Raw materials | `Inv RM` | 264 | 12 | 240 | 88 |
-| 3 — Finished goods | `Inv FG` | 512 | 12 | 240 | 88 |
-| 4 — Consumables | `Inv Consumables` | 760 | 12 | 240 | 88 |
-| 5 — TB vs MB5B difference | `Difference` | 1008 | 12 | 240 | 88 |
+| 1 — Total value ₹ Cr | `Value ₹ Cr` | 16 | 12 | 200 | 88 |
+| 2 — Raw materials ₹ Cr | `RM ₹ Cr` | 224 | 12 | 200 | 88 |
+| 3 — Finished goods ₹ Cr | `FG ₹ Cr` | 432 | 12 | 200 | 88 |
+| 4 — Consumables ₹ Cr | `Consumables ₹ Cr` | 640 | 12 | 200 | 88 |
+| 5 — FG days of inventory | `Days of Inventory` | 848 | 12 | 200 | 88 |
+| 6 — Change vs last month | `Value ₹ Cr % vs LM` | 1056 | 12 | 208 | 88 |
 
 **4.2** Two **Slicer** visuals (**Insert → Slicer**), each set to
 **Format → Slicer settings → Style: Dropdown**:
@@ -231,6 +238,7 @@ asks you to colour anything.
 |---|---|---|---|---|---|
 | Month | `dimDate[MonthName]` | 16 | 108 | 300 | 44 |
 | Plant | `dimPlant[Plant]` | 324 | 108 | 300 | 44 |
+| Category | `factInventory[Category]` | 632 | 108 | 300 | 44 |
 
 **4.3** Select all seven → **Ctrl+C** → on each other page **Ctrl+V**. Positions come with them.
 
@@ -241,158 +249,207 @@ asks you to colour anything.
 
 ## Page — Overview
 
-**4.5** **Stacked column chart** — Shows the whole inventory month by month, split RM / FG / consumables.
+**4.5** **Stacked column chart** — Every month side by side, split RM / FG / consumables.
 
 | Well | Field |
 |---|---|
 | X-axis | `dimDate[MonthName]` |
-| Y-axis | `Closing Value` |
+| Y-axis | `Value ₹ Cr` |
 | Legend | `factInventory[Category]` |
 
-Title: `Inventory by month and category`
+Title: `Value ₹ Cr by month and category`
 
-Position: X 16, Y 168, W 764, H 272.
+Position: X 16, Y 168, W 764, H 264.
 
-**4.6** **Clustered column chart** — Shows which plant is holding the stock.
+**4.6** **Clustered column chart** — Which plant is holding the stock, and of what kind.
 
 | Well | Field |
 |---|---|
 | X-axis | `dimPlant[Plant]` |
-| Y-axis | `Closing Value` |
+| Y-axis | `Value ₹ Cr` |
 | Legend | `factInventory[Category]` |
 
-Title: `Inventory by plant`
+Title: `Value ₹ Cr by plant`
 
-Position: X 788, Y 168, W 476, H 272.
+Position: X 788, Y 168, W 476, H 264.
 
-**4.7** **Line chart** — Two lines: this month and last month, so a jump is obvious.
+**4.7** **Line and clustered column chart** — Bars compare the two months directly; the line is the percentage swing, which is what people argue about.
 
 | Well | Field |
 |---|---|
 | X-axis | `dimDate[MonthName]` |
-| Y-axis | `Closing Value`, `Prev Month` |
+| Column y-axis | `Value ₹ Cr`, `Value ₹ Cr LM` |
+| Line y-axis | `Value ₹ Cr % vs LM` |
 
-Title: `Closing value vs previous month`
+Title: `Value ₹ Cr — this month vs last month`
 
-Position: X 16, Y 452, W 1248, H 260.
+Position: X 16, Y 444, W 764, H 268.
+
+**4.8** **Matrix** — The same numbers as a table, because some readers only trust a table.
+
+| Well | Field |
+|---|---|
+| Rows | `factInventory[Category]` |
+| Columns | `dimDate[MonthName]` |
+| Values | `Value ₹ Cr` |
+
+Title: `Months side by side`
+
+Position: X 788, Y 444, W 476, H 268.
+
+- Format pane → Row headers → Stepped layout: Off.
+- Turn Format pane → Subtotals → Row subtotals: On, so each column has a total.
 
 ---
 
 ## Page — Summary
 
-**4.8** **Matrix** — The reconciliation itself: what the books say vs what the stock report says.
+**4.9** **Matrix** — The whole model in one grid: months across, category and plant down. Click a row's arrow to expand plants under a category.
+
+| Well | Field |
+|---|---|
+| Rows | `factInventory[Category]`, `dimPlant[Plant]` |
+| Columns | `dimDate[MonthName]` |
+| Values | `Value ₹ Cr` |
+
+Title: `Value ₹ Cr by month, category and plant`
+
+Position: X 16, Y 168, W 1248, H 264.
+
+- Format pane → Row headers → Stepped layout: Off.
+- Format pane → Subtotals → turn on both Row subtotals and Column subtotals.
+
+**4.10** **Matrix** — The MW view of the same months, with days of inventory and how it moved.
+
+| Well | Field |
+|---|---|
+| Rows | `dimDate[MonthName]` |
+| Values | `MW`, `FG MW`, `Capacity MW`, `Days of Inventory`, `Days vs LM` |
+
+Title: `MW and days by month`
+
+Position: X 16, Y 444, W 620, H 268.
+
+**4.11** **Matrix** — The reconciliation: what the books say against what the stock report says.
 
 | Well | Field |
 |---|---|
 | Rows | `dimPlant[Plant]` |
-| Values | `TB Value`, `Closing Value`, `Difference`, `Difference %` |
+| Values | `TB ₹ Cr`, `Value ₹ Cr`, `Difference ₹ Cr`, `Difference %` |
 
 Title: `Trial balance vs MB5B`
 
-Position: X 16, Y 168, W 764, H 300.
+Position: X 644, Y 444, W 620, H 268.
 
-- In the Values well click the little arrow next to Difference → Conditional formatting → Background color.
-- Set Format style to Diverging. Minimum red, Centre white with Centre = 0, Maximum red.
+- In the Values well click the arrow next to Difference ₹ Cr → Conditional formatting → Background color.
+- Format style: Diverging. Minimum red, Centre white with Centre = 0, Maximum red.
 - Both ends red on purpose: a difference either direction is equally wrong.
-
-**4.9** **Waterfall chart** — Shows which plant creates the gap, rather than just that a gap exists.
-
-| Well | Field |
-|---|---|
-| Category | `dimPlant[Plant]` |
-| Y-axis | `Difference` |
-
-Title: `Difference by plant`
-
-Position: X 788, Y 168, W 476, H 300.
-
-**4.10** **Line chart** — Tells you whether the gap is being cleaned up or getting worse.
-
-| Well | Field |
-|---|---|
-| X-axis | `dimDate[MonthName]` |
-| Y-axis | `Difference` |
-
-Title: `Difference trend`
-
-Position: X 16, Y 480, W 1248, H 232.
 
 ---
 
 ## Page — FG
 
-**4.11** **Matrix** — The main FG table: value, MW, capacity, days and rupees per watt in one grid.
+**4.12** **Matrix** — Technology by technology: value, MW, capacity, days, rupees per watt and the month's movement.
 
 | Well | Field |
 |---|---|
-| Rows | `dimNature[Nature]`, `factInventory[Material]` |
-| Values | `Closing Value`, `FG MW`, `Capacity MW`, `Days`, `INR per Wp` |
+| Rows | `dimNature[Nature]` |
+| Values | `Value ₹ Cr`, `FG MW`, `Capacity MW`, `Days of Inventory`, `INR per Wp`, `Value ₹ Cr % vs LM` |
 | Filters | `factInventory[Category]  →  is FG` |
 
-Title: `FG by tech and material`
+Title: `FG by technology`
 
-Position: X 16, Y 168, W 1248, H 288.
+Position: X 16, Y 168, W 764, H 264.
 
-- Format pane → Row headers → turn Stepped layout OFF, so Nature and Material get their own columns.
+- Format pane → Row headers → Stepped layout: Off.
 
-**4.12** **Area chart** — History of FG stock, split by technology.
+**4.13** **Matrix** — MW per technology with the months side by side, so a build-up in one tech is obvious.
+
+| Well | Field |
+|---|---|
+| Rows | `dimNature[Nature]` |
+| Columns | `dimDate[MonthName]` |
+| Values | `FG MW` |
+| Filters | `factInventory[Category]  →  is FG` |
+
+Title: `FG technology by month`
+
+Position: X 788, Y 168, W 476, H 264.
+
+**4.14** **Area chart** — History of FG stock, split by technology.
 
 | Well | Field |
 |---|---|
 | X-axis | `dimDate[MonthName]` |
-| Y-axis | `Closing Value` |
+| Y-axis | `Value ₹ Cr` |
 | Legend | `dimNature[Nature]` |
 | Filters | `factInventory[Category]  →  is FG` |
 
-Title: `FG value by tech over time`
+Title: `FG value ₹ Cr by technology over time`
 
-Position: X 16, Y 468, W 828, H 244.
+Position: X 16, Y 444, W 764, H 268.
 
-**4.13** **Line chart** — Days of inventory — the number your superior will ask for first.
+**4.15** **Line and clustered column chart** — Days of inventory month by month, with the change on a line — the number your superior asks for first.
 
 | Well | Field |
 |---|---|
 | X-axis | `dimDate[MonthName]` |
-| Y-axis | `Days` |
+| Column y-axis | `Days of Inventory` |
+| Line y-axis | `Days vs LM` |
 | Filters | `factInventory[Category]  →  is FG` |
 
-Title: `FG inventory days`
+Title: `FG days of inventory vs last month`
 
-Position: X 852, Y 468, W 412, H 244.
+Position: X 788, Y 444, W 476, H 268.
 
 ---
 
 ## Page — RM
 
-**4.14** **Matrix** — The RM equivalent of the FG grid.
+**4.16** **Matrix** — The RM equivalent of the FG grid.
 
 | Well | Field |
 |---|---|
 | Rows | `dimPlant[Plant]`, `dimNature[Nature]`, `factInventory[GroupNature]` |
-| Values | `Closing Value`, `MW` |
+| Values | `Value ₹ Cr`, `MW`, `Value ₹ Cr % vs LM` |
 | Filters | `factInventory[Category]  →  is RM` |
 
 Title: `RM by plant and nature`
 
 Position: X 16, Y 168, W 620, H 544.
 
-**4.15** **Decomposition tree** — Replaces most of what the RM sheet does by hand, and drills in any order you click.
+- Format pane → Row headers → Stepped layout: Off.
+
+**4.17** **Matrix** — RM months side by side.
 
 | Well | Field |
 |---|---|
-| Analyze | `Closing Value` |
+| Rows | `dimNature[Nature]` |
+| Columns | `dimDate[MonthName]` |
+| Values | `Value ₹ Cr` |
+| Filters | `factInventory[Category]  →  is RM` |
+
+Title: `RM by month`
+
+Position: X 644, Y 168, W 620, H 264.
+
+**4.18** **Decomposition tree** — Replaces most of what the RM sheet does by hand, and drills in any order you click.
+
+| Well | Field |
+|---|---|
+| Analyze | `Value ₹ Cr` |
 | Explain by | `dimPlant[Plant]`, `dimNature[Nature]`, `factInventory[GroupNature]` |
 | Filters | `factInventory[Category]  →  is RM` |
 
 Title: `RM breakdown`
 
-Position: X 644, Y 168, W 620, H 544.
+Position: X 644, Y 444, W 620, H 268.
 
 ---
 
 ## Page — Data Quality
 
-**4.16** **Card** — Materials with no row in the master sheets. Should read 0.
+**4.19** **Card** — Materials with no row in the master sheets.
 
 | Well | Field |
 |---|---|
@@ -402,37 +459,37 @@ Title: `Rows missing master attributes (want 0)`
 
 Position: X 16, Y 168, W 300, H 100.
 
-**4.17** **Card** — Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited.
+**4.20** **Card** — Opening + receipts - issues - closing. Anything but 0 means a file is duplicated, truncated or hand-edited.
 
 | Well | Field |
 |---|---|
-| Fields | `Stock Recon` |
+| Fields | `Stock Recon ₹ Cr` |
 
-Title: `Stock reconciliation (must be 0)`
+Title: `Stock reconciliation ₹ Cr (must be 0)`
 
 Position: X 324, Y 168, W 300, H 100.
 
-**4.18** **Table** — Catches a new GL account nobody added to TB Master — otherwise it vanishes silently.
+**4.21** **Table** — Catches a new GL account nobody added to TB Master — otherwise it vanishes silently.
 
 | Well | Field |
 |---|---|
-| Columns | `factTB_Unmapped[GLAccount]`, `factTB_Unmapped[GLDesc]`, `factTB_Unmapped[Amount]` |
+| Columns | `factTB_Unmapped[GLAccount]`, `factTB_Unmapped[GLDesc]`, `Unmapped TB ₹ Cr` |
 
 Title: `GLs in TB but not in TB Master (want empty)`
 
 Position: X 632, Y 168, W 632, H 100.
 
-**4.19** **Table** — Anything listed here gets blank Days. This is the check that catches a Nature/Tech typo.
+**4.22** **Table** — Anything listed here gets blank days. This is the check that catches a Nature/Tech typo.
 
 | Well | Field |
 |---|---|
 | Columns | `qcNatureNoCapacity[Nature]` |
 
-Title: `FG Natures with no capacity row (want empty)`
+Title: `FG technologies with no capacity row (want empty)`
 
 Position: X 16, Y 276, W 608, H 210.
 
-**4.20** **Table** — Read this when a column comes through blank — it shows what the file really says.
+**4.23** **Table** — Read this when a column comes through blank — it shows what the file really says.
 
 | Well | Field |
 |---|---|
@@ -442,7 +499,7 @@ Title: `Actual headers of every source file`
 
 Position: X 632, Y 276, W 632, H 210.
 
-**4.21** **Table** — DataRows = 0 means a sheet is empty.
+**4.24** **Table** — DataRows = 0 means a sheet is empty.
 
 | Well | Field |
 |---|---|
@@ -452,11 +509,11 @@ Title: `Variables workbook sheets`
 
 Position: X 16, Y 494, W 608, H 218.
 
-**4.22** **Table** — Check after every refresh: a missing month looks like a real fall in inventory, not like an error.
+**4.25** **Table** — Check after every refresh: a missing month looks like a real fall in inventory, not like an error.
 
 | Well | Field |
 |---|---|
-| Columns | `factInventory[SourceFile]`, `factInventory[Month]`, `factInventory[Category]`, `Closing Value` |
+| Columns | `factInventory[SourceFile]`, `factInventory[Month]`, `factInventory[Category]`, `Value ₹ Cr` |
 
 Title: `Files loaded this refresh`
 
@@ -1320,96 +1377,168 @@ in
 
 # Appendix B — measures
 
-Add these one at a time (**Home → New measure**), with `factInventory` selected.
+Add these one at a time (**Home → New measure**), with `factInventory` selected. Copy the
+whole block each time — several measures build on the ones above them, so keep the order.
+
+Everything money is in **crore rupees** and named so a reader knows what it is without asking.
+`SUM(...)/10000000` is the crore conversion.
+
+*value, as at the end of the selected month*
 
 ```
-Closing Value   = SUM(factInventory[CloseVal])
-```
-
-```
-Inventory Total = [Closing Value]
-```
-
-```
-Closing Qty     = SUM(factInventory[CloseQty])
-```
-
-```
-Opening Value   = SUM(factInventory[OpenVal])
+Value ₹ Cr = DIVIDE(SUM(factInventory[CloseVal]), 10000000)
 ```
 
 ```
-Receipts Value  = SUM(factInventory[ReceiptVal])
+As On = "as on " & FORMAT(EOMONTH(MAX(dimDate[Month]), 0), "dd MMM yyyy")
 ```
 
 ```
-Issues Value    = SUM(factInventory[IssueVal])
+Value ₹ Cr Title = "Value ₹ Cr " & [As On]
 ```
 
 ```
-MW              = SUM(factInventory[MW])
+Opening Value ₹ Cr = DIVIDE(SUM(factInventory[OpenVal]), 10000000)
 ```
 
 ```
-INR per Wp      = SUM(factInventory[INR_WP])
+Receipts ₹ Cr = DIVIDE(SUM(factInventory[ReceiptVal]), 10000000)
 ```
 
 ```
-Inv RM          = CALCULATE([Closing Value], factInventory[Category] = "RM")
+Issues ₹ Cr = DIVIDE(SUM(factInventory[IssueVal]), 10000000)
 ```
 
 ```
-Inv FG          = CALCULATE([Closing Value], factInventory[Category] = "FG")
+Closing Qty = SUM(factInventory[CloseQty])
+```
+
+*by category*
+
+```
+RM ₹ Cr = CALCULATE([Value ₹ Cr], factInventory[Category] = "RM")
 ```
 
 ```
-Inv Consumables = CALCULATE([Closing Value], factInventory[Category] = "Consumables")
+FG ₹ Cr = CALCULATE([Value ₹ Cr], factInventory[Category] = "FG")
 ```
 
 ```
-Capacity MW     = SUM(dimCapacity[CapacityMW])
-```
-
-*Days applies to FG only: capacity is module capacity, so RM and consumables*
-
-*have no meaningful denominator. Scoping it here stops a plausible-looking but*
-
-*meaningless number appearing if someone drops Days onto the RM page.*
-
-```
-FG MW           = CALCULATE([MW], factInventory[Category] = "FG")
+Consumables ₹ Cr = CALCULATE([Value ₹ Cr], factInventory[Category] = "Consumables")
 ```
 
 ```
-Days            = DIVIDE([FG MW], [Capacity MW])
+Share of Total % = DIVIDE([Value ₹ Cr], CALCULATE([Value ₹ Cr], ALL(factInventory[Category])))
+```
+
+*megawatts and days*
+
+```
+MW = SUM(factInventory[MW])
 ```
 
 ```
-TB Value        = SUM(factTB[Amount])
+FG MW = CALCULATE([MW], factInventory[Category] = "FG")
 ```
 
 ```
-Difference      = [TB Value] - [Closing Value]
+Capacity MW = SUM(dimCapacity[CapacityMW])
+```
+
+*Days is FG only: capacity is module capacity, so RM and consumables have no*
+
+*meaningful denominator. Scoping it here stops a plausible-looking but meaningless*
+
+*number appearing if someone drops it on the RM page.*
+
+```
+Days of Inventory = DIVIDE([FG MW], [Capacity MW])
 ```
 
 ```
-Difference %    = DIVIDE([Difference], [TB Value])
+INR per Wp = SUM(factInventory[INR_WP])
 ```
 
+*month-on-month and year-on-year comparison*
+
 ```
-Prev Month      =
+Value ₹ Cr LM =
 VAR PrevIdx = MAX(dimDate[MonthIndex]) - 1
-RETURN CALCULATE([Closing Value], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)
+RETURN CALCULATE([Value ₹ Cr], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)
 ```
 
 ```
-MoM Delta       = [Closing Value] - [Prev Month]
+Value ₹ Cr vs LM = [Value ₹ Cr] - [Value ₹ Cr LM]
+```
+
+```
+Value ₹ Cr % vs LM = DIVIDE([Value ₹ Cr vs LM], [Value ₹ Cr LM])
+```
+
+```
+Value ₹ Cr LY =
+VAR PrevIdx = MAX(dimDate[MonthIndex]) - 12
+RETURN CALCULATE([Value ₹ Cr], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)
+```
+
+```
+Value ₹ Cr % vs LY = DIVIDE([Value ₹ Cr] - [Value ₹ Cr LY], [Value ₹ Cr LY])
+```
+
+```
+MW LM =
+VAR PrevIdx = MAX(dimDate[MonthIndex]) - 1
+RETURN CALCULATE([MW], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)
+```
+
+```
+MW vs LM = [MW] - [MW LM]
+```
+
+```
+Days LM =
+VAR PrevIdx = MAX(dimDate[MonthIndex]) - 1
+RETURN CALCULATE([Days of Inventory], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)
+```
+
+```
+Days vs LM = [Days of Inventory] - [Days LM]
+```
+
+*peak, average and latest across whatever months are in view*
+
+```
+Avg Value ₹ Cr = AVERAGEX(VALUES(dimDate[MonthIndex]), [Value ₹ Cr])
+```
+
+```
+Peak Value ₹ Cr = MAXX(VALUES(dimDate[MonthIndex]), [Value ₹ Cr])
+```
+
+```
+Latest Month Value ₹ Cr =
+VAR LastIdx = CALCULATE(MAX(dimDate[MonthIndex]), ALLSELECTED(dimDate))
+RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)
+```
+
+*trial balance reconciliation*
+
+```
+TB ₹ Cr = DIVIDE(SUM(factTB[Amount]), 10000000)
+```
+
+```
+Difference ₹ Cr = [TB ₹ Cr] - [Value ₹ Cr]
+```
+
+```
+Difference % = DIVIDE([Difference ₹ Cr], [TB ₹ Cr])
 ```
 
 *data quality*
 
 ```
-Stock Recon     = [Opening Value] + [Receipts Value] - [Issues Value] - [Closing Value]
+Stock Recon ₹ Cr = [Opening Value ₹ Cr] + [Receipts ₹ Cr] - [Issues ₹ Cr] - [Value ₹ Cr]
 ```
 
 ```
@@ -1417,5 +1546,12 @@ Rows Missing Attr = CALCULATE(COUNTROWS(factInventory), factInventory[AttrMissin
 ```
 
 ```
-Unmapped TB     = SUM(factTB_Unmapped[Amount])
+Unmapped TB ₹ Cr = DIVIDE(SUM(factTB_Unmapped[Amount]), 10000000)
 ```
+
+*formatting, once all of the above exist*
+
+Select each money measure → **Measure tools** → **Format: Decimal number**, 2 decimals.
+For `Days of Inventory` and `MW` use 1 decimal. For the `%` measures use **Percentage**,
+1 decimal. `Share of Total %` and `Difference %` both read better as percentages than as
+raw ratios, and a reader can't tell the difference from the number alone.
