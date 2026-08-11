@@ -460,7 +460,7 @@ function pageOverview(page){
   const title = d.lvl === 0 ? 'Value ₹ Cr by plant — click a bar to go deeper'
               : d.lvl === 1 ? `${d.plant} — by category (click again for natures)`
               : `${d.plant} · ${d.cat} — by material nature`;
-  b = vis(page, 788, 168, 476, 264, title,
+  b = vis(page, 788, 168, 476, 216, title,
           d.lvl ? null : 'Drill: plant → category → nature. Right-click = Detail page.');
   if (d.lvl){
     const bar = el('div', '', 'position:absolute;right:8px;top:-20px;z-index:2');
@@ -503,8 +503,13 @@ function pageOverview(page){
     'group', (m) => pick('m', m), m => toDetail({month: m}));
   lineOver(b, cur.map((v, i) => i ? (v - lm[i]) / (lm[i] || 1) : null), G.g4);
 
+  // where the money sits, as a share
+  b = vis(page, 788, 396, 476, 172, 'Share of value — click a slice');
+  pie(b, CATS.map(c => [c, val(rows({cat: 1}).filter(r => r.cat === c)), CATC[c]]), .58,
+      c => pick('cat', c));
+
   // months side by side
-  b = vis(page, 788, 444, 476, 268, 'Months side by side — ₹ Cr');
+  b = vis(page, 788, 580, 476, 132, 'Months side by side — ₹ Cr');
   matrix(b, 'ov', CATS.map(c => ({key: c, label: c})), [''], MONTHS,
     (rk, kk, top, sub) => ({v: val(rows({month: 1, cat: 1})
                                      .filter(r => r.cat === rk && r.m === sub))}),

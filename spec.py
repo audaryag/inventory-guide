@@ -50,7 +50,7 @@ VISUALS = [
     ("Overview", "Clustered column chart", "Value ₹ Cr by plant — click to go deeper",
      [("X-axis", ["dimPlant[Plant]", "dimCategory[Category]", "dimNature[Nature]"]),
       ("Y-axis", ["Value ₹ Cr"])],
-     (788, 168, 476, 264),
+     (788, 168, 476, 216),
      "Three fields in the X-axis makes it a hierarchy, so the little arrows appear in the "
      "visual's top-right corner: plant, then category inside a plant, then nature inside "
      "that. Clicking is the whole point — nobody has to build three charts.",
@@ -67,11 +67,19 @@ VISUALS = [
      "Bars compare the two months directly; the line is the percentage swing, which is "
      "what people argue about.", []),
 
+    ("Overview", "Donut chart", "Share of value — click a slice",
+     [("Legend", ["dimCategory[Category]"]),
+      ("Values", ["Value ₹ Cr"])],
+     (788, 396, 476, 172),
+     "Where the money actually sits. Clicking a slice filters the page to that category, "
+     "which is quicker than the Category slicer.",
+     ["Format pane → Detail labels → Label contents: Percent of total."]),
+
     ("Overview", "Matrix", "Months side by side",
      [("Rows", ["dimCategory[Category]"]),
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Value ₹ Cr"])],
-     (788, 444, 476, 268),
+     (788, 580, 476, 132),
      "The same numbers as a table, because some readers only trust a table.",
      ["Format pane → Row headers → Stepped layout: Off.",
       "Turn Format pane → Subtotals → Row subtotals: On, so each column has a total."]),
