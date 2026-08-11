@@ -811,26 +811,6 @@ in
     Out
 ```
 
-## qcMWSheet
-
-> Diagnostic. Shows the MW sheet exactly as it sits in Excel, cell for cell, with no interpretation. If `varMWCapacity` complains, look here and read me the layout. Leave Enable load ON.
-
-```
-let
-    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
-    Sh      = Table.SelectRows(Wb, each [Kind] = "Sheet"),
-    Norm    = (n as any) as text =>
-                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")), {" ",".","_","-"})),
-    Hit     = Table.SelectRows(Sh, each
-                  List.Contains({"MW","MWCAPACITY","CAPACITY","MWCAP"}, Norm([Item]))),
-    Data    = Hit{0}[Data],
-    AsText  = Table.TransformColumns(Data,
-                  List.Transform(Table.ColumnNames(Data),
-                      (c) => {c, each Text.From(_ ?? ""), type text}))
-in
-    AsText
-```
-
 ## dimCapacity
 
 ```
@@ -1170,4 +1150,24 @@ Rows Missing Attr = CALCULATE(COUNTROWS(factInventory), factInventory[AttrMissin
 
 ```
 Unmapped TB     = SUM(factTB_Unmapped[Amount])
+```
+
+## qcMWSheet
+
+> Diagnostic. Shows the MW sheet exactly as it sits in Excel, cell for cell, with no interpretation. If `varMWCapacity` complains, look here and read me the layout. Leave Enable load ON.
+
+```
+let
+    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
+    Sh      = Table.SelectRows(Wb, each [Kind] = "Sheet"),
+    Norm    = (n as any) as text =>
+                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")), {" ",".","_","-"})),
+    Hit     = Table.SelectRows(Sh, each
+                  List.Contains({"MW","MWCAPACITY","CAPACITY","MWCAP"}, Norm([Item]))),
+    Data    = Hit{0}[Data],
+    AsText  = Table.TransformColumns(Data,
+                  List.Transform(Table.ColumnNames(Data),
+                      (c) => {c, each Text.From(_ ?? ""), type text}))
+in
+    AsText
 ```

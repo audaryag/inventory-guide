@@ -55,8 +55,8 @@ footer{color:var(--dim);font-size:12px;margin-top:40px;text-align:center}
 Tick <strong>Done</strong> to keep your place — it is remembered in this browser.</p>
 
 <nav class="tabs">
-  <button data-tab="q" class="on">Queries (28)</button>
-  <button data-tab="m">Measures (22)</button>
+  <button data-tab="q" class="on">Queries (27)</button>
+  <button data-tab="m">Measures (23)</button>
   <button data-tab="g">Walkthrough</button>
   <input id="search" placeholder="Search a query name or code…">
   <button id="reset" title="Clear progress">Reset</button>
@@ -68,7 +68,7 @@ Tick <strong>Done</strong> to keep your place — it is remembered in this brows
   <p class="sub">One query per box, in this order. For each: <strong>Home → New Source → Blank Query</strong>,
   then <strong>Home → Advanced Editor</strong>, Ctrl+A, Delete, paste, <strong>Done</strong>,
   then right-click the query → <strong>Rename</strong> and type the name shown.
-  Never paste two boxes into one editor. Errors are normal until all 28 exist.</p>
+  Never paste two boxes into one editor. Errors are normal until all 27 exist.</p>
   
 <section class="card" id="q-1" data-name="proot">
   <header>
@@ -611,38 +611,15 @@ in
     Out</pre>
 </section>
 
-<section class="card" id="q-18" data-name="qcmwsheet">
+<section class="card" id="q-18" data-name="dimcapacity">
   <header>
     <span class="num">18</span>
-    <h3>qcMWSheet</h3>
+    <h3>dimCapacity</h3>
     <button class="copy" data-target="qcode18">Copy</button>
     <button class="done" data-key="q-18">Done</button>
   </header>
-  <p class='note'>Diagnostic. Shows the MW sheet exactly as it sits in Excel, cell for cell, with no interpretation. If `varMWCapacity` complains, look here and read me the layout. Leave Enable load ON.</p>
-  <pre id="qcode18">let
-    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
-    Sh      = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
-    Norm    = (n as any) as text =&gt;
-                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? &quot;&quot;)), {&quot; &quot;,&quot;.&quot;,&quot;_&quot;,&quot;-&quot;})),
-    Hit     = Table.SelectRows(Sh, each
-                  List.Contains({&quot;MW&quot;,&quot;MWCAPACITY&quot;,&quot;CAPACITY&quot;,&quot;MWCAP&quot;}, Norm([Item]))),
-    Data    = Hit{0}[Data],
-    AsText  = Table.TransformColumns(Data,
-                  List.Transform(Table.ColumnNames(Data),
-                      (c) =&gt; {c, each Text.From(_ ?? &quot;&quot;), type text}))
-in
-    AsText</pre>
-</section>
-
-<section class="card" id="q-19" data-name="dimcapacity">
-  <header>
-    <span class="num">19</span>
-    <h3>dimCapacity</h3>
-    <button class="copy" data-target="qcode19">Copy</button>
-    <button class="done" data-key="q-19">Done</button>
-  </header>
   
-  <pre id="qcode19">let
+  <pre id="qcode18">let
     Months   = List.Distinct(List.Sort(factInventory[Month])),
     Combos   = Table.Distinct(Table.SelectColumns(varMWCapacity, {&quot;Tech&quot;,&quot;ValuationArea&quot;})),
     Grid     = Table.AddColumn(Combos, &quot;Month&quot;, each Months),
@@ -661,15 +638,15 @@ in
     Typed</pre>
 </section>
 
-<section class="card" id="q-20" data-name="dimnature">
+<section class="card" id="q-19" data-name="dimnature">
   <header>
-    <span class="num">20</span>
+    <span class="num">19</span>
     <h3>dimNature</h3>
-    <button class="copy" data-target="qcode20">Copy</button>
-    <button class="done" data-key="q-20">Done</button>
+    <button class="copy" data-target="qcode19">Copy</button>
+    <button class="done" data-key="q-19">Done</button>
   </header>
   <p class='note'>Bridge table. Without it, slicing FG by Nature leaves Capacity MW unfiltered and Days is wrong everywhere except the grand total.</p>
-  <pre id="qcode20">let
+  <pre id="qcode19">let
     FromRM  = List.RemoveNulls(dimMaterialAttr[Nature]),
     FromFG  = List.RemoveNulls(dimFGAttr[Nature]),
     FromCap = List.RemoveNulls(varMWCapacity[Tech]),
@@ -680,15 +657,15 @@ in
     Typed</pre>
 </section>
 
-<section class="card" id="q-21" data-name="dimtbmaster">
+<section class="card" id="q-20" data-name="dimtbmaster">
   <header>
-    <span class="num">21</span>
+    <span class="num">20</span>
     <h3>dimTBMaster</h3>
-    <button class="copy" data-target="qcode21">Copy</button>
-    <button class="done" data-key="q-21">Done</button>
+    <button class="copy" data-target="qcode20">Copy</button>
+    <button class="done" data-key="q-20">Done</button>
   </header>
   
-  <pre id="qcode21">let
+  <pre id="qcode20">let
     Raw      = fnVarSheet(
                    {&quot;TB Master&quot;, &quot;TBMaster&quot;, &quot;TB&quot;},
                    {
@@ -715,15 +692,15 @@ in
     Dedup</pre>
 </section>
 
-<section class="card" id="q-22" data-name="facttb_staged">
+<section class="card" id="q-21" data-name="facttb_staged">
   <header>
-    <span class="num">22</span>
+    <span class="num">21</span>
     <h3>factTB_Staged</h3>
-    <button class="copy" data-target="qcode22">Copy</button>
-    <button class="done" data-key="q-22">Done</button>
+    <button class="copy" data-target="qcode21">Copy</button>
+    <button class="done" data-key="q-21">Done</button>
   </header>
   
-  <pre id="qcode22">let
+  <pre id="qcode21">let
     Files    = Folder.Files(pRoot &amp; &quot;\TB&quot;),
     OnlyXlsx = Table.SelectRows(Files, each Text.Lower([Extension]) = &quot;.xlsx&quot;
                    and not Text.StartsWith([Name], &quot;~$&quot;)
@@ -772,15 +749,15 @@ in
     Typed</pre>
 </section>
 
-<section class="card" id="q-23" data-name="facttb">
+<section class="card" id="q-22" data-name="facttb">
   <header>
-    <span class="num">23</span>
+    <span class="num">22</span>
     <h3>factTB</h3>
-    <button class="copy" data-target="qcode23">Copy</button>
-    <button class="done" data-key="q-23">Done</button>
+    <button class="copy" data-target="qcode22">Copy</button>
+    <button class="done" data-key="q-22">Done</button>
   </header>
   <p class='note'>The inner join to dimTBMaster IS the trial-balance cleaning - only whitelisted GL accounts survive.</p>
-  <pre id="qcode23">let
+  <pre id="qcode22">let
     Mapped  = Table.NestedJoin(factTB_Staged, {&quot;GLAccount&quot;}, dimTBMaster, {&quot;GLAccount&quot;},
                   &quot;tpl&quot;, JoinKind.Inner),
     Expand  = Table.ExpandTableColumn(Mapped, &quot;tpl&quot;, {&quot;Nature&quot;,&quot;TBPlant&quot;,&quot;TBSort&quot;})
@@ -788,15 +765,15 @@ in
     Expand</pre>
 </section>
 
-<section class="card" id="q-24" data-name="facttb_unmapped">
+<section class="card" id="q-23" data-name="facttb_unmapped">
   <header>
-    <span class="num">24</span>
+    <span class="num">23</span>
     <h3>factTB_Unmapped</h3>
-    <button class="copy" data-target="qcode24">Copy</button>
-    <button class="done" data-key="q-24">Done</button>
+    <button class="copy" data-target="qcode23">Copy</button>
+    <button class="done" data-key="q-23">Done</button>
   </header>
   <p class='note'>GL accounts present in the raw TB but absent from TB Master. Empty = good. This is what stops a new GL silently vanishing.</p>
-  <pre id="qcode24">let
+  <pre id="qcode23">let
     Anti  = Table.NestedJoin(factTB_Staged, {&quot;GLAccount&quot;}, dimTBMaster, {&quot;GLAccount&quot;},
                 &quot;tpl&quot;, JoinKind.LeftAnti),
     Clean = Table.RemoveColumns(Anti, {&quot;tpl&quot;}),
@@ -807,15 +784,15 @@ in
     Group</pre>
 </section>
 
-<section class="card" id="q-25" data-name="dimdate">
+<section class="card" id="q-24" data-name="dimdate">
   <header>
-    <span class="num">25</span>
+    <span class="num">24</span>
     <h3>dimDate</h3>
-    <button class="copy" data-target="qcode25">Copy</button>
-    <button class="done" data-key="q-25">Done</button>
+    <button class="copy" data-target="qcode24">Copy</button>
+    <button class="done" data-key="q-24">Done</button>
   </header>
   
-  <pre id="qcode25">let
+  <pre id="qcode24">let
     MinD  = List.Min(factInventory[FromDate]),
     MaxD  = List.Max(factInventory[ToDate]),
     Start = #date(Date.Year(MinD) - (if Date.Month(MinD) &lt; 4 then 1 else 0), 4, 1),
@@ -835,15 +812,15 @@ in
     FY</pre>
 </section>
 
-<section class="card" id="q-26" data-name="qcheaders">
+<section class="card" id="q-25" data-name="qcheaders">
   <header>
-    <span class="num">26</span>
+    <span class="num">25</span>
     <h3>qcHeaders</h3>
-    <button class="copy" data-target="qcode26">Copy</button>
-    <button class="done" data-key="q-26">Done</button>
+    <button class="copy" data-target="qcode25">Copy</button>
+    <button class="done" data-key="q-25">Done</button>
   </header>
   <p class='note'>Your self-check: lists the real sheet names and headers of every file in all four folders. Leave Enable load ON.</p>
-  <pre id="qcode26">let
+  <pre id="qcode25">let
     Folders  = {&quot;RM Raw&quot;, &quot;FG Raw&quot;, &quot;Consble Raw&quot;, &quot;TB&quot;},
     AllFiles = Table.Combine(List.Transform(Folders, (f) =&gt;
                    Table.AddColumn(
@@ -871,15 +848,15 @@ in
     Out</pre>
 </section>
 
-<section class="card" id="q-27" data-name="qcvarheaders">
+<section class="card" id="q-26" data-name="qcvarheaders">
   <header>
-    <span class="num">27</span>
+    <span class="num">26</span>
     <h3>qcVarHeaders</h3>
-    <button class="copy" data-target="qcode27">Copy</button>
-    <button class="done" data-key="q-27">Done</button>
+    <button class="copy" data-target="qcode26">Copy</button>
+    <button class="done" data-key="q-26">Done</button>
   </header>
   <p class='note'>Your self-check for Variables and Calculations: every sheet, its exact headers, and its row count. Leave Enable load ON.</p>
-  <pre id="qcode27">let
+  <pre id="qcode26">let
     Wb    = Excel.Workbook(File.Contents(pVarsFile), null, true),
     Sh    = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
     Slim  = Table.SelectColumns(Sh, {&quot;Item&quot;,&quot;Data&quot;}),
@@ -894,15 +871,15 @@ in
     Out</pre>
 </section>
 
-<section class="card" id="q-28" data-name="qcnaturenocapacity">
+<section class="card" id="q-27" data-name="qcnaturenocapacity">
   <header>
-    <span class="num">28</span>
+    <span class="num">27</span>
     <h3>qcNatureNoCapacity</h3>
-    <button class="copy" data-target="qcode28">Copy</button>
-    <button class="done" data-key="q-28">Done</button>
+    <button class="copy" data-target="qcode27">Copy</button>
+    <button class="done" data-key="q-27">Done</button>
   </header>
   <p class='note'>Lists FG Natures with no matching Tech on the MW sheet. Those rows get blank Days. Empty table = good.</p>
-  <pre id="qcode28">let
+  <pre id="qcode27">let
     FGNatures = List.Distinct(List.RemoveNulls(dimFGAttr[Nature])),
     CapTechs  = List.Distinct(List.RemoveNulls(varMWCapacity[Tech])),
     Orphans   = List.Difference(FGNatures, CapTechs),
@@ -1156,6 +1133,31 @@ in
   
   <pre id="mcode22">Unmapped TB     = SUM(factTB_Unmapped[Amount])</pre>
 </section>
+
+<section class="card" id="m-23" data-name="let
+    wb">
+  <header>
+    <span class="num">23</span>
+    <h3>let
+    Wb</h3>
+    <button class="copy" data-target="mcode23">Copy</button>
+    <button class="done" data-key="m-23">Done</button>
+  </header>
+  
+  <pre id="mcode23">let
+    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
+    Sh      = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
+    Norm    = (n as any) as text =&gt;
+                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? &quot;&quot;)), {&quot; &quot;,&quot;.&quot;,&quot;_&quot;,&quot;-&quot;})),
+    Hit     = Table.SelectRows(Sh, each
+                  List.Contains({&quot;MW&quot;,&quot;MWCAPACITY&quot;,&quot;CAPACITY&quot;,&quot;MWCAP&quot;}, Norm([Item]))),
+    Data    = Hit{0}[Data],
+    AsText  = Table.TransformColumns(Data,
+                  List.Transform(Table.ColumnNames(Data),
+                      (c) =&gt; {c, each Text.From(_ ?? &quot;&quot;), type text}))
+in
+    AsText</pre>
+</section>
 </div>
 
 <div class="panel" id="tab-g"><h1>Build guide — click by click</h1>
@@ -1384,7 +1386,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 </ol>
 <p>That&#x27;s it. No formulas to drag down, no SUMIFS to extend.</p></div>
 
-<footer>Updated 11 Aug 2026 06:48 UTC</footer>
+<footer>Updated 11 Aug 2026 06:49 UTC</footer>
 </div>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
