@@ -34,11 +34,15 @@ def _drag(field, well):
     """One literal sentence for putting one field into one well."""
     if "[" in field:                                    # a table column
         tbl, col = field.split("[")[0], field.split("[")[1].rstrip("]")
-        return ("In the Data pane (far right), click the little arrow to the left of %s to "
-                "open it, then drag %s and drop it into the box called %s."
-                % (tbl, col, well))
-    return ("In the Data pane (far right), find %s — it has a small calculator icon next to "
-            "it — and drag it into the box called %s." % (field, well))
+        return ("In the Data pane (far right), scroll to the table called %s and click the "
+                "little arrow to its left to open it, then drag the field called %s out of "
+                "it and drop it into the box called %s. (If the list is long, type %s into "
+                "the search box at the top of the pane first.)"
+                % (tbl, col, well, col))
+    return ("In the Data pane (far right) click the search box at the very top of the pane "
+            "and type: %s — the whole list shrinks to just that one item (it has a small "
+            "calculator icon, because it is a measure). Drag it into the box called %s, then "
+            "clear the search box." % (field, well))
 
 
 def _insert(vtype):
@@ -211,10 +215,17 @@ def steps():
                     for f in fl:
                         fld = f.split("  →")[0].strip()
                         val = f.split("→")[-1].strip() if "→" in f else ""
-                        do.append("Drag %s into the Filters pane (the pane just left of "
-                                  "Visualizations, under the words 'Filters on this visual'), "
-                                  "then tick %s and untick everything else."
-                                  % (fld, val or "the value shown below"))
+                        if "[" in fld:
+                            tbl2, col2 = fld.split("[")[0], fld.split("[")[1].rstrip("]")
+                            src = ("open the table called %s in the Data pane and drag the "
+                                   "field called %s" % (tbl2, col2))
+                        else:
+                            src = ("type %s into the search box at the top of the Data pane, "
+                                   "then drag it" % fld)
+                        do.append("Now the filter: %s into the Filters pane (that is the pane "
+                                  "just to the LEFT of Visualizations), dropping it under the "
+                                  "words 'Filters on this visual'. Then tick %s and untick "
+                                  "everything else." % (src, val or "the value shown below"))
                 else:
                     for f in fl:
                         do.append(_drag(f, wl))
