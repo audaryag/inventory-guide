@@ -733,44 +733,83 @@ in
     <button class="copy" data-target="qcode21">Copy</button>
     <button class="done" data-key="q-21">Done</button>
   </header>
-  
+  <p class='note'>Header-tolerant: sheet names, header position, case, spaces and punctuation are all matched loosely, and the common SAP spellings (`gl Account Number`, `Profit Center`, `Amount in local currency`, …) are recognised. A column it genuinely cannot find comes through blank rather than failing the refresh. Month comes from the file name, so files must be `TB_YYYYMM.xlsx`.</p>
   <pre id="qcode21">let
+    Norm     = (n as any) as text =&gt;
+                   Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? &quot;&quot;)), {&quot; &quot;,&quot;.&quot;,&quot;_&quot;,&quot;-&quot;,&quot;/&quot;,&quot;(&quot;,&quot;)&quot;})),
+    GLNames  = {&quot;GLACCOUNTNUMBER&quot;,&quot;GLACCOUNT&quot;,&quot;GLACCOUNTNO&quot;,&quot;GLACCNO&quot;,&quot;ACCOUNTNUMBER&quot;,&quot;GLCODE&quot;},
+    Alias    = {
+                   {GLNames, &quot;GLAccount&quot;},
+                   {{&quot;GLACCOUNTDESCRIPTION&quot;,&quot;GLACCOUNTDESC&quot;,&quot;ACCOUNTDESCRIPTION&quot;,
+                     &quot;GLDESCRIPTION&quot;,&quot;GLDESC&quot;,&quot;ACCOUNTNAME&quot;}, &quot;GLDesc&quot;},
+                   {{&quot;PROFITCENTRE&quot;,&quot;PROFITCENTER&quot;,&quot;PROFITCTR&quot;,&quot;PRCTR&quot;}, &quot;ProfitCentre&quot;},
+                   {{&quot;PROFITCENTREDESCRIPTION&quot;,&quot;PROFITCENTERDESCRIPTION&quot;,
+                     &quot;PROFITCENTREDESC&quot;,&quot;PROFITCENTERDESC&quot;}, &quot;ProfitCentreDesc&quot;},
+                   {{&quot;AMOUNT&quot;,&quot;AMOUNTINLOCALCURRENCY&quot;,&quot;AMOUNTINLC&quot;,&quot;AMTINLOCCUR&quot;,
+                     &quot;BALANCE&quot;,&quot;CLOSINGBALANCE&quot;}, &quot;Amount&quot;}
+               },
+    Wanted   = {&quot;GLAccount&quot;,&quot;GLDesc&quot;,&quot;ProfitCentre&quot;,&quot;ProfitCentreDesc&quot;,&quot;Amount&quot;},
+
+    Clean    = (content as binary) as table =&gt;
+                   let
+                       Wb       = Excel.Workbook(content, null, true),
+                       Sheets   = Table.SelectRows(Wb, each [Kind] = &quot;Sheet&quot;),
+                       Picked   = try Sheets{[Item = &quot;Sheet1&quot;, Kind = &quot;Sheet&quot;]}[Data]
+                                  otherwise Sheets{0}[Data],
+                       // find the header row: the one holding a GL-account-ish cell
+                       RowsL    = Table.ToRows(Picked),
+                       HdrIdx   = List.PositionOf(
+                                      List.Transform(RowsL, (r) =&gt;
+                                          List.AnyTrue(List.Transform(r,
+                                              (c) =&gt; List.Contains(GLNames, Norm(c))))), true),
+                       Skipped  = if HdrIdx &lt;= 0 then Picked else Table.Skip(Picked, HdrIdx),
+                       Promoted = Table.PromoteHeaders(Skipped, [PromoteAllScalars = true]),
+
+                       Lookup   = (c as any) as nullable text =&gt;
+                                      let Hits = List.Select(Alias, (a) =&gt; List.Contains(a{0}, Norm(c)))
+                                      in  if List.IsEmpty(Hits) then null else Hits{0}{1},
+                       Pairs    = List.RemoveNulls(
+                                      List.Transform(Table.ColumnNames(Promoted),
+                                          (c) =&gt; let t = Lookup(c) in if t = null then null else {c, t})),
+                       // if two source columns map to the same name, keep the first
+                       Renames  = List.Accumulate(Pairs, {}, (acc, pr) =&gt;
+                                      if List.Contains(List.Transform(acc, (x) =&gt; x{1}), pr{1})
+                                      then acc else acc &amp; {pr}),
+                       Renamed  = Table.RenameColumns(Promoted, Renames),
+                       Padded   = List.Accumulate(
+                                      List.Difference(Wanted, Table.ColumnNames(Renamed)), Renamed,
+                                      (tbl, col) =&gt; Table.AddColumn(tbl, col, each null)),
+                       Kept     = Table.SelectColumns(Padded, Wanted),
+                       NoJunk   = Table.SelectRows(Kept, each
+                                      [GLAccount] &lt;&gt; null
+                                      and Text.Trim(Text.From([GLAccount])) &lt;&gt; &quot;&quot;
+                                      and not Text.StartsWith(Text.From([GLAccount]), &quot;Total&quot;,
+                                              Comparer.OrdinalIgnoreCase))
+                   in
+                       NoJunk,
+
     Files    = Folder.Files(pRoot &amp; &quot;\TB&quot;),
-    OnlyXlsx = Table.SelectRows(Files, each Text.Lower([Extension]) = &quot;.xlsx&quot;
+    OnlyXlsx = Table.SelectRows(Files, each
+                   Text.StartsWith(Text.Lower([Extension]), &quot;.xls&quot;)
                    and not Text.StartsWith([Name], &quot;~$&quot;)
                    and not Text.StartsWith([Name], &quot;.&quot;)),
-    Loaded   = Table.AddColumn(OnlyXlsx, &quot;Data&quot;, each
-                   let
-                       Wb = Excel.Workbook([Content], true, true),
-                       Sh = Wb{[Item=&quot;Sheet1&quot;, Kind=&quot;Sheet&quot;]}[Data],
-                       Pr = Table.PromoteHeaders(Sh, [PromoteAllScalars=true])
-                   in
-                       Table.SelectColumns(Pr, {
-                           &quot;GL Account Number&quot;,&quot;GL Account Description&quot;,
-                           &quot;Profit Centre&quot;,&quot;Profit Centre Description&quot;,&quot;Amount&quot;},
-                           MissingField.Error)),
+    Loaded   = Table.AddColumn(OnlyXlsx, &quot;Data&quot;, each Clean([Content])),
+
     // month from the file name: TB_YYYYMM.xlsx
     WithMonth = Table.AddColumn(Loaded, &quot;Month&quot;, each
                    let
                        digits = Text.Select([Name], {&quot;0&quot;..&quot;9&quot;}),
                        yyyymm = Text.Middle(digits, 0, 6)
                    in
-                       try #date(Number.From(Text.Start(yyyymm,4)),
-                                 Number.From(Text.Middle(yyyymm,4,2)), 1)
+                       try #date(Number.From(Text.Start(yyyymm, 4)),
+                                 Number.From(Text.Middle(yyyymm, 4, 2)), 1)
                        otherwise null, type date),
     Slim     = Table.SelectColumns(WithMonth, {&quot;Name&quot;,&quot;Month&quot;,&quot;Data&quot;}),
-    Expanded = Table.ExpandTableColumn(Slim, &quot;Data&quot;,
-                   {&quot;GL Account Number&quot;,&quot;GL Account Description&quot;,
-                    &quot;Profit Centre&quot;,&quot;Profit Centre Description&quot;,&quot;Amount&quot;}),
-    Renamed  = Table.RenameColumns(Expanded, {
-                   {&quot;Name&quot;,&quot;SourceFile&quot;},
-                   {&quot;GL Account Number&quot;,&quot;GLAccount&quot;},
-                   {&quot;GL Account Description&quot;,&quot;GLDesc&quot;},
-                   {&quot;Profit Centre&quot;,&quot;ProfitCentre&quot;},
-                   {&quot;Profit Centre Description&quot;,&quot;ProfitCentreDesc&quot;}}),
+    Expanded = Table.ExpandTableColumn(Slim, &quot;Data&quot;, Wanted),
+    Renamed  = Table.RenameColumns(Expanded, {{&quot;Name&quot;,&quot;SourceFile&quot;}}),
     Keys     = Table.TransformColumns(Renamed, {
-                   {&quot;GLAccount&quot;,    each Text.TrimStart(Text.Trim(Text.From(_)), &quot;0&quot;), type text},
-                   {&quot;ProfitCentre&quot;, each Text.Trim(Text.From(_)), type text}}),
+                   {&quot;GLAccount&quot;,    each Text.TrimStart(Text.Trim(Text.From(_ ?? &quot;&quot;)), &quot;0&quot;), type text},
+                   {&quot;ProfitCentre&quot;, each Text.Trim(Text.From(_ ?? &quot;&quot;)), type text}}),
     // plant = characters 3-6 of the profit centre  (0-based start = 2)
     PlantRaw = Table.AddColumn(Keys, &quot;PlantCode&quot;,
                    each try Text.Middle([ProfitCentre], 2, 4) otherwise null, type text),
@@ -1418,7 +1457,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 </ol>
 <p>That&#x27;s it. No formulas to drag down, no SUMIFS to extend.</p></div>
 
-<footer>Updated 11 Aug 2026 07:04 UTC</footer>
+<footer>Updated 11 Aug 2026 07:12 UTC</footer>
 </div>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];

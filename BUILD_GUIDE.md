@@ -916,44 +916,85 @@ in
 
 ## factTB_Staged
 
+> Header-tolerant: sheet names, header position, case, spaces and punctuation are all matched loosely, and the common SAP spellings (`gl Account Number`, `Profit Center`, `Amount in local currency`, …) are recognised. A column it genuinely cannot find comes through blank rather than failing the refresh. Month comes from the file name, so files must be `TB_YYYYMM.xlsx`.
+
 ```
 let
+    Norm     = (n as any) as text =>
+                   Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")), {" ",".","_","-","/","(",")"})),
+    GLNames  = {"GLACCOUNTNUMBER","GLACCOUNT","GLACCOUNTNO","GLACCNO","ACCOUNTNUMBER","GLCODE"},
+    Alias    = {
+                   {GLNames, "GLAccount"},
+                   {{"GLACCOUNTDESCRIPTION","GLACCOUNTDESC","ACCOUNTDESCRIPTION",
+                     "GLDESCRIPTION","GLDESC","ACCOUNTNAME"}, "GLDesc"},
+                   {{"PROFITCENTRE","PROFITCENTER","PROFITCTR","PRCTR"}, "ProfitCentre"},
+                   {{"PROFITCENTREDESCRIPTION","PROFITCENTERDESCRIPTION",
+                     "PROFITCENTREDESC","PROFITCENTERDESC"}, "ProfitCentreDesc"},
+                   {{"AMOUNT","AMOUNTINLOCALCURRENCY","AMOUNTINLC","AMTINLOCCUR",
+                     "BALANCE","CLOSINGBALANCE"}, "Amount"}
+               },
+    Wanted   = {"GLAccount","GLDesc","ProfitCentre","ProfitCentreDesc","Amount"},
+
+    Clean    = (content as binary) as table =>
+                   let
+                       Wb       = Excel.Workbook(content, null, true),
+                       Sheets   = Table.SelectRows(Wb, each [Kind] = "Sheet"),
+                       Picked   = try Sheets{[Item = "Sheet1", Kind = "Sheet"]}[Data]
+                                  otherwise Sheets{0}[Data],
+                       // find the header row: the one holding a GL-account-ish cell
+                       RowsL    = Table.ToRows(Picked),
+                       HdrIdx   = List.PositionOf(
+                                      List.Transform(RowsL, (r) =>
+                                          List.AnyTrue(List.Transform(r,
+                                              (c) => List.Contains(GLNames, Norm(c))))), true),
+                       Skipped  = if HdrIdx <= 0 then Picked else Table.Skip(Picked, HdrIdx),
+                       Promoted = Table.PromoteHeaders(Skipped, [PromoteAllScalars = true]),
+
+                       Lookup   = (c as any) as nullable text =>
+                                      let Hits = List.Select(Alias, (a) => List.Contains(a{0}, Norm(c)))
+                                      in  if List.IsEmpty(Hits) then null else Hits{0}{1},
+                       Pairs    = List.RemoveNulls(
+                                      List.Transform(Table.ColumnNames(Promoted),
+                                          (c) => let t = Lookup(c) in if t = null then null else {c, t})),
+                       // if two source columns map to the same name, keep the first
+                       Renames  = List.Accumulate(Pairs, {}, (acc, pr) =>
+                                      if List.Contains(List.Transform(acc, (x) => x{1}), pr{1})
+                                      then acc else acc & {pr}),
+                       Renamed  = Table.RenameColumns(Promoted, Renames),
+                       Padded   = List.Accumulate(
+                                      List.Difference(Wanted, Table.ColumnNames(Renamed)), Renamed,
+                                      (tbl, col) => Table.AddColumn(tbl, col, each null)),
+                       Kept     = Table.SelectColumns(Padded, Wanted),
+                       NoJunk   = Table.SelectRows(Kept, each
+                                      [GLAccount] <> null
+                                      and Text.Trim(Text.From([GLAccount])) <> ""
+                                      and not Text.StartsWith(Text.From([GLAccount]), "Total",
+                                              Comparer.OrdinalIgnoreCase))
+                   in
+                       NoJunk,
+
     Files    = Folder.Files(pRoot & "\TB"),
-    OnlyXlsx = Table.SelectRows(Files, each Text.Lower([Extension]) = ".xlsx"
+    OnlyXlsx = Table.SelectRows(Files, each
+                   Text.StartsWith(Text.Lower([Extension]), ".xls")
                    and not Text.StartsWith([Name], "~$")
                    and not Text.StartsWith([Name], ".")),
-    Loaded   = Table.AddColumn(OnlyXlsx, "Data", each
-                   let
-                       Wb = Excel.Workbook([Content], true, true),
-                       Sh = Wb{[Item="Sheet1", Kind="Sheet"]}[Data],
-                       Pr = Table.PromoteHeaders(Sh, [PromoteAllScalars=true])
-                   in
-                       Table.SelectColumns(Pr, {
-                           "GL Account Number","GL Account Description",
-                           "Profit Centre","Profit Centre Description","Amount"},
-                           MissingField.Error)),
+    Loaded   = Table.AddColumn(OnlyXlsx, "Data", each Clean([Content])),
+
     // month from the file name: TB_YYYYMM.xlsx
     WithMonth = Table.AddColumn(Loaded, "Month", each
                    let
                        digits = Text.Select([Name], {"0".."9"}),
                        yyyymm = Text.Middle(digits, 0, 6)
                    in
-                       try #date(Number.From(Text.Start(yyyymm,4)),
-                                 Number.From(Text.Middle(yyyymm,4,2)), 1)
+                       try #date(Number.From(Text.Start(yyyymm, 4)),
+                                 Number.From(Text.Middle(yyyymm, 4, 2)), 1)
                        otherwise null, type date),
     Slim     = Table.SelectColumns(WithMonth, {"Name","Month","Data"}),
-    Expanded = Table.ExpandTableColumn(Slim, "Data",
-                   {"GL Account Number","GL Account Description",
-                    "Profit Centre","Profit Centre Description","Amount"}),
-    Renamed  = Table.RenameColumns(Expanded, {
-                   {"Name","SourceFile"},
-                   {"GL Account Number","GLAccount"},
-                   {"GL Account Description","GLDesc"},
-                   {"Profit Centre","ProfitCentre"},
-                   {"Profit Centre Description","ProfitCentreDesc"}}),
+    Expanded = Table.ExpandTableColumn(Slim, "Data", Wanted),
+    Renamed  = Table.RenameColumns(Expanded, {{"Name","SourceFile"}}),
     Keys     = Table.TransformColumns(Renamed, {
-                   {"GLAccount",    each Text.TrimStart(Text.Trim(Text.From(_)), "0"), type text},
-                   {"ProfitCentre", each Text.Trim(Text.From(_)), type text}}),
+                   {"GLAccount",    each Text.TrimStart(Text.Trim(Text.From(_ ?? "")), "0"), type text},
+                   {"ProfitCentre", each Text.Trim(Text.From(_ ?? "")), type text}}),
     // plant = characters 3-6 of the profit centre  (0-based start = 2)
     PlantRaw = Table.AddColumn(Keys, "PlantCode",
                    each try Text.Middle([ProfitCentre], 2, 4) otherwise null, type text),
@@ -965,6 +1006,7 @@ let
 in
     Typed
 ```
+
 
 ## factTB
 
