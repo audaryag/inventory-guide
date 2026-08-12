@@ -334,7 +334,7 @@ asks you to colour anything.
 | 2 — Raw materials ₹ Cr | `RM ₹ Cr` | 224 | 10 | 200 | 96 |
 | 3 — Finished goods ₹ Cr | `FG ₹ Cr` | 432 | 10 | 200 | 96 |
 | 4 — Consumables ₹ Cr | `Consumables ₹ Cr` | 640 | 10 | 200 | 96 |
-| 5 — Days of inventory | `Days of Inventory` | 848 | 10 | 200 | 96 |
+| 5 — Days of inventory (RM + FG) | `Days of Inventory` | 848 | 10 | 200 | 96 |
 | 6 — Change vs last month | `Value ₹ Cr % vs LM` | 1056 | 10 | 208 | 96 |
 
 For each card: **Callout value** → Font size **24**; **General → Title** → On,
@@ -715,13 +715,13 @@ Position: Horizontal 320, Vertical 16, Width 296, Height 96.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
 
-**4.23** **Card** — Stock in MW divided by the MW capacity on the Variables sheet. Blank where the plant has no capacity row — 1905.
+**4.23** **Card** — Stock in MW divided by the MW capacity on the Variables sheet. With no category picked that MW is RM plus FG over the same capacity, so the two add up — the title says so rather than leaving a reader to assume it means FG alone. Blank where the plant has no capacity row — 1905.
 
 | Well | Field |
 |---|---|
 | Fields | `Days of Inventory` |
 
-Title: `Days of inventory`
+Title: `Days of inventory (RM + FG)`
 
 Position: Horizontal 624, Vertical 16, Width 296, Height 96.
 
@@ -1970,6 +1970,12 @@ RETURN DIVIDE([MW], Cap)
 
 So an FG technology row divides by that technology's capacity, and an RM row divides by the
 plant's.
+
+With no category picked — the header card on `Overview`, and the card on `Detail` — the
+numerator is every category's MW over the one capacity, so the figure is RM days and FG days
+added together, not FG on its own. That is why both cards are titled
+`Days of inventory (RM + FG)`. If you ever want FG alone on the band, use the `FG Days`
+measure below instead, which divides FG MW only.
 
 ```
 FG Days = DIVIDE([FG MW], [Capacity MW])

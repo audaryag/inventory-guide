@@ -26,7 +26,7 @@ CARDS = [
     ("RM ₹ Cr",           224, 10, 200, 96, "Raw materials ₹ Cr"),
     ("FG ₹ Cr",           432, 10, 200, 96, "Finished goods ₹ Cr"),
     ("Consumables ₹ Cr",  640, 10, 200, 96, "Consumables ₹ Cr"),
-    ("Days of Inventory", 848, 10, 200, 96, "Days of inventory"),
+    ("Days of Inventory", 848, 10, 200, 96, "Days of inventory (RM + FG)"),
     ("Value ₹ Cr % vs LM", 1056, 10, 208, 96, "Change vs last month"),
 ]
 
@@ -226,11 +226,13 @@ VISUALS = [
      (320, 16, 296, 96),
      "Same slice in megawatts.", []),
 
-    ("Detail", "Card", "Days of inventory",
+    ("Detail", "Card", "Days of inventory (RM + FG)",
      [("Fields", ["Days of Inventory"])],
      (624, 16, 296, 96),
-     "Stock in MW divided by the MW capacity on the Variables sheet. Blank where the "
- "plant has no capacity row — 1905.", []),
+     "Stock in MW divided by the MW capacity on the Variables sheet. With no category "
+     "picked that MW is RM plus FG over the same capacity, so the two add up — the title "
+     "says so rather than leaving a reader to assume it means FG alone. Blank where the "
+     "plant has no capacity row — 1905.", []),
 
     ("Detail", "Card", "Share of the total",
      [("Fields", ["Share of Total %"])],
