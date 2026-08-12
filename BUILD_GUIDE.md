@@ -292,6 +292,25 @@ well, and the four numbers that place it on a 1280 x 720 canvas.
 **Size** and **Position** → type Width, Height, **Horizontal** (this is X) and
 **Vertical** (this is Y). Older versions put all four under **Size and style**.
 
+**What the Format pane calls things.** Every name below is a heading you click in
+the paintbrush pane. If a heading is not in your list, your version does not have
+it — skip that line, nothing else changes.
+
+| Name in the Format pane | What it actually is |
+|---|---|
+| Callout value | the one big number on a card |
+| Category label | the small grey words *under* the number on a card, which repeat the measure's name. The newer Card visual has none |
+| Title | the heading strip along the top of any visual, which you type yourself |
+| Column headers | the headings across the top of a matrix or table |
+| Row headers | the names down the left of a matrix, where the +/− signs live |
+| Values | the numbers in the body of a matrix or table |
+| Detail labels | the numbers or words written on the slices of a pie or donut |
+| Legend | the small colour key that names each colour |
+| X-axis | the labels along the bottom of a chart |
+| Y-axis | the number scale up the side of a chart |
+| Data labels | numbers printed on top of the bars themselves |
+| Grid | the lines between matrix rows, and the row height |
+
 **4.0 Canvas and theme, before anything else.**
 
 1. Click empty canvas → Format pane → Canvas settings → Type 16:9, Height 720, Width 1280.
@@ -311,22 +330,27 @@ asks you to colour anything.
 
 | Card | Measure | Horizontal (X) | Vertical (Y) | Width | Height |
 |---|---|---|---|---|---|
-| 1 — Total value ₹ Cr | `Value ₹ Cr` | 16 | 12 | 200 | 88 |
-| 2 — Raw materials ₹ Cr | `RM ₹ Cr` | 224 | 12 | 200 | 88 |
-| 3 — Finished goods ₹ Cr | `FG ₹ Cr` | 432 | 12 | 200 | 88 |
-| 4 — Consumables ₹ Cr | `Consumables ₹ Cr` | 640 | 12 | 200 | 88 |
-| 5 — Days of inventory | `Days of Inventory` | 848 | 12 | 200 | 88 |
-| 6 — Change vs last month | `Value ₹ Cr % vs LM` | 1056 | 12 | 208 | 88 |
+| 1 — Total value ₹ Cr | `Value ₹ Cr` | 16 | 10 | 200 | 96 |
+| 2 — Raw materials ₹ Cr | `RM ₹ Cr` | 224 | 10 | 200 | 96 |
+| 3 — Finished goods ₹ Cr | `FG ₹ Cr` | 432 | 10 | 200 | 96 |
+| 4 — Consumables ₹ Cr | `Consumables ₹ Cr` | 640 | 10 | 200 | 96 |
+| 5 — Days of inventory | `Days of Inventory` | 848 | 10 | 200 | 96 |
+| 6 — Change vs last month | `Value ₹ Cr % vs LM` | 1056 | 10 | 208 | 96 |
+
+For each card: **Callout value** → Font size **24**; **General → Title** → On,
+Text = the wording in the Card column above, Font size **12**; and if your version
+has a **Category label**, Font size **10** or switch it off (the newer Card visual
+has none).
 
 **4.2** 4 **Slicer** visuals (**Insert → Slicer**), each set to
 **Format → Slicer settings → Style: Dropdown**:
 
 | Slicer | Field | Horizontal (X) | Vertical (Y) | Width | Height |
 |---|---|---|---|---|---|
-| Month — tick the ones to compare | `dimDate[MonthName]` | 16 | 108 | 300 | 44 |
-| Quarter (FY starts 1 April) | `dimDate[Quarter]` | 324 | 108 | 300 | 44 |
-| Plant | `dimPlant[Plant]` | 632 | 108 | 300 | 44 |
-| Category | `dimCategory[Category]` | 940 | 108 | 324 | 44 |
+| Month — tick the ones to compare | `dimDate[MonthName]` | 16 | 114 | 300 | 40 |
+| Quarter (FY starts 1 April) | `dimDate[Quarter]` | 324 | 114 | 300 | 40 |
+| Plant | `dimPlant[Plant]` | 632 | 114 | 300 | 40 |
+| Category | `dimCategory[Category]` | 940 | 114 | 324 | 40 |
 
 **4.3** Select all 10 → **Ctrl+C** → **Ctrl+V** on `Summary`, `FG`, `RM`. Positions come with them.
 
@@ -350,7 +374,13 @@ pages can disagree about the same month.
 
 Title: `Value ₹ Cr by month and category`
 
-Position: X 16, Y 168, W 764, H 264.
+Position: Horizontal 16, Vertical 168, Width 764, Height 264.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
+- Click 'Y-axis' and set Font size to 9.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
+- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 
 **4.6** **Clustered column chart** — Three fields in the X-axis makes it a hierarchy, so the little arrows appear in the visual's top-right corner: plant, then category inside a plant, then nature inside that. Clicking is the whole point — nobody has to build three charts.
 
@@ -361,8 +391,13 @@ Position: X 16, Y 168, W 764, H 264.
 
 Title: `Value ₹ Cr by plant — click to go deeper`
 
-Position: X 788, Y 168, W 476, H 216.
+Position: Horizontal 788, Vertical 168, Width 476, Height 216.
 
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
+- Click 'Y-axis' and set Font size to 9.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
+- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 - The double-down-arrow in the header turns on drill mode; after that a single click on a bar opens the next level, and the up-arrow goes back.
 - Right-click a bar → Drill through → Detail for the pie-chart page instead.
 
@@ -376,7 +411,13 @@ Position: X 788, Y 168, W 476, H 216.
 
 Title: `Value ₹ Cr — this month vs last month`
 
-Position: X 16, Y 444, W 764, H 268.
+Position: Horizontal 16, Vertical 444, Width 764, Height 268.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
+- Click 'Y-axis' and set Font size to 9.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
+- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 
 **4.8** **Donut chart** — Where the money actually sits. Clicking a slice filters the page to that category, which is quicker than the Category slicer.
 
@@ -387,9 +428,12 @@ Position: X 16, Y 444, W 764, H 268.
 
 Title: `Share of value — click a slice`
 
-Position: X 788, Y 396, W 476, H 172.
+Position: Horizontal 788, Vertical 396, Width 476, Height 172.
 
-- Format pane → Detail labels → Label contents: Percent of total.
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
+- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Percent of total.
 
 **4.9** **Matrix** — The same numbers as a table, because some readers only trust a table.
 
@@ -401,9 +445,14 @@ Position: X 788, Y 396, W 476, H 172.
 
 Title: `Months side by side`
 
-Position: X 788, Y 580, W 476, H 132.
+Position: Horizontal 788, Vertical 580, Width 476, Height 132.
 
-- Format pane → Row headers → Stepped layout: Off.
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
+- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
+- Click 'Values' and set Font size to 10.
+- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
+- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off.
 - Turn Format pane → Subtotals → Row subtotals: On, so each column has a total.
 
 ---
@@ -421,12 +470,17 @@ Position: X 788, Y 580, W 476, H 132.
 
 Title: `Inventory (TB) · Inventory (MB5B) · Difference — ₹ Cr`
 
-Position: X 16, Y 168, W 1248, H 300.
+Position: Horizontal 16, Vertical 168, Width 1248, Height 300.
 
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
+- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
+- Click 'Values' and set Font size to 10.
+- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
 - Order of the two Columns fields matters: dimMetric[Metric] FIRST, then dimDate[MonthName]. That is what makes TB / MB5B / Difference the master columns with months nested inside.
-- Format pane → Row headers → Stepped layout: Off (so Plant and Category get their own columns).
-- Format pane → Row headers → +/- icons: On (that is the click-to-expand control).
-- Format pane → Subtotals → Row subtotals: On. Then switch Column subtotals to Off, and turn on 'Per row level' so each plant shows its own total. The grand total row at the bottom is the Total row you asked for.
+- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off (so Plant and Category get their own columns).
+- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then '+/- icons' and set it to On (that is the click-to-expand control).
+- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On. Then switch Column subtotals to Off, and turn on 'Per row level' so each plant shows its own total. The grand total row at the bottom is the Total row you asked for.
 - Colour the differences: in the Values box, click the small down-arrow next to Summary Value ₹ Cr, click 'Conditional formatting', then 'Background color'. Set Format style to Diverging, tick 'Add a middle colour', set the middle number to 0, and make both the Minimum and Maximum colours red. A difference either direction is equally wrong, so both ends are red.
 - Right-click any plant row in the matrix, click 'Expand', then 'All', so RM, FG and consumables show under every plant. Then press Ctrl+S — Power BI remembers it.
 
@@ -439,9 +493,14 @@ Position: X 16, Y 168, W 1248, H 300.
 
 Title: `Difference ₹ Cr by plant — click a bar`
 
-Position: X 16, Y 480, W 620, H 232.
+Position: Horizontal 16, Vertical 480, Width 620, Height 232.
 
-- Format pane → Columns → Colour → fx → Format style: Rules, and colour any negative value red. A difference either direction is equally wrong.
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
+- Click 'Y-axis' and set Font size to 9.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
+- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- In the Visualizations pane click the paintbrush icon, then click 'Columns', then 'Colour', then 'fx', then 'Format style' and set it to Rules, and colour any negative value red. A difference either direction is equally wrong.
 
 **4.12** **Clustered column chart** — Two bars per month, books against stock report — a gap that is opening up shows here before anyone notices it in the numbers.
 
@@ -452,7 +511,13 @@ Position: X 16, Y 480, W 620, H 232.
 
 Title: `Inventory (TB) vs Inventory (MB5B) by month`
 
-Position: X 644, Y 480, W 620, H 232.
+Position: Horizontal 644, Vertical 480, Width 620, Height 232.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
+- Click 'Y-axis' and set Font size to 9.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
+- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 
 ---
 
@@ -469,10 +534,15 @@ Position: X 644, Y 480, W 620, H 232.
 
 Title: `FG by plant — MW · In ₹ Cr · In Days`
 
-Position: X 16, Y 168, W 1248, H 176.
+Position: Horizontal 16, Vertical 168, Width 1248, Height 176.
 
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
+- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
+- Click 'Values' and set Font size to 10.
+- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
 - dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName].
-- Format pane → Row headers → Stepped layout: Off.
+- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off.
 - No month filter on this one — the Month slicer decides which months are columns. Tick any four to compare, or pick a Quarter and it shows that quarter's three.
 - Click a plant row to filter the technology table below it.
 
@@ -487,10 +557,15 @@ Position: X 16, Y 168, W 1248, H 176.
 
 Title: `FG by technology — MW · In ₹ Cr · In Days`
 
-Position: X 16, Y 356, W 620, H 356.
+Position: Horizontal 16, Vertical 356, Width 620, Height 356.
 
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
+- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
+- Click 'Values' and set Font size to 10.
+- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
 - Same column order: dimMeasure[Measure] then dimDate[MonthName].
-- Format pane → Row headers → Stepped layout: Off.
+- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off.
 
 **4.15** **Clustered column chart** — Clicking one technology filters both matrices to it; right-click drills through.
 
@@ -502,7 +577,13 @@ Position: X 16, Y 356, W 620, H 356.
 
 Title: `FG MW by technology — click a bar`
 
-Position: X 644, Y 356, W 620, H 176.
+Position: Horizontal 644, Vertical 356, Width 620, Height 176.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
+- Click 'Y-axis' and set Font size to 9.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
+- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 
 **4.16** **Line and clustered column chart** — Days month by month with the change on a line. Right-click any bar → Drill through → Detail for the technology and material split behind it.
 
@@ -515,7 +596,13 @@ Position: X 644, Y 356, W 620, H 176.
 
 Title: `Days of inventory by month — click a bar`
 
-Position: X 644, Y 544, W 620, H 168.
+Position: Horizontal 644, Vertical 544, Width 620, Height 168.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
+- Click 'Y-axis' and set Font size to 9.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
+- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 
 ---
 
@@ -532,11 +619,16 @@ Position: X 644, Y 544, W 620, H 168.
 
 Title: `RM by plant — In ₹ Cr · In Days`
 
-Position: X 16, Y 168, W 1248, H 176.
+Position: Horizontal 16, Vertical 168, Width 1248, Height 176.
 
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
+- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
+- Click 'Values' and set Font size to 10.
+- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
 - dimMeasure[Measure] in Columns first, then dimDate[MonthName].
 - In the Filters pane, drag dimMeasure[Measure] in and untick MW.
-- Format pane → Row headers → Stepped layout: Off.
+- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off.
 
 **4.18** **Matrix** — Then the same numbers down the material hierarchy: group nature, and nature inside it. The +/- arrow on each group row is the drill-in.
 
@@ -549,9 +641,14 @@ Position: X 16, Y 168, W 1248, H 176.
 
 Title: `RM by group nature and nature`
 
-Position: X 16, Y 356, W 620, H 356.
+Position: Horizontal 16, Vertical 356, Width 620, Height 356.
 
-- Format pane → Row headers → Stepped layout: Off, +/- icons: On.
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
+- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
+- Click 'Values' and set Font size to 10.
+- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
+- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On.
 
 **4.19** **Clustered column chart** — One click sets the whole page to a group nature; right-click drills through to the materials.
 
@@ -563,7 +660,13 @@ Position: X 16, Y 356, W 620, H 356.
 
 Title: `RM ₹ Cr by group nature — click a bar`
 
-Position: X 644, Y 356, W 620, H 176.
+Position: Horizontal 644, Vertical 356, Width 620, Height 176.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
+- Click 'Y-axis' and set Font size to 9.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
+- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 
 **4.20** **Decomposition tree** — The interactive one: click a box and it opens the next level, in whatever order you click. This is what replaces filtering the RM sheet by hand.
 
@@ -575,8 +678,9 @@ Position: X 644, Y 356, W 620, H 176.
 
 Title: `RM — click through any way you like`
 
-Position: X 644, Y 544, W 620, H 168.
+Position: Horizontal 644, Vertical 544, Width 620, Height 168.
 
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click the + on a node to choose which field to split by next.
 
 ---
@@ -591,7 +695,11 @@ Position: X 644, Y 544, W 620, H 168.
 
 Title: `Value ₹ Cr of what you clicked`
 
-Position: X 16, Y 16, W 296, H 92.
+Position: Horizontal 16, Vertical 16, Width 296, Height 96.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Callout value' (that is the big number) and set Font size to 24.
+- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
 
 **4.22** **Card** — Same slice in megawatts.
 
@@ -601,7 +709,11 @@ Position: X 16, Y 16, W 296, H 92.
 
 Title: `MW`
 
-Position: X 320, Y 16, W 296, H 92.
+Position: Horizontal 320, Vertical 16, Width 296, Height 96.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Callout value' (that is the big number) and set Font size to 24.
+- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
 
 **4.23** **Card** — Stock in MW divided by the MW capacity on the Variables sheet. Blank where the plant has no capacity row — 1905.
 
@@ -611,7 +723,11 @@ Position: X 320, Y 16, W 296, H 92.
 
 Title: `Days of inventory`
 
-Position: X 624, Y 16, W 296, H 92.
+Position: Horizontal 624, Vertical 16, Width 296, Height 96.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Callout value' (that is the big number) and set Font size to 24.
+- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
 
 **4.24** **Card** — How big this slice is against the whole.
 
@@ -621,7 +737,11 @@ Position: X 624, Y 16, W 296, H 92.
 
 Title: `Share of the total`
 
-Position: X 928, Y 16, W 336, H 92.
+Position: Horizontal 928, Vertical 16, Width 336, Height 96.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Callout value' (that is the big number) and set Font size to 24.
+- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
 
 **4.25** **Pie chart** — RM / FG / consumables for exactly what you clicked.
 
@@ -632,9 +752,12 @@ Position: X 928, Y 16, W 336, H 92.
 
 Title: `Split by category`
 
-Position: X 16, Y 120, W 404, H 296.
+Position: Horizontal 16, Vertical 120, Width 404, Height 296.
 
-- Format pane → Detail labels → Label contents: Category, percent of total.
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
+- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total.
 
 **4.26** **Donut chart** — Which technology or material nature the slice is made of.
 
@@ -645,9 +768,12 @@ Position: X 16, Y 120, W 404, H 296.
 
 Title: `Split by technology / nature`
 
-Position: X 428, Y 120, W 404, H 296.
+Position: Horizontal 428, Vertical 120, Width 404, Height 296.
 
-- Format pane → Detail labels → Label contents: Category, percent of total.
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
+- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total.
 
 **4.27** **Pie chart** — Where the slice sits. A single-colour pie means it is one plant already.
 
@@ -658,9 +784,12 @@ Position: X 428, Y 120, W 404, H 296.
 
 Title: `Split by plant`
 
-Position: X 840, Y 120, W 424, H 296.
+Position: Horizontal 840, Vertical 120, Width 424, Height 296.
 
-- Format pane → Detail labels → Label contents: Category, percent of total.
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
+- Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
+- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total.
 
 **4.28** **Matrix** — The line-item detail. A Matrix rather than a Table, so it opens nature → material instead of being one long flat list — that is the difference between clicking and scrolling.
 
@@ -671,11 +800,16 @@ Position: X 840, Y 120, W 424, H 296.
 
 Title: `Materials behind this number — click + to open a nature`
 
-Position: X 16, Y 428, W 1248, H 284.
+Position: Horizontal 16, Vertical 428, Width 1248, Height 284.
 
-- Format pane → Row headers → +/- icons: On, Stepped layout: Off. That is the click-to-open control.
-- Format pane → Grid → Options → Keep column headers visible: On. The headings then stay put while the rows scroll inside the visual, so a long list never makes the visual (or the page) grow.
-- Format pane → Subtotals → Row subtotals: On, so a closed nature row still shows its total.
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
+- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
+- Click 'Values' and set Font size to 10.
+- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
+- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then '+/- icons' and set it to On, Stepped layout: Off. That is the click-to-open control.
+- In the Visualizations pane click the paintbrush icon, then click 'Grid', then 'Options', then 'Keep column headers visible' and set it to On. The headings then stay put while the rows scroll inside the visual, so a long list never makes the visual (or the page) grow.
+- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On, so a closed nature row still shows its total.
 - Click the Value ₹ Cr column header once so it sorts largest first.
 
 ---
@@ -741,7 +875,8 @@ Find the words Power BI showed you in the left column.
 | `Value ₹ Cr cannot be determined. Either the column does not exist, or there is no current row` | either `factInventory` has no `CloseVal` column, or you pasted measures out of order | check `CloseVal` exists in `factInventory`; if it does, paste Appendix B again strictly top to bottom |
 | searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 40 from Appendix B, then delete the six old names listed in 3.7 |
 | RM and FG matrices show numbers under `In ₹ Cr` but nothing under `In Days` | the `Days` measure was deleted as an "old name" | paste `Days = [Days of Inventory]` back in; it is in Appendix B |
-| on a card, the number is fine but the words under it are cut in half | the card's default text is too big for an 88-pixel-high card | Format pane → **Callout value** → Font size **24**, and **Category label** → Font size **10**. Still cut off: switch **Category label** off and put the name in **General → Title → Text** instead, which is drawn above the number |
+| on a card, the number is fine but the wording is cut in half | the card's default text is too big for the space | set **Callout value** → Font size **24**, **General → Title** → Font size **12**, and Height **96** (every card in Part 4 is 96 high). A **Category label**, if your version has one, goes to **10** or off — the title says the same thing |
+| the paintbrush list has a **Callout value** but no **Category label** | you are on the newer Card visual, which has no category label | nothing to fix: the heading comes from **General → Title → Text**, which Part 4 gives you the wording for |
 | a measure exists but is named `Value  Cr` | the ₹ character was lost while pasting | right-click → Rename, type the name again |
 | `There is already a measure with the name …`, and it names a table such as `dimMetric` | you have already pasted that measure — Power BI filed it under whichever table happened to be selected at the time, which changes nothing about how it works | press Escape to cancel, tick that measure off your list and move to the next one. To be sure of the formula, click the existing measure and compare the formula bar with the guide, overwriting it only if it differs. Never let a second copy be made: `Receipts ₹ Cr 2` is not a name any visual looks for |
 | `The file is being used by another process` | an Excel file in the folders is open | close all Excel, end any stray `EXCEL.EXE` in Task Manager, delete any `~$...xlsx` file |

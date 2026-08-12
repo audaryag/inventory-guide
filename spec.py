@@ -19,20 +19,22 @@ DRILL_FIELDS = ["dimPlant[Plant]", "dimDate[MonthName]", "dimCategory[Category]"
 BAND_PAGES = ["Overview", "Summary", "FG", "RM"]
 
 # ---- header band, built once on Overview then copied ------------------------------------
+# 96 high, not 88: a card has to hold a 12pt title strip above a 24pt number, and 88
+# clips the lower one of the two.
 CARDS = [
-    ("Value ₹ Cr",         16, 12, 200, 88, "Total value ₹ Cr"),
-    ("RM ₹ Cr",           224, 12, 200, 88, "Raw materials ₹ Cr"),
-    ("FG ₹ Cr",           432, 12, 200, 88, "Finished goods ₹ Cr"),
-    ("Consumables ₹ Cr",  640, 12, 200, 88, "Consumables ₹ Cr"),
-    ("Days of Inventory", 848, 12, 200, 88, "Days of inventory"),
-    ("Value ₹ Cr % vs LM", 1056, 12, 208, 88, "Change vs last month"),
+    ("Value ₹ Cr",         16, 10, 200, 96, "Total value ₹ Cr"),
+    ("RM ₹ Cr",           224, 10, 200, 96, "Raw materials ₹ Cr"),
+    ("FG ₹ Cr",           432, 10, 200, 96, "Finished goods ₹ Cr"),
+    ("Consumables ₹ Cr",  640, 10, 200, 96, "Consumables ₹ Cr"),
+    ("Days of Inventory", 848, 10, 200, 96, "Days of inventory"),
+    ("Value ₹ Cr % vs LM", 1056, 10, 208, 96, "Change vs last month"),
 ]
 
 SLICERS = [
-    ("dimDate[MonthName]", 16, 108, 300, 44, "Month — tick the ones to compare"),
-    ("dimDate[Quarter]",  324, 108, 300, 44, "Quarter (FY starts 1 April)"),
-    ("dimPlant[Plant]",   632, 108, 300, 44, "Plant"),
-    ("dimCategory[Category]", 940, 108, 324, 44, "Category"),
+    ("dimDate[MonthName]", 16, 114, 300, 40, "Month — tick the ones to compare"),
+    ("dimDate[Quarter]",  324, 114, 300, 40, "Quarter (FY starts 1 April)"),
+    ("dimPlant[Plant]",   632, 114, 300, 40, "Plant"),
+    ("dimCategory[Category]", 940, 114, 324, 40, "Category"),
 ]
 
 # ---- one entry per visual ----------------------------------------------------------------
@@ -215,24 +217,24 @@ VISUALS = [
 
     ("Detail", "Card", "Value ₹ Cr of what you clicked",
      [("Fields", ["Value ₹ Cr"])],
-     (16, 16, 296, 92),
+     (16, 16, 296, 96),
      "The drill-through page opens already filtered to the bar or row you came from, so "
      "this card is that one number.", []),
 
     ("Detail", "Card", "MW",
      [("Fields", ["MW"])],
-     (320, 16, 296, 92),
+     (320, 16, 296, 96),
      "Same slice in megawatts.", []),
 
     ("Detail", "Card", "Days of inventory",
      [("Fields", ["Days of Inventory"])],
-     (624, 16, 296, 92),
+     (624, 16, 296, 96),
      "Stock in MW divided by the MW capacity on the Variables sheet. Blank where the "
  "plant has no capacity row — 1905.", []),
 
     ("Detail", "Card", "Share of the total",
      [("Fields", ["Share of Total %"])],
-     (928, 16, 336, 92),
+     (928, 16, 336, 96),
      "How big this slice is against the whole.", []),
 
     ("Detail", "Pie chart", "Split by category",

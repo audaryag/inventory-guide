@@ -114,8 +114,7 @@ def r_card(v):
         txt, col = f"{val/1000:+.1%}", (GREEN if val > 400 else RED)
     else:
         txt, col = fmt(name, val), DARK
-    return (f"<div class='card'><div class='cv' style='color:{col}'>{esc(txt)}</div>"
-            f"<div class='cl'>{esc(name)}</div></div>")
+    return f"<div class='card'><div class='cv' style='color:{col}'>{esc(txt)}</div></div>"
 
 
 def r_slicer(v):
@@ -299,7 +298,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#dfe6df;color:#22302a}
     overflow:hidden;text-overflow:ellipsis}
 .vb{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
 .card{display:flex;flex-direction:column;justify-content:center;height:100%}
-.cv{font-size:22px;font-weight:bold;line-height:1.1}
+.cv{font-size:30px;font-weight:bold;line-height:1.1}
 .cl{font-size:9px;color:#5A6B5F;margin-top:2px}
 .slicer{display:flex;flex-direction:column;justify-content:center;height:100%;gap:2px}
 .sl{font-size:9px;color:#1E6B3A;font-weight:bold}
@@ -354,7 +353,7 @@ def render_page(pdir, pages_order, names):
         vt = v["visual"]["visualType"]
         inner = RENDER[vt](v) if vt in RENDER else f"<i>{esc(vt)}</i>"
         t = title_of(v)
-        pad = "" if vt in ("card", "slicer") else f"<div class='vt'>{esc(t)}</div>"
+        pad = "" if vt == "slicer" else f"<div class='vt'>{esc(t)}</div>"
         body.append(f"<div class='v' style='left:{p['x']}px;top:{p['y']}px;"
                     f"width:{p['width']}px;height:{p['height']}px'>{pad}"
                     f"<div class='vb'>{inner}</div></div>")

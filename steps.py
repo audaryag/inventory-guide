@@ -134,8 +134,11 @@ def _fit(vtype, title):
             "the slices."]
     if vtype == "Card":
         return common + [
-            "Click 'Callout value' and set Font size to 24, then click 'Category label' and "
-            "set Font size to 10, so the words under the number are not cut in half."]
+            "Click 'Callout value' (that is the big number) and set Font size to 24.",
+            "If the list has a 'Category label' — the small grey wording Power BI prints "
+            "under the number — set its Font size to 10, or switch it off, because the "
+            "title above already says the same thing. The newer Card visual has no category "
+            "label at all, so skip this line if you cannot see it."]
     if vtype == "Decomposition tree":
         return common
     return common + [
@@ -262,20 +265,28 @@ def steps():
             do=_insert("Card") + [
                 _drag(measure, "Fields"),
                 "The card now shows one big number.",
-                "The words under the number are cut in half unless the text is made "
-                "smaller, so do this now: in the Visualizations pane click the paintbrush "
-                "icon, click 'Callout value' and set Font size to 24, then click 'Category "
-                "label' and set Font size to 10.",
-                "If the words are still cut off, switch 'Category label' off with its "
-                "toggle, then click General, then Title, and type the name into the Text "
-                "box instead — a title is drawn above the number, so it always fits."]
+                "In the Visualizations pane click the paintbrush icon, then click 'Callout "
+                "value' and set Font size to 24. The callout value is the big number "
+                "itself.",
+                "Now give it a heading. Click General, then Title, switch Title On, and "
+                "type the words shown as Title below into the Text box, then set Font size "
+                "to 12. The title is drawn in its own strip above the number, so it can "
+                "never be cut in half.",
+                "Look down the paintbrush list for 'Category label'. If it is there, that "
+                "is the small grey wording Power BI prints under the number (it repeats the "
+                "measure's name): set its Font size to 10, or switch it off since the title "
+                "already says the same thing. If there is no 'Category label' in your list, "
+                "you have the newer Card visual, which does not have one — the title you "
+                "just typed is the heading, and there is nothing else to set."]
             + _place(x, y, w, h, in_format=True),
-            fields=[("Measure", measure), ("Callout value font size", "24"),
-                    ("Category label font size", "10")] + _pos_rows(x, y, w, h),
+            fields=[("Measure", measure), ("Title", what),
+                    ("Callout value font size", "24"), ("Title font size", "12"),
+                    ("Category label font size (if you have one)", "10")]
+                   + _pos_rows(x, y, w, h),
             note="If the number looks wrong, you probably ticked a column instead of the "
                  "measure — measures have a calculator icon.",
-            check="The card shows one number with the words %s under it in full, not cut "
-                  "off, sitting in the top band of the page." % measure,
+            check="The card shows one number with the heading '%s' above it, both readable "
+                  "in full, sitting in the top band of the page." % what,
             stuck="'(Blank)' means no data reached it — check that factInventory has rows and "
                   "that no slicer is filtering everything out. A word instead of a number "
                   "means a text column was dropped in: remove it from the Fields box and drag "
@@ -504,6 +515,24 @@ def part4_markdown():
          "**To place any visual:** select it → Format pane → General → Properties → open",
          "**Size** and **Position** → type Width, Height, **Horizontal** (this is X) and",
          "**Vertical** (this is Y). Older versions put all four under **Size and style**.", "",
+         "**What the Format pane calls things.** Every name below is a heading you click in",
+         "the paintbrush pane. If a heading is not in your list, your version does not have",
+         "it — skip that line, nothing else changes.", "",
+         "| Name in the Format pane | What it actually is |",
+         "|---|---|",
+         "| Callout value | the one big number on a card |",
+         "| Category label | the small grey words *under* the number on a card, which repeat "
+         "the measure's name. The newer Card visual has none |",
+         "| Title | the heading strip along the top of any visual, which you type yourself |",
+         "| Column headers | the headings across the top of a matrix or table |",
+         "| Row headers | the names down the left of a matrix, where the +/− signs live |",
+         "| Values | the numbers in the body of a matrix or table |",
+         "| Detail labels | the numbers or words written on the slices of a pie or donut |",
+         "| Legend | the small colour key that names each colour |",
+         "| X-axis | the labels along the bottom of a chart |",
+         "| Y-axis | the number scale up the side of a chart |",
+         "| Data labels | numbers printed on top of the bars themselves |",
+         "| Grid | the lines between matrix rows, and the row height |", "",
          "**4.0 Canvas and theme, before anything else.**", "",
          "1. Click empty canvas → Format pane → Canvas settings → Type 16:9, "
          "Height %d, Width %d." % (H, W),
@@ -518,7 +547,12 @@ def part4_markdown():
          "| Card | Measure | Horizontal (X) | Vertical (Y) | Width | Height |", "|---|---|---|---|---|---|"]
     for i, (m, x, y, w, h, what) in enumerate(CARDS, 1):
         L.append("| %d — %s | `%s` | %d | %d | %d | %d |" % (i, what, m, x, y, w, h))
-    L += ["", "**4.2** %d **Slicer** visuals (**Insert → Slicer**), each set to" % len(SLICERS),
+    L += ["",
+          "For each card: **Callout value** → Font size **24**; **General → Title** → On,",
+          "Text = the wording in the Card column above, Font size **12**; and if your version",
+          "has a **Category label**, Font size **10** or switch it off (the newer Card visual",
+          "has none).", "",
+          "**4.2** %d **Slicer** visuals (**Insert → Slicer**), each set to" % len(SLICERS),
           "**Format → Slicer settings → Style: Dropdown**:", "",
           "| Slicer | Field | Horizontal (X) | Vertical (Y) | Width | Height |", "|---|---|---|---|---|---|"]
     for (f, x, y, w, h, what) in SLICERS:
@@ -544,11 +578,11 @@ def part4_markdown():
             for wl, fl in wells:
                 L.append("| %s | %s |" % (wl, ", ".join("`%s`" % f for f in fl)))
             L += ["", "Title: `%s`" % title,
-                  "", "Position: X %d, Y %d, W %d, H %d." % pos, ""]
-            for e in extra:
+                  "", "Position: Horizontal %d, Vertical %d, Width %d, Height %d." % pos,
+                  ""]
+            for e in _fit(vtype, title) + [_plain(x) for x in extra]:
                 L += ["- %s" % e]
-            if extra:
-                L.append("")
+            L.append("")
 
     L += ["---", "", "## Making it clickable", "",
           "**4.%d Drill through.** On the `%s` page click the empty area around the visuals "
