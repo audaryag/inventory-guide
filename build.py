@@ -238,7 +238,7 @@ function copyText(t,b){
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function drawStep(){
   const s=STEPS[si];
-  const pos=['X','Y','Width','Height'];
+  const pos=['Horizontal (X)','Vertical (Y)','Width','Height'];
   let rows='';
   for(const [k,v] of s.fields){
     rows+='<div class="row'+(pos.includes(k)?' pos':'')+'"><span class="k">'+esc(k)+'</span>'+

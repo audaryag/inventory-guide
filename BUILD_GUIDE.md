@@ -288,8 +288,9 @@ well, and the four numbers that place it on a 1280 x 720 canvas.
 
 > Prefer one instruction at a time? Use the **Build it** tab — same content, one step per screen, with a Next button.
 
-**To place any visual:** select it → Format pane → General → Properties →
-**Size and style** → type X, Y, Width, Height.
+**To place any visual:** select it → Format pane → General → Properties → open
+**Size** and **Position** → type Width, Height, **Horizontal** (this is X) and
+**Vertical** (this is Y). Older versions put all four under **Size and style**.
 
 **4.0 Canvas and theme, before anything else.**
 
@@ -308,7 +309,7 @@ asks you to colour anything.
 
 **4.1** 6 **Card** visuals (**Insert → Card**), one measure each:
 
-| Card | Measure | X | Y | Width | Height |
+| Card | Measure | Horizontal (X) | Vertical (Y) | Width | Height |
 |---|---|---|---|---|---|
 | 1 — Total value ₹ Cr | `Value ₹ Cr` | 16 | 12 | 200 | 88 |
 | 2 — Raw materials ₹ Cr | `RM ₹ Cr` | 224 | 12 | 200 | 88 |
@@ -320,7 +321,7 @@ asks you to colour anything.
 **4.2** 4 **Slicer** visuals (**Insert → Slicer**), each set to
 **Format → Slicer settings → Style: Dropdown**:
 
-| Slicer | Field | X | Y | Width | Height |
+| Slicer | Field | Horizontal (X) | Vertical (Y) | Width | Height |
 |---|---|---|---|---|---|
 | Month — tick the ones to compare | `dimDate[MonthName]` | 16 | 108 | 300 | 44 |
 | Quarter (FY starts 1 April) | `dimDate[Quarter]` | 324 | 108 | 300 | 44 |

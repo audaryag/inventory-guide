@@ -71,18 +71,21 @@ def _plain(line):
 
 
 def _place(x, y, w, h, in_format=False):
-    first = ("Still in the same pane, click the word General, then Properties, then "
-             "Size and style."
+    first = ("Still in the same pane, click the word General, then Properties."
              if in_format else
              "In the Visualizations pane click the paintbrush icon, then click General, "
-             "then Properties, then Size and style.")
+             "then Properties.")
     return [first,
-            "Type the four numbers below into Height, Width, Horizontal (X) and "
-            "Vertical (Y), pressing Tab after each one."]
+            "Inside Properties there are two groups, Size and Position. Click the small "
+            "arrow beside each to open it. (Older versions call the whole thing 'Size and "
+            "style' and list all four boxes together.)",
+            "Type the four numbers below into their boxes, pressing Tab after each one. "
+            "Horizontal is the same thing as X, and Vertical is the same thing as Y."]
 
 
 def _pos_rows(x, y, w, h):
-    return [("X", str(x)), ("Y", str(y)), ("Width", str(w)), ("Height", str(h))]
+    return [("Horizontal (X)", str(x)), ("Vertical (Y)", str(y)),
+            ("Width", str(w)), ("Height", str(h))]
 
 
 SHAPE = {
@@ -439,8 +442,9 @@ def part4_markdown():
          "> Prefer one instruction at a time? Use the **Build it** tab — same content, "
          "one step per screen, with a Next button.",
          "",
-         "**To place any visual:** select it → Format pane → General → Properties →",
-         "**Size and style** → type X, Y, Width, Height.", "",
+         "**To place any visual:** select it → Format pane → General → Properties → open",
+         "**Size** and **Position** → type Width, Height, **Horizontal** (this is X) and",
+         "**Vertical** (this is Y). Older versions put all four under **Size and style**.", "",
          "**4.0 Canvas and theme, before anything else.**", "",
          "1. Click empty canvas → Format pane → Canvas settings → Type 16:9, "
          "Height %d, Width %d." % (H, W),
@@ -452,12 +456,12 @@ def part4_markdown():
          " · ".join("`%s`" % p for p in PAGES) + ".", "",
          "---", "", "## The header band — build once on %s, then copy" % PAGES[0], "",
          "**4.1** %d **Card** visuals (**Insert → Card**), one measure each:" % len(CARDS), "",
-         "| Card | Measure | X | Y | Width | Height |", "|---|---|---|---|---|---|"]
+         "| Card | Measure | Horizontal (X) | Vertical (Y) | Width | Height |", "|---|---|---|---|---|---|"]
     for i, (m, x, y, w, h, what) in enumerate(CARDS, 1):
         L.append("| %d — %s | `%s` | %d | %d | %d | %d |" % (i, what, m, x, y, w, h))
     L += ["", "**4.2** %d **Slicer** visuals (**Insert → Slicer**), each set to" % len(SLICERS),
           "**Format → Slicer settings → Style: Dropdown**:", "",
-          "| Slicer | Field | X | Y | Width | Height |", "|---|---|---|---|---|---|"]
+          "| Slicer | Field | Horizontal (X) | Vertical (Y) | Width | Height |", "|---|---|---|---|---|---|"]
     for (f, x, y, w, h, what) in SLICERS:
         L.append("| %s | `%s` | %d | %d | %d | %d |" % (what, f, x, y, w, h))
     L += ["", "**4.3** Select all %d → **Ctrl+C** → **Ctrl+V** on %s. Positions come with "
