@@ -19,7 +19,8 @@ print(f"{len(store)} schemas loaded")
 
 errors = 0
 for f in sorted(OUT.rglob("*")):
-    if f.is_dir() or f.suffix not in (".json", ".pbip", ".pbism", ".pbir"):
+    if f.is_dir() or (f.name != ".platform"
+                      and f.suffix not in (".json", ".pbip", ".pbism", ".pbir")):
         continue
     doc = json.loads(f.read_text())
     sid = doc.get("$schema")

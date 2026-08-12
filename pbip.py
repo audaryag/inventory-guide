@@ -7,7 +7,7 @@ The semantic model is TMSL (model.bim): every Power Query query, every relations
 sort-by-column, hidden columns and all 40 measures. The report is PBIR (JSON per visual)
 built from spec.py, so the pages match the guide exactly.
 """
-import json, pathlib, re, shutil, sys, hashlib
+import json, pathlib, re, shutil, sys, hashlib, uuid
 
 HERE = pathlib.Path(__file__).parent
 sys.path.insert(0, str(HERE))
@@ -531,6 +531,17 @@ def write_visual(pdir, v):
     (vd / "visual.json").write_text(json.dumps(v, indent=2, ensure_ascii=False))
 
 
+def platform(folder, kind):
+    """Fabric item metadata; Desktop and Fabric both expect one per item."""
+    (folder / ".platform").write_text(json.dumps({
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/"
+                   "platformProperties/2.0.0/schema.json",
+        "metadata": {"type": kind, "displayName": NAME},
+        "config": {"version": "2.0",
+                   "logicalId": str(uuid.uuid5(uuid.NAMESPACE_URL,
+                                               f"inventory-{kind}"))}}, indent=2))
+
+
 def main():
     if OUT.exists():
         shutil.rmtree(OUT)
@@ -551,12 +562,14 @@ def main():
                    "definitionProperties/1.0.0/schema.json",
         "version": "1.0", "settings": {}}, indent=2))
     (sm / "model.bim").write_text(json.dumps(model_bim(), indent=2, ensure_ascii=False))
+    platform(sm, "SemanticModel")
 
     (rp / "definition.pbir").write_text(json.dumps({
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/"
                    "definitionProperties/2.0.0/schema.json",
         "version": "4.0",
         "datasetReference": {"byPath": {"path": f"../{NAME}.SemanticModel"}}}, indent=2))
+    platform(rp, "Report")
     write_report(rp)
 
     missing = set(queries) - set(TABLES) - set(EXPRESSION_ORDER)

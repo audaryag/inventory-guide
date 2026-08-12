@@ -390,6 +390,20 @@ that generated the file.</p>
 <img src="pbip-fg.png" alt="FG"><img src="pbip-rm.png" alt="RM">
 <img src="pbip-detail.png" alt="Detail"></p>
 
+<h3>How the file was checked before you got it</h3>
+<ul>
+<li>The model was loaded with Microsoft's own Analysis Services library (the same object model
+Power BI uses for tables, columns, relationships and measures) — 14 tables, 11 relationships,
+40 measures, 17 helper queries, <strong>0 validation errors</strong>.</li>
+<li>Every page and visual file was checked against Microsoft's published report schemas —
+5 pages, 64 visuals, <strong>0 errors</strong>.</li>
+<li>Every field and measure a visual refers to was checked to exist in the model, and every
+query was checked to only depend on queries that exist — <strong>0 problems</strong>.</li>
+<li>What could <em>not</em> be checked here: Power BI Desktop itself only runs on Windows, so the
+file was never opened, refreshed or photographed in Desktop. The first refresh on your laptop is
+the first time it touches real files. If it complains, send me the exact red text.</li>
+</ul>
+
 <h3>If something goes wrong</h3>
 <table>
 <tr><th>What you see</th><th>What to do</th></tr>
