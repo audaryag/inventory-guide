@@ -126,6 +126,15 @@ def r_slicer(v):
             f" <b>▾</b></span></div>")
 
 
+def subtotals_on(v):
+    """Whether the project asks this matrix for a Total row."""
+    try:
+        props = v["visual"]["objects"]["subTotals"][0]["properties"]
+        return props["rowSubtotals"]["expr"]["Literal"]["Value"] == "true"
+    except (KeyError, IndexError, TypeError):
+        return True
+
+
 def r_matrix(v):
     rows = fields(v, "Rows")
     colf = fields(v, "Columns")
@@ -180,7 +189,8 @@ def r_matrix(v):
                      f"{cells(a+b)}</tr>")
             for c in lvl3:
                 h.append(f"<tr class='l3'><td class='rh'>{esc(c)}</td>{cells(a+b+c)}</tr>")
-    h.append(f"<tr class='tot'><td class='rh'>Total</td>{cells('TOTAL')}</tr>")
+    if subtotals_on(v):
+        h.append(f"<tr class='tot'><td class='rh'>Total</td>{cells('TOTAL')}</tr>")
     h.append("</tbody></table>")
     return f"<div class='mxwrap'>{''.join(h)}</div>"
 

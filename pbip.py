@@ -266,7 +266,7 @@ def title_objects(text):
                                        "radius": literal("4D")}}]}
 
 
-def matrix_objects(rows_levels, expand):
+def matrix_objects(rows_levels, expand, subtotals=True):
     o = {
         "rowHeaders": [{"properties": {
             "steppedLayout": literal("false"),
@@ -281,9 +281,10 @@ def matrix_objects(rows_levels, expand):
                                    "backColorPrimary": {"solid": {"color": txt("#FFFFFF")}},
                                    "backColorSecondary": {"solid": {"color": txt("#F7FAF7")}},
                                    "banded": literal("true")}}],
-        "subTotals": [{"properties": {"rowSubtotals": literal("true"),
-                                      "columnSubtotals": literal("false"),
-                                      "perRowLevel": literal("true")}}],
+        "subTotals": [{"properties": {
+            "rowSubtotals": literal("true" if subtotals else "false"),
+            "columnSubtotals": literal("false"),
+            "perRowLevel": literal("true" if subtotals else "false")}}],
         "grid": [{"properties": {"gridVertical": literal("true"),
                                  "gridVerticalColor": {"solid": {"color": txt("#E6EDE6")}},
                                  "gridHorizontal": literal("true"),
@@ -415,7 +416,8 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
 
     query = {"queryState": qstate}
     if vt == "pivotTable":
-        objects = matrix_objects(rows_levels, expand=rows_levels > 1)
+        objects = matrix_objects(rows_levels, expand=rows_levels > 1,
+                                 subtotals=rows_levels > 1)
     elif vt == "card":
         objects = card_objects()
     elif vt == "slicer":

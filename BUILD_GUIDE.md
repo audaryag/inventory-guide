@@ -454,7 +454,7 @@ Position: Horizontal 788, Vertical 580, Width 476, Height 132.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off.
-- Turn Format pane → Subtotals → Row subtotals: On, so each column has a total.
+- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to Off, and Column subtotals: Off. Only three rows are on show, so a Total row repeats what the header card above already says.
 
 ---
 

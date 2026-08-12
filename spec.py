@@ -88,7 +88,8 @@ VISUALS = [
      (788, 580, 476, 132),
      "The same numbers as a table, because some readers only trust a table.",
      ["Format pane → Row headers → Stepped layout: Off.",
-      "Turn Format pane → Subtotals → Row subtotals: On, so each column has a total."]),
+      "Format pane → Subtotals → Row subtotals: Off, and Column subtotals: Off. Only three "
+      "rows are on show, so a Total row repeats what the header card above already says."]),
 
     # ---- Summary: TB | MB5B | Difference as master columns, plants as master rows -------
     ("Summary", "Matrix", "Inventory (TB) · Inventory (MB5B) · Difference — ₹ Cr",
