@@ -85,6 +85,47 @@ def _pos_rows(x, y, w, h):
     return [("X", str(x)), ("Y", str(y)), ("Width", str(w)), ("Height", str(h))]
 
 
+SHAPE = {
+    "Matrix": "a grid with the row names down the left and the column headings across the "
+              "top, and a Total row at the bottom",
+    "Stacked column chart": "bars, each one split into coloured blocks, with a small colour "
+                            "key above it",
+    "Clustered column chart": "groups of plain bars standing side by side",
+    "Line and clustered column chart": "bars with a line drawn across the top of them",
+    "Pie chart": "a filled circle cut into coloured slices",
+    "Donut chart": "a ring cut into coloured slices, hollow in the middle",
+    "Table": "plain rows with a heading row above them",
+    "Decomposition tree": "one box on the left with a + on it",
+    "Card": "one number",
+    "Slicer": "a dropdown",
+}
+
+
+def _check(vtype, wells):
+    """What the finished visual must look like, in plain words."""
+    named = [f for wl, fl in wells if wl != "Filters" for f in fl]
+    return ("The visual shows %s, it is not empty and not showing an error triangle, and the "
+            "Visualizations pane still lists every field you dropped in: %s."
+            % (SHAPE.get(vtype, "what the title describes"), ", ".join(named)))
+
+
+def _stuck(vtype, wells=()):
+    common = ("Empty visual: a slicer above is filtering everything out — clear the header "
+              "dropdowns and look again. 'Can't display this visual': a field is in the wrong "
+              "box, so drag it out and put it back where the list below says. Wrong size: "
+              "retype the four numbers rather than dragging the corners.")
+    if vtype == "Matrix":
+        rows = [f for wl, fl in wells if wl == "Rows" for f in fl]
+        extra = (" No + signs on the row names: one of the two Rows fields is missing, or "
+                 "stepped layout is still on — both are set in the lines above."
+                 if len(rows) > 1 else "")
+        return (common + extra + " Every row showing the same number: a relationship from "
+                "Part 2 is missing.")
+    if vtype == "Decomposition tree":
+        return common + " Nothing to expand means the Explain by box is empty."
+    return common
+
+
 def steps():
     """Each step: dict(title, page, do=[lines], fields=[(label, value)], note, link?)."""
     S = []
@@ -104,7 +145,14 @@ def steps():
             "Hover the mouse over any icon in the Visualizations pane and Power BI tells "
             "you its name — use that whenever a step names an icon."],
         fields=[], note="If a name a step asks for is not in the Data pane, that part is not "
-                        "finished — go back to Part 1-3 rather than guessing."))
+                        "finished — go back to Part 1-3 rather than guessing.",
+        check="The Data pane on the right lists factInventory, factTB, dimPlant, dimDate, "
+              "dimNature, dimCapacity, dimTBMaster, dimCategory, dimMetric and dimMeasure, "
+              "and typing Value into the search box at the top of that pane finds "
+              "'Value \u20b9 Cr' with a calculator icon beside it.",
+        stuck="A missing table means that query was never pasted (Part 1). A missing measure "
+              "means Part 3 is unfinished. Neither can be fixed from here, so go back and "
+              "finish it — nothing below will work otherwise."))
 
     S.append(dict(
         title="Set the canvas size",
@@ -115,7 +163,11 @@ def steps():
             "Set Type to 16:9, then type the Height and Width below into their boxes."],
         fields=[("Height", "720"), ("Width", "1280")],
         note="Every position in these steps assumes this canvas, so do it before anything "
-             "else — changing it later moves everything."))
+             "else — changing it later moves everything.",
+        check="The white page is a wide rectangle and the Canvas settings boxes read "
+              "Height 720, Width 1280.",
+        stuck="No paintbrush icon means a visual is still selected — press Escape, click the "
+              "grey area outside the page, then click the empty white page once."))
 
     S.append(dict(
         title="Load the colour theme",
@@ -127,7 +179,12 @@ def steps():
             "Click 'Browse for themes' at the bottom of that list.",
             "Choose the inventory-theme.json file you just saved, and click Open."],
         fields=[], note="This sets all colours, fonts, borders and card styling, so no step "
-                        "below asks you to colour anything.", link="inventory-theme.json"))
+                        "below asks you to colour anything.", link="inventory-theme.json",
+        check="A message says the theme imported successfully, and the page background turns "
+              "a very light grey rather than pure white.",
+        stuck="'Invalid theme file' means the download saved as .txt — rename it so it ends "
+              ".json and import again. If there is no 'Browse for themes' entry, your Power "
+              "BI is an old build: everything still works, it just stays in default colours."))
 
     S.append(dict(
         title="Create the %d pages" % len(PAGES),
@@ -139,7 +196,11 @@ def steps():
             "Double-click the first tab, type the first name below, and press Enter.",
             "Do the same for the other tabs, in this exact order."],
         fields=[("Page %d" % (i + 1), p) for i, p in enumerate(PAGES)],
-        note="Names must match, because later steps say which page to work on."))
+        note="Names must match, because later steps say which page to work on.",
+        check="%d tabs along the bottom, reading left to right: %s."
+              % (len(PAGES), ", ".join(PAGES)),
+        stuck="A tab still called 'Page 1' just needs double-clicking and retyping. If a tab "
+              "is in the wrong place, drag it sideways."))
 
     # header band
     for i, (measure, x, y, w, h, what) in enumerate(CARDS, 1):
@@ -151,7 +212,13 @@ def steps():
                 "The card now shows one big number."] + _place(x, y, w, h),
             fields=[("Measure", measure)] + _pos_rows(x, y, w, h),
             note="If the number looks wrong, you probably ticked a column instead of the "
-                 "measure — measures have a calculator icon."))
+                 "measure — measures have a calculator icon.",
+            check="The card shows one number with the words %s under it, sitting in the top "
+                  "band of the page." % measure,
+            stuck="'(Blank)' means no data reached it — check that factInventory has rows and "
+                  "that no slicer is filtering everything out. A word instead of a number "
+                  "means a text column was dropped in: remove it from the Fields box and drag "
+                  "the measure instead (calculator icon, not a table icon)."))
 
     for (field, x, y, w, h, what) in SLICERS:
         multi = field in ("dimDate[MonthName]", "dimDate[Quarter]")
@@ -168,7 +235,12 @@ def steps():
                    % ("months" if "Month" in field else "quarters")] if multi else [])
                + _place(x, y, w, h, in_format=True),
             fields=[("Field", field)] + _pos_rows(x, y, w, h),
-            note=""))
+            note="",
+            check="A closed dropdown sits in the header band; clicking it lists the values of "
+                  "%s, and clicking one changes the numbers on the cards above." % field,
+            stuck="An empty dropdown means the field came from the wrong table — remove it and "
+                  "drag %s exactly. A slider instead of a list means a number column was "
+                  "used; check the field name again." % field))
 
     n_band = len(CARDS) + len(SLICERS)
     others = [p for p in BAND_PAGES if p != PAGES[0]]
@@ -185,7 +257,12 @@ def steps():
             "page, so nothing needs moving."],
         fields=[("Paste on", p) for p in others],
         note="Not on %s — that page is filtered by whatever you clicked to get there, so a "
-             "slicer on it would fight the drill-through." % DRILL_PAGE))
+             "slicer on it would fight the drill-through." % DRILL_PAGE,
+        check="These pages now each have the same row of cards and dropdowns across the top, "
+              "in the same place: " + ", ".join(others) + ".",
+        stuck="If the band lands crooked, do not nudge it by hand — press Ctrl+Z, reselect all "
+              "%d items and paste again. If only one card pasted, the Ctrl+click selection was "
+              "lost partway; select them all again." % n_band))
 
     S.append(dict(
         title="Sync the slicers across pages",
@@ -198,7 +275,12 @@ def steps():
             "Then click the Quarter slicer and do the same, then the Plant slicer, then the "
             "Category slicer."],
         fields=[], note="Skip this and each page filters on its own, so two pages will show "
-                        "different totals for the same month."))
+                        "different totals for the same month.",
+        check="Pick one month on %s, then click through %s — the same month is still picked on "
+              "each of them." % (PAGES[0], ", ".join(BAND_PAGES[1:])),
+        stuck="If a page ignores the choice, its row in the Sync slicers pane is unticked — "
+              "tick both boxes on that row. Leave the %s row unticked everywhere."
+              % DRILL_PAGE))
 
     # one step per visual
     by_page = {}
@@ -248,7 +330,8 @@ def steps():
             fields += _pos_rows(*pos)
             S.append(dict(
                 title="%s %d of %d — %s" % (page, i, len(vs), title),
-                page=page, do=do, fields=fields, note=why))
+                page=page, do=do, fields=fields, note=why,
+                check=_check(vtype, wells), stuck=_stuck(vtype, wells)))
 
     S.append(dict(
         title="Make clicking a bar open the pie charts",
@@ -263,6 +346,11 @@ def steps():
             "next to its name.)",
             "Leave the switch called 'Keep all filters' as it is — it is already on."],
         fields=[("Drill through", f) for f in DRILL_FIELDS],
+        check="A round Back arrow has appeared by itself in the top-left corner of the %s "
+              "page, and the Drill through box lists all four fields." % DRILL_PAGE,
+        stuck="No Drill through box means a visual is still selected — press Escape and click "
+              "the grey space outside the page. If a field will not drop in, it came from the "
+              "wrong table; the table name is the part before the square bracket.",
         note="This is what makes the report clickable: a Back arrow appears on this page "
              "automatically, and every bar, row and slice on the other pages now offers "
              "Drill through → %s." % DRILL_PAGE))
@@ -277,9 +365,16 @@ def steps():
             "list." % DRILL_PAGE,
             "Click the circled Back arrow at the top-left of the %s page to return."
             % DRILL_PAGE],
-        fields=[], note="A left-click filters the rest of the page instead (that is Power "
-                        "BI's built-in cross-filtering, nothing to set up). Right-click is "
-                        "the one that opens the pies."))
+        fields=[],
+        check="The %s page opens and its first card shows a smaller number than the company "
+              "total, because it is showing only the plant you clicked." % DRILL_PAGE,
+        stuck="'Drill through' greyed out means the four fields are not in the Drill through "
+              "box yet — go back one step. If the page opens but shows the full total, you "
+              "right-clicked something that is not one of the four drill-through fields; "
+              "right-click a plant bar instead.",
+        note="A left-click filters the rest of the page instead (that is Power BI's built-in "
+             "cross-filtering, nothing to set up). Right-click is the one that opens the "
+             "pies."))
 
     S.append(dict(
         title="Choose what a click filters",
@@ -293,7 +388,12 @@ def steps():
             "For each matrix on the page click the funnel. For each header card click the "
             "circle.",
             "Click 'Edit interactions' again to switch the mode off, then press Ctrl+S."],
-        fields=[], note="Default is highlight, which greys out the rest of a bar rather than "
+        fields=[],
+        check="With the mode switched off again, clicking a bar changes the matrix totals but "
+              "leaves the header cards unchanged.",
+        stuck="If the cards still change, their icon is set to funnel or chart — turn Edit "
+              "interactions back on and click the circle-with-a-line icon on each card.",
+        note="Default is highlight, which greys out the rest of a bar rather than "
                         "removing it. Set the matrices to filter instead, so a click makes "
                         "their totals match what you clicked. Set the header cards to none, "
                         "so the band always shows the company total."))
@@ -302,8 +402,11 @@ def steps():
         title="Save",
         page="—",
         do=["Press Ctrl+S. If it asks for a name, type Inventory Model and click Save."],
-        fields=[], note="Power BI does not autosave. Save every few steps, not just at "
-                        "the end."))
+        fields=[],
+        check="The window title no longer says 'unsaved'.",
+        stuck="If saving fails, the file is open somewhere else or sitting in a folder "
+              "OneDrive is mid-sync on — save to the Desktop first, then move it.",
+        note="Power BI does not autosave. Save every few steps, not just at the end."))
 
     S.append(dict(
         title="Check it actually works",
@@ -314,7 +417,14 @@ def steps():
             "On FG, 1905 should show blank Days, because it has no capacity row.",
             "Right-click a bar → Drill through → Detail, and check the cards match the bar.",
             "Then Ctrl+S."],
-        fields=[], note="If Difference is large, a source file is missing, duplicated or "
+        fields=[],
+        check="All five pages react to the month dropdown, Summary's Difference column reads "
+              "about 0.00, and right-click → Drill through → %s opens filtered." % DRILL_PAGE,
+        stuck="Difference far from zero: a TB file or a Raw file is missing for that month, or "
+              "one has been hand-edited. Blank pages: no month is picked in the header "
+              "dropdown. The same number on every row of Summary: the two dimCategory "
+              "relationships from Part 2 are missing.",
+        note="If Difference is large, a source file is missing, duplicated or "
                         "hand-edited — the numbers on every page are wrong until that is "
                         "fixed. The qc* queries are still in the model if you want to put "
                         "them on a page of their own to see why."))

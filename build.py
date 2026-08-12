@@ -197,6 +197,12 @@ footer{color:var(--dim);font-size:12px;margin-top:40px;text-align:center}
 .step ol{margin:0 0 4px;padding-left:22px}
 .step ol li{margin:8px 0;font-size:16px}
 .step .why{margin:16px 0 0;color:var(--dim);font-size:14px;border-left:2px solid var(--acc);padding-left:12px}
+.step .check{margin:16px 0 0;padding:11px 14px;border:1px solid #2f6b45;background:#16241c;
+  border-radius:9px;font-size:15px}
+.step .check b{color:#8fd3a3}
+.step .stuck{margin:10px 0 0;padding:11px 14px;border:1px solid #6b4a2f;background:#241d16;
+  border-radius:9px;font-size:14px;color:#e0c9a8}
+.step .stuck b{color:#f0b96b}
 .kv{margin:16px 0 0;border:1px solid var(--line);border-radius:9px;overflow:hidden}
 .kv .row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-top:1px solid var(--line)}
 .kv .row:first-child{border-top:0}
@@ -244,6 +250,8 @@ function drawStep(){
     '<ol>'+s.do.map(d=>'<li>'+esc(d)+'</li>').join('')+'</ol>'+
     (rows?'<div class="kv">'+rows+'</div>':'')+
     (s.link?'<p><a class="dl" href="'+s.link+'" download>Download '+esc(s.link)+'</a></p>':'')+
+    (s.check?'<div class="check"><b>Check before moving on:</b> '+esc(s.check)+'</div>':'')+
+    (s.stuck?'<div class="stuck"><b>If that is not what you see:</b> '+esc(s.stuck)+'</div>':'')+
     (s.note?'<p class="why">'+esc(s.note)+'</p>':'');
   document.querySelectorAll('#stepbox button.mini').forEach(b=>
     b.onclick=()=>copyText(b.dataset.copy,b));
@@ -302,6 +310,14 @@ paint();
 """
 
 FAST = """
+<blockquote><strong>If the download will not open in your Power BI, stop trying.</strong>
+Some Power BI builds refuse the project format no matter what is ticked. Go to the
+<strong>Queries</strong>, <strong>Measures</strong> and <strong>Build it</strong> tabs and build it by
+hand instead — that route is checked by a script every time this page is published, so the
+queries, the 11 relationships, the 40 measures and all 64 visuals are guaranteed to agree with
+each other. Every step there now also tells you what you should see on screen before you move
+on, and Part 6 of the Walkthrough lists every error we have hit with its one-line fix.</blockquote>
+
 <h2>Start here — the report is already built</h2>
 <p class="sub">You do not have to make the tables, the measures, the relationships or the pages.
 They are all inside one download. You open it, tell it where your folder is, and press Refresh.
@@ -399,6 +415,11 @@ Power BI uses for tables, columns, relationships and measures) — 14 tables, 11
 5 pages, 64 visuals, <strong>0 errors</strong>.</li>
 <li>Every field and measure a visual refers to was checked to exist in the model, and every
 query was checked to only depend on queries that exist — <strong>0 problems</strong>.</li>
+<li>The manual route is checked separately and straight out of the guide text: the 31 query
+code blocks are read step by step to work out which columns each one really produces, and every
+measure, relationship, sort-by, hide and drag-this-field instruction is then checked against
+those columns — 231 columns, 98 field references, <strong>0 problems</strong>. That is what stops
+a step naming a field that does not exist.</li>
 <li>What could <em>not</em> be checked here: Power BI Desktop itself only runs on Windows, so the
 file was never opened, refreshed or photographed in Desktop. The first refresh on your laptop is
 the first time it touches real files. If it complains, send me the exact red text.</li>

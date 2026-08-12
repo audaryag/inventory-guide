@@ -116,6 +116,26 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet
 
 **1.6** Ribbon: **Home** → **Close & Apply**. Wait for it to load.
 
+### Checkpoint — do not go to Part 2 until all five are true
+
+1. The Queries list on the left of Power Query shows **31** names, and every name in the
+   table above appears in it, spelled identically. Compare them one by one; a missing one
+   is the single most common cause of an error later.
+2. The 14 helper names in step 1.5 are shown in *italics* in that list (that is what
+   "Enable load off" looks like); the other 17 are not italic.
+3. Click `factInventory`: the preview shows rows, and the columns include `CloseVal`,
+   `Category`, `Nature`, `Month`, `ValuationArea`, `MW`.
+4. Click `factTB`: it shows rows, `Month` is filled in on every row, and `ValuationArea`
+   is not the word `Unallocated` on every row.
+5. Click `factTB_Unmapped`: ideally empty. Rows here mean a GL account in your TB is
+   missing from `TB Master`, so its money is not counted anywhere — add it to `TB Master`
+   and refresh.
+
+After **Close & Apply**, the Data pane on the right must list exactly these 17 tables:
+`factInventory`, `factTB`, `factTB_Unmapped`, `dimPlant`, `dimDate`, `dimNature`,
+`dimCapacity`, `dimTBMaster`, `dimMaterialAttr`, `dimFGAttr`, `dimCategory`, `dimMetric`,
+`dimMeasure`, `qcHeaders`, `qcVarHeaders`, `qcNatureNoCapacity`, `qcMWSheet`.
+
 ### If something fails here
 
 | Error message | What it means | Fix |
@@ -175,15 +195,34 @@ purpose. None of the measures need it; `Value ₹ Cr LM` uses `MonthIndex` inste
 **Column tools** → **Sort by column** → pick `MonthSort`. Without this, months sort
 alphabetically (Apr, Aug, Dec…) and every chart reads as nonsense.
 
+> Two ways to reach *Sort by column*, use whichever pane you can see:
+> **Data view** — left sidebar, the middle icon (a grid) → click the table in the Data pane
+> → click the column's heading in the grid → ribbon **Column tools** → **Sort by column**.
+> **Model view** — left sidebar, the third icon → click the field's name inside the table
+> box → the **Properties** pane opens on the right → expand **Advanced** → **Sort by
+> column**. If you can only see one view icon you are still inside the Power Query window;
+> close it with **Home → Close & Apply** and all three icons appear.
+
 **2.6** Do the same for: `dimPlant[Plant]` → `PlantSort`, `dimCategory[Category]` →
 `CategorySort`, `dimMetric[Metric]` → `MetricSort`, `dimMeasure[Measure]` → `MeasureSort`,
 `dimDate[Quarter]` → `QuarterSort`. The middle two matter — without them your master columns
 come out alphabetically (Difference first), which reads backwards. `Quarter` matters because
 alphabetical order puts Q1 of every year together.
 
-**2.7** Hide the plumbing so the Fields list stays usable. Right-click → **Hide** on:
+**2.7** Hide the plumbing so the Fields list stays usable. In Model view, right-click the
+field's name inside its table box → **Hide in report view**. Do it on:
 `factInventory[MatKey]`, `factTB[PlantCode]`, `dimDate[MonthSort]`, `dimPlant[PlantSort]`,
 `dimDate[FYMonthNo]`, `dimDate[QuarterNo]`, `dimDate[QuarterSort]`.
+
+### Checkpoint — do not go to Part 3 until all four are true
+
+1. Ribbon **Modeling** → **Manage relationships** lists **11** relationships, all with the
+   **Active** box ticked. Read it as a table and compare it line by line with 2.3 — far
+   easier than reading the diagram.
+2. Every one says **Many to one** or **One to many** (never **Many to many**) and
+   **Single** (never **Both**).
+3. `dimMetric` and `dimMeasure` appear in **no** relationship at all.
+4. There is no relationship you did not create yourself; delete any Power BI guessed.
 
 **2.8** Nothing else to set up for quarters — the `Quarter` column does it. The **Month**
 slicer lets you tick exactly which months a page compares, and the **Quarter** slicer picks
@@ -201,8 +240,28 @@ slicer lets you tick exactly which months a page compares, and the **Quarter** s
 
 **3.4** Delete what's there, paste **one** measure from Appendix B, press **Enter**.
 
-**3.5** Repeat 3.3–3.4 for every measure in Appendix B. One at a time — Power BI takes one
-measure per box.
+**3.5** Repeat 3.3–3.4 for every measure in Appendix B, **strictly top to bottom**. One at a
+time — Power BI takes one measure per box. Order matters: later measures use earlier ones, so
+pasting out of order gives "cannot be determined" on a measure that is perfectly fine.
+
+> It does not matter which table a measure ends up under. Power BI files it beside whatever
+> was selected, and that changes nothing about how it behaves. To find one later, type its
+> name into the search box at the top of the **Data** pane rather than opening tables.
+>
+> If the ₹ sign does not survive pasting and a measure lands as `Value  Cr`, right-click it
+> → **Rename** and type the name again from the guide. The formula is unaffected.
+
+### Checkpoint — do not go to Part 4 until all three are true
+
+1. Type `Value` into the Data pane search box: `Value ₹ Cr` is there, with a calculator icon.
+2. Count the measures (calculator icons) — there must be **40**. Fewer means Appendix B is
+   not finished; the pages will fail on whichever one is missing.
+3. None of these six old names survive: `Closing Value`, `Inv RM`, `Inv FG`,
+   `Inv Consumables`, `TB Value`, `Prev Month`. Delete any you find (right-click → **Delete
+   from model**), otherwise a visual may quietly use the old one.
+4. `Days` is the one name that stays. **Do not delete it** — the RM and FG matrices use it.
+   Click it once and check the formula bar reads `Days = [Days of Inventory]`; if it says
+   anything else, select the whole formula and paste the Appendix B version over it.
 
 **3.6** Everything money is already in **crore rupees** and named to say so
 (`Value ₹ Cr`, `TB ₹ Cr`, …), so no currency symbol is needed. Click each ₹ Cr measure →
@@ -212,9 +271,13 @@ For every `%` measure use **Format: Percentage**, 1 decimal.
 
 **3.7** If you built an earlier version of this file, the old names are gone: `Closing Value`
 became `Value ₹ Cr`, `Inv RM/FG/Consumables` became `RM/FG/Consumables ₹ Cr`, `TB Value`
-became `TB ₹ Cr`, `Days` became `Days of Inventory`, `Prev Month` became `Value ₹ Cr LM`.
-Delete the old measures (right-click → Delete) after the new ones exist, or visuals will
-still point at the old ones.
+became `TB ₹ Cr`, `Prev Month` became `Value ₹ Cr LM`. Delete those six (right-click →
+**Delete from model**) after the new ones exist, or visuals will still point at the old ones.
+
+`Days` is the exception: the name is unchanged but the formula is not. Do **not** delete it —
+click it and paste the Appendix B version (`Days = [Days of Inventory]`) over whatever is in
+the formula bar. Deleting it breaks the RM and FG matrices, which read it through
+`Unit Value`.
 
 ---
 
@@ -362,9 +425,9 @@ Position: X 16, Y 168, W 1248, H 300.
 - Order of the two Columns fields matters: dimMetric[Metric] FIRST, then dimDate[MonthName]. That is what makes TB / MB5B / Difference the master columns with months nested inside.
 - Format pane → Row headers → Stepped layout: Off (so Plant and Category get their own columns).
 - Format pane → Row headers → +/- icons: On (that is the click-to-expand control).
-- Format pane → Subtotals → Row subtotals On, Column subtotals Off, and set 'Per row level' so each plant shows its own total. Grand total row = the Total row.
-- In the Values well, arrow next to Summary Value ₹ Cr → Conditional formatting → Background color → Format style Diverging, centre 0, both ends red: a difference either direction is equally wrong.
-- Expand all plants once with the arrow at the top-left of the matrix, then save — the expansion state is remembered.
+- Format pane → Subtotals → Row subtotals: On. Then switch Column subtotals to Off, and turn on 'Per row level' so each plant shows its own total. The grand total row at the bottom is the Total row you asked for.
+- Colour the differences: in the Values box, click the small down-arrow next to Summary Value ₹ Cr, click 'Conditional formatting', then 'Background color'. Set Format style to Diverging, tick 'Add a middle colour', set the middle number to 0, and make both the Minimum and Maximum colours red. A difference either direction is equally wrong, so both ends are red.
+- Right-click any plant row in the matrix, click 'Expand', then 'All', so RM, FG and consumables show under every plant. Then press Ctrl+S — Power BI remembers it.
 
 **4.11** **Clustered column chart** — The reconciliation as a picture. Click a bar and the matrix above filters to that plant; right-click → Drill through → Detail for the materials behind it.
 
@@ -659,6 +722,62 @@ and the header cards to **none** (so the band always shows the company total).
 1. Close all Excel files before refreshing.
 2. On `MW Capacity` and `Constants`, never overwrite a number — add a new row with the
    date it takes effect. Overwriting silently rewrites past months.
+
+---
+
+# PART 6 — Every error we have hit, and its one-line fix
+
+Find the words Power BI showed you in the left column.
+
+| What Power BI says | What is actually wrong | Fix |
+|---|---|---|
+| `Not enough elements in the enumeration to complete the operation` | a query expected more columns than the sheet has | you are on an old copy of that query — refresh the guide page and re-copy it |
+| `could not find a row in the MW sheet containing at least two of 1900, 1902, 1905` | the MW sheet is in the effective-dated layout, not the wide one | re-copy `varMWCapacity`; the current one reads both layouts. Paste `qcMWSheet` to see the sheet raw |
+| `Column 'GL Account Number' of the table wasn't found` | your TB export spells the header differently | re-copy `factTB_Staged`; it matches headers loosely and leaves a column blank rather than failing |
+| `The Column Month in the table dimDate contains duplicate value` | you are on the old daily `dimDate` | re-copy `dimDate` (it is monthly now), Close & Apply, then make the relationship |
+| `Mark as date table` will not accept any column | nothing is wrong | skip 2.4 entirely; a monthly table is deliberate and no measure needs it |
+| `dimMetric cannot find table` | `dimCategory` / `dimMetric` / `dimMeasure` were never created | paste those three queries, Close & Apply, then paste the measure again |
+| `Value ₹ Cr cannot be determined. Either the column does not exist, or there is no current row` | either `factInventory` has no `CloseVal` column, or you pasted measures out of order | check `CloseVal` exists in `factInventory`; if it does, paste Appendix B again strictly top to bottom |
+| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 40 from Appendix B, then delete the six old names listed in 3.7 |
+| RM and FG matrices show numbers under `In ₹ Cr` but nothing under `In Days` | the `Days` measure was deleted as an "old name" | paste `Days = [Days of Inventory]` back in; it is in Appendix B |
+| a measure exists but is named `Value  Cr` | the ₹ character was lost while pasting | right-click → Rename, type the name again |
+| `The file is being used by another process` | an Excel file in the folders is open | close all Excel, end any stray `EXCEL.EXE` in Task Manager, delete any `~$...xlsx` file |
+| `We couldn't find folder` | `pRoot` is wrong | copy the path from the File Explorer address bar; keep the quote marks, no trailing backslash |
+| `Token Literal expected` | `pRoot` lost its quote marks | it must read `"C:\…\Inventory Report"`, quotes included |
+| `Expression.Syntax Error` right after pasting | the whole appendix went into one query | one Blank Query per heading, 31 times |
+| the report has no **Data** or **Fields** pane | the pane is collapsed, or you are in the Power Query window | ribbon **View** → **Show panes**, or click the `>` at the right edge. Power Query has no such pane — Close & Apply first |
+| there is no **Card** button on the Insert ribbon | cards are not on the ribbon | they live in the **Visualizations** pane on the right; Card is the icon showing `123`. Ignore "New visual" and "More visuals" |
+| there is no **Format page** | it is a pane, not a page | select a visual, then click the **paintbrush** icon in the Visualizations pane |
+| the materials list will not open up | it is a Table visual, which cannot expand | it must be a **Matrix** with `Nature`, `Material`, `MaterialDesc` in **Rows** — see the Detail page steps |
+| every row of Summary shows the same number | the two `dimCategory` relationships are missing | add `dimCategory[Category]` → `factInventory[Category]` and → `factTB[Category]` |
+| the Summary matrix is completely blank | `dimMetric` has been connected to something | delete every relationship on `dimMetric` and `dimMeasure`; they must stay disconnected |
+| months read Apr, Aug, Dec… | `MonthName` is not sorted by `MonthSort` | do 2.5 |
+| Difference is a big number, not 0.00 | a source file for that month is missing, duplicated, or was hand-edited | check the four folders have exactly one file each for that month |
+| `1905` shows blank Days | correct behaviour | it has no capacity row on the MW sheet; `qcNatureNoCapacity` lists any others |
+| `Drill through` is greyed out | the four fields are not in the Drill through box | do the drill-through step on the Detail page |
+
+If a message is not in this table, send me the exact wording — including the name in
+quotes, which is the part that says what Power BI could not find.
+
+---
+
+# Already part-built? Bring an older model up to date
+
+If you built some of this before, do these four things once and you are level with the guide.
+Nothing here is destructive.
+
+1. **Queries.** Walk the 31 names in 1.3 against your Queries list. For a name you have,
+   open **Advanced Editor**, Ctrl+A, paste the appendix version over it, **Done** — harmless
+   even when nothing changed. For a name you do not have, create it. The ones most likely
+   missing or stale: `dimDate`, `factInventory`, `factTB`, `factTB_Staged`, `varMWCapacity`,
+   `dimCategory`, `dimMetric`, `dimMeasure`. Then **Close & Apply**.
+2. **Relationships.** Manage relationships must match 2.3 exactly — 11 rows, all Single,
+   nothing on `dimMetric` or `dimMeasure`.
+3. **Measures.** Add all 40 from Appendix B top to bottom (adding beside old ones is safe),
+   then delete the six old names in 3.7 — keeping `Days`, whose formula you overwrite instead.
+4. **Sorting.** Set the five sort-by columns in 2.5 and 2.6.
+
+Then run the Part 3 checkpoint above. If it passes, Part 4 will not surprise you.
 
 ---
 
@@ -1092,13 +1211,39 @@ stgConble
 
 ## factInventory
 
-> The single table every report visual uses.
+> The single table every report visual uses. The last three steps force an exact column list
+> and exact types, so the table looks identical whatever the source files happen to contain -
+> RM files have no Rate, consumables have no Nature, and this is what stops that mattering.
 
 ```
 let
-    Combined = Table.Combine({factRM, factFG, factConble})
+    Combined = Table.Combine({factRM, factFG, factConble}),
+    Wanted   = {"SourceFile","ValuationArea","Material","MatKey","MaterialDesc",
+                "FromDate","ToDate","OpenQty","OpenVal","ReceiptQty","ReceiptVal",
+                "IssueQty","IssueVal","CloseQty","CloseVal","BaseUOM","SpecialStock",
+                "Currency","Month","Category","Nature","GroupNature","BOMStdQty","Item",
+                "AttrMissing","MW","Rate","RateParseFailed","Mid","Base","INR_WP"},
+    Padded   = List.Accumulate(List.Difference(Wanted, Table.ColumnNames(Combined)),
+                   Combined, (t, c) => Table.AddColumn(t, c, each null)),
+    Kept     = Table.SelectColumns(Padded, Wanted),
+    Typed    = Table.TransformColumnTypes(Kept, {
+                   {"SourceFile", type text}, {"ValuationArea", type text},
+                   {"Material", type text}, {"MatKey", type text},
+                   {"MaterialDesc", type text}, {"FromDate", type date},
+                   {"ToDate", type date}, {"OpenQty", type number},
+                   {"OpenVal", type number}, {"ReceiptQty", type number},
+                   {"ReceiptVal", type number}, {"IssueQty", type number},
+                   {"IssueVal", type number}, {"CloseQty", type number},
+                   {"CloseVal", type number}, {"BaseUOM", type text},
+                   {"SpecialStock", type text}, {"Currency", type text},
+                   {"Month", type date}, {"Category", type text},
+                   {"Nature", type text}, {"GroupNature", type text},
+                   {"BOMStdQty", type number}, {"Item", type text},
+                   {"AttrMissing", type logical}, {"MW", type number},
+                   {"Rate", type number}, {"RateParseFailed", type logical},
+                   {"Mid", type text}, {"Base", type text}, {"INR_WP", type number}})
 in
-    Combined
+    Typed
 ```
 
 ## varMWCapacity
@@ -1250,7 +1395,9 @@ let
                    (t, c) => Table.AddColumn(t, c, each null)),
     Slim     = Table.SelectColumns(Padded, Wanted),
     Typed    = Table.TransformColumnTypes(Slim, {
-                   {"Nature", type text}, {"TBPlant", type text}}),
+                   {"GLAccount", type text}, {"GLDescMaster", type text},
+                   {"Nature", type text}, {"TBPlant", type text},
+                   {"TBSort", Int64.Type}}),
     Dedup    = Table.Distinct(Typed, {"GLAccount"})
 in
     Dedup
@@ -1372,9 +1519,23 @@ let
                       then "RM"
                   else "RM",
     Cat     = Table.AddColumn(Expand, "Category",
-                  each Bucket([Nature], [GLDesc]), type text)
+                  each Bucket([Nature], [GLDesc]), type text),
+    // exact column list and types, so the table is the same shape every refresh
+    Wanted  = {"SourceFile","Month","GLAccount","GLDesc","ProfitCentre","ProfitCentreDesc",
+               "Amount","PlantCode","ValuationArea","Nature","TBPlant","TBSort","Category"},
+    Padded  = List.Accumulate(List.Difference(Wanted, Table.ColumnNames(Cat)), Cat,
+                  (t, c) => Table.AddColumn(t, c, each null)),
+    Kept    = Table.SelectColumns(Padded, Wanted),
+    Typed   = Table.TransformColumnTypes(Kept, {
+                  {"SourceFile", type text}, {"Month", type date},
+                  {"GLAccount", type text}, {"GLDesc", type text},
+                  {"ProfitCentre", type text}, {"ProfitCentreDesc", type text},
+                  {"Amount", type number}, {"PlantCode", type text},
+                  {"ValuationArea", type text}, {"Nature", type text},
+                  {"TBPlant", type text}, {"TBSort", Int64.Type},
+                  {"Category", type text}})
 in
-    Cat
+    Typed
 ```
 
 ## factTB_Unmapped
@@ -1499,9 +1660,10 @@ let
     FGNatures = List.Distinct(List.RemoveNulls(dimFGAttr[Nature])),
     CapTechs  = List.Distinct(List.RemoveNulls(varMWCapacity[Tech])),
     Orphans   = List.Difference(FGNatures, CapTechs),
-    T         = Table.FromList(Orphans, Splitter.SplitByNothing(), {"Nature"})
+    T         = Table.FromList(Orphans, Splitter.SplitByNothing(), {"Nature"}),
+    Typed     = Table.TransformColumnTypes(T, {{"Nature", type text}})
 in
-    T
+    Typed
 ```
 
 ## qcMWSheet
