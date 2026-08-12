@@ -47,7 +47,11 @@ VISUALS = [
      (16, 168, 764, 264),
      "Every month side by side, split RM / FG / consumables. Click one segment and the "
      "rest of the page follows it; right-click → Drill through → Detail for the pies "
-     "behind it.", []),
+     "behind it.",
+     ["Stacked, not Clustered: one bar per month whose height is the month's total, cut "
+      "into the three categories. Clustered would stand RM, FG and consumables apart and "
+      "the month total would no longer be a bar you can read. Not 'line and clustered' "
+      "either — that one is the third visual on this page."]),
 
     ("Overview", "Clustered column chart", "Value ₹ Cr by plant — click to go deeper",
      [("X-axis", ["dimPlant[Plant]", "dimCategory[Category]", "dimNature[Nature]"]),

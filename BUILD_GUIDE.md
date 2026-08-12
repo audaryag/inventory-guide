@@ -381,6 +381,7 @@ Position: Horizontal 16, Vertical 168, Width 764, Height 264.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Stacked, not Clustered: one bar per month whose height is the month's total, cut into the three categories. Clustered would stand RM, FG and consumables apart and the month total would no longer be a bar you can read. Not 'line and clustered' either — that one is the third visual on this page.
 
 **4.6** **Clustered column chart** — Three fields in the X-axis makes it a hierarchy, so the little arrows appear in the visual's top-right corner: plant, then category inside a plant, then nature inside that. Clicking is the whole point — nobody has to build three charts.
 

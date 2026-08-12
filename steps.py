@@ -49,7 +49,11 @@ def _insert(vtype):
     return ["Click once on an empty white part of the page, so that no visual has a border "
             "round it.",
             "In the Visualizations pane on the right (the grid of small icons), click %s. "
-            "An empty visual appears on the page." % ICON.get(vtype, "the %s icon" % vtype)]
+            "An empty visual appears on the page." % ICON.get(vtype, "the %s icon" % vtype),
+            "Check you took the right one: hover the mouse over the icon that is now "
+            "highlighted and the name that appears must read exactly '%s'. Several icons "
+            "look alike, so if it says anything else, click the correct one now — with the "
+            "visual still empty, changing type costs nothing." % vtype]
 
 
 def _plain(line):
