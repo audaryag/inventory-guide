@@ -212,12 +212,21 @@ def steps():
             page=PAGES[0],
             do=_insert("Card") + [
                 _drag(measure, "Fields"),
-                "The card now shows one big number."] + _place(x, y, w, h),
-            fields=[("Measure", measure)] + _pos_rows(x, y, w, h),
+                "The card now shows one big number.",
+                "The words under the number are cut in half unless the text is made "
+                "smaller, so do this now: in the Visualizations pane click the paintbrush "
+                "icon, click 'Callout value' and set Font size to 24, then click 'Category "
+                "label' and set Font size to 10.",
+                "If the words are still cut off, switch 'Category label' off with its "
+                "toggle, then click General, then Title, and type the name into the Text "
+                "box instead — a title is drawn above the number, so it always fits."]
+            + _place(x, y, w, h, in_format=True),
+            fields=[("Measure", measure), ("Callout value font size", "24"),
+                    ("Category label font size", "10")] + _pos_rows(x, y, w, h),
             note="If the number looks wrong, you probably ticked a column instead of the "
                  "measure — measures have a calculator icon.",
-            check="The card shows one number with the words %s under it, sitting in the top "
-                  "band of the page." % measure,
+            check="The card shows one number with the words %s under it in full, not cut "
+                  "off, sitting in the top band of the page." % measure,
             stuck="'(Blank)' means no data reached it — check that factInventory has rows and "
                   "that no slicer is filtering everything out. A word instead of a number "
                   "means a text column was dropped in: remove it from the Fields box and drag "

@@ -151,7 +151,7 @@
         "labels": [
           {
             "fontFamily": "Arial Bold",
-            "fontSize": 22,
+            "fontSize": 20,
             "color": {
               "solid": {
                 "color": "#1B1F26"
