@@ -87,7 +87,8 @@ a.dl{display:inline-block;margin:14px 0 0;background:#232936;border:1px solid va
 <h1>Inventory Power BI — build guide</h1>
 <p class="sub">New here? <strong>Start here</strong> — the finished file is ready to download, so you
 do not have to build anything by hand. The other tabs are the manual route, kept as a fallback.</p>
-<p class="sub">Click <strong>Copy</strong> on a block, then paste it into Power Query's Advanced Editor.
+<p class="sub">On every block: <strong>Copy code</strong> for the Advanced Editor, and
+<strong>Copy name</strong> for the rename box, so nothing is ever typed by hand.
 Tick <strong>Done</strong> to keep your place — it is remembered in this browser.
 Building the pages? Use <strong>Build it</strong> — one instruction per screen.</p>
 
@@ -248,7 +249,8 @@ than an invented number.</td></tr>
   <header>
     <span class="num">1</span>
     <h3>pRoot</h3>
-    <button class="copy" data-target="qcode1">Copy</button>
+    <button class="copy" data-text="pRoot">Copy name</button>
+    <button class="copy" data-target="qcode1">Copy code</button>
     <button class="done" data-key="q-1">Done</button>
   </header>
   <p class='note'>Replace the whole path with YOUR real folder path. Keep the quote marks. No trailing backslash. No angle brackets.</p>
@@ -259,7 +261,8 @@ than an invented number.</td></tr>
   <header>
     <span class="num">2</span>
     <h3>pVarsFile</h3>
-    <button class="copy" data-target="qcode2">Copy</button>
+    <button class="copy" data-text="pVarsFile">Copy name</button>
+    <button class="copy" data-target="qcode2">Copy code</button>
     <button class="done" data-key="q-2">Done</button>
   </header>
   
@@ -270,7 +273,8 @@ than an invented number.</td></tr>
   <header>
     <span class="num">3</span>
     <h3>fnCleanMB5B</h3>
-    <button class="copy" data-target="qcode3">Copy</button>
+    <button class="copy" data-text="fnCleanMB5B">Copy name</button>
+    <button class="copy" data-target="qcode3">Copy code</button>
     <button class="done" data-key="q-3">Done</button>
   </header>
   <p class='note'>Matches headers ignoring case, spaces and punctuation; finds the header row itself; does not require the sheet to be named Sheet1. A genuinely missing column loads as blank rather than failing the refresh - qcHeaders is how you catch that.</p>
@@ -379,7 +383,8 @@ in
   <header>
     <span class="num">4</span>
     <h3>stgRM</h3>
-    <button class="copy" data-target="qcode4">Copy</button>
+    <button class="copy" data-text="stgRM">Copy name</button>
+    <button class="copy" data-target="qcode4">Copy code</button>
     <button class="done" data-key="q-4">Done</button>
   </header>
   
@@ -405,7 +410,8 @@ in
   <header>
     <span class="num">5</span>
     <h3>stgFG</h3>
-    <button class="copy" data-target="qcode5">Copy</button>
+    <button class="copy" data-text="stgFG">Copy name</button>
+    <button class="copy" data-target="qcode5">Copy code</button>
     <button class="done" data-key="q-5">Done</button>
   </header>
   
@@ -431,7 +437,8 @@ in
   <header>
     <span class="num">6</span>
     <h3>stgConble</h3>
-    <button class="copy" data-target="qcode6">Copy</button>
+    <button class="copy" data-text="stgConble">Copy name</button>
+    <button class="copy" data-target="qcode6">Copy code</button>
     <button class="done" data-key="q-6">Done</button>
   </header>
   
@@ -457,7 +464,8 @@ in
   <header>
     <span class="num">7</span>
     <h3>fnVarSheet</h3>
-    <button class="copy" data-target="qcode7">Copy</button>
+    <button class="copy" data-text="fnVarSheet">Copy name</button>
+    <button class="copy" data-target="qcode7">Copy code</button>
     <button class="done" data-key="q-7">Done</button>
   </header>
   <p class='note'>Shared helper. Create this BEFORE dimMaterialAttr, dimFGAttr, varConstants and dimTBMaster, which all call it.</p>
@@ -496,7 +504,8 @@ in
   <header>
     <span class="num">8</span>
     <h3>dimPlant</h3>
-    <button class="copy" data-target="qcode8">Copy</button>
+    <button class="copy" data-text="dimPlant">Copy name</button>
+    <button class="copy" data-target="qcode8">Copy code</button>
     <button class="done" data-key="q-8">Done</button>
   </header>
   <p class='note'>Hardcoded on purpose: no sheet, no header to mismatch. Add a plant by adding a line.</p>
@@ -516,7 +525,8 @@ in
   <header>
     <span class="num">9</span>
     <h3>dimMaterialAttr</h3>
-    <button class="copy" data-target="qcode9">Copy</button>
+    <button class="copy" data-text="dimMaterialAttr">Copy name</button>
+    <button class="copy" data-target="qcode9">Copy code</button>
     <button class="done" data-key="q-9">Done</button>
   </header>
   
@@ -553,7 +563,8 @@ in
   <header>
     <span class="num">10</span>
     <h3>dimFGAttr</h3>
-    <button class="copy" data-target="qcode10">Copy</button>
+    <button class="copy" data-text="dimFGAttr">Copy name</button>
+    <button class="copy" data-target="qcode10">Copy code</button>
     <button class="done" data-key="q-10">Done</button>
   </header>
   
@@ -585,7 +596,8 @@ in
   <header>
     <span class="num">11</span>
     <h3>varConstants</h3>
-    <button class="copy" data-target="qcode11">Copy</button>
+    <button class="copy" data-text="varConstants">Copy name</button>
+    <button class="copy" data-target="qcode11">Copy code</button>
     <button class="done" data-key="q-11">Done</button>
   </header>
   <p class='note'>Works with or without an Effective From column. Needs a row named exactly RM_MW_FACTOR (value 580) or RM MW comes out blank.</p>
@@ -616,7 +628,8 @@ in
   <header>
     <span class="num">12</span>
     <h3>fnConstantAsOf</h3>
-    <button class="copy" data-target="qcode12">Copy</button>
+    <button class="copy" data-text="fnConstantAsOf">Copy name</button>
+    <button class="copy" data-target="qcode12">Copy code</button>
     <button class="done" data-key="q-12">Done</button>
   </header>
   
@@ -637,7 +650,8 @@ in
   <header>
     <span class="num">13</span>
     <h3>factRM</h3>
-    <button class="copy" data-target="qcode13">Copy</button>
+    <button class="copy" data-text="factRM">Copy name</button>
+    <button class="copy" data-target="qcode13">Copy code</button>
     <button class="done" data-key="q-13">Done</button>
   </header>
   
@@ -663,7 +677,8 @@ in
   <header>
     <span class="num">14</span>
     <h3>factFG</h3>
-    <button class="copy" data-target="qcode14">Copy</button>
+    <button class="copy" data-text="factFG">Copy name</button>
+    <button class="copy" data-target="qcode14">Copy code</button>
     <button class="done" data-key="q-14">Done</button>
   </header>
   
@@ -709,7 +724,8 @@ in
   <header>
     <span class="num">15</span>
     <h3>factConble</h3>
-    <button class="copy" data-target="qcode15">Copy</button>
+    <button class="copy" data-text="factConble">Copy name</button>
+    <button class="copy" data-target="qcode15">Copy code</button>
     <button class="done" data-key="q-15">Done</button>
   </header>
   
@@ -720,7 +736,8 @@ in
   <header>
     <span class="num">16</span>
     <h3>factInventory</h3>
-    <button class="copy" data-target="qcode16">Copy</button>
+    <button class="copy" data-text="factInventory">Copy name</button>
+    <button class="copy" data-target="qcode16">Copy code</button>
     <button class="done" data-key="q-16">Done</button>
   </header>
   <p class='note'>The single table every report visual uses. The last three steps force an exact column list and exact types, so the table looks identical whatever the source files happen to contain - RM files have no Rate, consumables have no Nature, and this is what stops that mattering.</p>
@@ -758,7 +775,8 @@ in
   <header>
     <span class="num">17</span>
     <h3>varMWCapacity</h3>
-    <button class="copy" data-target="qcode17">Copy</button>
+    <button class="copy" data-text="varMWCapacity">Copy name</button>
+    <button class="copy" data-target="qcode17">Copy code</button>
     <button class="done" data-key="q-17">Done</button>
   </header>
   <p class='note'>Handles either MW sheet layout and picks automatically: the long one (`Effective From | Tech | Valuation Area | MW`, one row per combination) or the original wide one (a `Tech` column with 1900/1902/1905 across the top). Headers are matched ignoring case, spaces and punctuation. A missing `Effective From` defaults to 1900-01-01, `-` becomes 0, and plant codes are forced to text so they join to `dimPlant`.</p>
@@ -847,7 +865,8 @@ in
   <header>
     <span class="num">18</span>
     <h3>dimCapacity</h3>
-    <button class="copy" data-target="qcode18">Copy</button>
+    <button class="copy" data-text="dimCapacity">Copy name</button>
+    <button class="copy" data-target="qcode18">Copy code</button>
     <button class="done" data-key="q-18">Done</button>
   </header>
   
@@ -874,7 +893,8 @@ in
   <header>
     <span class="num">19</span>
     <h3>dimNature</h3>
-    <button class="copy" data-target="qcode19">Copy</button>
+    <button class="copy" data-text="dimNature">Copy name</button>
+    <button class="copy" data-target="qcode19">Copy code</button>
     <button class="done" data-key="q-19">Done</button>
   </header>
   <p class='note'>Bridge table. Without it, slicing FG by Nature leaves Capacity MW unfiltered and Days is wrong everywhere except the grand total.</p>
@@ -893,7 +913,8 @@ in
   <header>
     <span class="num">20</span>
     <h3>dimTBMaster</h3>
-    <button class="copy" data-target="qcode20">Copy</button>
+    <button class="copy" data-text="dimTBMaster">Copy name</button>
+    <button class="copy" data-target="qcode20">Copy code</button>
     <button class="done" data-key="q-20">Done</button>
   </header>
   
@@ -930,7 +951,8 @@ in
   <header>
     <span class="num">21</span>
     <h3>factTB_Staged</h3>
-    <button class="copy" data-target="qcode21">Copy</button>
+    <button class="copy" data-text="factTB_Staged">Copy name</button>
+    <button class="copy" data-target="qcode21">Copy code</button>
     <button class="done" data-key="q-21">Done</button>
   </header>
   <p class='note'>Header-tolerant: sheet names, header position, case, spaces and punctuation are all matched loosely, and the common SAP spellings (`gl Account Number`, `Profit Center`, `Amount in local currency`, …) are recognised. A column it genuinely cannot find comes through blank rather than failing the refresh. Month comes from the file name, so files must be `TB_YYYYMM.xlsx`.</p>
@@ -1026,7 +1048,8 @@ in
   <header>
     <span class="num">22</span>
     <h3>factTB</h3>
-    <button class="copy" data-target="qcode22">Copy</button>
+    <button class="copy" data-text="factTB">Copy name</button>
+    <button class="copy" data-target="qcode22">Copy code</button>
     <button class="done" data-key="q-22">Done</button>
   </header>
   <p class='note'>The inner join to dimTBMaster IS the trial-balance cleaning - only whitelisted GL accounts survive. `Category` is worked out from the Nature text on TB Master, so the trial balance and MB5B can be compared on the same RM / FG / Consumables row.</p>
@@ -1070,7 +1093,8 @@ in
   <header>
     <span class="num">23</span>
     <h3>factTB_Unmapped</h3>
-    <button class="copy" data-target="qcode23">Copy</button>
+    <button class="copy" data-text="factTB_Unmapped">Copy name</button>
+    <button class="copy" data-target="qcode23">Copy code</button>
     <button class="done" data-key="q-23">Done</button>
   </header>
   <p class='note'>GL accounts present in the raw TB but absent from TB Master. Empty = good. This is what stops a new GL silently vanishing.</p>
@@ -1089,7 +1113,8 @@ in
   <header>
     <span class="num">24</span>
     <h3>dimDate</h3>
-    <button class="copy" data-target="qcode24">Copy</button>
+    <button class="copy" data-text="dimDate">Copy name</button>
+    <button class="copy" data-target="qcode24">Copy code</button>
     <button class="done" data-key="q-24">Done</button>
   </header>
   <p class='note'>One row per month, because every fact is monthly. A daily calendar would repeat each Month value ~30 times and Power BI would refuse to put it on the &quot;one&quot; side of the relationship.</p>
@@ -1132,7 +1157,8 @@ in
   <header>
     <span class="num">25</span>
     <h3>qcHeaders</h3>
-    <button class="copy" data-target="qcode25">Copy</button>
+    <button class="copy" data-text="qcHeaders">Copy name</button>
+    <button class="copy" data-target="qcode25">Copy code</button>
     <button class="done" data-key="q-25">Done</button>
   </header>
   <p class='note'>Your self-check: lists the real sheet names and headers of every file in all four folders. Leave Enable load ON.</p>
@@ -1168,7 +1194,8 @@ in
   <header>
     <span class="num">26</span>
     <h3>qcVarHeaders</h3>
-    <button class="copy" data-target="qcode26">Copy</button>
+    <button class="copy" data-text="qcVarHeaders">Copy name</button>
+    <button class="copy" data-target="qcode26">Copy code</button>
     <button class="done" data-key="q-26">Done</button>
   </header>
   <p class='note'>Your self-check for Variables and Calculations: every sheet, its exact headers, and its row count. Leave Enable load ON.</p>
@@ -1191,7 +1218,8 @@ in
   <header>
     <span class="num">27</span>
     <h3>qcNatureNoCapacity</h3>
-    <button class="copy" data-target="qcode27">Copy</button>
+    <button class="copy" data-text="qcNatureNoCapacity">Copy name</button>
+    <button class="copy" data-target="qcode27">Copy code</button>
     <button class="done" data-key="q-27">Done</button>
   </header>
   <p class='note'>Lists FG Natures with no matching Tech on the MW sheet. Those rows get blank Days. Empty table = good.</p>
@@ -1209,7 +1237,8 @@ in
   <header>
     <span class="num">28</span>
     <h3>qcMWSheet</h3>
-    <button class="copy" data-target="qcode28">Copy</button>
+    <button class="copy" data-text="qcMWSheet">Copy name</button>
+    <button class="copy" data-target="qcode28">Copy code</button>
     <button class="done" data-key="q-28">Done</button>
   </header>
   <p class='note'>Diagnostic. Shows the MW sheet exactly as it sits in Excel, cell for cell, with no interpretation. If `varMWCapacity` complains, look here and read me the layout. Leave Enable load ON.</p>
@@ -1232,7 +1261,8 @@ in
   <header>
     <span class="num">29</span>
     <h3>dimCategory</h3>
-    <button class="copy" data-target="qcode29">Copy</button>
+    <button class="copy" data-text="dimCategory">Copy name</button>
+    <button class="copy" data-target="qcode29">Copy code</button>
     <button class="done" data-key="q-29">Done</button>
   </header>
   <p class='note'>The shared RM / FG / Consumables list. Both `factInventory` and `factTB` join to it, which is what puts the trial balance and MB5B on the same row of the Summary matrix.</p>
@@ -1252,7 +1282,8 @@ in
   <header>
     <span class="num">30</span>
     <h3>dimMetric</h3>
-    <button class="copy" data-target="qcode30">Copy</button>
+    <button class="copy" data-text="dimMetric">Copy name</button>
+    <button class="copy" data-target="qcode30">Copy code</button>
     <button class="done" data-key="q-30">Done</button>
   </header>
   <p class='note'>Deliberately disconnected — no relationship to anything. It exists so a matrix can have `Inventory (TB)`, `Inventory (MB5B)` and `Difference` as its three master columns, with months underneath them. The `Summary Value ₹ Cr` measure reads which one a cell is in.</p>
@@ -1272,7 +1303,8 @@ in
   <header>
     <span class="num">31</span>
     <h3>dimMeasure</h3>
-    <button class="copy" data-target="qcode31">Copy</button>
+    <button class="copy" data-text="dimMeasure">Copy name</button>
+    <button class="copy" data-target="qcode31">Copy code</button>
     <button class="done" data-key="q-31">Done</button>
   </header>
   <p class='note'>Also disconnected. Gives the FG and RM matrices their `MW` / `In ₹ Cr` / `In Days` master columns.</p>
@@ -1296,7 +1328,8 @@ in
   <header>
     <span class="num">1</span>
     <h3>Value ₹ Cr</h3>
-    <button class="copy" data-target="mcode1">Copy</button>
+    <button class="copy" data-text="Value ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode1">Copy code</button>
     <button class="done" data-key="m-1">Done</button>
   </header>
   
@@ -1307,7 +1340,8 @@ in
   <header>
     <span class="num">2</span>
     <h3>As On</h3>
-    <button class="copy" data-target="mcode2">Copy</button>
+    <button class="copy" data-text="As On">Copy name</button>
+    <button class="copy" data-target="mcode2">Copy code</button>
     <button class="done" data-key="m-2">Done</button>
   </header>
   
@@ -1318,7 +1352,8 @@ in
   <header>
     <span class="num">3</span>
     <h3>Value ₹ Cr Title</h3>
-    <button class="copy" data-target="mcode3">Copy</button>
+    <button class="copy" data-text="Value ₹ Cr Title">Copy name</button>
+    <button class="copy" data-target="mcode3">Copy code</button>
     <button class="done" data-key="m-3">Done</button>
   </header>
   
@@ -1329,7 +1364,8 @@ in
   <header>
     <span class="num">4</span>
     <h3>Opening Value ₹ Cr</h3>
-    <button class="copy" data-target="mcode4">Copy</button>
+    <button class="copy" data-text="Opening Value ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode4">Copy code</button>
     <button class="done" data-key="m-4">Done</button>
   </header>
   
@@ -1340,7 +1376,8 @@ in
   <header>
     <span class="num">5</span>
     <h3>Receipts ₹ Cr</h3>
-    <button class="copy" data-target="mcode5">Copy</button>
+    <button class="copy" data-text="Receipts ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode5">Copy code</button>
     <button class="done" data-key="m-5">Done</button>
   </header>
   
@@ -1351,7 +1388,8 @@ in
   <header>
     <span class="num">6</span>
     <h3>Issues ₹ Cr</h3>
-    <button class="copy" data-target="mcode6">Copy</button>
+    <button class="copy" data-text="Issues ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode6">Copy code</button>
     <button class="done" data-key="m-6">Done</button>
   </header>
   
@@ -1362,7 +1400,8 @@ in
   <header>
     <span class="num">7</span>
     <h3>Closing Qty</h3>
-    <button class="copy" data-target="mcode7">Copy</button>
+    <button class="copy" data-text="Closing Qty">Copy name</button>
+    <button class="copy" data-target="mcode7">Copy code</button>
     <button class="done" data-key="m-7">Done</button>
   </header>
   
@@ -1373,7 +1412,8 @@ in
   <header>
     <span class="num">8</span>
     <h3>RM ₹ Cr</h3>
-    <button class="copy" data-target="mcode8">Copy</button>
+    <button class="copy" data-text="RM ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode8">Copy code</button>
     <button class="done" data-key="m-8">Done</button>
   </header>
   
@@ -1384,7 +1424,8 @@ in
   <header>
     <span class="num">9</span>
     <h3>FG ₹ Cr</h3>
-    <button class="copy" data-target="mcode9">Copy</button>
+    <button class="copy" data-text="FG ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode9">Copy code</button>
     <button class="done" data-key="m-9">Done</button>
   </header>
   
@@ -1395,7 +1436,8 @@ in
   <header>
     <span class="num">10</span>
     <h3>Consumables ₹ Cr</h3>
-    <button class="copy" data-target="mcode10">Copy</button>
+    <button class="copy" data-text="Consumables ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode10">Copy code</button>
     <button class="done" data-key="m-10">Done</button>
   </header>
   
@@ -1406,7 +1448,8 @@ in
   <header>
     <span class="num">11</span>
     <h3>Share of Total %</h3>
-    <button class="copy" data-target="mcode11">Copy</button>
+    <button class="copy" data-text="Share of Total %">Copy name</button>
+    <button class="copy" data-target="mcode11">Copy code</button>
     <button class="done" data-key="m-11">Done</button>
   </header>
   
@@ -1417,7 +1460,8 @@ in
   <header>
     <span class="num">12</span>
     <h3>MW</h3>
-    <button class="copy" data-target="mcode12">Copy</button>
+    <button class="copy" data-text="MW">Copy name</button>
+    <button class="copy" data-target="mcode12">Copy code</button>
     <button class="done" data-key="m-12">Done</button>
   </header>
   
@@ -1428,7 +1472,8 @@ in
   <header>
     <span class="num">13</span>
     <h3>FG MW</h3>
-    <button class="copy" data-target="mcode13">Copy</button>
+    <button class="copy" data-text="FG MW">Copy name</button>
+    <button class="copy" data-target="mcode13">Copy code</button>
     <button class="done" data-key="m-13">Done</button>
   </header>
   
@@ -1439,7 +1484,8 @@ in
   <header>
     <span class="num">14</span>
     <h3>Capacity MW</h3>
-    <button class="copy" data-target="mcode14">Copy</button>
+    <button class="copy" data-text="Capacity MW">Copy name</button>
+    <button class="copy" data-target="mcode14">Copy code</button>
     <button class="done" data-key="m-14">Done</button>
   </header>
   
@@ -1450,7 +1496,8 @@ in
   <header>
     <span class="num">15</span>
     <h3>Capacity MW (plant)</h3>
-    <button class="copy" data-target="mcode15">Copy</button>
+    <button class="copy" data-text="Capacity MW (plant)">Copy name</button>
+    <button class="copy" data-target="mcode15">Copy code</button>
     <button class="done" data-key="m-15">Done</button>
   </header>
   
@@ -1461,7 +1508,8 @@ in
   <header>
     <span class="num">16</span>
     <h3>Days of Inventory</h3>
-    <button class="copy" data-target="mcode16">Copy</button>
+    <button class="copy" data-text="Days of Inventory">Copy name</button>
+    <button class="copy" data-target="mcode16">Copy code</button>
     <button class="done" data-key="m-16">Done</button>
   </header>
   
@@ -1474,7 +1522,8 @@ RETURN DIVIDE([MW], Cap)</pre>
   <header>
     <span class="num">17</span>
     <h3>FG Days</h3>
-    <button class="copy" data-target="mcode17">Copy</button>
+    <button class="copy" data-text="FG Days">Copy name</button>
+    <button class="copy" data-target="mcode17">Copy code</button>
     <button class="done" data-key="m-17">Done</button>
   </header>
   
@@ -1485,7 +1534,8 @@ RETURN DIVIDE([MW], Cap)</pre>
   <header>
     <span class="num">18</span>
     <h3>INR per Wp</h3>
-    <button class="copy" data-target="mcode18">Copy</button>
+    <button class="copy" data-text="INR per Wp">Copy name</button>
+    <button class="copy" data-target="mcode18">Copy code</button>
     <button class="done" data-key="m-18">Done</button>
   </header>
   
@@ -1496,7 +1546,8 @@ RETURN DIVIDE([MW], Cap)</pre>
   <header>
     <span class="num">19</span>
     <h3>Value ₹ Cr LM</h3>
-    <button class="copy" data-target="mcode19">Copy</button>
+    <button class="copy" data-text="Value ₹ Cr LM">Copy name</button>
+    <button class="copy" data-target="mcode19">Copy code</button>
     <button class="done" data-key="m-19">Done</button>
   </header>
   
@@ -1509,7 +1560,8 @@ RETURN CALCULATE([Value ₹ Cr], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)</p
   <header>
     <span class="num">20</span>
     <h3>Value ₹ Cr vs LM</h3>
-    <button class="copy" data-target="mcode20">Copy</button>
+    <button class="copy" data-text="Value ₹ Cr vs LM">Copy name</button>
+    <button class="copy" data-target="mcode20">Copy code</button>
     <button class="done" data-key="m-20">Done</button>
   </header>
   
@@ -1520,7 +1572,8 @@ RETURN CALCULATE([Value ₹ Cr], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)</p
   <header>
     <span class="num">21</span>
     <h3>Value ₹ Cr % vs LM</h3>
-    <button class="copy" data-target="mcode21">Copy</button>
+    <button class="copy" data-text="Value ₹ Cr % vs LM">Copy name</button>
+    <button class="copy" data-target="mcode21">Copy code</button>
     <button class="done" data-key="m-21">Done</button>
   </header>
   
@@ -1531,7 +1584,8 @@ RETURN CALCULATE([Value ₹ Cr], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)</p
   <header>
     <span class="num">22</span>
     <h3>Value ₹ Cr LY</h3>
-    <button class="copy" data-target="mcode22">Copy</button>
+    <button class="copy" data-text="Value ₹ Cr LY">Copy name</button>
+    <button class="copy" data-target="mcode22">Copy code</button>
     <button class="done" data-key="m-22">Done</button>
   </header>
   
@@ -1544,7 +1598,8 @@ RETURN CALCULATE([Value ₹ Cr], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)</p
   <header>
     <span class="num">23</span>
     <h3>Value ₹ Cr % vs LY</h3>
-    <button class="copy" data-target="mcode23">Copy</button>
+    <button class="copy" data-text="Value ₹ Cr % vs LY">Copy name</button>
+    <button class="copy" data-target="mcode23">Copy code</button>
     <button class="done" data-key="m-23">Done</button>
   </header>
   
@@ -1555,7 +1610,8 @@ RETURN CALCULATE([Value ₹ Cr], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)</p
   <header>
     <span class="num">24</span>
     <h3>MW LM</h3>
-    <button class="copy" data-target="mcode24">Copy</button>
+    <button class="copy" data-text="MW LM">Copy name</button>
+    <button class="copy" data-target="mcode24">Copy code</button>
     <button class="done" data-key="m-24">Done</button>
   </header>
   
@@ -1568,7 +1624,8 @@ RETURN CALCULATE([MW], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)</pre>
   <header>
     <span class="num">25</span>
     <h3>MW vs LM</h3>
-    <button class="copy" data-target="mcode25">Copy</button>
+    <button class="copy" data-text="MW vs LM">Copy name</button>
+    <button class="copy" data-target="mcode25">Copy code</button>
     <button class="done" data-key="m-25">Done</button>
   </header>
   
@@ -1579,7 +1636,8 @@ RETURN CALCULATE([MW], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)</pre>
   <header>
     <span class="num">26</span>
     <h3>Days LM</h3>
-    <button class="copy" data-target="mcode26">Copy</button>
+    <button class="copy" data-text="Days LM">Copy name</button>
+    <button class="copy" data-target="mcode26">Copy code</button>
     <button class="done" data-key="m-26">Done</button>
   </header>
   
@@ -1592,7 +1650,8 @@ RETURN CALCULATE([Days of Inventory], ALL(dimDate), dimDate[MonthIndex] = PrevId
   <header>
     <span class="num">27</span>
     <h3>Days vs LM</h3>
-    <button class="copy" data-target="mcode27">Copy</button>
+    <button class="copy" data-text="Days vs LM">Copy name</button>
+    <button class="copy" data-target="mcode27">Copy code</button>
     <button class="done" data-key="m-27">Done</button>
   </header>
   
@@ -1603,7 +1662,8 @@ RETURN CALCULATE([Days of Inventory], ALL(dimDate), dimDate[MonthIndex] = PrevId
   <header>
     <span class="num">28</span>
     <h3>Avg Value ₹ Cr</h3>
-    <button class="copy" data-target="mcode28">Copy</button>
+    <button class="copy" data-text="Avg Value ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode28">Copy code</button>
     <button class="done" data-key="m-28">Done</button>
   </header>
   
@@ -1614,7 +1674,8 @@ RETURN CALCULATE([Days of Inventory], ALL(dimDate), dimDate[MonthIndex] = PrevId
   <header>
     <span class="num">29</span>
     <h3>Peak Value ₹ Cr</h3>
-    <button class="copy" data-target="mcode29">Copy</button>
+    <button class="copy" data-text="Peak Value ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode29">Copy code</button>
     <button class="done" data-key="m-29">Done</button>
   </header>
   
@@ -1625,7 +1686,8 @@ RETURN CALCULATE([Days of Inventory], ALL(dimDate), dimDate[MonthIndex] = PrevId
   <header>
     <span class="num">30</span>
     <h3>Latest Month Value ₹ Cr</h3>
-    <button class="copy" data-target="mcode30">Copy</button>
+    <button class="copy" data-text="Latest Month Value ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode30">Copy code</button>
     <button class="done" data-key="m-30">Done</button>
   </header>
   
@@ -1638,7 +1700,8 @@ RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)</pre>
   <header>
     <span class="num">31</span>
     <h3>TB ₹ Cr</h3>
-    <button class="copy" data-target="mcode31">Copy</button>
+    <button class="copy" data-text="TB ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode31">Copy code</button>
     <button class="done" data-key="m-31">Done</button>
   </header>
   
@@ -1649,7 +1712,8 @@ RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)</pre>
   <header>
     <span class="num">32</span>
     <h3>Difference ₹ Cr</h3>
-    <button class="copy" data-target="mcode32">Copy</button>
+    <button class="copy" data-text="Difference ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode32">Copy code</button>
     <button class="done" data-key="m-32">Done</button>
   </header>
   
@@ -1660,7 +1724,8 @@ RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)</pre>
   <header>
     <span class="num">33</span>
     <h3>Difference %</h3>
-    <button class="copy" data-target="mcode33">Copy</button>
+    <button class="copy" data-text="Difference %">Copy name</button>
+    <button class="copy" data-target="mcode33">Copy code</button>
     <button class="done" data-key="m-33">Done</button>
   </header>
   
@@ -1671,7 +1736,8 @@ RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)</pre>
   <header>
     <span class="num">34</span>
     <h3>Stock Recon ₹ Cr</h3>
-    <button class="copy" data-target="mcode34">Copy</button>
+    <button class="copy" data-text="Stock Recon ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode34">Copy code</button>
     <button class="done" data-key="m-34">Done</button>
   </header>
   
@@ -1682,7 +1748,8 @@ RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)</pre>
   <header>
     <span class="num">35</span>
     <h3>Rows Missing Attr</h3>
-    <button class="copy" data-target="mcode35">Copy</button>
+    <button class="copy" data-text="Rows Missing Attr">Copy name</button>
+    <button class="copy" data-target="mcode35">Copy code</button>
     <button class="done" data-key="m-35">Done</button>
   </header>
   
@@ -1693,7 +1760,8 @@ RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)</pre>
   <header>
     <span class="num">36</span>
     <h3>Unmapped TB ₹ Cr</h3>
-    <button class="copy" data-target="mcode36">Copy</button>
+    <button class="copy" data-text="Unmapped TB ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode36">Copy code</button>
     <button class="done" data-key="m-36">Done</button>
   </header>
   
@@ -1704,7 +1772,8 @@ RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)</pre>
   <header>
     <span class="num">37</span>
     <h3>Days</h3>
-    <button class="copy" data-target="mcode37">Copy</button>
+    <button class="copy" data-text="Days">Copy name</button>
+    <button class="copy" data-target="mcode37">Copy code</button>
     <button class="done" data-key="m-37">Done</button>
   </header>
   
@@ -1715,7 +1784,8 @@ RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)</pre>
   <header>
     <span class="num">38</span>
     <h3>Summary Value ₹ Cr</h3>
-    <button class="copy" data-target="mcode38">Copy</button>
+    <button class="copy" data-text="Summary Value ₹ Cr">Copy name</button>
+    <button class="copy" data-target="mcode38">Copy code</button>
     <button class="done" data-key="m-38">Done</button>
   </header>
   
@@ -1731,7 +1801,8 @@ SWITCH(SELECTEDVALUE(dimMetric[Metric]),
   <header>
     <span class="num">39</span>
     <h3>Unit Value</h3>
-    <button class="copy" data-target="mcode39">Copy</button>
+    <button class="copy" data-text="Unit Value">Copy name</button>
+    <button class="copy" data-target="mcode39">Copy code</button>
     <button class="done" data-key="m-39">Done</button>
   </header>
   
@@ -1747,7 +1818,8 @@ SWITCH(SELECTEDVALUE(dimMeasure[Measure]),
   <header>
     <span class="num">40</span>
     <h3>Last 4 Months</h3>
-    <button class="copy" data-target="mcode40">Copy</button>
+    <button class="copy" data-text="Last 4 Months">Copy name</button>
+    <button class="copy" data-target="mcode40">Copy code</button>
     <button class="done" data-key="m-40">Done</button>
   </header>
   
@@ -2345,7 +2417,7 @@ qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet</pre>
 </ol>
 <p>That&#x27;s it. No formulas to drag down, no SUMIFS to extend.</p></div>
 
-<footer>Updated 12 Aug 2026 04:50 UTC</footer>
+<footer>Updated 12 Aug 2026 05:11 UTC</footer>
 </div>
 <script>const STEPS = [{"title": "Before you start", "page": "\u2014", "do": ["You should already have: the queries loaded (Part 1), the relationships made (Part 2) and the measures added (Part 3).", "Click the very first icon on the left edge of the Power BI window \u2014 it looks like a bar chart. That is Report view, where all of these steps happen.", "Three panes should now be down the right-hand side: Filters, then Visualizations (a grid of small chart icons), then Data (a list of your tables such as factInventory and dimDate).", "If a pane is missing, click the View tab at the top and then 'Show panes' (or click the small > arrow at the right edge of the window to open it).", "Hover the mouse over any icon in the Visualizations pane and Power BI tells you its name \u2014 use that whenever a step names an icon."], "fields": [], "note": "If a name a step asks for is not in the Data pane, that part is not finished \u2014 go back to Part 1-3 rather than guessing.", "check": "The Data pane on the right lists factInventory, factTB, dimPlant, dimDate, dimNature, dimCapacity, dimTBMaster, dimCategory, dimMetric and dimMeasure, and typing Value into the search box at the top of that pane finds 'Value \u20b9 Cr' with a calculator icon beside it.", "stuck": "A missing table means that query was never pasted (Part 1). A missing measure means Part 3 is unfinished. Neither can be fixed from here, so go back and finish it \u2014 nothing below will work otherwise."}, {"title": "Set the canvas size", "page": "\u2014", "do": ["Click once on the empty white area of the page (not on a visual).", "In the Visualizations pane on the right, click the paintbrush icon.", "Click the words 'Canvas settings'.", "Set Type to 16:9, then type the Height and Width below into their boxes."], "fields": [["Height", "720"], ["Width", "1280"]], "note": "Every position in these steps assumes this canvas, so do it before anything else \u2014 changing it later moves everything.", "check": "The white page is a wide rectangle and the Canvas settings boxes read Height 720, Width 1280.", "stuck": "No paintbrush icon means a visual is still selected \u2014 press Escape, click the grey area outside the page, then click the empty white page once."}, {"title": "Load the colour theme", "page": "\u2014", "do": ["Click the download link just below these steps and save inventory-theme.json into your Inventory Report folder.", "At the top of the window click the View tab.", "Click the small arrow under the word Themes to open the list.", "Click 'Browse for themes' at the bottom of that list.", "Choose the inventory-theme.json file you just saved, and click Open."], "fields": [], "note": "This sets all colours, fonts, borders and card styling, so no step below asks you to colour anything.", "link": "inventory-theme.json", "check": "A message says the theme imported successfully, and the page background turns a very light grey rather than pure white.", "stuck": "'Invalid theme file' means the download saved as .txt \u2014 rename it so it ends .json and import again. If there is no 'Browse for themes' entry, your Power BI is an old build: everything still works, it just stays in default colours."}, {"title": "Create the 5 pages", "page": "\u2014", "do": ["Look at the very bottom-left of the window: there is a yellow tab called 'Page 1' and a + button next to it.", "Click the + button 4 times, so there are 5 tabs in total.", "Double-click the first tab, type the first name below, and press Enter.", "Do the same for the other tabs, in this exact order."], "fields": [["Page 1", "Overview"], ["Page 2", "Summary"], ["Page 3", "FG"], ["Page 4", "RM"], ["Page 5", "Detail"]], "note": "Names must match, because later steps say which page to work on.", "check": "5 tabs along the bottom, reading left to right: Overview, Summary, FG, RM, Detail.", "stuck": "A tab still called 'Page 1' just needs double-clicking and retyping. If a tab is in the wrong place, drag it sideways."}, {"title": "Header card 1 of 6 \u2014 Total value \u20b9 Cr", "page": "Overview", "do": ["Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon showing 123 (called Card). An empty visual appears on the page.", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Fields, then clear the search box.", "The card now shows one big number.", "In the Visualizations pane click the paintbrush icon, then click General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Measure", "Value \u20b9 Cr"], ["X", "16"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon.", "check": "The card shows one number with the words Value \u20b9 Cr under it, sitting in the top band of the page.", "stuck": "'(Blank)' means no data reached it \u2014 check that factInventory has rows and that no slicer is filtering everything out. A word instead of a number means a text column was dropped in: remove it from the Fields box and drag the measure instead (calculator icon, not a table icon)."}, {"title": "Header card 2 of 6 \u2014 Raw materials \u20b9 Cr", "page": "Overview", "do": ["Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon showing 123 (called Card). An empty visual appears on the page.", "In the Data pane (far right) click the search box at the very top of the pane and type: RM \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Fields, then clear the search box.", "The card now shows one big number.", "In the Visualizations pane click the paintbrush icon, then click General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Measure", "RM \u20b9 Cr"], ["X", "224"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon.", "check": "The card shows one number with the words RM \u20b9 Cr under it, sitting in the top band of the page.", "stuck": "'(Blank)' means no data reached it \u2014 check that factInventory has rows and that no slicer is filtering everything out. A word instead of a number means a text column was dropped in: remove it from the Fields box and drag the measure instead (calculator icon, not a table icon)."}, {"title": "Header card 3 of 6 \u2014 Finished goods \u20b9 Cr", "page": "Overview", "do": ["Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon showing 123 (called Card). An empty visual appears on the page.", "In the Data pane (far right) click the search box at the very top of the pane and type: FG \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Fields, then clear the search box.", "The card now shows one big number.", "In the Visualizations pane click the paintbrush icon, then click General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Measure", "FG \u20b9 Cr"], ["X", "432"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon.", "check": "The card shows one number with the words FG \u20b9 Cr under it, sitting in the top band of the page.", "stuck": "'(Blank)' means no data reached it \u2014 check that factInventory has rows and that no slicer is filtering everything out. A word instead of a number means a text column was dropped in: remove it from the Fields box and drag the measure instead (calculator icon, not a table icon)."}, {"title": "Header card 4 of 6 \u2014 Consumables \u20b9 Cr", "page": "Overview", "do": ["Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon showing 123 (called Card). An empty visual appears on the page.", "In the Data pane (far right) click the search box at the very top of the pane and type: Consumables \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Fields, then clear the search box.", "The card now shows one big number.", "In the Visualizations pane click the paintbrush icon, then click General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Measure", "Consumables \u20b9 Cr"], ["X", "640"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon.", "check": "The card shows one number with the words Consumables \u20b9 Cr under it, sitting in the top band of the page.", "stuck": "'(Blank)' means no data reached it \u2014 check that factInventory has rows and that no slicer is filtering everything out. A word instead of a number means a text column was dropped in: remove it from the Fields box and drag the measure instead (calculator icon, not a table icon)."}, {"title": "Header card 5 of 6 \u2014 Days of inventory", "page": "Overview", "do": ["Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon showing 123 (called Card). An empty visual appears on the page.", "In the Data pane (far right) click the search box at the very top of the pane and type: Days of Inventory \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Fields, then clear the search box.", "The card now shows one big number.", "In the Visualizations pane click the paintbrush icon, then click General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Measure", "Days of Inventory"], ["X", "848"], ["Y", "12"], ["Width", "200"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon.", "check": "The card shows one number with the words Days of Inventory under it, sitting in the top band of the page.", "stuck": "'(Blank)' means no data reached it \u2014 check that factInventory has rows and that no slicer is filtering everything out. A word instead of a number means a text column was dropped in: remove it from the Fields box and drag the measure instead (calculator icon, not a table icon)."}, {"title": "Header card 6 of 6 \u2014 Change vs last month", "page": "Overview", "do": ["Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon showing 123 (called Card). An empty visual appears on the page.", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr % vs LM \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Fields, then clear the search box.", "The card now shows one big number.", "In the Visualizations pane click the paintbrush icon, then click General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Measure", "Value \u20b9 Cr % vs LM"], ["X", "1056"], ["Y", "12"], ["Width", "208"], ["Height", "88"]], "note": "If the number looks wrong, you probably ticked a column instead of the measure \u2014 measures have a calculator icon.", "check": "The card shows one number with the words Value \u20b9 Cr % vs LM under it, sitting in the top band of the page.", "stuck": "'(Blank)' means no data reached it \u2014 check that factInventory has rows and that no slicer is filtering everything out. A word instead of a number means a text column was dropped in: remove it from the Fields box and drag the measure instead (calculator icon, not a table icon)."}, {"title": "Header slicer \u2014 Month \u2014 tick the ones to compare", "page": "Overview", "do": ["Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a funnel with a bar under it (called Slicer). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called MonthName out of it and drop it into the box called Field. (If the list is long, type MonthName into the search box at the top of the pane first.)", "In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', and set Style to Dropdown.", "Still under 'Slicer settings', click 'Selection' and switch OFF 'Multi-select with CTRL'. After that you can tick as many months as you like just by clicking them \u2014 no keyboard needed.", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Field", "dimDate[MonthName]"], ["X", "16"], ["Y", "108"], ["Width", "300"], ["Height", "44"]], "note": "", "check": "A closed dropdown sits in the header band; clicking it lists the values of dimDate[MonthName], and clicking one changes the numbers on the cards above.", "stuck": "An empty dropdown means the field came from the wrong table \u2014 remove it and drag dimDate[MonthName] exactly. A slider instead of a list means a number column was used; check the field name again."}, {"title": "Header slicer \u2014 Quarter (FY starts 1 April)", "page": "Overview", "do": ["Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a funnel with a bar under it (called Slicer). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called Quarter out of it and drop it into the box called Field. (If the list is long, type Quarter into the search box at the top of the pane first.)", "In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', and set Style to Dropdown.", "Still under 'Slicer settings', click 'Selection' and switch OFF 'Multi-select with CTRL'. After that you can tick as many quarters as you like just by clicking them \u2014 no keyboard needed.", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Field", "dimDate[Quarter]"], ["X", "324"], ["Y", "108"], ["Width", "300"], ["Height", "44"]], "note": "", "check": "A closed dropdown sits in the header band; clicking it lists the values of dimDate[Quarter], and clicking one changes the numbers on the cards above.", "stuck": "An empty dropdown means the field came from the wrong table \u2014 remove it and drag dimDate[Quarter] exactly. A slider instead of a list means a number column was used; check the field name again."}, {"title": "Header slicer \u2014 Plant", "page": "Overview", "do": ["Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a funnel with a bar under it (called Slicer). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimPlant and click the little arrow to its left to open it, then drag the field called Plant out of it and drop it into the box called Field. (If the list is long, type Plant into the search box at the top of the pane first.)", "In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', and set Style to Dropdown.", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Field", "dimPlant[Plant]"], ["X", "632"], ["Y", "108"], ["Width", "300"], ["Height", "44"]], "note": "", "check": "A closed dropdown sits in the header band; clicking it lists the values of dimPlant[Plant], and clicking one changes the numbers on the cards above.", "stuck": "An empty dropdown means the field came from the wrong table \u2014 remove it and drag dimPlant[Plant] exactly. A slider instead of a list means a number column was used; check the field name again."}, {"title": "Header slicer \u2014 Category", "page": "Overview", "do": ["Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a funnel with a bar under it (called Slicer). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimCategory and click the little arrow to its left to open it, then drag the field called Category out of it and drop it into the box called Field. (If the list is long, type Category into the search box at the top of the pane first.)", "In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', and set Style to Dropdown.", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Field", "dimCategory[Category]"], ["X", "940"], ["Y", "108"], ["Width", "324"], ["Height", "44"]], "note": "", "check": "A closed dropdown sits in the header band; clicking it lists the values of dimCategory[Category], and clicking one changes the numbers on the cards above.", "stuck": "An empty dropdown means the field came from the wrong table \u2014 remove it and drag dimCategory[Category] exactly. A slider instead of a list means a number column was used; check the field name again."}, {"title": "Copy the header band to the other pages", "page": "Overview", "do": ["Click once on the first card. Then hold Ctrl and click each of the other 5 cards and all 4 slicers, so 10 things are selected at once.", "Press Ctrl+C.", "Click the tab at the bottom for the next page in the list below, then press Ctrl+V. If Power BI asks about the data, click 'Keep'.", "Repeat for every page in the list. The cards land in the same place on each page, so nothing needs moving."], "fields": [["Paste on", "Summary"], ["Paste on", "FG"], ["Paste on", "RM"]], "note": "Not on Detail \u2014 that page is filtered by whatever you clicked to get there, so a slicer on it would fight the drill-through.", "check": "These pages now each have the same row of cards and dropdowns across the top, in the same place: Summary, FG, RM.", "stuck": "If the band lands crooked, do not nudge it by hand \u2014 press Ctrl+Z, reselect all 10 items and paste again. If only one card pasted, the Ctrl+click selection was lost partway; select them all again."}, {"title": "Sync the slicers across pages", "page": "\u2014", "do": ["At the top of the window click the View tab, then tick the box called 'Sync slicers'. A new pane opens on the right.", "Click once on the Month slicer on the page.", "In the 'Sync slicers' pane, tick BOTH boxes (Sync and Visible) on the rows for these pages: Overview, Summary, FG, RM.", "Then click the Quarter slicer and do the same, then the Plant slicer, then the Category slicer."], "fields": [], "note": "Skip this and each page filters on its own, so two pages will show different totals for the same month.", "check": "Pick one month on Overview, then click through Summary, FG, RM \u2014 the same month is still picked on each of them.", "stuck": "If a page ignores the choice, its row in the Sync slicers pane is unticked \u2014 tick both boxes on that row. Leave the Detail row unticked everywhere."}, {"title": "Overview 1 of 5 \u2014 Value \u20b9 Cr by month and category", "page": "Overview", "do": ["At the bottom of the window click the tab named Overview.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of three bars stacked in two colours (called Stacked column chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called MonthName out of it and drop it into the box called X-axis. (If the list is long, type MonthName into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Y-axis, then clear the search box.", "In the Data pane (far right), scroll to the table called dimCategory and click the little arrow to its left to open it, then drag the field called Category out of it and drop it into the box called Legend. (If the list is long, type Category into the search box at the top of the pane first.)", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Visual", "Stacked column chart"], ["Title", "Value \u20b9 Cr by month and category"], ["X-axis", "dimDate[MonthName]"], ["Y-axis", "Value \u20b9 Cr"], ["Legend", "dimCategory[Category]"], ["X", "16"], ["Y", "168"], ["Width", "764"], ["Height", "264"]], "note": "Every month side by side, split RM / FG / consumables. Click one segment and the rest of the page follows it; right-click \u2192 Drill through \u2192 Detail for the pies behind it.", "check": "The visual shows bars, each one split into coloured blocks, with a small colour key above it, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimDate[MonthName], Value \u20b9 Cr, dimCategory[Category].", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Overview 2 of 5 \u2014 Value \u20b9 Cr by plant \u2014 click to go deeper", "page": "Overview", "do": ["At the bottom of the window click the tab named Overview.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of three plain bars side by side (called Clustered column chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimPlant and click the little arrow to its left to open it, then drag the field called Plant out of it and drop it into the box called X-axis. (If the list is long, type Plant into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimCategory and click the little arrow to its left to open it, then drag the field called Category out of it and drop it into the box called X-axis. (If the list is long, type Category into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimNature and click the little arrow to its left to open it, then drag the field called Nature out of it and drop it into the box called X-axis. (If the list is long, type Nature into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Y-axis, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "The double-down-arrow in the header turns on drill mode; after that a single click on a bar opens the next level, and the up-arrow goes back.", "Right-click a bar \u2192 Drill through \u2192 Detail for the pie-chart page instead."], "fields": [["Visual", "Clustered column chart"], ["Title", "Value \u20b9 Cr by plant \u2014 click to go deeper"], ["X-axis", "dimPlant[Plant]"], ["X-axis", "dimCategory[Category]"], ["X-axis", "dimNature[Nature]"], ["Y-axis", "Value \u20b9 Cr"], ["X", "788"], ["Y", "168"], ["Width", "476"], ["Height", "216"]], "note": "Three fields in the X-axis makes it a hierarchy, so the little arrows appear in the visual's top-right corner: plant, then category inside a plant, then nature inside that. Clicking is the whole point \u2014 nobody has to build three charts.", "check": "The visual shows groups of plain bars standing side by side, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimPlant[Plant], dimCategory[Category], dimNature[Nature], Value \u20b9 Cr.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Overview 3 of 5 \u2014 Value \u20b9 Cr \u2014 this month vs last month", "page": "Overview", "do": ["At the bottom of the window click the tab named Overview.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of bars with a line drawn over them (called Line and clustered column chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called MonthName out of it and drop it into the box called X-axis. (If the list is long, type MonthName into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Column y-axis, then clear the search box.", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr LM \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Column y-axis, then clear the search box.", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr % vs LM \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Line y-axis, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Visual", "Line and clustered column chart"], ["Title", "Value \u20b9 Cr \u2014 this month vs last month"], ["X-axis", "dimDate[MonthName]"], ["Column y-axis", "Value \u20b9 Cr"], ["Column y-axis", "Value \u20b9 Cr LM"], ["Line y-axis", "Value \u20b9 Cr % vs LM"], ["X", "16"], ["Y", "444"], ["Width", "764"], ["Height", "268"]], "note": "Bars compare the two months directly; the line is the percentage swing, which is what people argue about.", "check": "The visual shows bars with a line drawn across the top of them, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimDate[MonthName], Value \u20b9 Cr, Value \u20b9 Cr LM, Value \u20b9 Cr % vs LM.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Overview 4 of 5 \u2014 Share of value \u2014 click a slice", "page": "Overview", "do": ["At the bottom of the window click the tab named Overview.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a ring (called Donut chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimCategory and click the little arrow to its left to open it, then drag the field called Category out of it and drop it into the box called Legend. (If the list is long, type Category into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Percent of total."], "fields": [["Visual", "Donut chart"], ["Title", "Share of value \u2014 click a slice"], ["Legend", "dimCategory[Category]"], ["Values", "Value \u20b9 Cr"], ["X", "788"], ["Y", "396"], ["Width", "476"], ["Height", "172"]], "note": "Where the money actually sits. Clicking a slice filters the page to that category, which is quicker than the Category slicer.", "check": "The visual shows a ring cut into coloured slices, hollow in the middle, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimCategory[Category], Value \u20b9 Cr.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Overview 5 of 5 \u2014 Months side by side", "page": "Overview", "do": ["At the bottom of the window click the tab named Overview.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a small grid of boxes (called Matrix). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimCategory and click the little arrow to its left to open it, then drag the field called Category out of it and drop it into the box called Rows. (If the list is long, type Category into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called MonthName out of it and drop it into the box called Columns. (If the list is long, type MonthName into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off.", "Turn Format pane \u2192 Subtotals \u2192 Row subtotals: On, so each column has a total."], "fields": [["Visual", "Matrix"], ["Title", "Months side by side"], ["Rows", "dimCategory[Category]"], ["Columns", "dimDate[MonthName]"], ["Values", "Value \u20b9 Cr"], ["X", "788"], ["Y", "580"], ["Width", "476"], ["Height", "132"]], "note": "The same numbers as a table, because some readers only trust a table.", "check": "The visual shows a grid with the row names down the left and the column headings across the top, and a Total row at the bottom, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimCategory[Category], dimDate[MonthName], Value \u20b9 Cr.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners. Every row showing the same number: a relationship from Part 2 is missing."}, {"title": "Summary 1 of 3 \u2014 Inventory (TB) \u00b7 Inventory (MB5B) \u00b7 Difference \u2014 \u20b9 Cr", "page": "Summary", "do": ["At the bottom of the window click the tab named Summary.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a small grid of boxes (called Matrix). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimPlant and click the little arrow to its left to open it, then drag the field called Plant out of it and drop it into the box called Rows. (If the list is long, type Plant into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimCategory and click the little arrow to its left to open it, then drag the field called Category out of it and drop it into the box called Rows. (If the list is long, type Category into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimMetric and click the little arrow to its left to open it, then drag the field called Metric out of it and drop it into the box called Columns. (If the list is long, type Metric into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called MonthName out of it and drop it into the box called Columns. (If the list is long, type MonthName into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Summary Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "Now the filter: type Last 4 Months into the search box at the top of the Data pane, then drag it into the Filters pane (that is the pane just to the LEFT of Visualizations), dropping it under the words 'Filters on this visual'. Then tick 1 in the list and untick everything else.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "Order of the two Columns fields matters: dimMetric[Metric] FIRST, then dimDate[MonthName]. That is what makes TB / MB5B / Difference the master columns with months nested inside.", "In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off (so Plant and Category get their own columns).", "In the Visualizations pane click the paintbrush icon, then click 'Row headers', then '+/- icons' and set it to On (that is the click-to-expand control).", "In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On. Then switch Column subtotals to Off, and turn on 'Per row level' so each plant shows its own total. The grand total row at the bottom is the Total row you asked for.", "Colour the differences: in the Values box, click the small down-arrow next to Summary Value \u20b9 Cr, click 'Conditional formatting', then 'Background color'. Set Format style to Diverging, tick 'Add a middle colour', set the middle number to 0, and make both the Minimum and Maximum colours red. A difference either direction is equally wrong, so both ends are red.", "Right-click any plant row in the matrix, click 'Expand', then 'All', so RM, FG and consumables show under every plant. Then press Ctrl+S \u2014 Power BI remembers it."], "fields": [["Visual", "Matrix"], ["Title", "Inventory (TB) \u00b7 Inventory (MB5B) \u00b7 Difference \u2014 \u20b9 Cr"], ["Rows", "dimPlant[Plant]"], ["Rows", "dimCategory[Category]"], ["Columns", "dimMetric[Metric]"], ["Columns", "dimDate[MonthName]"], ["Values", "Summary Value \u20b9 Cr"], ["Filters", "Last 4 Months  \u2192  is 1"], ["X", "16"], ["Y", "168"], ["Width", "1248"], ["Height", "300"]], "note": "The whole reconciliation in one grid, exactly as it is read out: three master columns (TB, MB5B, Difference), the last four months under each, one row per plant with RM, FG and consumables beneath it, and a Total row. Everything in crore rupees.", "check": "The visual shows a grid with the row names down the left and the column headings across the top, and a Total row at the bottom, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimPlant[Plant], dimCategory[Category], dimMetric[Metric], dimDate[MonthName], Summary Value \u20b9 Cr.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners. No + signs on the row names: one of the two Rows fields is missing, or stepped layout is still on \u2014 both are set in the lines above. Every row showing the same number: a relationship from Part 2 is missing."}, {"title": "Summary 2 of 3 \u2014 Difference \u20b9 Cr by plant \u2014 click a bar", "page": "Summary", "do": ["At the bottom of the window click the tab named Summary.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of three plain bars side by side (called Clustered column chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimPlant and click the little arrow to its left to open it, then drag the field called Plant out of it and drop it into the box called X-axis. (If the list is long, type Plant into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Difference \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Y-axis, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "In the Visualizations pane click the paintbrush icon, then click 'Columns', then 'Colour', then 'fx', then 'Format style' and set it to Rules, and colour any negative value red. A difference either direction is equally wrong."], "fields": [["Visual", "Clustered column chart"], ["Title", "Difference \u20b9 Cr by plant \u2014 click a bar"], ["X-axis", "dimPlant[Plant]"], ["Y-axis", "Difference \u20b9 Cr"], ["X", "16"], ["Y", "480"], ["Width", "620"], ["Height", "232"]], "note": "The reconciliation as a picture. Click a bar and the matrix above filters to that plant; right-click \u2192 Drill through \u2192 Detail for the materials behind it.", "check": "The visual shows groups of plain bars standing side by side, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimPlant[Plant], Difference \u20b9 Cr.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Summary 3 of 3 \u2014 Inventory (TB) vs Inventory (MB5B) by month", "page": "Summary", "do": ["At the bottom of the window click the tab named Summary.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of three plain bars side by side (called Clustered column chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called MonthName out of it and drop it into the box called X-axis. (If the list is long, type MonthName into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: TB \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Y-axis, then clear the search box.", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Y-axis, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Visual", "Clustered column chart"], ["Title", "Inventory (TB) vs Inventory (MB5B) by month"], ["X-axis", "dimDate[MonthName]"], ["Y-axis", "TB \u20b9 Cr"], ["Y-axis", "Value \u20b9 Cr"], ["X", "644"], ["Y", "480"], ["Width", "620"], ["Height", "232"]], "note": "Two bars per month, books against stock report \u2014 a gap that is opening up shows here before anyone notices it in the numbers.", "check": "The visual shows groups of plain bars standing side by side, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimDate[MonthName], TB \u20b9 Cr, Value \u20b9 Cr.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "FG 1 of 4 \u2014 FG by plant \u2014 MW \u00b7 In \u20b9 Cr \u00b7 In Days", "page": "FG", "do": ["At the bottom of the window click the tab named FG.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a small grid of boxes (called Matrix). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimPlant and click the little arrow to its left to open it, then drag the field called Plant out of it and drop it into the box called Rows. (If the list is long, type Plant into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimMeasure and click the little arrow to its left to open it, then drag the field called Measure out of it and drop it into the box called Columns. (If the list is long, type Measure into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called MonthName out of it and drop it into the box called Columns. (If the list is long, type MonthName into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Unit Value \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "Now the filter: open the table called dimCategory in the Data pane and drag the field called Category into the Filters pane (that is the pane just to the LEFT of Visualizations), dropping it under the words 'Filters on this visual'. Then tick FG in the list and untick everything else.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName].", "In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off.", "No month filter on this one \u2014 the Month slicer decides which months are columns. Tick any four to compare, or pick a Quarter and it shows that quarter's three.", "Click a plant row to filter the technology table below it."], "fields": [["Visual", "Matrix"], ["Title", "FG by plant \u2014 MW \u00b7 In \u20b9 Cr \u00b7 In Days"], ["Rows", "dimPlant[Plant]"], ["Columns", "dimMeasure[Measure]"], ["Columns", "dimDate[MonthName]"], ["Values", "Unit Value"], ["Filters", "dimCategory[Category]  \u2192  is FG"], ["X", "16"], ["Y", "168"], ["Width", "1248"], ["Height", "176"]], "note": "FG per plant in all three units at once \u2014 megawatts, crore rupees and days \u2014 with the months you tick under each. Days is MW \u00f7 capacity MW, so 1905 is blank on purpose.", "check": "The visual shows a grid with the row names down the left and the column headings across the top, and a Total row at the bottom, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimPlant[Plant], dimMeasure[Measure], dimDate[MonthName], Unit Value.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners. Every row showing the same number: a relationship from Part 2 is missing."}, {"title": "FG 2 of 4 \u2014 FG by technology \u2014 MW \u00b7 In \u20b9 Cr \u00b7 In Days", "page": "FG", "do": ["At the bottom of the window click the tab named FG.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a small grid of boxes (called Matrix). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimNature and click the little arrow to its left to open it, then drag the field called Nature out of it and drop it into the box called Rows. (If the list is long, type Nature into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimMeasure and click the little arrow to its left to open it, then drag the field called Measure out of it and drop it into the box called Columns. (If the list is long, type Measure into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called MonthName out of it and drop it into the box called Columns. (If the list is long, type MonthName into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Unit Value \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "Now the filter: open the table called dimCategory in the Data pane and drag the field called Category into the Filters pane (that is the pane just to the LEFT of Visualizations), dropping it under the words 'Filters on this visual'. Then tick FG in the list and untick everything else.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "Same column order: dimMeasure[Measure] then dimDate[MonthName].", "In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off."], "fields": [["Visual", "Matrix"], ["Title", "FG by technology \u2014 MW \u00b7 In \u20b9 Cr \u00b7 In Days"], ["Rows", "dimNature[Nature]"], ["Columns", "dimMeasure[Measure]"], ["Columns", "dimDate[MonthName]"], ["Values", "Unit Value"], ["Filters", "dimCategory[Category]  \u2192  is FG"], ["X", "16"], ["Y", "356"], ["Width", "620"], ["Height", "356"]], "note": "The same three units by technology rather than by plant, which is where a build-up in one technology shows up.", "check": "The visual shows a grid with the row names down the left and the column headings across the top, and a Total row at the bottom, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimNature[Nature], dimMeasure[Measure], dimDate[MonthName], Unit Value.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners. Every row showing the same number: a relationship from Part 2 is missing."}, {"title": "FG 3 of 4 \u2014 FG MW by technology \u2014 click a bar", "page": "FG", "do": ["At the bottom of the window click the tab named FG.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of three plain bars side by side (called Clustered column chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimNature and click the little arrow to its left to open it, then drag the field called Nature out of it and drop it into the box called X-axis. (If the list is long, type Nature into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: MW \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Y-axis, then clear the search box.", "Now the filter: open the table called dimCategory in the Data pane and drag the field called Category into the Filters pane (that is the pane just to the LEFT of Visualizations), dropping it under the words 'Filters on this visual'. Then tick FG in the list and untick everything else.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Visual", "Clustered column chart"], ["Title", "FG MW by technology \u2014 click a bar"], ["X-axis", "dimNature[Nature]"], ["Y-axis", "MW"], ["Filters", "dimCategory[Category]  \u2192  is FG"], ["X", "644"], ["Y", "356"], ["Width", "620"], ["Height", "176"]], "note": "Clicking one technology filters both matrices to it; right-click drills through.", "check": "The visual shows groups of plain bars standing side by side, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimNature[Nature], MW.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "FG 4 of 4 \u2014 Days of inventory by month \u2014 click a bar", "page": "FG", "do": ["At the bottom of the window click the tab named FG.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of bars with a line drawn over them (called Line and clustered column chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called MonthName out of it and drop it into the box called X-axis. (If the list is long, type MonthName into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Days \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Column y-axis, then clear the search box.", "In the Data pane (far right) click the search box at the very top of the pane and type: Days vs LM \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Line y-axis, then clear the search box.", "Now the filter: open the table called dimCategory in the Data pane and drag the field called Category into the Filters pane (that is the pane just to the LEFT of Visualizations), dropping it under the words 'Filters on this visual'. Then tick FG in the list and untick everything else.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Visual", "Line and clustered column chart"], ["Title", "Days of inventory by month \u2014 click a bar"], ["X-axis", "dimDate[MonthName]"], ["Column y-axis", "Days"], ["Line y-axis", "Days vs LM"], ["Filters", "dimCategory[Category]  \u2192  is FG"], ["X", "644"], ["Y", "544"], ["Width", "620"], ["Height", "168"]], "note": "Days month by month with the change on a line. Right-click any bar \u2192 Drill through \u2192 Detail for the technology and material split behind it.", "check": "The visual shows bars with a line drawn across the top of them, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimDate[MonthName], Days, Days vs LM.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "RM 1 of 4 \u2014 RM by plant \u2014 In \u20b9 Cr \u00b7 In Days", "page": "RM", "do": ["At the bottom of the window click the tab named RM.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a small grid of boxes (called Matrix). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimPlant and click the little arrow to its left to open it, then drag the field called Plant out of it and drop it into the box called Rows. (If the list is long, type Plant into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimMeasure and click the little arrow to its left to open it, then drag the field called Measure out of it and drop it into the box called Columns. (If the list is long, type Measure into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called MonthName out of it and drop it into the box called Columns. (If the list is long, type MonthName into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Unit Value \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "Now the filter: open the table called dimCategory in the Data pane and drag the field called Category into the Filters pane (that is the pane just to the LEFT of Visualizations), dropping it under the words 'Filters on this visual'. Then tick RM in the list and untick everything else.", "Now the filter: open the table called dimMeasure in the Data pane and drag the field called Measure into the Filters pane (that is the pane just to the LEFT of Visualizations), dropping it under the words 'Filters on this visual'. Then untick MW in the list and leave everything else ticked.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "dimMeasure[Measure] in Columns first, then dimDate[MonthName].", "In the Filters pane, drag dimMeasure[Measure] in and untick MW.", "In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off."], "fields": [["Visual", "Matrix"], ["Title", "RM by plant \u2014 In \u20b9 Cr \u00b7 In Days"], ["Rows", "dimPlant[Plant]"], ["Columns", "dimMeasure[Measure]"], ["Columns", "dimDate[MonthName]"], ["Values", "Unit Value"], ["Filters", "dimCategory[Category]  \u2192  is RM"], ["Filters", "dimMeasure[Measure]  \u2192  untick MW"], ["X", "16"], ["Y", "168"], ["Width", "1248"], ["Height", "176"]], "note": "RM by plant in crore rupees and days, the months you tick under each. MW is unticked here because an RM megawatt figure is a derived number, not a measured one.", "check": "The visual shows a grid with the row names down the left and the column headings across the top, and a Total row at the bottom, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimPlant[Plant], dimMeasure[Measure], dimDate[MonthName], Unit Value.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners. Every row showing the same number: a relationship from Part 2 is missing."}, {"title": "RM 2 of 4 \u2014 RM by group nature and nature", "page": "RM", "do": ["At the bottom of the window click the tab named RM.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a small grid of boxes (called Matrix). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called factInventory and click the little arrow to its left to open it, then drag the field called GroupNature out of it and drop it into the box called Rows. (If the list is long, type GroupNature into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimNature and click the little arrow to its left to open it, then drag the field called Nature out of it and drop it into the box called Rows. (If the list is long, type Nature into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimMeasure and click the little arrow to its left to open it, then drag the field called Measure out of it and drop it into the box called Columns. (If the list is long, type Measure into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimDate and click the little arrow to its left to open it, then drag the field called MonthName out of it and drop it into the box called Columns. (If the list is long, type MonthName into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Unit Value \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "Now the filter: open the table called dimCategory in the Data pane and drag the field called Category into the Filters pane (that is the pane just to the LEFT of Visualizations), dropping it under the words 'Filters on this visual'. Then tick RM in the list and untick everything else.", "Now the filter: open the table called dimMeasure in the Data pane and drag the field called Measure into the Filters pane (that is the pane just to the LEFT of Visualizations), dropping it under the words 'Filters on this visual'. Then untick MW in the list and leave everything else ticked.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On."], "fields": [["Visual", "Matrix"], ["Title", "RM by group nature and nature"], ["Rows", "factInventory[GroupNature]"], ["Rows", "dimNature[Nature]"], ["Columns", "dimMeasure[Measure]"], ["Columns", "dimDate[MonthName]"], ["Values", "Unit Value"], ["Filters", "dimCategory[Category]  \u2192  is RM"], ["Filters", "dimMeasure[Measure]  \u2192  untick MW"], ["X", "16"], ["Y", "356"], ["Width", "620"], ["Height", "356"]], "note": "Then the same numbers down the material hierarchy: group nature, and nature inside it. The +/- arrow on each group row is the drill-in.", "check": "The visual shows a grid with the row names down the left and the column headings across the top, and a Total row at the bottom, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: factInventory[GroupNature], dimNature[Nature], dimMeasure[Measure], dimDate[MonthName], Unit Value.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners. No + signs on the row names: one of the two Rows fields is missing, or stepped layout is still on \u2014 both are set in the lines above. Every row showing the same number: a relationship from Part 2 is missing."}, {"title": "RM 3 of 4 \u2014 RM \u20b9 Cr by group nature \u2014 click a bar", "page": "RM", "do": ["At the bottom of the window click the tab named RM.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of three plain bars side by side (called Clustered column chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called factInventory and click the little arrow to its left to open it, then drag the field called GroupNature out of it and drop it into the box called X-axis. (If the list is long, type GroupNature into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Y-axis, then clear the search box.", "Now the filter: open the table called dimCategory in the Data pane and drag the field called Category into the Filters pane (that is the pane just to the LEFT of Visualizations), dropping it under the words 'Filters on this visual'. Then tick RM in the list and untick everything else.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Visual", "Clustered column chart"], ["Title", "RM \u20b9 Cr by group nature \u2014 click a bar"], ["X-axis", "factInventory[GroupNature]"], ["Y-axis", "Value \u20b9 Cr"], ["Filters", "dimCategory[Category]  \u2192  is RM"], ["X", "644"], ["Y", "356"], ["Width", "620"], ["Height", "176"]], "note": "One click sets the whole page to a group nature; right-click drills through to the materials.", "check": "The visual shows groups of plain bars standing side by side, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: factInventory[GroupNature], Value \u20b9 Cr.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "RM 4 of 4 \u2014 RM \u2014 click through any way you like", "page": "RM", "do": ["At the bottom of the window click the tab named RM.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of boxes joined by branches (called Decomposition tree). An empty visual appears on the page.", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Analyze, then clear the search box.", "In the Data pane (far right), scroll to the table called dimPlant and click the little arrow to its left to open it, then drag the field called Plant out of it and drop it into the box called Explain by. (If the list is long, type Plant into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called factInventory and click the little arrow to its left to open it, then drag the field called GroupNature out of it and drop it into the box called Explain by. (If the list is long, type GroupNature into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called dimNature and click the little arrow to its left to open it, then drag the field called Nature out of it and drop it into the box called Explain by. (If the list is long, type Nature into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called factInventory and click the little arrow to its left to open it, then drag the field called Material out of it and drop it into the box called Explain by. (If the list is long, type Material into the search box at the top of the pane first.)", "Now the filter: open the table called dimCategory in the Data pane and drag the field called Category into the Filters pane (that is the pane just to the LEFT of Visualizations), dropping it under the words 'Filters on this visual'. Then tick RM in the list and untick everything else.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "Click the + on a node to choose which field to split by next."], "fields": [["Visual", "Decomposition tree"], ["Title", "RM \u2014 click through any way you like"], ["Analyze", "Value \u20b9 Cr"], ["Explain by", "dimPlant[Plant]"], ["Explain by", "factInventory[GroupNature]"], ["Explain by", "dimNature[Nature]"], ["Explain by", "factInventory[Material]"], ["Filters", "dimCategory[Category]  \u2192  is RM"], ["X", "644"], ["Y", "544"], ["Width", "620"], ["Height", "168"]], "note": "The interactive one: click a box and it opens the next level, in whatever order you click. This is what replaces filtering the RM sheet by hand.", "check": "The visual shows one box on the left with a + on it, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: Value \u20b9 Cr, dimPlant[Plant], factInventory[GroupNature], dimNature[Nature], factInventory[Material].", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners. Nothing to expand means the Explain by box is empty."}, {"title": "Detail 1 of 8 \u2014 Value \u20b9 Cr of what you clicked", "page": "Detail", "do": ["At the bottom of the window click the tab named Detail.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon showing 123 (called Card). An empty visual appears on the page.", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Fields, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Visual", "Card"], ["Title", "Value \u20b9 Cr of what you clicked"], ["Fields", "Value \u20b9 Cr"], ["X", "16"], ["Y", "16"], ["Width", "296"], ["Height", "92"]], "note": "The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.", "check": "The visual shows one number, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: Value \u20b9 Cr.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Detail 2 of 8 \u2014 MW", "page": "Detail", "do": ["At the bottom of the window click the tab named Detail.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon showing 123 (called Card). An empty visual appears on the page.", "In the Data pane (far right) click the search box at the very top of the pane and type: MW \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Fields, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Visual", "Card"], ["Title", "MW"], ["Fields", "MW"], ["X", "320"], ["Y", "16"], ["Width", "296"], ["Height", "92"]], "note": "Same slice in megawatts.", "check": "The visual shows one number, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: MW.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Detail 3 of 8 \u2014 Days of inventory", "page": "Detail", "do": ["At the bottom of the window click the tab named Detail.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon showing 123 (called Card). An empty visual appears on the page.", "In the Data pane (far right) click the search box at the very top of the pane and type: Days of Inventory \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Fields, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Visual", "Card"], ["Title", "Days of inventory"], ["Fields", "Days of Inventory"], ["X", "624"], ["Y", "16"], ["Width", "296"], ["Height", "92"]], "note": "Stock in MW divided by the MW capacity on the Variables sheet. Blank where the plant has no capacity row \u2014 1905.", "check": "The visual shows one number, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: Days of Inventory.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Detail 4 of 8 \u2014 Share of the total", "page": "Detail", "do": ["At the bottom of the window click the tab named Detail.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon showing 123 (called Card). An empty visual appears on the page.", "In the Data pane (far right) click the search box at the very top of the pane and type: Share of Total % \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Fields, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one."], "fields": [["Visual", "Card"], ["Title", "Share of the total"], ["Fields", "Share of Total %"], ["X", "928"], ["Y", "16"], ["Width", "336"], ["Height", "92"]], "note": "How big this slice is against the whole.", "check": "The visual shows one number, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: Share of Total %.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Detail 5 of 8 \u2014 Split by category", "page": "Detail", "do": ["At the bottom of the window click the tab named Detail.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a filled circle (called Pie chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimCategory and click the little arrow to its left to open it, then drag the field called Category out of it and drop it into the box called Legend. (If the list is long, type Category into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total."], "fields": [["Visual", "Pie chart"], ["Title", "Split by category"], ["Legend", "dimCategory[Category]"], ["Values", "Value \u20b9 Cr"], ["X", "16"], ["Y", "120"], ["Width", "404"], ["Height", "296"]], "note": "RM / FG / consumables for exactly what you clicked.", "check": "The visual shows a filled circle cut into coloured slices, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimCategory[Category], Value \u20b9 Cr.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Detail 6 of 8 \u2014 Split by technology / nature", "page": "Detail", "do": ["At the bottom of the window click the tab named Detail.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a ring (called Donut chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimNature and click the little arrow to its left to open it, then drag the field called Nature out of it and drop it into the box called Legend. (If the list is long, type Nature into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total."], "fields": [["Visual", "Donut chart"], ["Title", "Split by technology / nature"], ["Legend", "dimNature[Nature]"], ["Values", "Value \u20b9 Cr"], ["X", "428"], ["Y", "120"], ["Width", "404"], ["Height", "296"]], "note": "Which technology or material nature the slice is made of.", "check": "The visual shows a ring cut into coloured slices, hollow in the middle, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimNature[Nature], Value \u20b9 Cr.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Detail 7 of 8 \u2014 Split by plant", "page": "Detail", "do": ["At the bottom of the window click the tab named Detail.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a filled circle (called Pie chart). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimPlant and click the little arrow to its left to open it, then drag the field called Plant out of it and drop it into the box called Legend. (If the list is long, type Plant into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total."], "fields": [["Visual", "Pie chart"], ["Title", "Split by plant"], ["Legend", "dimPlant[Plant]"], ["Values", "Value \u20b9 Cr"], ["X", "840"], ["Y", "120"], ["Width", "424"], ["Height", "296"]], "note": "Where the slice sits. A single-colour pie means it is one plant already.", "check": "The visual shows a filled circle cut into coloured slices, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimPlant[Plant], Value \u20b9 Cr.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners."}, {"title": "Detail 8 of 8 \u2014 Materials behind this number \u2014 click + to open a nature", "page": "Detail", "do": ["At the bottom of the window click the tab named Detail.", "Click once on an empty white part of the page, so that no visual has a border round it.", "In the Visualizations pane on the right (the grid of small icons), click the icon of a small grid of boxes (called Matrix). An empty visual appears on the page.", "In the Data pane (far right), scroll to the table called dimNature and click the little arrow to its left to open it, then drag the field called Nature out of it and drop it into the box called Rows. (If the list is long, type Nature into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called factInventory and click the little arrow to its left to open it, then drag the field called Material out of it and drop it into the box called Rows. (If the list is long, type Material into the search box at the top of the pane first.)", "In the Data pane (far right), scroll to the table called factInventory and click the little arrow to its left to open it, then drag the field called MaterialDesc out of it and drop it into the box called Rows. (If the list is long, type MaterialDesc into the search box at the top of the pane first.)", "In the Data pane (far right) click the search box at the very top of the pane and type: Value \u20b9 Cr \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "In the Data pane (far right) click the search box at the very top of the pane and type: MW \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "In the Data pane (far right) click the search box at the very top of the pane and type: Days \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "In the Data pane (far right) click the search box at the very top of the pane and type: INR per Wp \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "In the Data pane (far right) click the search box at the very top of the pane and type: Share of Total % \u2014 the whole list shrinks to just that one item (it has a small calculator icon, because it is a measure). Drag it into the box called Values, then clear the search box.", "In the Visualizations pane click the paintbrush icon, then click General, then Title, and type the title shown below into the Text box (delete whatever Power BI already put there).", "Still in the same pane, click the word General, then Properties, then Size and style.", "Type the four numbers below into Height, Width, Horizontal (X) and Vertical (Y), pressing Tab after each one.", "In the Visualizations pane click the paintbrush icon, then click 'Row headers', then '+/- icons' and set it to On, Stepped layout: Off. That is the click-to-open control.", "In the Visualizations pane click the paintbrush icon, then click 'Grid', then 'Options', then 'Keep column headers visible' and set it to On. The headings then stay put while the rows scroll inside the visual, so a long list never makes the visual (or the page) grow.", "In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On, so a closed nature row still shows its total.", "Click the Value \u20b9 Cr column header once so it sorts largest first."], "fields": [["Visual", "Matrix"], ["Title", "Materials behind this number \u2014 click + to open a nature"], ["Rows", "dimNature[Nature]"], ["Rows", "factInventory[Material]"], ["Rows", "factInventory[MaterialDesc]"], ["Values", "Value \u20b9 Cr"], ["Values", "MW"], ["Values", "Days"], ["Values", "INR per Wp"], ["Values", "Share of Total %"], ["X", "16"], ["Y", "428"], ["Width", "1248"], ["Height", "284"]], "note": "The line-item detail. A Matrix rather than a Table, so it opens nature \u2192 material instead of being one long flat list \u2014 that is the difference between clicking and scrolling.", "check": "The visual shows a grid with the row names down the left and the column headings across the top, and a Total row at the bottom, it is not empty and not showing an error triangle, and the Visualizations pane still lists every field you dropped in: dimNature[Nature], factInventory[Material], factInventory[MaterialDesc], Value \u20b9 Cr, MW, Days, INR per Wp, Share of Total %.", "stuck": "Empty visual: a slicer above is filtering everything out \u2014 clear the header dropdowns and look again. 'Can't display this visual': a field is in the wrong box, so drag it out and put it back where the list below says. Wrong size: retype the four numbers rather than dragging the corners. No + signs on the row names: one of the two Rows fields is missing, or stepped layout is still on \u2014 both are set in the lines above. Every row showing the same number: a relationship from Part 2 is missing."}, {"title": "Make clicking a bar open the pie charts", "page": "Detail", "do": ["At the bottom of the window click the tab named Detail.", "Click once on the empty grey space around the visuals, so no visual has a border round it.", "Look at the Visualizations pane on the right and scroll it down to the bottom: there is a box called 'Drill through'.", "Drag each of the four fields below out of the Data pane and drop it into that 'Drill through' box, one at a time. (Open the table first by clicking the arrow next to its name.)", "Leave the switch called 'Keep all filters' as it is \u2014 it is already on."], "fields": [["Drill through", "dimPlant[Plant]"], ["Drill through", "dimDate[MonthName]"], ["Drill through", "dimCategory[Category]"], ["Drill through", "dimNature[Nature]"]], "check": "A round Back arrow has appeared by itself in the top-left corner of the Detail page, and the Drill through box lists all four fields.", "stuck": "No Drill through box means a visual is still selected \u2014 press Escape and click the grey space outside the page. If a field will not drop in, it came from the wrong table; the table name is the part before the square bracket.", "note": "This is what makes the report clickable: a Back arrow appears on this page automatically, and every bar, row and slice on the other pages now offers Drill through \u2192 Detail."}, {"title": "Try it \u2014 click a bar, get the pies", "page": "Overview", "do": ["At the bottom of the window click the tab named Overview.", "Right-click one bar of the 'Value \u20b9 Cr by plant' chart.", "Choose Drill through \u2192 Detail.", "The Detail page opens showing only that plant: cards, three pies and the material list.", "Click the circled Back arrow at the top-left of the Detail page to return."], "fields": [], "check": "The Detail page opens and its first card shows a smaller number than the company total, because it is showing only the plant you clicked.", "stuck": "'Drill through' greyed out means the four fields are not in the Drill through box yet \u2014 go back one step. If the page opens but shows the full total, you right-clicked something that is not one of the four drill-through fields; right-click a plant bar instead.", "note": "A left-click filters the rest of the page instead (that is Power BI's built-in cross-filtering, nothing to set up). Right-click is the one that opens the pies."}, {"title": "Choose what a click filters", "page": "Overview", "do": ["Click once on a chart so it has a border round it.", "At the top of the window click the Format tab (it only appears when a visual is selected), then click 'Edit interactions'.", "Small icons now sit at the top-right corner of every OTHER visual: a funnel (filter), a bar chart (highlight) and a circle with a line through it (do nothing).", "For each matrix on the page click the funnel. For each header card click the circle.", "Click 'Edit interactions' again to switch the mode off, then press Ctrl+S."], "fields": [], "check": "With the mode switched off again, clicking a bar changes the matrix totals but leaves the header cards unchanged.", "stuck": "If the cards still change, their icon is set to funnel or chart \u2014 turn Edit interactions back on and click the circle-with-a-line icon on each card.", "note": "Default is highlight, which greys out the rest of a bar rather than removing it. Set the matrices to filter instead, so a click makes their totals match what you clicked. Set the header cards to none, so the band always shows the company total."}, {"title": "Save", "page": "\u2014", "do": ["Press Ctrl+S. If it asks for a name, type Inventory Model and click Save."], "fields": [], "check": "The window title no longer says 'unsaved'.", "stuck": "If saving fails, the file is open somewhere else or sitting in a folder OneDrive is mid-sync on \u2014 save to the Desktop first, then move it.", "note": "Power BI does not autosave. Save every few steps, not just at the end."}, {"title": "Check it actually works", "page": "\u2014", "do": ["Pick a month in the header slicer and confirm every page changes with it.", "On Summary, the Difference column should be 0.00 (or very close) for every plant \u2014 that is the books agreeing with the stock report.", "On FG, 1905 should show blank Days, because it has no capacity row.", "Right-click a bar \u2192 Drill through \u2192 Detail, and check the cards match the bar.", "Then Ctrl+S."], "fields": [], "check": "All five pages react to the month dropdown, Summary's Difference column reads about 0.00, and right-click \u2192 Drill through \u2192 Detail opens filtered.", "stuck": "Difference far from zero: a TB file or a Raw file is missing for that month, or one has been hand-edited. Blank pages: no month is picked in the header dropdown. The same number on every row of Summary: the two dimCategory relationships from Part 2 are missing.", "note": "If Difference is large, a source file is missing, duplicated or hand-edited \u2014 the numbers on every page are wrong until that is fixed. The qc* queries are still in the model if you want to put them on a page of their own to see why."}];</script>
 <script>
@@ -2356,14 +2428,15 @@ $$('nav.tabs button[data-tab]').forEach(b=>b.onclick=()=>{
   $('#qbar').style.display = (b.dataset.tab==='q'||b.dataset.tab==='m') ? '' : 'none';
   window.scrollTo(0,0);
 });
-$$('button.copy').forEach(b=>b.onclick=async()=>{
-  const t=document.getElementById(b.dataset.target).textContent;
+$$('button.copy').forEach(b=>{const label=b.textContent;b.onclick=async()=>{
+  const t = b.dataset.text!==undefined ? b.dataset.text
+          : document.getElementById(b.dataset.target).textContent;
   try{await navigator.clipboard.writeText(t);}
   catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);
     a.select();document.execCommand('copy');a.remove();}
   b.textContent='Copied';b.classList.add('ok');
-  setTimeout(()=>{b.textContent='Copy';b.classList.remove('ok');},1200);
-});
+  setTimeout(()=>{b.textContent=label;b.classList.remove('ok');},1200);
+};});
 const KEY='invGuideDone';
 const done=new Set(JSON.parse(localStorage.getItem(KEY)||'[]'));
 function paint(){

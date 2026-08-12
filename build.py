@@ -133,7 +133,8 @@ def cards(items, kind):
   <header>
     <span class="num">{n}</span>
     <h3>{html.escape(it['name'])}</h3>
-    <button class="copy" data-target="{kind}code{n}">Copy</button>
+    <button class="copy" data-text="{html.escape(it['name'], quote=True)}">Copy name</button>
+    <button class="copy" data-target="{kind}code{n}">Copy code</button>
     <button class="done" data-key="{kind}-{n}">Done</button>
   </header>
   {note}
@@ -276,14 +277,15 @@ $$('nav.tabs button[data-tab]').forEach(b=>b.onclick=()=>{
   $('#qbar').style.display = (b.dataset.tab==='q'||b.dataset.tab==='m') ? '' : 'none';
   window.scrollTo(0,0);
 });
-$$('button.copy').forEach(b=>b.onclick=async()=>{
-  const t=document.getElementById(b.dataset.target).textContent;
+$$('button.copy').forEach(b=>{const label=b.textContent;b.onclick=async()=>{
+  const t = b.dataset.text!==undefined ? b.dataset.text
+          : document.getElementById(b.dataset.target).textContent;
   try{await navigator.clipboard.writeText(t);}
   catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);
     a.select();document.execCommand('copy');a.remove();}
   b.textContent='Copied';b.classList.add('ok');
-  setTimeout(()=>{b.textContent='Copy';b.classList.remove('ok');},1200);
-});
+  setTimeout(()=>{b.textContent=label;b.classList.remove('ok');},1200);
+};});
 const KEY='invGuideDone';
 const done=new Set(JSON.parse(localStorage.getItem(KEY)||'[]'));
 function paint(){
@@ -453,7 +455,8 @@ HTML = f"""<!doctype html>
 <h1>Inventory Power BI — build guide</h1>
 <p class="sub">New here? <strong>Start here</strong> — the finished file is ready to download, so you
 do not have to build anything by hand. The other tabs are the manual route, kept as a fallback.</p>
-<p class="sub">Click <strong>Copy</strong> on a block, then paste it into Power Query's Advanced Editor.
+<p class="sub">On every block: <strong>Copy code</strong> for the Advanced Editor, and
+<strong>Copy name</strong> for the rename box, so nothing is ever typed by hand.
 Tick <strong>Done</strong> to keep your place — it is remembered in this browser.
 Building the pages? Use <strong>Build it</strong> — one instruction per screen.</p>
 
