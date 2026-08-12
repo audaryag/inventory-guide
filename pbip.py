@@ -1,0 +1,572 @@
+#!/usr/bin/env python3
+"""Generates a ready-to-open Power BI project (.pbip) from BUILD_GUIDE.md + spec.py.
+
+Output: /home/ubuntu/pbip/  (Inventory Report.pbip + .SemanticModel + .Report)
+
+The semantic model is TMSL (model.bim): every Power Query query, every relationship,
+sort-by-column, hidden columns and all 40 measures. The report is PBIR (JSON per visual)
+built from spec.py, so the pages match the guide exactly.
+"""
+import json, pathlib, re, shutil, sys, hashlib
+
+HERE = pathlib.Path(__file__).parent
+sys.path.insert(0, str(HERE))
+import build          # noqa: E402  (parse_queries / parse_measures; also rewrites index.html)
+import spec           # noqa: E402
+
+GUIDE = pathlib.Path("/home/ubuntu/BUILD_GUIDE.md")
+OUT = pathlib.Path("/home/ubuntu/pbip")
+NAME = "Inventory Report"
+
+md = GUIDE.read_text()
+queries = {q["name"]: q["code"] for q in build.parse_queries(
+    md[md.index("# Appendix A"):md.index("# Appendix B")])}
+measures = build.parse_measures(md[md.index("# Appendix B"):])
+
+# ---------------------------------------------------------------- semantic model ----------
+S, I, D, T, B = "string", "int64", "double", "dateTime", "boolean"
+
+MB5B_COLS = [
+    ("SourceFile", S), ("ValuationArea", S), ("Material", S), ("MatKey", S),
+    ("MaterialDesc", S), ("FromDate", T), ("ToDate", T), ("OpenQty", D), ("OpenVal", D),
+    ("ReceiptQty", D), ("ReceiptVal", D), ("IssueQty", D), ("IssueVal", D),
+    ("CloseQty", D), ("CloseVal", D), ("BaseUOM", S), ("SpecialStock", S), ("Currency", S),
+    ("Month", T), ("Category", S), ("Nature", S), ("GroupNature", S), ("BOMStdQty", D),
+    ("Item", S), ("AttrMissing", B), ("MW", D), ("Rate", D), ("RateParseFailed", B),
+    ("Mid", S), ("Base", S), ("INR_WP", D),
+]
+
+# tables that load into the model, with their exact column list
+TABLES = {
+    "factInventory": MB5B_COLS,
+    "factTB": [("SourceFile", S), ("Month", T), ("GLAccount", S), ("GLDesc", S),
+               ("ProfitCentre", S), ("ProfitCentreDesc", S), ("Amount", D),
+               ("PlantCode", S), ("ValuationArea", S), ("Nature", S), ("TBPlant", S),
+               ("TBSort", I), ("Category", S)],
+    "factTB_Unmapped": [("GLAccount", S), ("GLDesc", S), ("Amount", D), ("Rows", I)],
+    "dimPlant": [("ValuationArea", S), ("Plant", S), ("PlantSort", I)],
+    "dimDate": [("Month", T), ("MonthName", S), ("MonthSort", I), ("MonthIndex", I),
+                ("FY", S), ("FYMonthNo", I), ("QuarterNo", I), ("Quarter", S),
+                ("QuarterSort", I)],
+    "dimNature": [("Nature", S)],
+    "dimCapacity": [("Tech", S), ("ValuationArea", S), ("Month", T), ("CapacityMW", D)],
+    "dimTBMaster": [("GLAccount", S), ("GLDescMaster", S), ("Nature", S), ("TBPlant", S),
+                    ("TBSort", I)],
+    "dimCategory": [("Category", S), ("CategorySort", I)],
+    "dimMetric": [("Metric", S), ("MetricSort", I)],
+    "dimMeasure": [("Measure", S), ("MeasureSort", I)],
+    "qcHeaders": [("Folder", S), ("Name", S), ("SheetNames", S), ("Headers", S)],
+    "qcVarHeaders": [("SheetName", S), ("Headers", S), ("DataRows", I)],
+    "qcNatureNoCapacity": [("Nature", S)],
+}
+
+# every other query stays a shared expression: helpers, staging, and the diagnostic whose
+# shape depends on the sheet (qcMWSheet), which a fixed column list could not describe.
+EXPRESSION_ORDER = ["pRoot", "pVarsFile", "fnCleanMB5B", "fnVarSheet", "stgRM", "stgFG",
+                    "stgConble", "dimMaterialAttr", "dimFGAttr", "varConstants",
+                    "fnConstantAsOf", "factRM", "factFG", "factConble", "varMWCapacity",
+                    "factTB_Staged", "qcMWSheet"]
+
+RELATIONSHIPS = [
+    ("dimDate", "Month", "factInventory", "Month"),
+    ("dimDate", "Month", "factTB", "Month"),
+    ("dimDate", "Month", "dimCapacity", "Month"),
+    ("dimPlant", "ValuationArea", "factInventory", "ValuationArea"),
+    ("dimPlant", "ValuationArea", "factTB", "ValuationArea"),
+    ("dimPlant", "ValuationArea", "dimCapacity", "ValuationArea"),
+    ("dimNature", "Nature", "factInventory", "Nature"),
+    ("dimNature", "Nature", "dimCapacity", "Tech"),
+    ("dimTBMaster", "GLAccount", "factTB", "GLAccount"),
+    ("dimCategory", "Category", "factInventory", "Category"),
+    ("dimCategory", "Category", "factTB", "Category"),
+]
+
+SORT_BY = {("dimDate", "MonthName"): "MonthSort", ("dimPlant", "Plant"): "PlantSort",
+           ("dimCategory", "Category"): "CategorySort", ("dimMetric", "Metric"): "MetricSort",
+           ("dimMeasure", "Measure"): "MeasureSort", ("dimDate", "Quarter"): "QuarterSort"}
+
+HIDDEN = {("factInventory", "MatKey"), ("factTB", "PlantCode"), ("dimDate", "MonthSort"),
+          ("dimDate", "MonthIndex"), ("dimDate", "FYMonthNo"), ("dimDate", "QuarterNo"),
+          ("dimDate", "QuarterSort"), ("dimPlant", "PlantSort"),
+          ("dimCategory", "CategorySort"), ("dimMetric", "MetricSort"),
+          ("dimMeasure", "MeasureSort")}
+
+# tables kept out of the report field list (helpers/diagnostics still refresh)
+HIDDEN_TABLES = {"factTB_Unmapped", "qcHeaders", "qcVarHeaders", "qcNatureNoCapacity"}
+
+
+def measure_format(name):
+    n = name.lower()
+    if name in ("As On", "Value ₹ Cr Title"):
+        return None                                  # text measures
+    if "%" in name:
+        return "0.0%"
+    if "days" in n:
+        return "#,##0.0"
+    if "mw" in n.split() or n.endswith(" mw") or n.startswith("mw"):
+        return "#,##0.00"
+    if "cr" in n or "value" in n:
+        return "#,##0.00"
+    if "qty" in n or "rows" in n or "months" in n:
+        return "#,##0"
+    return "#,##0.00"
+
+
+def model_bim():
+    tables = []
+    for tname, cols in TABLES.items():
+        columns = []
+        for cname, dtype in cols:
+            col = {"name": cname, "dataType": dtype, "sourceColumn": cname,
+                   "summarizeBy": "none",
+                   "annotations": [{"name": "SummarizationSetBy", "value": "Automatic"}]}
+            if dtype == T:
+                col["formatString"] = "yyyy-mm-dd"
+            if (tname, cname) in SORT_BY:
+                col["sortByColumn"] = SORT_BY[(tname, cname)]
+            if (tname, cname) in HIDDEN:
+                col["isHidden"] = True
+            columns.append(col)
+        t = {"name": tname, "columns": columns,
+             "partitions": [{"name": tname, "mode": "import",
+                             "source": {"type": "m", "expression": queries[tname]}}],
+             "annotations": [{"name": "PBI_ResultType", "value": "Table"}]}
+        if tname in HIDDEN_TABLES:
+            t["isHidden"] = True
+        if tname == "factInventory":
+            t["measures"] = [m for m in (
+                {"name": mm["name"],
+                 "expression": mm["code"].split("=", 1)[1].strip(),
+                 **({"formatString": measure_format(mm["name"])}
+                    if measure_format(mm["name"]) else {}),
+                 "displayFolder": "Report measures"} for mm in measures)]
+        tables.append(t)
+
+    rels = []
+    for i, (ft, fc, tt, tc) in enumerate(RELATIONSHIPS, 1):
+        rels.append({"name": f"rel{i:02d}_{ft}_{tt}_{tc}",
+                     "fromTable": tt, "fromColumn": tc,     # many side
+                     "toTable": ft, "toColumn": fc,         # one side
+                     "joinOnDateBehavior": "datePartOnly" if fc == "Month" else None})
+    for r in rels:                                          # drop the None we may have set
+        if r.get("joinOnDateBehavior") is None:
+            r.pop("joinOnDateBehavior")
+
+    # pRoot becomes a real Power Query parameter, so the folder is set from
+    # Home > Transform data > Edit parameters instead of by editing code.
+    queries["pRoot"] = ('"C:\\Data\\Inventory Report" meta [IsParameterQuery=true, '
+                        'Type="Text", IsParameterQueryRequired=true]')
+
+    exprs = [{"name": n, "kind": "m", "expression": queries[n],
+              "annotations": [{"name": "PBI_NavigationStepName", "value": "Navigation"},
+                              {"name": "PBI_ResultType",
+                               "value": "Function" if n.startswith("fn") else (
+                                   "Text" if n in ("pRoot", "pVarsFile") else "Table")}]}
+             for n in EXPRESSION_ORDER]
+
+    order = EXPRESSION_ORDER + list(TABLES)
+    return {
+        "name": NAME,
+        "compatibilityLevel": 1567,
+        "model": {
+            "culture": "en-US",
+            "dataAccessOptions": {"legacyRedirects": True, "returnErrorValuesAsNull": True},
+            "defaultPowerBIDataSourceVersion": "powerBI_V3",
+            "sourceQueryCulture": "en-US",
+            "tables": tables,
+            "relationships": rels,
+            "expressions": exprs,
+            "annotations": [
+                {"name": "PBI_QueryOrder", "value": json.dumps(order)},
+                {"name": "__PBI_TimeIntelligenceEnabled", "value": "0"},
+                {"name": "PBIDesktopVersion", "value": "generated"},
+            ],
+        },
+    }
+
+
+# ------------------------------------------------------------------------- report ----------
+SCH = "https://developer.microsoft.com/json-schemas/fabric/item/report/definition"
+VC = f"{SCH}/visualContainer/1.0.0/schema.json"
+PG = f"{SCH}/page/1.0.0/schema.json"
+PGS = f"{SCH}/pagesMetadata/1.0.0/schema.json"
+RPT = f"{SCH}/report/1.0.0/schema.json"
+VER = f"{SCH}/versionMetadata/1.0.0/schema.json"
+
+VISUAL_TYPE = {
+    "Card": "card", "Slicer": "slicer", "Matrix": "pivotTable", "Table": "tableEx",
+    "Stacked column chart": "columnChart", "Clustered column chart": "clusteredColumnChart",
+    "Line and clustered column chart": "lineClusteredColumnComboChart",
+    "Pie chart": "pieChart", "Donut chart": "donutChart",
+    "Decomposition tree": "decompositionTreeVisual",
+}
+
+# spec well name -> PBIR role, per visual type family
+ROLE = {
+    "card": {"Fields": "Values", "Values": "Values"},
+    "slicer": {"Field": "Values", "Values": "Values"},
+    "pivotTable": {"Rows": "Rows", "Columns": "Columns", "Values": "Values"},
+    "tableEx": {"Values": "Values"},
+    "columnChart": {"X-axis": "Category", "Y-axis": "Y", "Legend": "Series"},
+    "clusteredColumnChart": {"X-axis": "Category", "Y-axis": "Y", "Legend": "Series"},
+    "lineClusteredColumnComboChart": {"X-axis": "Category", "Column y-axis": "Y",
+                                      "Line y-axis": "Y2"},
+    "pieChart": {"Legend": "Category", "Values": "Y"},
+    "donutChart": {"Legend": "Category", "Values": "Y"},
+    "decompositionTreeVisual": {"Analyze": "Analyze", "Explain by": "Explain"},
+}
+
+MEASURE_NAMES = {m["name"] for m in measures}
+FIELD_RE = re.compile(r"^(\w+)\[(.+)\]$")
+
+
+def field_expr(token):
+    """'dimPlant[Plant]' or 'Value ₹ Cr' -> (QueryExpressionContainer, queryRef, native)."""
+    m = FIELD_RE.match(token)
+    if m:
+        entity, prop = m.group(1), m.group(2)
+        if prop in MEASURE_NAMES:      # a measure written table[measure]
+            return ({"Measure": {"Expression": {"SourceRef": {"Entity": entity}},
+                                 "Property": prop}}, f"{entity}.{prop}", prop)
+        return ({"Column": {"Expression": {"SourceRef": {"Entity": entity}},
+                            "Property": prop}}, f"{entity}.{prop}", prop)
+    if token in MEASURE_NAMES:
+        return ({"Measure": {"Expression": {"SourceRef": {"Entity": "factInventory"}},
+                             "Property": token}}, f"factInventory.{token}", token)
+    raise SystemExit(f"unknown field in spec: {token!r}")
+
+
+def vname(page, idx):
+    h = hashlib.md5(f"{page}-{idx}".encode()).hexdigest()[:16]
+    return f"v{h}"
+
+
+def literal(v):
+    return {"expr": {"Literal": {"Value": v}}}
+
+
+def txt(v):
+    return literal("'" + v.replace("'", "''") + "'")
+
+
+GREEN, DARK, RED = "#4FA45F", "#1E6B3A", "#C0504D"
+
+
+def title_objects(text):
+    return {"title": [{"properties": {"show": literal("true"), "text": txt(text),
+                                      "fontColor": {"solid": {"color": txt(DARK)}},
+                                      "fontSize": literal("11D"),
+                                      "bold": literal("true"),
+                                      "fontFamily": txt("Arial")}}],
+            "background": [{"properties": {"show": literal("true"),
+                                           "color": {"solid": {"color": txt("#FFFFFF")}},
+                                           "transparency": literal("0D")}}],
+            "border": [{"properties": {"show": literal("true"),
+                                       "color": {"solid": {"color": txt("#DCE5DC")}},
+                                       "radius": literal("4D")}}]}
+
+
+def matrix_objects(rows_levels, expand):
+    o = {
+        "rowHeaders": [{"properties": {
+            "steppedLayout": literal("false"),
+            "showExpandCollapseButtons": literal("true" if expand else "false"),
+            "fontFamily": txt("Arial"), "bold": literal("true")}}],
+        "columnHeaders": [{"properties": {
+            "fontFamily": txt("Arial"), "bold": literal("true"),
+            "autoSizeColumnWidth": literal("true"),
+            "backColor": {"solid": {"color": txt("#EEF3EF")}},
+            "fontColor": {"solid": {"color": txt(DARK)}}}}],
+        "values": [{"properties": {"fontFamily": txt("Arial"),
+                                   "backColorPrimary": {"solid": {"color": txt("#FFFFFF")}},
+                                   "backColorSecondary": {"solid": {"color": txt("#F7FAF7")}},
+                                   "banded": literal("true")}}],
+        "subTotals": [{"properties": {"rowSubtotals": literal("true"),
+                                      "columnSubtotals": literal("false"),
+                                      "perRowLevel": literal("true")}}],
+        "grid": [{"properties": {"gridVertical": literal("true"),
+                                 "gridVerticalColor": {"solid": {"color": txt("#E6EDE6")}},
+                                 "gridHorizontal": literal("true"),
+                                 "gridHorizontalColor": {"solid": {"color": txt("#E6EDE6")}},
+                                 "rowPadding": literal("2D"),
+                                 "textSize": literal("9D")}}],
+        "columnWidth": [{"properties": {"autoSizeColumnWidth": literal("true")}}],
+        "total": [{"properties": {"fontFamily": txt("Arial"), "bold": literal("true"),
+                                  "backColor": {"solid": {"color": txt("#EEF3EF")}}}}],
+    }
+    if rows_levels > 1:
+        # keep the column headings on screen while the rows scroll inside the visual
+        o["columnHeaders"][0]["properties"]["keepColumnHeadersVisible"] = literal("true")
+    return o
+
+
+def chart_objects(kind, labels=False):
+    o = {"legend": [{"properties": {"show": literal("true"), "position": txt("Top"),
+                                    "fontFamily": txt("Arial")}}],
+         "categoryAxis": [{"properties": {"fontFamily": txt("Arial"),
+                                          "labelColor": {"solid": {"color": txt("#3A4A3F")}},
+                                          "showAxisTitle": literal("false")}}],
+         "valueAxis": [{"properties": {"fontFamily": txt("Arial"),
+                                       "labelColor": {"solid": {"color": txt("#3A4A3F")}},
+                                       "showAxisTitle": literal("false"),
+                                       "gridlineColor": {"solid": {"color": txt("#E6EDE6")}}}}],
+         "labels": [{"properties": {"show": literal("true" if labels else "false"),
+                                    "fontFamily": txt("Arial"),
+                                    "labelPrecision": literal("1D")}}]}
+    if kind in ("pieChart", "donutChart"):
+        o.pop("categoryAxis"), o.pop("valueAxis")
+        o["labels"] = [{"properties": {"show": literal("true"),
+                                       "labelStyle": txt("Both"),
+                                       "fontFamily": txt("Arial")}}]
+    return o
+
+
+def card_objects():
+    return {"labels": [{"properties": {"fontFamily": txt("Arial"),
+                                       "fontSize": literal("22D"),
+                                       "color": {"solid": {"color": txt(DARK)}}}}],
+            "categoryLabels": [{"properties": {"show": literal("true"),
+                                               "fontFamily": txt("Arial"),
+                                               "fontSize": literal("9D"),
+                                               "color": {"solid": {"color": txt("#5A6B5F")}}}}],
+            "wordWrap": [{"properties": {"show": literal("true")}}]}
+
+
+def slicer_objects():
+    return {"general": [{"properties": {"outlineColor": {"solid": {"color": txt("#DCE5DC")}},
+                                        "outlineWeight": literal("1D")}}],
+            "header": [{"properties": {"show": literal("true"), "fontFamily": txt("Arial"),
+                                       "fontColor": {"solid": {"color": txt(DARK)}},
+                                       "textSize": literal("9D")}}],
+            "items": [{"properties": {"fontFamily": txt("Arial"),
+                                      "textSize": literal("9D")}}],
+            "data": [{"properties": {"mode": txt("Dropdown")}}]}
+
+
+def categorical_filter(fname, entity, prop, values, exclude=False):
+    src = {"SourceRef": {"Source": "f"}}
+    expr = {"Column": {"Expression": src, "Property": prop}}
+    inexpr = {"In": {"Expressions": [expr],
+                     "Values": [[{"Literal": {"Value": "'" + v + "'"}}] for v in values]}}
+    cond = {"Not": {"Expression": inexpr}} if exclude else inexpr
+    return {"name": fname, "type": "Categorical",
+            "field": {"Column": {"Expression": {"SourceRef": {"Entity": entity}},
+                                 "Property": prop}},
+            "filter": {"Version": 2,
+                       "From": [{"Name": "f", "Entity": entity, "Type": 0}],
+                       "Where": [{"Condition": cond}]},
+            "howCreated": "User"}
+
+
+def measure_equals_filter(fname, entity, prop, value):
+    return {"name": fname, "type": "Advanced",
+            "field": {"Measure": {"Expression": {"SourceRef": {"Entity": entity}},
+                                  "Property": prop}},
+            "filter": {"Version": 2,
+                       "From": [{"Name": "f", "Entity": entity, "Type": 0}],
+                       "Where": [{"Condition": {"Comparison": {
+                           "ComparisonKind": 0,
+                           "Left": {"Measure": {"Expression": {"SourceRef": {"Source": "f"}},
+                                                "Property": prop}},
+                           "Right": {"Literal": {"Value": f"{value}L"}}}}}]},
+            "howCreated": "User"}
+
+
+def parse_spec_filter(text, seq):
+    """'dimCategory[Category]  →  is FG' / 'Last 4 Months  →  is 1' / '... untick MW'."""
+    left, _, right = [p.strip() for p in text.partition("→")]
+    right = right.strip()
+    m = FIELD_RE.match(left)
+    if m and right.lower().startswith("untick"):
+        return categorical_filter(f"flt{seq}", m.group(1), m.group(2),
+                                  [right.split(None, 1)[1].strip()], exclude=True)
+    if m:
+        return categorical_filter(f"flt{seq}", m.group(1), m.group(2),
+                                  [right.split(None, 1)[1].strip()])
+    return measure_equals_filter(f"flt{seq}", "factInventory", left,
+                                 int(right.split()[-1]))
+
+
+def build_visual(page, idx, kind, title, wells, pos, extra_filters):
+    vt = VISUAL_TYPE[kind]
+    roles = ROLE[vt]
+    qstate, rows_levels, sort_field = {}, 0, None
+    for well, fields in wells:
+        if well == "Filters":
+            continue
+        role = roles[well]
+        projections = []
+        for f in fields:
+            fe, qref, native = field_expr(f)
+            projections.append({"field": fe, "queryRef": qref, "nativeQueryRef": native})
+            if vt in ("columnChart", "clusteredColumnChart",
+                      "lineClusteredColumnComboChart") and role == "Y" and not sort_field:
+                sort_field = fe
+        st = qstate.setdefault(role, {"projections": []})
+        st["projections"].extend(projections)
+        if role in ("Category", "Series", "Rows", "Columns", "Explain"):
+            st["showAll"] = True if role in ("Category", "Series") else st.get("showAll", False)
+        if role == "Rows":
+            rows_levels = len(projections)
+    if "showAll" in qstate.get("Rows", {}):
+        qstate["Rows"].pop("showAll")
+    for r in ("Explain",):
+        qstate.get(r, {}).pop("showAll", None)
+
+    query = {"queryState": qstate}
+    if vt == "pivotTable":
+        objects = matrix_objects(rows_levels, expand=rows_levels > 1)
+    elif vt == "card":
+        objects = card_objects()
+    elif vt == "slicer":
+        objects = slicer_objects()
+    elif vt == "decompositionTreeVisual":
+        objects = {}
+    else:
+        objects = chart_objects(vt, labels=vt in ("pieChart", "donutChart"))
+
+    visual = {"visualType": vt, "query": query,
+              "visualContainerObjects": title_objects(title)}
+    if objects:
+        visual["objects"] = objects
+    if vt == "pivotTable" and rows_levels > 1:
+        visual["expansionStates"] = [{
+            "roles": ["Rows"],
+            "levels": [{"queryRefs": [p["queryRef"]], "isCollapsed": i > 0}
+                       for i, p in enumerate(qstate["Rows"]["projections"])]}]
+
+    x, y, w, h = pos
+    out = {"$schema": VC, "name": vname(page, idx),
+           "position": {"x": x, "y": y, "z": idx, "width": w, "height": h,
+                        "tabOrder": idx * 100},
+           "visual": visual}
+    if extra_filters:
+        out["filterConfig"] = {"filters": extra_filters}
+    return out
+
+
+def page_json(name, idx, drill=False):
+    p = {"$schema": PG, "name": pname(name), "displayName": name,
+         "displayOption": "FitToPage", "width": spec.CANVAS[0], "height": spec.CANVAS[1],
+         "objects": {
+             "background": [{"properties": {
+                 "color": {"solid": {"color": txt("#F4F7F4")}},
+                 "transparency": literal("0D")}}],
+             "outspace": [{"properties": {
+                 "color": {"solid": {"color": txt("#FFFFFF")}}}}]}}
+    if drill:
+        p["pageBinding"] = {"name": f"{pname(name)}_drill", "type": "Drillthrough"}
+        p["filterConfig"] = {"filters": [
+            dict(categorical_filter(f"drill{i}", *FIELD_RE.match(f).groups(), []),
+                 howCreated="Drillthrough") for i, f in enumerate(spec.DRILL_FIELDS)]}
+        for f in p["filterConfig"]["filters"]:
+            f.pop("filter")                     # no values yet: the drill supplies them
+    return p
+
+
+def pname(page):
+    return "pg" + hashlib.md5(page.encode()).hexdigest()[:16]
+
+
+def write_report(root):
+    d = root / "definition"
+    (d / "pages").mkdir(parents=True, exist_ok=True)
+    (d / "version.json").write_text(json.dumps({"$schema": VER, "version": "1.0.0"}, indent=2))
+    theme = json.loads((HERE / "inventory-theme.json").read_text())
+    res = root / "StaticResources" / "RegisteredResources"
+    res.mkdir(parents=True, exist_ok=True)
+    (res / "inventory-theme.json").write_text(json.dumps(theme, indent=2, ensure_ascii=False))
+    (d / "report.json").write_text(json.dumps({
+        "$schema": RPT, "layoutOptimization": "None",
+        "themeCollection": {"customTheme": {"name": theme["name"],
+                                            "reportVersionAtImport": "5.55",
+                                            "type": "RegisteredResources"}},
+        "resourcePackages": [{"name": "RegisteredResources", "type": "RegisteredResources",
+                              "items": [{"name": "inventory-theme.json",
+                                         "path": "inventory-theme.json",
+                                         "type": "CustomTheme"}]}],
+        "settings": {"useStylableVisualContainerHeader": True,
+                     "defaultFilterActionIsDataFilter": True,
+                     "allowChangeFilterTypes": True},
+        "objects": {"outspacePane": [{"properties": {"expanded": literal("false")}}]},
+    }, indent=2, ensure_ascii=False))
+    (d / "pages" / "pages.json").write_text(json.dumps({
+        "$schema": PGS, "pageOrder": [pname(p) for p in spec.PAGES],
+        "activePageName": pname(spec.PAGES[0])}, indent=2))
+
+    for page in spec.PAGES:
+        pdir = d / "pages" / pname(page)
+        (pdir / "visuals").mkdir(parents=True, exist_ok=True)
+        (pdir / "page.json").write_text(json.dumps(
+            page_json(page, spec.PAGES.index(page), drill=page == spec.DRILL_PAGE),
+            indent=2, ensure_ascii=False))
+
+        idx = 0
+        if page in spec.BAND_PAGES:
+            for mname, x, y, w, h, cap in spec.CARDS:
+                idx += 1
+                v = build_visual(page, idx, "Card", cap, [("Fields", [mname])],
+                                 (x, y, w, h), [])
+                write_visual(pdir, v)
+            for field, x, y, w, h, cap in spec.SLICERS:
+                idx += 1
+                v = build_visual(page, idx, "Slicer", cap, [("Field", [field])],
+                                 (x, y, w, h), [])
+                write_visual(pdir, v)
+
+        for vi, (pg, kind, title, wells, pos, why, extra) in enumerate(spec.VISUALS):
+            if pg != page:
+                continue
+            idx += 1
+            filters = [parse_spec_filter(t, f"{pname(page)}_{idx}_{i}")
+                       for well, fields in wells if well == "Filters"
+                       for i, t in enumerate(fields)]
+            v = build_visual(page, idx, kind, title, wells, pos, filters)
+            write_visual(pdir, v)
+
+
+def write_visual(pdir, v):
+    vd = pdir / "visuals" / v["name"]
+    vd.mkdir(parents=True, exist_ok=True)
+    (vd / "visual.json").write_text(json.dumps(v, indent=2, ensure_ascii=False))
+
+
+def main():
+    if OUT.exists():
+        shutil.rmtree(OUT)
+    sm = OUT / f"{NAME}.SemanticModel"
+    rp = OUT / f"{NAME}.Report"
+    sm.mkdir(parents=True)
+    rp.mkdir(parents=True)
+
+    (OUT / f"{NAME}.pbip").write_text(json.dumps({
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/pbip/"
+                   "pbipProperties/1.0.0/schema.json",
+        "version": "1.0",
+        "artifacts": [{"report": {"path": f"{NAME}.Report"}}],
+        "settings": {"enableAutoRecovery": True}}, indent=2))
+
+    (sm / "definition.pbism").write_text(json.dumps({
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/semanticModel/"
+                   "definitionProperties/1.0.0/schema.json",
+        "version": "1.0", "settings": {}}, indent=2))
+    (sm / "model.bim").write_text(json.dumps(model_bim(), indent=2, ensure_ascii=False))
+
+    (rp / "definition.pbir").write_text(json.dumps({
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/"
+                   "definitionProperties/2.0.0/schema.json",
+        "version": "4.0",
+        "datasetReference": {"byPath": {"path": f"../{NAME}.SemanticModel"}}}, indent=2))
+    write_report(rp)
+
+    missing = set(queries) - set(TABLES) - set(EXPRESSION_ORDER)
+    if missing:
+        raise SystemExit(f"queries in the guide but not in the model: {sorted(missing)}")
+    n_vis = len(list((rp / "definition" / "pages").rglob("visual.json")))
+    print(f"wrote {OUT}: {len(TABLES)} tables, {len(EXPRESSION_ORDER)} helper queries, "
+          f"{len(measures)} measures, {len(RELATIONSHIPS)} relationships, "
+          f"{len(spec.PAGES)} pages, {n_vis} visuals")
+
+
+if __name__ == "__main__":
+    main()

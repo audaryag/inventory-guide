@@ -150,6 +150,8 @@ a{color:var(--acc)}
 .wrap{max-width:1000px;margin:0 auto;padding:0 20px 80px}
 h1{font-size:26px;margin:28px 0 6px}
 .sub{color:var(--dim);margin:0 0 20px}
+img{max-width:100%;border:1px solid var(--line);border-radius:6px;margin:8px 0}
+ol,ul{margin:8px 0 8px 22px}li{margin:4px 0;line-height:1.5}
 nav.tabs{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);
   display:flex;gap:6px;padding:10px 0;flex-wrap:wrap}
 nav.tabs button{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:7px;
@@ -299,6 +301,114 @@ $('#reset').onclick=()=>{if(confirm('Clear all Done ticks?')){done.clear();
 paint();
 """
 
+FAST = """
+<h2>Start here — the report is already built</h2>
+<p class="sub">You do not have to make the tables, the measures, the relationships or the pages.
+They are all inside one download. You open it, tell it where your folder is, and press Refresh.
+The other tabs stay as a fallback if you ever want to rebuild a piece by hand.</p>
+
+<h3>Before you start: your folder must look exactly like this</h3>
+<pre>Inventory Report\\
+    RM Raw\\          <- the MB5B raw-material files, untouched
+    FG Raw\\          <- the MB5B finished-goods files, untouched
+    Consble Raw\\     <- the MB5B consumables files, untouched
+    TB\\              <- the TB files, named TB_YYYYMM.xlsx
+    Variables and Calculations.xlsx</pre>
+<p class="sub">Nothing is ever written back to those files. The report reads them and does the
+work in memory, so the SAP downloads stay exactly as they came out of SAP.</p>
+
+<h3>1. One setting, once</h3>
+<ol>
+<li>Open Power BI Desktop.</li>
+<li><strong>File → Options and settings → Options</strong>.</li>
+<li>Left-hand list, under GLOBAL, click <strong>Preview features</strong>.</li>
+<li>Tick <strong>Store reports using enhanced metadata format (PBIR)</strong>. Click <strong>OK</strong>.</li>
+<li>Close Power BI Desktop completely and open it again. (The tick only takes effect after a restart.)</li>
+</ol>
+
+<h3>2. Download and unzip</h3>
+<ol>
+<li>Download <a href="InventoryReport-pbip.zip"><strong>InventoryReport-pbip.zip</strong></a>.</li>
+<li>Right-click the downloaded file → <strong>Extract All…</strong> → put it in
+<code>Documents</code>. Do not leave it inside the zip, and do not put it in a folder that
+OneDrive is still syncing — wait for the green tick if you use OneDrive.</li>
+<li>Open the extracted folder. You will see <code>Inventory Report.pbip</code>,
+<code>Inventory Report.Report</code> and <code>Inventory Report.SemanticModel</code>.
+All three must stay together in the same folder.</li>
+</ol>
+
+<h3>3. Open it</h3>
+<ol>
+<li>Double-click <strong>Inventory Report.pbip</strong>. Power BI Desktop opens with all five
+pages already made.</li>
+<li>It will show errors or blank visuals at first — that is expected, it has not read your
+files yet. Carry on.</li>
+</ol>
+
+<h3>4. Tell it where your folder is (the only thing you type)</h3>
+<ol>
+<li><strong>Home</strong> tab → click the small arrow under <strong>Transform data</strong> →
+click <strong>Edit parameters</strong>.</li>
+<li>A box appears with one parameter called <strong>pRoot</strong>.</li>
+<li>Delete what is in it and type your real folder path, with no backslash on the end, e.g.
+<code>C:\\Users\\alisha\\Documents\\Inventory Report</code>.
+The quickest way to get it right: open the folder in File Explorer, click once in the address
+bar, copy what appears, and paste it in.</li>
+<li>Click <strong>OK</strong>.</li>
+</ol>
+
+<h3>5. Refresh and save</h3>
+<ol>
+<li><strong>Home</strong> tab → <strong>Refresh</strong>. Wait — the first refresh reads every file
+and can take a few minutes.</li>
+<li>Press <strong>Ctrl+S</strong>.</li>
+<li>Look at the <strong>Overview</strong> page. If the cards show numbers, you are done.</li>
+</ol>
+
+<h3>6. Every month after that</h3>
+<ol>
+<li>Drop the new month's MB5B files into <code>RM Raw</code>, <code>FG Raw</code>,
+<code>Consble Raw</code> and the new TB file into <code>TB</code> as
+<code>TB_YYYYMM.xlsx</code>.</li>
+<li>Open the report, press <strong>Refresh</strong>, press <strong>Ctrl+S</strong>. Nothing else.
+The matrices already follow the last four months, so the new month appears and the oldest drops
+off on its own.</li>
+</ol>
+
+<h3>7. To share it with people</h3>
+<p class="sub"><strong>File → Save as</strong> → change the type to
+<strong>Power BI files (*.pbix)</strong> → save that copy on SharePoint or OneDrive. Or
+<strong>Home → Publish</strong> to put it in the Power BI service. The .pbip folder is the
+master copy — keep it.</p>
+
+<h3>What the five pages look like</h3>
+<p class="sub">These are drawn from the project file itself — same page size, same visuals in the
+same places, same fields — with made-up numbers. They are not screenshots of Power BI Desktop:
+Power BI Desktop only runs on Windows, so it could not be opened and photographed on the machine
+that generated the file.</p>
+<p><img src="pbip-overview.png" alt="Overview"><img src="pbip-summary.png" alt="Summary">
+<img src="pbip-fg.png" alt="FG"><img src="pbip-rm.png" alt="RM">
+<img src="pbip-detail.png" alt="Detail"></p>
+
+<h3>If something goes wrong</h3>
+<table>
+<tr><th>What you see</th><th>What to do</th></tr>
+<tr><td>It refuses to open the .pbip, or mentions an unsupported report format</td>
+<td>Step 1 was skipped or Power BI was not restarted. Do step 1 again, close Power BI fully,
+reopen.</td></tr>
+<tr><td><em>DataSource.Error … could not find the folder</em></td>
+<td>pRoot is wrong. Redo step 4 and check the four sub-folders are named exactly
+<code>RM Raw</code>, <code>FG Raw</code>, <code>Consble Raw</code>, <code>TB</code>.</td></tr>
+<tr><td>Everything refreshes but <code>Month</code> is blank on TB</td>
+<td>A TB file is not named <code>TB_YYYYMM.xlsx</code>. Rename it and refresh.</td></tr>
+<tr><td>Days is blank for 1905</td>
+<td>Correct. 1905 has no module capacity in the Variables workbook, so a blank is shown rather
+than an invented number.</td></tr>
+<tr><td>One visual says something is missing</td>
+<td>Send me the exact red text. Do not start rebuilding — it will be one line to fix.</td></tr>
+</table>
+"""
+
 HTML = f"""<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -306,12 +416,15 @@ HTML = f"""<!doctype html>
 <style>{CSS}</style></head><body>
 <div class="wrap">
 <h1>Inventory Power BI — build guide</h1>
+<p class="sub">New here? <strong>Start here</strong> — the finished file is ready to download, so you
+do not have to build anything by hand. The other tabs are the manual route, kept as a fallback.</p>
 <p class="sub">Click <strong>Copy</strong> on a block, then paste it into Power Query's Advanced Editor.
 Tick <strong>Done</strong> to keep your place — it is remembered in this browser.
 Building the pages? Use <strong>Build it</strong> — one instruction per screen.</p>
 
 <nav class="tabs">
-  <button data-tab="q" class="on">Queries ({len(queries)})</button>
+  <button data-tab="f" class="on">Start here</button>
+  <button data-tab="q">Queries ({len(queries)})</button>
   <button data-tab="m">Measures ({len(measures)})</button>
   <button data-tab="b">Build it ({len(STEPS)})</button>
   <button data-tab="g">Walkthrough</button>
@@ -319,9 +432,11 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
   <button id="reset" title="Clear progress">Reset</button>
 </nav>
 
-<div class="bar" id="qbar"><span id="ptext"></span><span class="track"><span class="fill" id="pfill"></span></span></div>
+<div class="bar" id="qbar" style="display:none"><span id="ptext"></span><span class="track"><span class="fill" id="pfill"></span></span></div>
 
-<div class="panel on" id="tab-q">
+<div class="panel on" id="tab-f">{FAST}</div>
+
+<div class="panel" id="tab-q">
   <p class="sub">One query per box, in this order. For each: <strong>Home → New Source → Blank Query</strong>,
   then <strong>Home → Advanced Editor</strong>, Ctrl+A, Delete, paste, <strong>Done</strong>,
   then right-click the query → <strong>Rename</strong> and type the name shown.
