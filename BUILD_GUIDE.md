@@ -392,7 +392,7 @@ Position: Horizontal 16, Vertical 168, Width 764, Height 264.
 
 Title: `Value ₹ Cr by plant — click to go deeper`
 
-Position: Horizontal 788, Vertical 168, Width 476, Height 216.
+Position: Horizontal 16, Vertical 444, Width 764, Height 268.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -412,7 +412,7 @@ Position: Horizontal 788, Vertical 168, Width 476, Height 216.
 
 Title: `Value ₹ Cr — this month vs last month`
 
-Position: Horizontal 16, Vertical 444, Width 764, Height 268.
+Position: Horizontal 788, Vertical 168, Width 476, Height 216.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.

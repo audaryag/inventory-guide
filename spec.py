@@ -56,7 +56,7 @@ VISUALS = [
     ("Overview", "Clustered column chart", "Value ₹ Cr by plant — click to go deeper",
      [("X-axis", ["dimPlant[Plant]", "dimCategory[Category]", "dimNature[Nature]"]),
       ("Y-axis", ["Value ₹ Cr"])],
-     (788, 168, 476, 216),
+     (16, 444, 764, 268),
      "Three fields in the X-axis makes it a hierarchy, so the little arrows appear in the "
      "visual's top-right corner: plant, then category inside a plant, then nature inside "
      "that. Clicking is the whole point — nobody has to build three charts.",
@@ -69,7 +69,7 @@ VISUALS = [
      [("X-axis", ["dimDate[MonthName]"]),
       ("Column y-axis", ["Value ₹ Cr", "Value ₹ Cr LM"]),
       ("Line y-axis", ["Value ₹ Cr % vs LM"])],
-     (16, 444, 764, 268),
+     (788, 168, 476, 216),
      "Bars compare the two months directly; the line is the percentage swing, which is "
      "what people argue about.", []),
 
