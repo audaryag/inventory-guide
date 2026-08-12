@@ -104,11 +104,56 @@ SHAPE = {
 }
 
 
+def _fit(vtype, title):
+    """Settings that stop text clipping or overflowing, per visual type.
+
+    Power BI's defaults are sized for a full-screen visual; these pages fit 5-8 visuals
+    on one canvas, so titles, headers and labels have to come down a size or two.
+    """
+    common = ["Still in the paintbrush pane, click General, then Title, and set Font size "
+              "to 12. If the title still ends in three dots, shorten the text you typed — "
+              "a clipped title is the visual telling you it has run out of width."]
+    if vtype in ("Matrix", "Table"):
+        return common + [
+            "Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' "
+            "toggle under it, switch it On so a long heading goes onto two lines instead "
+            "of being cut.",
+            "Click 'Row headers' and do the same: Font size 10, Word wrap On if it is "
+            "offered.",
+            "Click 'Values' and set Font size to 10.",
+            "Double-click the line between two column headings to widen a column that is "
+            "still showing three dots — or drag that line. Column widths are remembered "
+            "when you save."]
+    if vtype in ("Pie chart", "Donut chart"):
+        return common + [
+            "Click 'Detail labels' and set Font size to 9. If a slice label is still cut "
+            "off, set 'Position' to Outside, and switch on 'Overflow text' if your version "
+            "offers it.",
+            "Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the "
+            "legend eats the chart, switch Legend off entirely — the labels already name "
+            "the slices."]
+    if vtype == "Card":
+        return common + [
+            "Click 'Callout value' and set Font size to 24, then click 'Category label' and "
+            "set Font size to 10, so the words under the number are not cut in half."]
+    if vtype == "Decomposition tree":
+        return common
+    return common + [
+        "Click 'X-axis' and set Font size to 9. If the labels are turned on their side or "
+        "cut off, that is the visual being too narrow — leave it, Power BI rotates them "
+        "on purpose.",
+        "Click 'Y-axis' and set Font size to 9.",
+        "Click 'Legend' and set Font size to 9 and Position to 'Top center'.",
+        "Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon "
+        "as there are more than about six bars."]
+
+
 def _check(vtype, wells):
     """What the finished visual must look like, in plain words."""
     named = [f for wl, fl in wells if wl != "Filters" for f in fl]
-    return ("The visual shows %s, it is not empty and not showing an error triangle, and the "
-            "Visualizations pane still lists every field you dropped in: %s."
+    return ("The visual shows %s, it is not empty and not showing an error triangle, the "
+            "title and every heading are readable in full rather than ending in three dots, "
+            "and the Visualizations pane still lists every field you dropped in: %s."
             % (SHAPE.get(vtype, "what the title describes"), ", ".join(named)))
 
 
@@ -116,7 +161,8 @@ def _stuck(vtype, wells=()):
     common = ("Empty visual: a slicer above is filtering everything out — clear the header "
               "dropdowns and look again. 'Can't display this visual': a field is in the wrong "
               "box, so drag it out and put it back where the list below says. Wrong size: "
-              "retype the four numbers rather than dragging the corners.")
+              "retype the four numbers rather than dragging the corners. Text ending in three "
+              "dots: drop that font size by 1 and, on a heading, switch its Word wrap on.")
     if vtype == "Matrix":
         rows = [f for wl, fl in wells if wl == "Rows" for f in fl]
         extra = (" No + signs on the row names: one of the two Rows fields is missing, or "
@@ -181,8 +227,11 @@ def steps():
             "Click the small arrow under the word Themes to open the list.",
             "Click 'Browse for themes' at the bottom of that list.",
             "Choose the inventory-theme.json file you just saved, and click Open."],
-        fields=[], note="This sets all colours, fonts, borders and card styling, so no step "
-                        "below asks you to colour anything.", link="inventory-theme.json",
+        fields=[], note="This sets all colours, fonts, borders and text sizes, so no step "
+                        "below asks you to choose any of them. If you imported an earlier "
+                        "copy of this file, download and import it again — the sizes in it "
+                        "were lowered so titles and card labels stop being cut off.",
+        link="inventory-theme.json",
         check="A message says the theme imported successfully, and the page background turns "
               "a very light grey rather than pure white.",
         stuck="'Invalid theme file' means the download saved as .txt — rename it so it ends "
@@ -334,6 +383,7 @@ def steps():
             do += ["In the Visualizations pane click the paintbrush icon, then click "
                    "General, then Title, and type the title shown below into the Text box "
                    "(delete whatever Power BI already put there)."]
+            do += _fit(vtype, title)
             do += _place(*pos, in_format=True)
             do += [_plain(e) for e in extra]
             fields = [("Visual", vtype), ("Title", title)]

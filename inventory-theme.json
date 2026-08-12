@@ -35,7 +35,7 @@
       "color": "#3C424C"
     },
     "callout": {
-      "fontSize": 26,
+      "fontSize": 24,
       "fontFace": "Arial Bold",
       "color": "#1B1F26"
     },
@@ -78,7 +78,7 @@
         "title": [
           {
             "show": true,
-            "fontSize": 13,
+            "fontSize": 12,
             "fontFamily": "Arial Bold",
             "fontColor": {
               "solid": {
@@ -96,7 +96,7 @@
         "categoryAxis": [
           {
             "fontFamily": "Arial",
-            "fontSize": 10,
+            "fontSize": 9,
             "labelColor": {
               "solid": {
                 "color": "#3C424C"
@@ -108,7 +108,7 @@
         "valueAxis": [
           {
             "fontFamily": "Arial",
-            "fontSize": 10,
+            "fontSize": 9,
             "labelColor": {
               "solid": {
                 "color": "#3C424C"
@@ -124,13 +124,13 @@
         "legend": [
           {
             "fontFamily": "Arial",
-            "fontSize": 10,
+            "fontSize": 9,
             "labelColor": {
               "solid": {
                 "color": "#3C424C"
               }
             },
-            "position": "TopRight"
+            "position": "TopCenter"
           }
         ],
         "labels": [
@@ -235,7 +235,7 @@
         "columnHeaders": [
           {
             "fontFamily": "Arial Bold",
-            "fontSize": 11,
+            "fontSize": 10,
             "fontColor": {
               "solid": {
                 "color": "#1B1F26"
@@ -245,7 +245,9 @@
               "solid": {
                 "color": "#F0F3F8"
               }
-            }
+            },
+            "wordWrap": true,
+            "autoSizeColumnWidth": true
           }
         ],
         "subTotals": [
@@ -258,13 +260,15 @@
         "values": [
           {
             "fontFamily": "Arial",
-            "fontSize": 11
+            "fontSize": 10,
+            "wordWrap": true
           }
         ],
         "rowHeaders": [
           {
             "fontFamily": "Arial",
-            "fontSize": 11
+            "fontSize": 10,
+            "wordWrap": true
           }
         ]
       }
@@ -279,18 +283,19 @@
         "columnHeaders": [
           {
             "fontFamily": "Arial Bold",
-            "fontSize": 11,
+            "fontSize": 10,
             "backColor": {
               "solid": {
                 "color": "#F0F3F8"
               }
-            }
+            },
+            "wordWrap": true
           }
         ],
         "values": [
           {
             "fontFamily": "Arial",
-            "fontSize": 11
+            "fontSize": 10
           }
         ]
       }
