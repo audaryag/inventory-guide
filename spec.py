@@ -25,10 +25,10 @@ BOX = "#FFFFFF"          # the three white boxes inside the panel
 UP, DOWN = "#2E7D32", "#B3261E"
 
 # Overview and Summary carry their own controls, so they are built visual by visual.
-# FG and RM still share the older card-and-slicer band.
-BAND_PAGES = ["FG", "RM"]
+# RM is the only page still using the older card-and-slicer band.
+BAND_PAGES = ["RM"]
 
-# ---- header band for FG / RM -------------------------------------------------------------
+# ---- header band for RM -------------------------------------------------------------
 # 96 high, not 88: a card has to hold a 12pt title strip above a 24pt number, and 88
 # clips the lower one of the two.
 CARDS = [
@@ -540,48 +540,167 @@ VISUALS = [
       "has none to spare.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 11, Colour: #14532D."]),
 
-    # ---- FG: MW | In ₹ Cr | In Days as master columns ----------------------------------
-    ("FG", "Matrix", "FG by plant — MW · In ₹ Cr · In Days",
+    # ---- FG: its own controls, then MW | Rs Cr. | Days as master columns ---------------
+    ("FG", "Slicer", "By Month / By Quarter",
+     [("Field", ["Period[Period]"])],
+     (16, 20, 216, 52),
+     "The same two-button toggle as Overview and Summary. By Month puts the months you pick "
+     "under each master column; By Quarter puts fiscal quarters there instead, each one the "
+     "average of its three month-ends, because stock cannot be added up across months.",
+     ["Format pane → Slicer settings → Options → Style: Tile. Two buttons side by side, not "
+      "a dropdown.",
+      "Format pane → Slicer settings → Selection → Single select: On, Show 'Select all': "
+      "Off. Exactly one of the two is always chosen.",
+      "Format pane → Values → Font: Arial, Font size: 10, Colour: #14532D.",
+      "Leave it out of View → Sync slicers. FG keeps its own toggle, so changing the mode "
+      "here must not move Overview or Summary."]),
+
+    ("FG", "Slicer", "Months (leave empty for the last 4)",
+     [("Field", ["dimDate[MonthName]"])],
+     (248, 20, 300, 52),
+     "Which months appear under each master column. Tick nothing and it shows the last four "
+     "with data; tick your own and it shows those, up to twelve.",
+     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+      "Format pane → Slicer settings → Selection → switch OFF 'Multi-select with CTRL', so "
+      "months can be ticked by clicking.",
+      "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24.",
+      "Do not sync this one either. Both FG matrices read it, and nothing else should."]),
+
+    ("FG", "Slicer", "Quarters (leave empty for the last 4)",
+     [("Field", ["dimDate[Quarter]"])],
+     (564, 20, 240, 52),
+     "The same idea in quarter mode: empty means the last four fiscal quarters, or tick the "
+     "ones you want, up to twelve.",
+     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+      "Format pane → Slicer settings → Selection → 'Multi-select with CTRL': Off.",
+      "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24.",
+      "It has no effect while the toggle says By Month — that is intended, not a fault."]),
+
+    ("FG", "Slicer", "Plant",
+     [("Field", ["dimPlant[Plant]"])],
+     (820, 20, 220, 52),
+     "One plant, or all of them. It filters the technology matrix and all three charts, so "
+     "picking Dholera Cell turns the page into a Dholera Cell page.",
+     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+      "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
+
+    ("FG", "Slicer", "Technology",
+     [("Field", ["dimNature[Nature]"])],
+     (1056, 20, 208, 52),
+     "One module technology, when you want the page to be about that technology only.",
+     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+      "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
+
+    ("FG", "Matrix", "FG by Plant — MW · Rs Cr. · Days",
      [("Rows", ["dimPlant[Plant]"]),
-      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
-      ("Values", ["Unit Value"]),
-      ("Filters", ["dimCategory[Category]  →  is FG"])],
-     (16, 168, 1248, 176),
-     "FG per plant in all three units at once — megawatts, crore rupees and days — with the "
-     "months you tick under each. Days is MW ÷ capacity MW, so 1905 is blank on purpose.",
-     ["dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName].",
-      "Format pane → Row headers → Stepped layout: Off.",
-      "No month filter on this one — the Month slicer decides which months are columns. "
-      "Tick any four to compare, or pick a Quarter and it shows that quarter's three.",
-      "Click a plant row to filter the technology table below it."]),
+      ("Columns", ["dimMeasure[Measure]", "Period[Period]"]),
+      ("Values", ["Unit Value by Period"]),
+      ("Filters", ["dimCategory[Category]  →  is FG",
+                   "In Summary Window  →  is 1"])],
+     (16, 88, 1248, 140),
+     "Finished goods per plant in all three units at once — megawatts, crore rupees and "
+     "days — with four periods under each of the three master columns by default. Days is "
+     "MW ÷ capacity MW, so a plant with no capacity figure is blank on purpose.",
+     ["dimMeasure[Measure] goes in Columns FIRST, then Period[Period]. That order is what "
+      "makes MW, Rs Cr. and Days the master columns with the periods nested inside them; "
+      "the other way round gives you periods with three units inside each, which is not "
+      "what you want.",
+      "Values takes Unit Value by Period, not Unit Value — the by-Period one averages the "
+      "month-ends in quarter mode instead of adding them.",
+      "Filters pane → drag dimCategory[Category] in → tick FG only. Then drag the measure "
+      "In Summary Window in and set 'is 1' — that is what limits it to four periods, or to "
+      "the ones you tick, up to twelve.",
+      "Format pane → Row headers → Stepped layout: Off, +/- icons: On.",
+      "Format pane → Subtotals → Row subtotals: On, Column subtotals: Off.",
+      "Format pane → Values → Font: Arial, Font size: 9, Colour: #1F2A24. Everything else "
+      "comes from the theme.",
+      "Format pane → General → Title → Font: Arial, Font size: 12, Colour: #14532D.",
+      "Click a plant row and the technology matrix and the charts below follow it.",
+      "With twelve periods ticked this is 36 number columns, so the matrix scrolls "
+      "sideways. That is normal — scroll inside it, do not widen it."]),
 
-    ("FG", "Matrix", "FG by technology — MW · In ₹ Cr · In Days",
+    ("FG", "Matrix", "FG by Technology — MW · Rs Cr. · Days",
      [("Rows", ["dimNature[Nature]"]),
-      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
-      ("Values", ["Unit Value"]),
-      ("Filters", ["dimCategory[Category]  →  is FG"])],
-     (16, 356, 620, 356),
-     "The same three units by technology rather than by plant, which is where a build-up in "
-     "one technology shows up.",
-     ["Same column order: dimMeasure[Measure] then dimDate[MonthName].",
-      "Format pane → Row headers → Stepped layout: Off."]),
+      ("Columns", ["dimMeasure[Measure]", "Period[Period]"]),
+      ("Values", ["Unit Value by Period"]),
+      ("Filters", ["dimCategory[Category]  →  is FG",
+                   "In Summary Window  →  is 1"])],
+     (16, 236, 1248, 252),
+     "Exactly the same three master columns and the same periods, but by module technology "
+     "rather than by plant — which is where a build-up in one technology shows up.",
+     ["Build it the fastest way: click the matrix above, Ctrl+C, Ctrl+V, then in the Rows "
+      "box remove dimPlant[Plant] and drag dimNature[Nature] in. Everything else, filters "
+      "included, comes with the copy.",
+      "Then set its position and size from the numbers below, and retype the title.",
+      "Check the filters came across: the Filters pane should still show Category is FG and "
+      "In Summary Window is 1.",
+      "Format pane → Row headers → Stepped layout: Off.",
+      "Format pane → Subtotals → Row subtotals: On, Column subtotals: Off.",
+      "With the Plant slicer on one plant, this becomes that plant's technology split."]),
 
-    ("FG", "Clustered column chart", "FG MW by technology — click a bar",
+    ("FG", "Clustered column chart", "FG MW by Technology, Latest Month — Click a Bar",
      [("X-axis", ["dimNature[Nature]"]),
       ("Y-axis", ["MW"]),
-      ("Filters", ["dimCategory[Category]  →  is FG"])],
-     (644, 356, 620, 176),
-     "Clicking one technology filters both matrices to it; right-click drills through.", []),
+      ("Filters", ["dimCategory[Category]  →  is FG",
+                   "In Latest Month  →  is 1"])],
+     (16, 496, 412, 208),
+     "Which technology is holding the megawatts right now. It is deliberately pinned to the "
+     "latest month with data: there is no period on the axis here, so without that pin it "
+     "would add four months of stock together and read four times too high.",
+     ["Filters pane → drag In Latest Month in → is 1. Do not skip it, and do not put a "
+      "period field on this chart.",
+      "Format pane → Data labels: On, Font: Arial, Font size: 9, Colour: #1F2A24, Display "
+      "units: None, Value decimal places: 1.",
+      "Format pane → Y-axis: Off — the label on each bar is the number.",
+      "Format pane → X-axis → Values → Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane → Legend: Off. One measure, one colour.",
+      "Format pane → General → Title → Font: Arial, Font size: 11, Colour: #14532D.",
+      "Clicking a bar filters both matrices to that technology; right-click → Drill "
+      "through → Detail for the materials behind it."]),
 
-    ("FG", "Line and clustered column chart", "Days of inventory by month — click a bar",
+    ("FG", "Line and clustered column chart",
+     "FG Days of Inventory by Month, Last 12 Months (Days and % vs Last Month)",
      [("X-axis", ["dimDate[MonthName]"]),
       ("Column y-axis", ["Days"]),
       ("Line y-axis", ["Days vs LM"]),
-      ("Filters", ["dimCategory[Category]  →  is FG"])],
-     (644, 544, 620, 168),
-     "Days month by month with the change on a line. Right-click any bar → Drill through → "
-     "Detail for the technology and material split behind it.",
-     []),
+      ("Filters", ["dimCategory[Category]  →  is FG",
+                   "In Last 12  →  is 1"])],
+     (444, 496, 428, 208),
+     "How long the finished goods on hand would last, month by month, with the change on "
+     "last month printed above each bar — so a slow build-up is visible before it becomes a "
+     "number anyone argues about.",
+     ["Filters pane → drag In Last 12 in → is 1, so this always shows the last twelve "
+      "months whatever the pickers above say.",
+      "This chart must ignore the two period controls, or it drops back to four months: "
+      "click the By Month / By Quarter slicer → Format tab → Edit interactions → set this "
+      "chart to None (the circle-with-a-line icon). Do the same after clicking the Months "
+      "slicer and the Quarters slicer.",
+      "Format pane → Data labels: On. 'Apply settings to' → Series: Days — Font: Arial, "
+      "Font size: 8, Colour: #1F2A24, Value decimal places: 0, Position: Inside end.",
+      "Switch 'Apply settings to' → Series to Days vs LM: Font: Arial, Font size: 8, "
+      "Colour: #6B7280, Value decimal places: 0, Position: Above.",
+      "Format pane → Y-axis: Off, Secondary y-axis: Off.",
+      "Format pane → X-axis → Values → Font: Arial, Font size: 8, Colour: #1F2A24.",
+      "Format pane → Legend: Off — the title says which is which.",
+      "Format pane → General → Title → Font: Arial, Font size: 11, Colour: #14532D.",
+      "Right-click any bar → Drill through → Detail for the split behind that month."]),
+
+    ("FG", "Donut chart", "FG Share by Plant (%), Latest Month",
+     [("Legend", ["dimPlant[Plant]"]),
+      ("Values", ["FG ₹ Cr"]),
+      ("Filters", ["In Latest Month  →  is 1"])],
+     (888, 496, 376, 208),
+     "Where the finished goods are sitting, as a share of the whole. Pinned to the latest "
+     "month for the same reason as the bar chart: a share of four added-up months would "
+     "mean nothing.",
+     ["Filters pane → drag In Latest Month in → is 1.",
+      "Format pane → Detail labels → Label contents: Category, percent of total. Font: "
+      "Arial, Font size: 9, Colour: #1F2A24, Percentage decimal places: 1 — so the "
+      "percentage is printed on each slice and nobody has to hover.",
+      "Format pane → Legend: Off. The slice labels already name the plants.",
+      "Format pane → General → Title → Font: Arial, Font size: 11, Colour: #14532D.",
+      "Clicking a slice filters the rest of the page to that plant; clicking it again "
+      "releases it."]),
 
     # ---- RM: plant first, then group nature / nature, in ₹ Cr and days -----------------
     ("RM", "Matrix", "RM by plant — In ₹ Cr · In Days",

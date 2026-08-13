@@ -502,11 +502,11 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
   <p class="sub">Report view → <strong>Home → New measure</strong>, paste, Enter. One per box.
   They are also in the Measures tab at the bottom, so do not paste them twice.</p>
   {cards(new_measures, 'nm')}
-  <h2>3 &mdash; then rebuild the Overview and Summary pages</h2>
-  <p class="sub">Go to <strong>Build it</strong> and work through the Overview steps, then the
-  Summary steps. On both pages, delete what is there first — select everything on the page with
-  <strong>Ctrl+A</strong> and press <strong>Delete</strong> — because both are laid out
-  differently now.</p>
+  <h2>3 &mdash; then rebuild the Overview, Summary and FG pages</h2>
+  <p class="sub">Go to <strong>Build it</strong> and work through the Overview steps, then
+  Summary, then FG. On each of those three pages, delete what is there first — select
+  everything on the page with <strong>Ctrl+A</strong> and press <strong>Delete</strong> —
+  because all three are laid out differently now.</p>
   <p class="sub"><strong>Overview:</strong> green panel down the left, chart above table, two
   donuts on the right, twelve-month strip along the bottom.</p>
   <p class="sub"><strong>Summary:</strong> no header band of cards any more. It has its own five
@@ -515,9 +515,14 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
   the across-all-plants block, then the difference chart. It needs the two new measures
   <code>Summary Value Rs Cr</code> and <code>In Summary Window</code> from section 2 above, so
   paste those before you start.</p>
-  <p class="sub">The FG, RM and Detail pages are untouched — but the header band of cards is now
-  built on <strong>FG</strong> and copied to <strong>RM</strong> only, since Summary no longer
-  carries it.</p>
+  <p class="sub"><strong>FG:</strong> also its own five controls now (toggle, Months, Quarters,
+  Plant, Technology), then two matrices with <em>MW</em>, <em>Rs Cr.</em> and <em>Days</em> as
+  master columns — the first by plant, the second by technology — then three visuals across the
+  bottom: MW by technology, the Days trend, and a donut of the share by plant. It needs
+  <code>Unit Value by Period</code> and <code>In Latest Month</code> from section 2.</p>
+  <p class="sub">RM and Detail are untouched — but the header band of six cards and four
+  dropdowns now lives on <strong>RM</strong> only, since Overview, Summary and FG all carry
+  their own controls. There is nothing left to copy it to, and nothing to sync.</p>
 </div>
 
 <div class="panel" id="tab-b">

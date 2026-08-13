@@ -455,43 +455,57 @@ def steps():
 
     n_band = len(CARDS) + len(SLICERS)
     others = [p for p in BAND_PAGES if p != BAND]
-    S.append(dict(
-        title="Copy the header band to the other pages",
-        page=BAND,
-        do=["Click once on the first card. Then hold Ctrl and click each of the other %d "
-            "cards and all %d slicers, so %d things are selected at once."
-            % (len(CARDS) - 1, len(SLICERS), n_band),
-            "Press Ctrl+C.",
-            "Click the tab at the bottom for the next page in the list below, then press "
-            "Ctrl+V. If Power BI asks about the data, click 'Keep'.",
-            "Repeat for every page in the list. The cards land in the same place on each "
-            "page, so nothing needs moving."],
-        fields=[("Paste on", p) for p in others],
-        note="Not on %s — that page is filtered by whatever you clicked to get there, so a "
-             "slicer on it would fight the drill-through." % DRILL_PAGE,
-        check="These pages now each have the same row of cards and dropdowns across the top, "
-              "in the same place: " + ", ".join(others) + ".",
-        stuck="If the band lands crooked, do not nudge it by hand — press Ctrl+Z, reselect all "
-              "%d items and paste again. If only one card pasted, the Ctrl+click selection was "
-              "lost partway; select them all again." % n_band))
+    if others:
+        S.append(dict(
+            title="Copy the header band to the other pages",
+            page=BAND,
+            do=["Click once on the first card. Then hold Ctrl and click each of the other %d "
+                "cards and all %d slicers, so %d things are selected at once."
+                % (len(CARDS) - 1, len(SLICERS), n_band),
+                "Press Ctrl+C.",
+                "Click the tab at the bottom for the next page in the list below, then press "
+                "Ctrl+V. If Power BI asks about the data, click 'Keep'.",
+                "Repeat for every page in the list. The cards land in the same place on each "
+                "page, so nothing needs moving."],
+            fields=[("Paste on", p) for p in others],
+            note="Not on %s — that page is filtered by whatever you clicked to get there, so "
+                 "a slicer on it would fight the drill-through." % DRILL_PAGE,
+            check="These pages now each have the same row of cards and dropdowns across the "
+                  "top, in the same place: " + ", ".join(others) + ".",
+            stuck="If the band lands crooked, do not nudge it by hand — press Ctrl+Z, reselect "
+                  "all %d items and paste again. If only one card pasted, the Ctrl+click "
+                  "selection was lost partway; select them all again." % n_band))
 
-    S.append(dict(
-        title="Sync the slicers across pages",
-        page="—",
-        do=["At the top of the window click the View tab, then tick the box called "
-            "'Sync slicers'. A new pane opens on the right.",
-            "Click once on the Month slicer on the page.",
-            "In the 'Sync slicers' pane, tick BOTH boxes (Sync and Visible) on the rows for "
-            "these pages: " + ", ".join(BAND_PAGES) + ".",
-            "Then click the Quarter slicer and do the same, then the Plant slicer, then the "
-            "Category slicer."],
-        fields=[], note="Skip this and each page filters on its own, so two pages will show "
-                        "different totals for the same month.",
-        check="Pick one month on %s, then click through %s — the same month is still picked on "
-              "each of them." % (BAND, ", ".join(BAND_PAGES[1:])),
-        stuck="If a page ignores the choice, its row in the Sync slicers pane is unticked — "
-              "tick both boxes on that row. Leave the %s row unticked everywhere."
-              % DRILL_PAGE))
+        S.append(dict(
+            title="Sync the slicers across pages",
+            page="—",
+            do=["At the top of the window click the View tab, then tick the box called "
+                "'Sync slicers'. A new pane opens on the right.",
+                "Click once on the Month slicer on the page.",
+                "In the 'Sync slicers' pane, tick BOTH boxes (Sync and Visible) on the rows "
+                "for these pages: " + ", ".join(BAND_PAGES) + ".",
+                "Then click the Quarter slicer and do the same, then the Plant slicer, then "
+                "the Category slicer."],
+            fields=[], note="Skip this and each page filters on its own, so two pages will "
+                            "show different totals for the same month.",
+            check="Pick one month on %s, then click through %s — the same month is still "
+                  "picked on each of them." % (BAND, ", ".join(BAND_PAGES[1:])),
+            stuck="If a page ignores the choice, its row in the Sync slicers pane is unticked "
+                  "— tick both boxes on that row. Leave the %s row unticked everywhere."
+                  % DRILL_PAGE))
+    else:
+        S.append(dict(
+            title="Leave these slicers on this page only",
+            page=BAND,
+            do=["%s is the only page carrying this band, so there is nothing to copy and "
+                "nothing to sync." % BAND,
+                "If you have used 'Sync slicers' before, open View → Sync slicers and make "
+                "sure every other page's row is unticked for these four — Overview, Summary "
+                "and FG each have their own controls, and a synced slicer would fight them."],
+            fields=[], note="",
+            check="Clicking a month here changes only this page.",
+            stuck="If picking a month here also changes Overview, Summary or FG, untick that "
+                  "page's row in the Sync slicers pane."))
 
     # one step per visual
     by_page = {}
