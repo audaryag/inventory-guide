@@ -794,18 +794,18 @@ VISUALS = [
       "list behind it."]),
 
     ("RM", "Clustered column chart", "RM Inventory (Rs Cr.) by Plant",
-     [("X-axis", ["dimPlant[Plant]"]),
-      ("Legend", ["Period[Period]"]),
+     [("X-axis", ["Period[Period]"]),
+      ("Legend", ["dimPlant[Plant]"]),
       ("Y-axis", ["Inventory Rs Cr"]),
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "In Summary Window  →  is 1"])],
      (16, 496, 616, 208),
-     "The first of the two charts you wanted: raw material held at each plant in crore "
-     "rupees, one bar per period beside each plant, so four months sit side by side and a "
-     "build-up at one plant is obvious. It follows the pickers above, so it is four periods "
-     "by default and up to twelve if you tick them.",
-     ["Period[Period] goes in Legend, not in the X-axis — that is what puts the four periods "
-      "side by side within each plant instead of splitting the chart in two.",
+     "The first of the two charts you wanted: raw material held in crore rupees, one group per "
+     "period along the bottom and the three plants side by side inside each group, so you read "
+     "the months left to right and compare the plants within a month. It follows the pickers "
+     "above, so it is four periods by default and up to twelve if you tick them.",
+     ["Period[Period] goes in the X-axis and dimPlant[Plant] in Legend — that order is what "
+      "gives three bars per month rather than four bars per plant.",
       "Y-axis takes Inventory Rs Cr, the period-aware one, so quarter mode averages the "
       "month-ends instead of adding them.",
       "Format pane → Data labels: On, Font: Arial, Font size: 8, Colour: #1F2A24, Display "
@@ -813,20 +813,21 @@ VISUALS = [
       "Format pane → Y-axis: Off — every bar carries its own number.",
       "Format pane → X-axis → Values → Font: Arial, Font size: 9, Colour: #1F2A24.",
       "Format pane → Legend → Position: Top center, Font: Arial, Font size: 8. Keep it on: "
-      "it is the only thing naming the periods.",
+      "it is the only thing naming the plants.",
       "Format pane → General → Title → Font: Arial, Font size: 11, Colour: #14532D.",
-      "Clicking one plant's bar filters both matrices to that plant."]),
+      "Clicking one plant's bar filters both matrices to that plant and that period."]),
 
     ("RM", "Clustered column chart", "RM Inventory (Days) by Plant",
-     [("X-axis", ["dimPlant[Plant]"]),
-      ("Legend", ["Period[Period]"]),
+     [("X-axis", ["Period[Period]"]),
+      ("Legend", ["dimPlant[Plant]"]),
       ("Y-axis", ["Days by Period"]),
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "In Summary Window  →  is 1"])],
      (648, 496, 616, 208),
      "The same chart in days rather than rupees — how long each plant's raw material would "
-     "last at its own capacity. Read together with the one beside it, this is what tells you "
-     "whether a bigger rupee figure is actually more stock or just a dearer month.",
+     "last at its own capacity, again three plant bars per month. Read together with the one "
+     "beside it, this is what tells you whether a bigger rupee figure is actually more stock "
+     "or just a dearer month.",
      ["Build it by copying the chart beside it (Ctrl+C, Ctrl+V) and swapping the Y-axis "
       "measure from Inventory Rs Cr to Days by Period. Everything else stays.",
       "Format pane → Data labels → Value decimal places: 0, and Display units: None. Days "

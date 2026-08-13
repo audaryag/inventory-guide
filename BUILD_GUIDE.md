@@ -1281,12 +1281,12 @@ Position: Horizontal 16, Vertical 236, Width 1248, Height 252.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On, and switch 'Per row level' On so both the Total Module and Total Cell lines appear, not only the grand total.
 - Right-click a material row → Drill through → Detail for the material-by-material list behind it.
 
-**4.49** **Clustered column chart** — The first of the two charts you wanted: raw material held at each plant in crore rupees, one bar per period beside each plant, so four months sit side by side and a build-up at one plant is obvious. It follows the pickers above, so it is four periods by default and up to twelve if you tick them.
+**4.49** **Clustered column chart** — The first of the two charts you wanted: raw material held in crore rupees, one group per period along the bottom and the three plants side by side inside each group, so you read the months left to right and compare the plants within a month. It follows the pickers above, so it is four periods by default and up to twelve if you tick them.
 
 | Well | Field |
 |---|---|
-| X-axis | `dimPlant[Plant]` |
-| Legend | `Period[Period]` |
+| X-axis | `Period[Period]` |
+| Legend | `dimPlant[Plant]` |
 | Y-axis | `Inventory Rs Cr` |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
@@ -1299,21 +1299,21 @@ Position: Horizontal 16, Vertical 496, Width 616, Height 208.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
-- Period[Period] goes in Legend, not in the X-axis — that is what puts the four periods side by side within each plant instead of splitting the chart in two.
+- Period[Period] goes in the X-axis and dimPlant[Plant] in Legend — that order is what gives three bars per month rather than four bars per plant.
 - Y-axis takes Inventory Rs Cr, the period-aware one, so quarter mode averages the month-ends instead of adding them.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels' and set it to On, Font: Arial, Font size: 8, Colour: #1F2A24, Display units: None, Value decimal places: 0, Position: Inside end.
 - In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off — every bar carries its own number.
 - In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Legend', then 'Position' and set it to Top center, Font: Arial, Font size: 8. Keep it on: it is the only thing naming the periods.
+- In the Visualizations pane click the paintbrush icon, then click 'Legend', then 'Position' and set it to Top center, Font: Arial, Font size: 8. Keep it on: it is the only thing naming the plants.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
-- Clicking one plant's bar filters both matrices to that plant.
+- Clicking one plant's bar filters both matrices to that plant and that period.
 
-**4.50** **Clustered column chart** — The same chart in days rather than rupees — how long each plant's raw material would last at its own capacity. Read together with the one beside it, this is what tells you whether a bigger rupee figure is actually more stock or just a dearer month.
+**4.50** **Clustered column chart** — The same chart in days rather than rupees — how long each plant's raw material would last at its own capacity, again three plant bars per month. Read together with the one beside it, this is what tells you whether a bigger rupee figure is actually more stock or just a dearer month.
 
 | Well | Field |
 |---|---|
-| X-axis | `dimPlant[Plant]` |
-| Legend | `Period[Period]` |
+| X-axis | `Period[Period]` |
+| Legend | `dimPlant[Plant]` |
 | Y-axis | `Days by Period` |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
