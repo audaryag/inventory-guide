@@ -477,6 +477,15 @@ there.</li>
 until you restart.</li>
 </ol>
 
+<blockquote><strong>Fixed 13 Aug (third fix):</strong> next came
+<em>&ldquo;a function placeholder has been used in a true/false expression that is used as a table
+filter expression&rdquo;</em>. DAX will not let a measure be used directly as a filter condition, and
+ten measures did that with <code>dimDate[MonthIndex] = [Latest Month Index]</code>. Each now reads
+<code>VAR LastIdx = [Latest Month Index]</code> first and filters on <code>LastIdx</code> &mdash;
+same answer, legal DAX. The ten are <code>As On Text</code>, the eight <code>Ticker &hellip;</code>
+measures and <code>In Window</code>; if you pasted them by hand, re-copy those from the
+<strong>Measures</strong> tab.</blockquote>
+
 <blockquote><strong>Fixed 13 Aug (second fix):</strong> the model then failed with
 <em>&ldquo;The 'MW' measure cannot be created because a column with the same name already
 exists&rdquo;</em> &mdash; Power BI will not hold a column and a measure of the same name in one

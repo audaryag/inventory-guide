@@ -14,6 +14,26 @@ def text(expr):
     return expr if isinstance(expr, str) else "".join(expr)
 
 
+def split_args(expr):
+    """Split a DAX argument list on the commas that sit at bracket depth zero."""
+    args, depth, current, quoted = [], 0, "", False
+    for ch in expr:
+        if ch == '"':
+            quoted = not quoted
+        if not quoted:
+            if ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth -= 1
+            elif ch == "," and depth == 0:
+                args.append(current)
+                current = ""
+                continue
+        current += ch
+    args.append(current)
+    return args
+
+
 def main():
     model = json.loads(MODEL.read_text())["model"]
     tables = {t["name"]: t for t in model["tables"]}
@@ -52,6 +72,45 @@ def main():
             key = (r[side + "Table"], r[side + "Column"])
             if key not in columns:
                 problems.append(f"relationship: {key[0]}[{key[1]}] does not exist")
+
+    # a measure inside a CALCULATE/FILTER boolean predicate is what Desktop reports as
+    # "a function placeholder has been used in a true/false expression"
+    for name, expr in [(m["name"], text(m["expression"]))
+                       for t in tables.values() for m in t.get("measures", [])]:
+        for fn in ("CALCULATE", "CALCULATETABLE", "FILTER"):
+            for match in re.finditer(fn + r"\s*\(", expr, re.I):
+                depth, j = 1, match.end()
+                while j < len(expr) and depth:
+                    depth += (expr[j] == "(") - (expr[j] == ")")
+                    j += 1
+                for arg in split_args(expr[match.end():j - 1])[1:]:
+                    if not re.search(r"\[[^\]]+\]\s*(=|<>|<=|>=|<|>)", arg):
+                        continue
+                    for ref in re.findall(r"(?<![A-Za-z0-9_'\]])\[([^\]]+)\]", arg):
+                        if ref in measures:
+                            problems.append(
+                                f"measure {name}: [{ref}] is used inside a {fn} filter "
+                                f"condition; assign it to a VAR first")
+
+    # circular references stop the model loading outright
+    deps = {}
+    for t in tables.values():
+        for m in t.get("measures", []):
+            body = text(m["expression"])
+            deps[m["name"]] = {r for r in re.findall(r"(?<![A-Za-z0-9_'\]])\[([^\]]+)\]", body)
+                               if r in measures and r != m["name"]}
+    for start in deps:
+        seen, stack = set(), [start]
+        while stack:
+            cur = stack.pop()
+            for nxt in deps.get(cur, ()):
+                if nxt == start:
+                    problems.append(f"measure {start}: circular reference through {cur}")
+                    stack = []
+                    break
+                if nxt not in seen:
+                    seen.add(nxt)
+                    stack.append(nxt)
 
     print("TMSL PROBLEMS:", len(problems))
     for p in problems:
