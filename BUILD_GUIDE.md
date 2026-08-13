@@ -320,6 +320,8 @@ it — skip that line, nothing else changes.
 Colours, fonts, borders and card styling all come from the theme, so nothing below
 asks you to colour anything.
 
+Only two colours are ever used for a printed number, and never grey: **#FFFFFF** bold when the number sits on top of a coloured bar or slice, and **#14532D** (or **#1F2A24** for plain figures) when it sits on the white card. If a number anywhere looks faint grey — inside a bar, above a line, on an axis — that visual predates this theme: re-import the theme file, then check the visual's **Data labels → Colour**. On a combo chart the two series are set separately, under **Data labels → Apply settings to → Series**: the column series #FFFFFF, the line series #14532D.
+
 **Create the 5 pages** with the **+** at the bottom, named: `Overview` · `Summary` · `FG` · `RM` · `Detail`.
 
 ---
@@ -653,7 +655,7 @@ Position: Horizontal 200, Vertical 576, Width 700, Height 130.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 - This one must ignore the two controls at the top, or it would shrink back to five months. Click the 'By Month / By Quarter' slicer once, then ribbon Format → Edit interactions; small icons appear on every other visual. On this chart click the circle-with-a-line (None). Do the same after selecting the 'Months' slicer. Leave Plant and Type set to filter, so those two still work on it.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels: On. Then open 'Apply settings to'', then 'Series and pick 'Value ₹ Cr'' and set it to Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Display units: None, Value decimal places: 0, Position: Inside end.
-- Still under Data labels, switch 'Apply settings to' → Series to 'Value ₹ Cr % vs LM': Font: Arial, Font size: 8, Colour: #6B7280, Value decimal places: 0, Position: Above. That is the second number you asked for — the percentage sits over the bar, the crore figure sits inside it, so the two never collide.
+- Still under Data labels, switch 'Apply settings to' → Series to 'Value ₹ Cr % vs LM': Font: Arial, Font size: 8, Colour: #14532D, Value decimal places: 0, Position: Above. That is the second number you asked for — the percentage sits over the bar, the crore figure sits inside it, so the two never collide.
 - In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off, and Secondary y-axis: Off. Both numbers are printed on the chart, so two scales up the sides would only eat the height.
 - In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24, Concatenate labels: Off, and Maximum height: 20%.
 - In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Inner padding: 30%, and Format pane', then 'General', then 'Properties', then 'Padding' and set it to Left 12, Right 12. The padding is what stops the first and last bar touching the sides of the card, and it pulls both edges in by the same amount.
@@ -899,7 +901,7 @@ Position: Horizontal 648, Vertical 560, Width 616, Height 144.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 - In the Visualizations pane click the paintbrush icon, then click 'Columns', then 'Colour', then 'fx', then 'Format style' and set it to Rules, and colour any value below 0 red. A difference either direction is equally wrong, so red both ways.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels: On. Then 'Apply settings to'', then 'Series' and set it to Difference Inventory Rs Cr — Font: Arial, Font size: 8, Colour: #1F2A24, Display units: None, Value decimal places: 2, Position: Inside end.
-- Still under Data labels, switch 'Apply settings to' → Series to Difference Inventory %: Font: Arial, Font size: 8, Colour: #6B7280, Value decimal places: 1, Position: Above. Two numbers per period, and they cannot collide.
+- Still under Data labels, switch 'Apply settings to' → Series to Difference Inventory %: Font: Arial, Font size: 8, Colour: #14532D, Value decimal places: 1, Position: Above. Two numbers per period, and they cannot collide.
 - In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off, Secondary y-axis: Off. Both numbers are printed on the chart already.
 - In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'Lines', then 'Colour' and set it to #9AA79F, Stroke width: 1, Markers: On, Marker size: 3.
@@ -1105,7 +1107,7 @@ Position: Horizontal 444, Vertical 496, Width 428, Height 208.
 - Filters pane → drag In Last 12 in → is 1, so this always shows the last twelve months whatever the pickers above say.
 - This chart must ignore the two period controls, or it drops back to four months: click the By Month / By Quarter slicer → Format tab → Edit interactions → set this chart to None (the circle-with-a-line icon). Do the same after clicking the Months slicer and the Quarters slicer.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels: On. 'Apply settings to'', then 'Series' and set it to Days — Font: Arial, Font size: 8, Colour: #1F2A24, Value decimal places: 0, Position: Inside end.
-- Switch 'Apply settings to' → Series to Days vs LM: Font: Arial, Font size: 8, Colour: #6B7280, Value decimal places: 0, Position: Above.
+- Switch 'Apply settings to' → Series to Days vs LM: Font: Arial, Font size: 8, Colour: #14532D, Value decimal places: 0, Position: Above.
 - In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off, Secondary y-axis: Off.
 - In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'Legend' and set it to Off — the title says which is which.

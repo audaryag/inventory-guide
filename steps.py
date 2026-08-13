@@ -698,6 +698,14 @@ def part4_markdown():
          "3. Ribbon **View** → **Themes** → **Browse for themes** → pick that file.", "",
          "Colours, fonts, borders and card styling all come from the theme, so nothing below",
          "asks you to colour anything.", "",
+         "Only two colours are ever used for a printed number, and never grey: **#FFFFFF** "
+         "bold when the number sits on top of a coloured bar or slice, and **#14532D** (or "
+         "**#1F2A24** for plain figures) when it sits on the white card. If a number anywhere "
+         "looks faint grey — inside a bar, above a line, on an axis — that visual predates "
+         "this theme: re-import the theme file, then check the visual's **Data labels → "
+         "Colour**. On a combo chart the two series are set separately, under **Data labels → "
+         "Apply settings to → Series**: the column series #FFFFFF, the line series #14532D.",
+         "",
          "**Create the %d pages** with the **+** at the bottom, named: " % len(PAGES) +
          " · ".join("`%s`" % p for p in PAGES) + ".", "",
          "---", "", "## The furniture on `Overview` (no data in any of it)", "",

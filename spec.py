@@ -339,7 +339,7 @@ VISUALS = [
       "'Value \u20b9 Cr': Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Display units: "
       "None, Value decimal places: 0, Position: Inside end.",
       "Still under Data labels, switch 'Apply settings to' \u2192 Series to "
-      "'Value \u20b9 Cr % vs LM': Font: Arial, Font size: 8, Colour: #6B7280, Value decimal "
+      "'Value \u20b9 Cr % vs LM': Font: Arial, Font size: 8, Colour: #14532D, Value decimal "
       "places: 0, Position: Above. That is the second number you asked for \u2014 the percentage "
       "sits over the bar, the crore figure sits inside it, so the two never collide.",
       "Format pane \u2192 Y-axis: Off, and Secondary y-axis: Off. Both numbers are printed on "
@@ -531,7 +531,7 @@ VISUALS = [
       "Inventory Rs Cr \u2014 Font: Arial, Font size: 8, Colour: #1F2A24, Display units: None, "
       "Value decimal places: 2, Position: Inside end.",
       "Still under Data labels, switch 'Apply settings to' \u2192 Series to Difference "
-      "Inventory %: Font: Arial, Font size: 8, Colour: #6B7280, Value decimal places: 1, "
+      "Inventory %: Font: Arial, Font size: 8, Colour: #14532D, Value decimal places: 1, "
       "Position: Above. Two numbers per period, and they cannot collide.",
       "Format pane \u2192 Y-axis: Off, Secondary y-axis: Off. Both numbers are printed on the "
       "chart already.",
@@ -679,7 +679,7 @@ VISUALS = [
       "Format pane → Data labels: On. 'Apply settings to' → Series: Days — Font: Arial, "
       "Font size: 8, Colour: #1F2A24, Value decimal places: 0, Position: Inside end.",
       "Switch 'Apply settings to' → Series to Days vs LM: Font: Arial, Font size: 8, "
-      "Colour: #6B7280, Value decimal places: 0, Position: Above.",
+      "Colour: #14532D, Value decimal places: 0, Position: Above.",
       "Format pane → Y-axis: Off, Secondary y-axis: Off.",
       "Format pane → X-axis → Values → Font: Arial, Font size: 8, Colour: #1F2A24.",
       "Format pane → Legend: Off — the title says which is which.",
