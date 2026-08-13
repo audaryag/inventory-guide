@@ -477,6 +477,14 @@ there.</li>
 until you restart.</li>
 </ol>
 
+<blockquote><strong>Build 4 &mdash; 13 Aug:</strong> the ten measures that read the latest month
+no longer use a filter <em>condition</em> at all; they use an explicit table filter
+(<code>FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx)</code>), which no engine version can
+read as a measure-bearing true/false expression. The zip now extracts into a folder called
+<strong>InventoryReport build 4</strong>, so an old extraction can never be confused with a new
+one &mdash; if Power BI's error names a path without &ldquo;build 4&rdquo; in it, you are opening
+the old copy.</blockquote>
+
 <blockquote><strong>Fixed 13 Aug (third fix):</strong> next came
 <em>&ldquo;a function placeholder has been used in a true/false expression that is used as a table
 filter expression&rdquo;</em>. DAX will not let a measure be used directly as a filter condition, and

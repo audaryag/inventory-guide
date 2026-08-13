@@ -581,7 +581,7 @@
           },
           {
             "name": "Latest Month Value ₹ Cr",
-            "expression": "VAR LastIdx = CALCULATE(MAX(dimDate[MonthIndex]), ALLSELECTED(dimDate))\nRETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)",
+            "expression": "VAR LastIdx = CALCULATE(MAX(dimDate[MonthIndex]), ALLSELECTED(dimDate))\nRETURN CALCULATE([Value ₹ Cr], FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx))",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
@@ -653,55 +653,55 @@
           },
           {
             "name": "As On Text",
-            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN \"As on \" & CALCULATE(MAX(dimDate[MonthName]), REMOVEFILTERS(), dimDate[MonthIndex] = LastIdx)",
+            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN \"As on \" & CALCULATE(MAX(dimDate[MonthName]), REMOVEFILTERS(),\n    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx))",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
           {
             "name": "Ticker Rs Cr",
-            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = LastIdx)",
+            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),\n    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx))",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
           {
             "name": "Ticker RM Rs Cr",
-            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = LastIdx, dimCategory[Category] = \"RM\")",
+            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),\n    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),\n    FILTER(ALL(dimCategory), dimCategory[Category] = \"RM\"))",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
           {
             "name": "Ticker FG Rs Cr",
-            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = LastIdx, dimCategory[Category] = \"FG\")",
+            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),\n    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),\n    FILTER(ALL(dimCategory), dimCategory[Category] = \"FG\"))",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
           {
             "name": "Ticker Consumables Rs Cr",
-            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = LastIdx, dimCategory[Category] = \"Consumables\")",
+            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),\n    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),\n    FILTER(ALL(dimCategory), dimCategory[Category] = \"Consumables\"))",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
           {
             "name": "Ticker 1900 Rs Cr",
-            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = LastIdx, dimPlant[ValuationArea] = \"1900\")",
+            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),\n    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),\n    FILTER(ALL(dimPlant), dimPlant[ValuationArea] = \"1900\"))",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
           {
             "name": "Ticker 1902 Rs Cr",
-            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = LastIdx, dimPlant[ValuationArea] = \"1902\")",
+            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),\n    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),\n    FILTER(ALL(dimPlant), dimPlant[ValuationArea] = \"1902\"))",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
           {
             "name": "Ticker 1905 Rs Cr",
-            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = LastIdx, dimPlant[ValuationArea] = \"1905\")",
+            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),\n    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),\n    FILTER(ALL(dimPlant), dimPlant[ValuationArea] = \"1905\"))",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
           {
             "name": "Ticker Prev Rs Cr",
-            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = LastIdx - 1)",
+            "expression": "VAR LastIdx = [Latest Month Index]\nRETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),\n    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx - 1))",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
@@ -731,7 +731,7 @@
           },
           {
             "name": "In Window",
-            "expression": "VAR Mode = SELECTEDVALUE('Period'[Period Order], 0)\nVAR Picked = IF(Mode = 1, ISFILTERED(dimDate[Quarter]), ISFILTERED(dimDate[MonthName]))\nVAR Keep = IF(Mode = 1, 4, IF(Picked, 5, 4))\nVAR Place =\n    IF(\n        Mode = 1,\n        RANKX(ALLSELECTED(dimDate[QuarterSort]), CALCULATE(MAX(dimDate[QuarterSort])), , DESC),\n        RANKX(ALLSELECTED(dimDate[MonthIndex]), CALCULATE(MAX(dimDate[MonthIndex])), , DESC)\n    )\nVAR LastIdx = [Latest Month Index]\nVAR MarchIdx =\n    CALCULATE(\n        MAX(dimDate[MonthIndex]),\n        REMOVEFILTERS(dimDate),\n        dimDate[FYMonthNo] = 12,\n        dimDate[MonthIndex] <= LastIdx\n    )\nVAR IsMarch =\n    IF(Mode <> 1 && NOT Picked && MAX(dimDate[MonthIndex]) = MarchIdx, 1, 0)\nRETURN IF(Place <= Keep || IsMarch = 1, 1, 0)",
+            "expression": "VAR Mode = SELECTEDVALUE('Period'[Period Order], 0)\nVAR Picked = IF(Mode = 1, ISFILTERED(dimDate[Quarter]), ISFILTERED(dimDate[MonthName]))\nVAR Keep = IF(Mode = 1, 4, IF(Picked, 5, 4))\nVAR Place =\n    IF(\n        Mode = 1,\n        RANKX(ALLSELECTED(dimDate[QuarterSort]), CALCULATE(MAX(dimDate[QuarterSort])), , DESC),\n        RANKX(ALLSELECTED(dimDate[MonthIndex]), CALCULATE(MAX(dimDate[MonthIndex])), , DESC)\n    )\nVAR LastIdx = [Latest Month Index]\nVAR MarchIdx =\n    CALCULATE(\n        MAX(dimDate[MonthIndex]),\n        REMOVEFILTERS(dimDate),\n        FILTER(ALL(dimDate),\n            dimDate[FYMonthNo] = 12 && dimDate[MonthIndex] <= LastIdx)\n    )\nVAR IsMarch =\n    IF(Mode <> 1 && NOT Picked && MAX(dimDate[MonthIndex]) = MarchIdx, 1, 0)\nRETURN IF(Place <= Keep || IsMarch = 1, 1, 0)",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },

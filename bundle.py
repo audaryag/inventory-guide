@@ -16,6 +16,9 @@ import build  # noqa: E402
 GUIDE = pathlib.Path("/home/ubuntu/BUILD_GUIDE.md")
 STAGE = pathlib.Path("/home/ubuntu/bundle")
 ZIP = HERE / "InventoryReport-pbip.zip"
+# bumped on every published fix, and used as the folder name inside the zip so an old
+# extraction can never be mistaken for a new one
+BUILD = 4
 
 md = GUIDE.read_text()
 queries = build.parse_queries(md[md.index("# Appendix A"):md.index("# Appendix B")])
@@ -108,9 +111,10 @@ def main():
     with zipfile.ZipFile(ZIP, "w", zipfile.ZIP_DEFLATED) as z:
         for f in sorted(STAGE.rglob("*")):
             if f.is_file():
-                z.write(f, f.relative_to(STAGE).as_posix())
+                z.write(f, f"InventoryReport build {BUILD}/"
+                           + f.relative_to(STAGE).as_posix())
     n = len(zipfile.ZipFile(ZIP).namelist())
-    print(f"wrote {ZIP} ({ZIP.stat().st_size // 1024} KB, {n} files): "
+    print(f"wrote build {BUILD} {ZIP} ({ZIP.stat().st_size // 1024} KB, {n} files): "
           f"{len(queries)} queries, {len(measures)} measures")
 
 
