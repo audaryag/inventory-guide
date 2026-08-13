@@ -1,48 +1,48 @@
 {
-  "name": "Inventory Report",
+  "name": "Inventory Green",
   "dataColors": [
-    "#1E6B3A",
-    "#4FA45F",
-    "#8CC63F",
-    "#C0504D",
-    "#2E7D6B",
-    "#A7C957",
-    "#155E38",
-    "#6C6F76",
-    "#7FB069",
-    "#8A8F98"
+    "#14532D",
+    "#2E7D46",
+    "#57A05C",
+    "#8CC084",
+    "#B7D9A8",
+    "#0E7C7B",
+    "#4C8C74",
+    "#9AA79F",
+    "#B3261E",
+    "#6B7280"
   ],
   "background": "#FFFFFF",
-  "foreground": "#1B1F26",
-  "tableAccent": "#1E6B3A",
-  "good": "#1E6B3A",
-  "neutral": "#8CC63F",
-  "bad": "#C0504D",
+  "foreground": "#1F2A24",
+  "tableAccent": "#14532D",
+  "good": "#2E7D32",
+  "neutral": "#8CC084",
+  "bad": "#B3261E",
   "textClasses": {
     "title": {
       "fontSize": 13,
       "fontFace": "Arial Bold",
-      "color": "#1B1F26"
+      "color": "#14532D"
     },
     "header": {
       "fontSize": 12,
       "fontFace": "Arial Bold",
-      "color": "#1B1F26"
+      "color": "#14532D"
     },
     "label": {
       "fontSize": 10,
       "fontFace": "Arial",
-      "color": "#3C424C"
+      "color": "#1F2A24"
     },
     "callout": {
-      "fontSize": 24,
+      "fontSize": 22,
       "fontFace": "Arial Bold",
-      "color": "#1B1F26"
+      "color": "#1F2A24"
     },
     "largeTitle": {
       "fontSize": 16,
       "fontFace": "Arial Bold",
-      "color": "#1B1F26"
+      "color": "#14532D"
     }
   },
   "visualStyles": {
@@ -64,7 +64,7 @@
             "show": true,
             "color": {
               "solid": {
-                "color": "#E3E6EB"
+                "color": "#DCE7DC"
               }
             },
             "radius": 6
@@ -82,7 +82,7 @@
             "fontFamily": "Arial Bold",
             "fontColor": {
               "solid": {
-                "color": "#1B1F26"
+                "color": "#14532D"
               }
             },
             "alignment": "left"
@@ -130,7 +130,7 @@
                 "color": "#3C424C"
               }
             },
-            "position": "TopCenter"
+            "position": "BottomCenter"
           }
         ],
         "labels": [
@@ -154,7 +154,7 @@
             "fontSize": 20,
             "color": {
               "solid": {
-                "color": "#1B1F26"
+                "color": "#14532D"
               }
             }
           }
@@ -175,7 +175,7 @@
             "show": true,
             "color": {
               "solid": {
-                "color": "#F6F8FB"
+                "color": "#FFFFFF"
               }
             }
           }
@@ -189,7 +189,7 @@
             "show": true,
             "color": {
               "solid": {
-                "color": "#F6F8FB"
+                "color": "#FFFFFF"
               }
             }
           }
@@ -238,12 +238,12 @@
             "fontSize": 10,
             "fontColor": {
               "solid": {
-                "color": "#1B1F26"
+                "color": "#14532D"
               }
             },
             "backColor": {
               "solid": {
-                "color": "#F0F3F8"
+                "color": "#E7F1E7"
               }
             },
             "wordWrap": true,
@@ -286,7 +286,7 @@
             "fontSize": 10,
             "backColor": {
               "solid": {
-                "color": "#F0F3F8"
+                "color": "#E7F1E7"
               }
             },
             "wordWrap": true
@@ -306,7 +306,7 @@
           {
             "color": {
               "solid": {
-                "color": "#F2F4F8"
+                "color": "#EFF5EF"
               }
             },
             "transparency": 0

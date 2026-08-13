@@ -23,7 +23,8 @@ import spec
 
 GUIDE = pathlib.Path("/home/ubuntu/BUILD_GUIDE.md")
 txt = GUIDE.read_text()
-app_a = txt.split("# Appendix A")[1].split("# Appendix B")[0]
+app_a = txt.split("# Appendix A")[1].split("# Appendix C")[0]
+app_c = txt.split("# Appendix C")[1].split("# Appendix B")[0]
 app_b = txt.split("# Appendix B")[1]
 parts = txt.split("# Appendix A")[0]
 
@@ -155,7 +156,11 @@ for n in qorder:
         note(f"step 1.5 puts {n!r} in both the load-off and the load-on list")
     elif n not in OFF and n not in ON:
         note(f"step 1.5 never says whether {n!r} should load")
-MODEL_TABLES = sorted(set(ON) & set(qorder))
+# tables made in report view with DAX rather than in Power Query
+DAX_TABLES = {q["name"]: ["Period", "Period Fields", "Period Order"]
+              for q in build.parse_queries(app_c)}
+PQ_TABLES = sorted(set(ON) & set(qorder))
+MODEL_TABLES = PQ_TABLES + sorted(DAX_TABLES)
 
 # the Part 1 checkpoint must name exactly the tables that load
 _chk = re.search(r"Data pane on the right must list exactly these (\d+) tables:(.*?)\n\n",
@@ -164,9 +169,9 @@ if _chk:
     listed = set(re.findall(r"`([\w]+)`", _chk.group(2)))
     if int(_chk.group(1)) != len(listed):
         note(f"the Part 1 checkpoint says {_chk.group(1)} tables but lists {len(listed)}")
-    for miss in sorted(set(MODEL_TABLES) - listed):
+    for miss in sorted(set(PQ_TABLES) - listed):
         note(f"the Part 1 checkpoint does not list {miss!r}, which does load")
-    for extra in sorted(listed - set(MODEL_TABLES)):
+    for extra in sorted(listed - set(PQ_TABLES)):
         note(f"the Part 1 checkpoint lists {extra!r}, which does not load")
 else:
     note("Part 1 has no checkpoint naming the tables that must appear")
@@ -180,6 +185,9 @@ for claim, real, what in ((re.search(r"you will repeat this (\d+) times", parts)
                            "helpers with load off")):
     if claim and int(claim.group(1)) != real:
         note(f"the guide says {claim.group(1)} {what}, but there are {real}")
+
+for t, cs in DAX_TABLES.items():
+    COLS[t] = set(cs)
 
 OPAQUE = [t for t in MODEL_TABLES if t not in COLS]
 

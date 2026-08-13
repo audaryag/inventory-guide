@@ -14,8 +14,10 @@ md = SRC.read_text()
 _p4s, _p4e = md.index("# PART 4 "), md.index("# PART 5 ")
 md = md[:_p4s] + part4_markdown() + "\n" + md[_p4e:]
 SRC.write_text(md)
-appA = md[md.index("# Appendix A"):md.index("# Appendix B")]
+appA = md[md.index("# Appendix A"):md.index("# Appendix C")]
+appC = md[md.index("# Appendix C"):md.index("# Appendix B")]
 appB = md[md.index("# Appendix B"):]
+appB_old, appB_new = appB.split("## New in this update")
 guide = md[:md.index("# Appendix A")].rstrip().rstrip("-").rstrip()
 
 
@@ -121,6 +123,8 @@ def md_to_html(text):
 
 
 queries, measures = parse_queries(appA), parse_measures(appB)
+new_measures = parse_measures(appB_new)
+new_tables = parse_queries(appC)
 STEPS = steps()
 
 
@@ -464,6 +468,7 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
   <button data-tab="f" class="on">Start here</button>
   <button data-tab="q">Queries ({len(queries)})</button>
   <button data-tab="m">Measures ({len(measures)})</button>
+  <button data-tab="n">New ({len(new_tables) + len(new_measures)})</button>
   <button data-tab="b">Build it ({len(STEPS)})</button>
   <button data-tab="g">Walkthrough</button>
   <input id="search" placeholder="Search a query name or code…">
@@ -485,6 +490,23 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
 <div class="panel" id="tab-m">
   <p class="sub">In report view: <strong>Home → New measure</strong>, paste, Enter. One per box.</p>
   {cards(measures, 'm')}
+</div>
+
+<div class="panel" id="tab-n">
+  <p class="sub">Everything added in this update, and nothing else — paste these on top of the
+  model you already have. <strong>Order matters:</strong> the table first, then the measures
+  top to bottom.</p>
+  <h2>1 &mdash; the table (report view, not Power Query)</h2>
+  {cards(new_tables, 'n')}
+  <h2>2 &mdash; the measures ({len(new_measures)})</h2>
+  <p class="sub">Report view → <strong>Home → New measure</strong>, paste, Enter. One per box.
+  They are also in the Measures tab at the bottom, so do not paste them twice.</p>
+  {cards(new_measures, 'nm')}
+  <h2>3 &mdash; then rebuild the Overview page</h2>
+  <p class="sub">Go to <strong>Build it</strong> and work through the Overview steps. Delete the
+  old cards, slicers and charts on Overview first — the page is laid out differently now
+  (green panel down the left, chart above table, two donuts on the right). The Summary, FG,
+  RM and Detail pages are untouched.</p>
 </div>
 
 <div class="panel" id="tab-b">

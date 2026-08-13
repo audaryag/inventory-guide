@@ -1,6 +1,6 @@
 """Turns spec.py into (a) guided one-at-a-time steps and (b) the PART 4 markdown."""
 from spec import (CANVAS, PAGES, CARDS, SLICERS, VISUALS, DRILL_PAGE, DRILL_FIELDS,
-                  BAND_PAGES)
+                  BAND_PAGES, DECOR, FONT, PANEL, PANEL_INK, PANEL_SUB, HEAD, INK)
 
 W, H = CANVAS
 
@@ -182,6 +182,88 @@ def _stuck(vtype, wells=()):
     return common
 
 
+
+def _decor_steps():
+    """The green panel, the logo box and the wording on Overview: no data, pure furniture."""
+    out = []
+    for kind, text, x, y, w, h, note in [(d[1], d[2], d[3], d[4], d[5], d[6], d[7])
+                                         for d in DECOR if d[0] == "Overview"]:
+        if kind == "Rectangle":
+            do = ["At the bottom of the window click the tab named Overview.",
+                  "Click once on an empty part of the page so nothing is selected.",
+                  "At the top of the window click the Insert tab, then click Shapes, then "
+                  "click Rectangle. A grey rectangle appears.",
+                  "In the Format pane on the right click Shape, then Style, then Fill, and "
+                  "click the colour box. Choose 'Custom colour' at the bottom of the list "
+                  "and type %s into the Hex box, then press Enter." % PANEL,
+                  "Still under Style, click Border and switch it Off.",
+                  "Under Shape, set Rounded corners to 0 if that box exists."]
+            do += _place(x, y, w, h, in_format=True)
+            do += ["Right-click the rectangle and choose Send to back. Everything you add "
+                   "next will sit on top of it."]
+            out.append(dict(
+                title="Overview — the green panel down the left",
+                page="Overview", do=do,
+                fields=[("Shape", "Rectangle"), ("Fill colour (Hex)", PANEL),
+                        ("Border", "Off")] + _pos_rows(x, y, w, h),
+                note="This is only paint. The panel is what makes the left-hand figures read "
+                     "as one block instead of nine loose cards.",
+                check="A dark green stripe runs down the whole left edge of the page, from "
+                      "the very top to the very bottom.",
+                stuck="If it hides something you built earlier, right-click it and choose "
+                      "Send to back again. If the green is the wrong shade, reopen Fill → "
+                      "Custom colour and retype %s." % PANEL))
+        elif kind == "Image":
+            do = ["At the bottom of the window click the tab named Overview.",
+                  "At the top of the window click the Insert tab, then click Image.",
+                  "Pick any picture file for now — a placeholder is fine; you can swap in "
+                  "the company logo later by clicking the image and choosing Browse.",
+                  "In the Format pane click Image, then Style, and set Fit to 'Fit', so the "
+                  "picture shrinks inside the box instead of being cropped.",
+                  "Click General, then Effects, and switch Background Off and Border Off."]
+            do += _place(x, y, w, h, in_format=True)
+            out.append(dict(
+                title="Overview — the logo box, top left",
+                page="Overview", do=do,
+                fields=[("Insert", "Image"), ("Fit", "Fit")] + _pos_rows(x, y, w, h),
+                note="Left empty for now on purpose. When you have the real logo, click this "
+                     "box, choose Browse and pick the file — nothing else moves.",
+                check="A small square sits in the top-left corner of the green panel, with "
+                      "the words 'Inventory Overview' to its right once the next step is "
+                      "done.",
+                stuck="If the picture is stretched, set Fit to 'Fit' rather than 'Fill'. If "
+                      "the box has a white surround, its Background is still on."))
+        else:
+            size, colour = (15, PANEL_INK) if h >= 28 else (10, PANEL_SUB)
+            do = ["At the bottom of the window click the tab named Overview.",
+                  "Click once on an empty part of the page so nothing is selected.",
+                  "At the top of the window click the Insert tab, then click Text box. A "
+                  "small empty box appears with the cursor inside it.",
+                  "Type exactly: %s" % text,
+                  "Select the words you just typed by dragging across them with the mouse.",
+                  "A small toolbar sits above the text box. In it: set the font to %s, set "
+                  "the size to %d, click the B button to make it bold, then click the "
+                  "letter-A colour button, choose 'Custom colour' and type %s into the Hex "
+                  "box." % (FONT, size, colour),
+                  "Click once outside the text box to finish typing, then click the box "
+                  "itself once so it has a border round it.",
+                  "In the Format pane click General, then Effects, and switch Background "
+                  "Off and Border Off, so only the words show on the green."]
+            do += _place(x, y, w, h, in_format=True)
+            out.append(dict(
+                title="Overview — the wording '%s'" % text,
+                page="Overview", do=do,
+                fields=[("Text", text), ("Font", FONT), ("Font size", str(size)),
+                        ("Bold", "Yes"), ("Colour (Hex)", colour)] + _pos_rows(x, y, w, h),
+                note=note,
+                check="The words '%s' show in %s on the green panel, at the position "
+                      "below." % (text, "white" if colour == PANEL_INK else "pale green"),
+                stuck="If the words are invisible, the colour is still black on dark green — "
+                      "reselect the text and set the Hex to %s. If a white box surrounds "
+                      "them, Background is still on under General → Effects." % colour))
+    return out
+
+
 def steps():
     """Each step: dict(title, page, do=[lines], fields=[(label, value)], note, link?)."""
     S = []
@@ -261,11 +343,15 @@ def steps():
         stuck="A tab still called 'Page 1' just needs double-clicking and retyping. If a tab "
               "is in the wrong place, drag it sideways."))
 
-    # header band
+    # ---- the furniture on Overview: panel, logo box, wording ---------------------------
+    S.extend(_decor_steps())
+
+    # header band, on the pages that still use it
+    BAND = BAND_PAGES[0]
     for i, (measure, x, y, w, h, what) in enumerate(CARDS, 1):
         S.append(dict(
-            title="Header card %d of %d — %s" % (i, len(CARDS), what),
-            page=PAGES[0],
+            title="Header card %d of %d — %s (on %s)" % (i, len(CARDS), what, BAND),
+            page=BAND,
             do=_insert("Card") + [
                 _drag(measure, "Fields"),
                 "The card now shows one big number.",
@@ -299,8 +385,8 @@ def steps():
     for (field, x, y, w, h, what) in SLICERS:
         multi = field in ("dimDate[MonthName]", "dimDate[Quarter]")
         S.append(dict(
-            title="Header slicer — %s" % what,
-            page=PAGES[0],
+            title="Header slicer — %s (on %s)" % (what, BAND),
+            page=BAND,
             do=_insert("Slicer") + [
                 _drag(field, "Field"),
                 "In the Visualizations pane click the paintbrush icon, then click "
@@ -319,10 +405,10 @@ def steps():
                   "used; check the field name again." % field))
 
     n_band = len(CARDS) + len(SLICERS)
-    others = [p for p in BAND_PAGES if p != PAGES[0]]
+    others = [p for p in BAND_PAGES if p != BAND]
     S.append(dict(
         title="Copy the header band to the other pages",
-        page=PAGES[0],
+        page=BAND,
         do=["Click once on the first card. Then hold Ctrl and click each of the other %d "
             "cards and all %d slicers, so %d things are selected at once."
             % (len(CARDS) - 1, len(SLICERS), n_band),
@@ -353,7 +439,7 @@ def steps():
         fields=[], note="Skip this and each page filters on its own, so two pages will show "
                         "different totals for the same month.",
         check="Pick one month on %s, then click through %s — the same month is still picked on "
-              "each of them." % (PAGES[0], ", ".join(BAND_PAGES[1:])),
+              "each of them." % (BAND, ", ".join(BAND_PAGES[1:])),
         stuck="If a page ignores the choice, its row in the Sync slicers pane is unticked — "
               "tick both boxes on that row. Leave the %s row unticked everywhere."
               % DRILL_PAGE))
@@ -436,7 +522,7 @@ def steps():
         title="Try it — click a bar, get the pies",
         page=PAGES[0],
         do=["At the bottom of the window click the tab named %s." % PAGES[0],
-            "Right-click one bar of the 'Value ₹ Cr by plant' chart.",
+            "Right-click one coloured block of the 'Inventory by Month (Rs Cr.)' chart.",
             "Choose Drill through → %s." % DRILL_PAGE,
             "The %s page opens showing only that plant: cards, three pies and the material "
             "list." % DRILL_PAGE,
@@ -448,7 +534,8 @@ def steps():
         stuck="'Drill through' greyed out means the four fields are not in the Drill through "
               "box yet — go back one step. If the page opens but shows the full total, you "
               "right-clicked something that is not one of the four drill-through fields; "
-              "right-click a plant bar instead.",
+              "right-click a coloured block of the month chart instead, or a slice of "
+              "'Share by Plant (%)'.",
         note="A left-click filters the rest of the page instead (that is Power BI's built-in "
              "cross-filtering, nothing to set up). Right-click is the one that opens the "
              "pies."))
@@ -546,7 +633,24 @@ def part4_markdown():
          "asks you to colour anything.", "",
          "**Create the %d pages** with the **+** at the bottom, named: " % len(PAGES) +
          " · ".join("`%s`" % p for p in PAGES) + ".", "",
-         "---", "", "## The header band — build once on %s, then copy" % PAGES[0], "",
+         "---", "", "## The furniture on `Overview` (no data in any of it)", "",
+         "| What | Insert it with | Text / fill | Horizontal (X) | Vertical (Y) | Width | "
+         "Height |", "|---|---|---|---|---|---|---|"] + \
+        ["| %s | Insert → %s | %s | %d | %d | %d | %d |"
+         % ("the green panel" if k == "Rectangle" else
+            ("the logo box" if k == "Image" else "text '%s'" % t),
+            "Shapes → Rectangle" if k == "Rectangle" else k,
+            PANEL if k == "Rectangle" else ("any picture for now" if k == "Image"
+                                            else "%s, %s" % (FONT, PANEL_INK if h >= 28
+                                                             else PANEL_SUB)),
+            x, y, w, h)
+         for (pg, k, t, x, y, w, h, note) in DECOR if pg == "Overview"] + \
+        ["",
+         "Build the rectangle first and **right-click → Send to back**; everything else on",
+         "the panel sits on top of it. Each card on the panel then has **General → Effects →",
+         "Background: Off**, so the green shows through and the nine figures read as one",
+         "block.", "",
+         "---", "", "## The header band — build once on %s, then copy" % BAND_PAGES[0], "",
          "**4.1** %d **Card** visuals (**Insert → Card**), one measure each:" % len(CARDS), "",
          "| Card | Measure | Horizontal (X) | Vertical (Y) | Width | Height |", "|---|---|---|---|---|---|"]
     for i, (m, x, y, w, h, what) in enumerate(CARDS, 1):
@@ -563,8 +667,10 @@ def part4_markdown():
         L.append("| %s | `%s` | %d | %d | %d | %d |" % (what, f, x, y, w, h))
     L += ["", "**4.3** Select all %d → **Ctrl+C** → **Ctrl+V** on %s. Positions come with "
           "them." % (len(CARDS) + len(SLICERS),
-                     ", ".join("`%s`" % p for p in BAND_PAGES if p != PAGES[0])), "",
-          "Not on `%s` — it is filtered by whatever you clicked to get there." % DRILL_PAGE, "",
+                     ", ".join("`%s`" % p for p in BAND_PAGES if p != BAND_PAGES[0])), "",
+          "Not on `%s` — it is filtered by whatever you clicked to get there. Not on "
+          "`Overview` either: that page has its own controls, and its left-hand panel is "
+          "meant to ignore them." % DRILL_PAGE, "",
           "**4.4** Ribbon **View** → tick **Sync slicers**; for each slicer tick **Sync** and",
           "**Visible** on " + ", ".join("`%s`" % p for p in BAND_PAGES) + ". Without it, two",
           "pages can disagree about the same month.", ""]

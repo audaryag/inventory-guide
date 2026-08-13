@@ -14,11 +14,20 @@ DRILL_PAGE = "Detail"
 DRILL_FIELDS = ["dimPlant[Plant]", "dimDate[MonthName]", "dimCategory[Category]",
                 "dimNature[Nature]"]
 
-# Pages that get a copy of the header band. Detail is driven by what you clicked rather
-# than by slicers, so it gets no slicers of its own.
-BAND_PAGES = ["Overview", "Summary", "FG", "RM"]
+# ---- colours and type, quoted by every step so nothing is left to taste -----------------
+FONT = "Arial"
+INK = "#1F2A24"          # body text
+HEAD = "#14532D"         # headings
+PANEL = "#14532D"        # the ticker panel down the left
+PANEL_INK = "#FFFFFF"    # text on the panel
+PANEL_SUB = "#BFE3C6"    # the small wording on the panel
+UP, DOWN = "#2E7D32", "#B3261E"
 
-# ---- header band, built once on Overview then copied ------------------------------------
+# Overview carries the ticker panel and its own controls, so it is built visual by visual.
+# The other pages still share the older card-and-slicer band.
+BAND_PAGES = ["Summary", "FG", "RM"]
+
+# ---- header band for Summary / FG / RM ---------------------------------------------------
 # 96 high, not 88: a card has to hold a 12pt title strip above a 24pt number, and 88
 # clips the lower one of the two.
 CARDS = [
@@ -37,59 +46,243 @@ SLICERS = [
     ("dimCategory[Category]", 940, 114, 324, 40, "Category"),
 ]
 
+# ---- Overview furniture: a shape, a logo box and three pieces of wording ------------------
+# (page, kind, text, x, y, w, h, note)
+DECOR = [
+    ("Overview", "Rectangle", "", 0, 0, 236, 720,
+     "The ticker panel. Fill %s, no border, no rounded corners. Right-click it and choose "
+     "Send to back so the cards sit on top of it." % PANEL),
+    ("Overview", "Image", "", 20, 16, 56, 56,
+     "Empty box for the company logo. Insert → Image, pick any small file for now, then "
+     "swap it later by clicking the image and choosing Browse."),
+    ("Overview", "Text box", "Inventory Overview", 88, 20, 140, 30,
+     "Arial 15, bold, colour %s." % PANEL_INK),
+    ("Overview", "Text box", "By type", 20, 92, 196, 20,
+     "Arial 10, bold, colour %s. Section heading for the three category cards." % PANEL_SUB),
+    ("Overview", "Text box", "By plant", 20, 306, 196, 20,
+     "Arial 10, bold, colour %s. Section heading for the three plant cards." % PANEL_SUB),
+]
+
 # ---- one entry per visual ----------------------------------------------------------------
 # wells: list of (well name, [fields])  |  pos: (x, y, w, h)  |  extra: list of extra clicks
 VISUALS = [
-    ("Overview", "Stacked column chart", "Value ₹ Cr by month and category",
-     [("X-axis", ["dimDate[MonthName]"]),
-      ("Y-axis", ["Value ₹ Cr"]),
-      ("Legend", ["dimCategory[Category]"])],
-     (16, 168, 764, 264),
-     "Every month side by side, split RM / FG / consumables. Click one segment and the "
-     "rest of the page follows it; right-click → Drill through → Detail for the pies "
-     "behind it.",
-     ["Stacked, not Clustered: one bar per month whose height is the month's total, cut "
-      "into the three categories. Clustered would stand RM, FG and consumables apart and "
-      "the month total would no longer be a bar you can read. Not 'line and clustered' "
-      "either — that one is the third visual on this page."]),
+    # ---- Overview: the ticker panel, fixed to the latest month, then the history ---------
+    ("Overview", "Card", "RM",
+     [("Fields", ["Ticker RM Rs Cr"])],
+     (20, 116, 196, 60),
+     "Panel figure. It reads the latest month that has data and ignores every slicer on "
+     "the page, because stock is a level, not something you add up across months.",
+     ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
+      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
+      "Power BI writing 2.5K instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Text: the title above.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
+      "panel behind shows through.",
+      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
 
-    ("Overview", "Clustered column chart", "Value ₹ Cr by plant — click to go deeper",
-     [("X-axis", ["dimPlant[Plant]", "dimCategory[Category]", "dimNature[Nature]"]),
-      ("Y-axis", ["Value ₹ Cr"])],
-     (16, 444, 764, 268),
-     "Three fields in the X-axis makes it a hierarchy, so the little arrows appear in the "
-     "visual's top-right corner: plant, then category inside a plant, then nature inside "
-     "that. Clicking is the whole point — nobody has to build three charts.",
-     ["The double-down-arrow in the header turns on drill mode; after that a single click "
-      "on a bar opens the next level, and the up-arrow goes back.",
-      "Right-click a bar → Drill through → Detail for the pie-chart page instead."]),
+    ("Overview", "Card", "FG",
+     [("Fields", ["Ticker FG Rs Cr"])],
+     (20, 180, 196, 60),
+     "Panel figure. It reads the latest month that has data and ignores every slicer on "
+     "the page, because stock is a level, not something you add up across months.",
+     ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
+      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
+      "Power BI writing 2.5K instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Text: the title above.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
+      "panel behind shows through.",
+      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
 
-    ("Overview", "Line and clustered column chart",
-     "Value ₹ Cr — this month vs last month",
-     [("X-axis", ["dimDate[MonthName]"]),
-      ("Column y-axis", ["Value ₹ Cr", "Value ₹ Cr LM"]),
-      ("Line y-axis", ["Value ₹ Cr % vs LM"])],
-     (788, 168, 476, 216),
-     "Bars compare the two months directly; the line is the percentage swing, which is "
-     "what people argue about.", []),
+    ("Overview", "Card", "Consumables",
+     [("Fields", ["Ticker Consumables Rs Cr"])],
+     (20, 244, 196, 60),
+     "Panel figure. It reads the latest month that has data and ignores every slicer on "
+     "the page, because stock is a level, not something you add up across months.",
+     ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
+      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
+      "Power BI writing 2.5K instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Text: the title above.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
+      "panel behind shows through.",
+      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
 
-    ("Overview", "Donut chart", "Share of value — click a slice",
-     [("Legend", ["dimCategory[Category]"]),
-      ("Values", ["Value ₹ Cr"])],
-     (788, 396, 476, 172),
-     "Where the money actually sits. Clicking a slice filters the page to that category, "
-     "which is quicker than the Category slicer.",
-     ["Format pane → Detail labels → Label contents: Percent of total."]),
+    ("Overview", "Card", "1900 Jaipur Module",
+     [("Fields", ["Ticker 1900 Rs Cr"])],
+     (20, 330, 196, 60),
+     "Panel figure. It reads the latest month that has data and ignores every slicer on "
+     "the page, because stock is a level, not something you add up across months.",
+     ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
+      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
+      "Power BI writing 2.5K instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Text: the title above.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
+      "panel behind shows through.",
+      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
 
-    ("Overview", "Matrix", "Months side by side",
+    ("Overview", "Card", "1902 Dholera Module",
+     [("Fields", ["Ticker 1902 Rs Cr"])],
+     (20, 394, 196, 60),
+     "Panel figure. It reads the latest month that has data and ignores every slicer on "
+     "the page, because stock is a level, not something you add up across months.",
+     ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
+      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
+      "Power BI writing 2.5K instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Text: the title above.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
+      "panel behind shows through.",
+      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
+
+    ("Overview", "Card", "1905 Dholera Cell",
+     [("Fields", ["Ticker 1905 Rs Cr"])],
+     (20, 458, 196, 60),
+     "Panel figure. It reads the latest month that has data and ignores every slicer on "
+     "the page, because stock is a level, not something you add up across months.",
+     ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
+      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
+      "Power BI writing 2.5K instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Text: the title above.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
+      "panel behind shows through.",
+      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
+
+    ("Overview", "Card", "Total",
+     [("Fields", ["Ticker Rs Cr"])],
+     (20, 526, 196, 64),
+     "Panel figure. It reads the latest month that has data and ignores every slicer on "
+     "the page, because stock is a level, not something you add up across months.",
+     ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
+      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
+      "Power BI writing 2.5K instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Text: the title above.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
+      "panel behind shows through.",
+      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
+
+    ("Overview", "Card", "Change since last month",
+     [("Fields", ["Ticker Change Text"])],
+     (20, 598, 196, 60),
+     "One line reading, for example, +12.4 Rs Cr. (+2.1%) \u2014 the amount and the percentage "
+     "together, each labelled, so nobody has to ask which is which. Green when stock rose, "
+     "red when it fell.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 14, Colour: #FFFFFF.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, Border: Off.",
+      "The measure writes its own + or \u2212 sign and both units, so leave Display units alone."]),
+
+    ("Overview", "Card", "As on",
+     [("Fields", ["As On Text"])],
+     (20, 662, 196, 44),
+     "Says which month the panel is showing, so a reader never has to guess.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 11, Colour: #BFE3C6.",
+      "Format pane \u2192 General \u2192 Title: Off \u2014 the sentence says it all.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, Border: Off."]),
+
+    # ---- Overview controls ---------------------------------------------------------------
+    ("Overview", "Slicer", "By month / By quarter",
+     [("Field", ["Period[Period]"])],
+     (252, 20, 236, 52),
+     "The toggle. Period is the field parameter you made in the New tab; picking By quarter "
+     "swaps the chart and the table from months to quarters and averages the month-ends.",
+     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Tile, so it reads as two buttons "
+      "rather than a list.",
+      "Format pane \u2192 Slicer settings \u2192 Selection: switch ON 'Single select' so exactly one "
+      "of the two is always chosen.",
+      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #14532D.",
+      "Format pane \u2192 General \u2192 Title: Off."]),
+
+    ("Overview", "Slicer", "Months (leave empty for the last 5)",
+     [("Field", ["dimDate[MonthName]"])],
+     (500, 20, 300, 52),
+     "Tick nothing and the chart shows the last 5 months by itself. Tick more than 5 and it "
+     "shows the 5 most recent of your ticks. In quarter mode this is the quarter picker.",
+     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+      "Format pane \u2192 Slicer settings \u2192 Selection: switch OFF 'Multi-select with CTRL' so "
+      "ticking several needs no keyboard.",
+      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
+
+    ("Overview", "Slicer", "Plant",
+     [("Field", ["dimPlant[Plant]"])],
+     (812, 20, 220, 52),
+     "Filters the history and the donuts. The panel on the left ignores it on purpose.",
+     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
+
+    ("Overview", "Slicer", "Type",
+     [("Field", ["dimCategory[Category]"])],
+     (1044, 20, 220, 52),
+     "RM, FG or consumables.",
+     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
+
+    # ---- Overview history: chart above, the same numbers as a table below ----------------
+    ("Overview", "Stacked column chart", "Inventory by Month (Rs Cr.)",
+     [("X-axis", ["Period[Period]"]),
+      ("Y-axis", ["Inventory Rs Cr"]),
+      ("Legend", ["dimCategory[Category]"]),
+      ("Filters", ["In Window  \u2192  is 1"])],
+     (252, 88, 664, 336),
+     "Five months side by side, or four quarters if the toggle is set to By quarter, in "
+     "which case each bar is the average of that quarter's month-ends. The In Window filter "
+     "is what keeps it to five (or four) without you having to prune the slicer.",
+     ["Format pane \u2192 Data labels: On, Font: Arial, Font size: 9, Colour: #1F2A24, Display "
+      "units: None, Value decimal places: 1. Every bar segment then prints its own number.",
+      "Format pane \u2192 Data labels \u2192 Options \u2192 Position: Inside center, Orientation: "
+      "Horizontal.",
+      "Format pane \u2192 Total labels: On, Font size 9 \u2014 that prints the whole month's figure "
+      "above each bar.",
+      "Format pane \u2192 General \u2192 Title \u2192 use the measure instead of typed words: click the "
+      "fx button beside Text, choose 'Field value', and pick the measure Period Title. The "
+      "heading then reads 'Inventory by Month (Rs Cr.)' or 'Inventory by Quarter (Rs Cr., "
+      "average of month-ends)' to match the toggle.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D."]),
+
+    ("Overview", "Matrix", "Inventory by Month (Rs Cr.)",
      [("Rows", ["dimCategory[Category]"]),
-      ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["Value ₹ Cr"])],
-     (788, 580, 476, 132),
-     "The same numbers as a table, because some readers only trust a table.",
-     ["Format pane → Row headers → Stepped layout: Off.",
-      "Format pane → Subtotals → Row subtotals: Off, and Column subtotals: Off. Only three "
-      "rows are on show, so a Total row repeats what the header card above already says."]),
+      ("Columns", ["Period[Period]"]),
+      ("Values", ["Inventory Rs Cr"]),
+      ("Filters", ["In Window  \u2192  is 1"])],
+     (252, 432, 664, 274),
+     "The same five columns as the chart directly above it, for readers who want the "
+     "figures rather than the shape.",
+     ["Format pane \u2192 Row headers \u2192 Stepped layout: Off.",
+      "Format pane \u2192 Subtotals \u2192 Row subtotals: On, Column subtotals: Off. Here the total "
+      "row earns its place, because the three types add up to the month.",
+      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
+      "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 10, Colour: #14532D."]),
+
+    # ---- Overview donuts -----------------------------------------------------------------
+    ("Overview", "Donut chart", "Share by Type (%)",
+     [("Legend", ["dimCategory[Category]"]),
+      ("Values", ["Inventory Rs Cr"])],
+     (932, 88, 332, 306),
+     "RM against FG against consumables, as a percentage of the selected months.",
+     ["Format pane \u2192 Detail labels \u2192 Label contents: Percent of total, Font: Arial, Font "
+      "size: 10, Colour: #1F2A24, Value decimal places: 1.",
+      "Format pane \u2192 Detail labels \u2192 Position: Outside, so a thin slice still shows its "
+      "percentage.",
+      "Format pane \u2192 Legend \u2192 Position: Bottom center, Font size: 9.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D."]),
+
+    ("Overview", "Donut chart", "Share by Plant (%)",
+     [("Legend", ["dimPlant[Plant]"]),
+      ("Values", ["Inventory Rs Cr"])],
+     (932, 402, 332, 304),
+     "The same money split by plant instead of by type.",
+     ["Format pane \u2192 Detail labels \u2192 Label contents: Percent of total, Font: Arial, Font "
+      "size: 10, Colour: #1F2A24, Value decimal places: 1.",
+      "Format pane \u2192 Detail labels \u2192 Position: Outside.",
+      "Format pane \u2192 Legend \u2192 Position: Bottom center, Font size: 9.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D."]),
 
     # ---- Summary: TB | MB5B | Difference as master columns, plants as master rows -------
     ("Summary", "Matrix", "Inventory (TB) · Inventory (MB5B) · Difference — ₹ Cr",
