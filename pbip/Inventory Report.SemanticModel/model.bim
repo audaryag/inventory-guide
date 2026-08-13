@@ -1782,6 +1782,13 @@
             "isNameInferred": false,
             "sortByColumn": "Period Order",
             "summarizeBy": "none",
+            "relatedColumnDetails": {
+              "groupByColumns": [
+                {
+                  "groupingColumn": "Period Fields"
+                }
+              ]
+            },
             "annotations": [
               {
                 "name": "SummarizationSetBy",

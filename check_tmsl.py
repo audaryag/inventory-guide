@@ -92,6 +92,21 @@ def main():
                                 f"measure {name}: [{ref}] is used inside a {fn} filter "
                                 f"condition; assign it to a VAR first")
 
+    # a field parameter whose label column is not grouped by the NAMEOF column loads
+    # cleanly and then behaves as an ordinary two-row category in every visual
+    for name, t in tables.items():
+        fields = [c for c in t.get("columns", [])
+                  if any(e["name"] == "ParameterMetadata"
+                         for e in c.get("extendedProperties", []))]
+        for field in fields:
+            labels = [c for c in t.get("columns", [])
+                      if [g["groupingColumn"] for g in
+                          c.get("relatedColumnDetails", {}).get("groupByColumns", [])]
+                      == [field["name"]]]
+            if not labels:
+                problems.append(f"{name}: no column is grouped by {field['name']}, so the "
+                                f"field parameter will not swap fields")
+
     # circular references stop the model loading outright
     deps = {}
     for t in tables.values():

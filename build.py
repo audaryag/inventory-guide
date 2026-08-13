@@ -477,6 +477,14 @@ there.</li>
 until you restart.</li>
 </ol>
 
+<blockquote><strong>Build 5 &mdash; 13 Aug:</strong> the project opens and refreshes. One thing
+was wrong in the generated model: the <code>Period</code> field parameter was missing the
+<em>group by</em> link between its visible label and its hidden <code>NAMEOF</code> column, so every
+chart and matrix drew &ldquo;By Month / By Quarter&rdquo; as two categories instead of swapping in
+the months. Fixed, and the checker now tests for it. Nothing to redo by hand if you built the
+parameter through <strong>Modeling &rarr; New parameter &rarr; Fields</strong> &mdash; that route
+sets it correctly.</blockquote>
+
 <blockquote><strong>Build 4 &mdash; 13 Aug:</strong> the ten measures that read the latest month
 no longer use a filter <em>condition</em> at all; they use an explicit table filter
 (<code>FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx)</code>), which no engine version can

@@ -172,9 +172,13 @@ def model_bim():
     tables.append({
         "name": "Period",
         "columns": [
+            # groupByColumns is what makes the visible label swap the field it stands for;
+            # without it a visual treats the label as an ordinary two-row category
             {"name": "Period", "dataType": S, "sourceColumn": "[Value1]",
              "type": "calculatedTableColumn", "isNameInferred": False,
              "sortByColumn": "Period Order", "summarizeBy": "none",
+             "relatedColumnDetails": {
+                 "groupByColumns": [{"groupingColumn": "Period Fields"}]},
              "annotations": [{"name": "SummarizationSetBy", "value": "Automatic"}]},
             {"name": "Period Fields", "dataType": S, "sourceColumn": "[Value2]",
              "type": "calculatedTableColumn", "isNameInferred": False, "isHidden": True,
