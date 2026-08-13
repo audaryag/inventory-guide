@@ -251,11 +251,13 @@ VISUALS = [
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #14532D.",
       "Format pane \u2192 General \u2192 Title: Off."]),
 
-    ("Overview", "Slicer", "Months (leave empty for the last 5)",
+    ("Overview", "Slicer", "Months (leave empty for March plus the last 4)",
      [("Field", ["dimDate[MonthName]"])],
      (424, 20, 268, 52),
-     "Tick nothing and the chart shows the last 5 months by itself. Tick more than 5 and it "
-     "shows the 5 most recent of your ticks. In quarter mode this is the quarter picker.",
+     "Tick nothing and you get March — the year-end close — followed by the last four "
+     "months that have data, five columns in all, or fewer early in the year: in April just "
+     "March and April. Tick your own months and they replace that, up to the 5 most recent of "
+     "your ticks. In quarter mode this is the quarter picker and the last 4 quarters apply.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Slicer settings \u2192 Selection: switch OFF 'Multi-select with CTRL' so "
       "ticking several needs no keyboard.",
@@ -311,7 +313,11 @@ VISUALS = [
      (200, 432, 700, 136),
      "The same five columns as the chart directly above it, for readers who want the "
      "figures rather than the shape. Only as tall as its four rows, so no white gap is left "
-     "under it.",
+     "under it. Left to itself the first column is always March \u2014 the year-end close \u2014 and "
+     "the four columns after it are the last four months that have data, so in July you get "
+     "Mar, Apr, May, Jun, Jul and in April just Mar and Apr. Tick five months in the picker "
+     "and your ticks replace that entirely. That behaviour lives in the In Window filter, so "
+     "the chart above obeys it too.",
      ["Format pane \u2192 Row headers \u2192 Stepped layout: Off.",
       "Format pane \u2192 Subtotals \u2192 Row subtotals: On, Column subtotals: Off. Here the total "
       "row earns its place, because the three types add up to the month.",
@@ -319,15 +325,17 @@ VISUALS = [
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 10, Colour: #14532D."]),
 
     ("Overview", "Line and clustered column chart",
-     "Total Inventory by Month, Last 12 Months (Rs Cr. and % vs Last Month)",
+     "Total Inventory by Month, Last 12 Months (MW and % vs Last Month)",
      [("X-axis", ["dimDate[MonthName]"]),
-      ("Column y-axis", ["Value \u20b9 Cr"]),
-      ("Line y-axis", ["Value \u20b9 Cr % vs LM"]),
+      ("Column y-axis", ["MW"]),
+      ("Line y-axis", ["MW % vs LM"]),
       ("Filters", ["In Last 12  \u2192  is 1"])],
      (200, 576, 700, 130),
      "The long view, under the table: one bar per month for the last twelve months that have "
      "data, or fewer if that is all there is. Two numbers on every month \u2014 the bar prints the "
-     "crore figure, the line above it prints the change on the month before as a percentage. "
+     "megawatts held, the line above it prints the change on the month before as a percentage. "
+     "It is in MW rather than rupees on purpose: this strip is about how much product is "
+     "sitting there, which prices cannot flatter. "
      "Each bar is that month's closing stock on its own, so nothing here is ever added across "
      "months.",
      ["This one must ignore the two controls at the top, or it would shrink back to five "
@@ -336,10 +344,11 @@ VISUALS = [
       "circle-with-a-line (None). Do the same after selecting the 'Months' slicer. Leave "
       "Plant and Type set to filter, so those two still work on it.",
       "Format pane \u2192 Data labels: On. Then open 'Apply settings to' \u2192 Series and pick "
-      "'Value \u20b9 Cr': Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Display units: "
-      "None, Value decimal places: 0, Position: Inside end.",
+      "MW: Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, Display units: "
+      "None, Value decimal places: 1, Position: Inside end \u2014 white, because this number is "
+      "printed on the green bar.",
       "Still under Data labels, switch 'Apply settings to' \u2192 Series to "
-      "'Value \u20b9 Cr % vs LM': Font: Arial, Font size: 8, Colour: #14532D, Value decimal "
+      "'MW % vs LM': Font: Arial, Font size: 8, Colour: #14532D, Value decimal "
       "places: 0, Position: Above. That is the second number you asked for \u2014 the percentage "
       "sits over the bar, the crore figure sits inside it, so the two never collide.",
       "Format pane \u2192 Y-axis: Off, and Secondary y-axis: Off. Both numbers are printed on "
@@ -356,29 +365,43 @@ VISUALS = [
       "repeat what the labels already say.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 11, Colour: #14532D."]),
 
-    # ---- Overview donuts -----------------------------------------------------------------
-    ("Overview", "Donut chart", "Share by Type (%)",
-     [("Legend", ["dimCategory[Category]"]),
-      ("Values", ["Inventory Rs Cr"])],
+    # ---- Overview donuts: what the latest month is actually made of --------------------
+    ("Overview", "Donut chart", "FG Components, Latest Month (Rs Cr. and % Share)",
+     [("Legend", ["dimNature[Nature]"]),
+      ("Values", ["Value \u20b9 Cr"]),
+      ("Filters", ["dimCategory[Category]  \u2192  is FG",
+                   "In Latest Month  \u2192  is 1"])],
      (916, 88, 348, 306),
-     "RM against FG against consumables, as a percentage of the selected months.",
-     ["Format pane \u2192 Detail labels \u2192 Label contents: Percent of total, Font: Arial, Font "
-      "size: 10, Colour: #1F2A24, Value decimal places: 1.",
-      "Format pane \u2192 Detail labels \u2192 Position: Outside, so a thin slice still shows its "
-      "percentage.",
+     "What the finished goods are made of in the latest month that has data \u2014 the module "
+     "technologies, largest slice first. It is pinned to the latest month by the In Latest "
+     "Month filter, because adding one month-end of stock to another would be meaningless; "
+     "the Plant and Type slicers still narrow it.",
+     ["Format pane \u2192 Detail labels \u2192 Label contents: Category, percent of total, Font: "
+      "Arial, Font size: 9, Colour: #1F2A24, Value decimal places: 1.",
+      "Format pane \u2192 Detail labels \u2192 Position: Outside, so a thin technology still shows "
+      "its percentage.",
       "Format pane \u2192 Legend \u2192 Position: Bottom center, Font size: 9.",
-      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D."]),
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D.",
+      "Right-click a slice \u2192 Drill through \u2192 Detail to see the materials inside that "
+      "technology."]),
 
-    ("Overview", "Donut chart", "Share by Plant (%)",
-     [("Legend", ["dimPlant[Plant]"]),
-      ("Values", ["Inventory Rs Cr"])],
+    ("Overview", "Donut chart", "RM Components, Latest Month (Rs Cr. and % Share)",
+     [("Legend", ["dimNature[Nature]"]),
+      ("Values", ["Value \u20b9 Cr"]),
+      ("Filters", ["dimCategory[Category]  \u2192  is RM",
+                   "In Latest Month  \u2192  is 1"])],
      (916, 402, 348, 304),
-     "The same money split by plant instead of by type.",
-     ["Format pane \u2192 Detail labels \u2192 Label contents: Percent of total, Font: Arial, Font "
-      "size: 10, Colour: #1F2A24, Value decimal places: 1.",
+     "The same for raw materials in the latest month \u2014 cell, glass, frame, POE, packing and "
+     "the rest \u2014 so the two donuts read as a pair: what the finished stock is, and what the "
+     "raw stock is.",
+     ["Format pane \u2192 Detail labels \u2192 Label contents: Category, percent of total, Font: "
+      "Arial, Font size: 9, Colour: #1F2A24, Value decimal places: 1.",
       "Format pane \u2192 Detail labels \u2192 Position: Outside.",
       "Format pane \u2192 Legend \u2192 Position: Bottom center, Font size: 9.",
-      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D."]),
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D.",
+      "If the legend runs to more than about eight natures, Format pane \u2192 Legend \u2192 Font "
+      "size: 8 and it still fits; the smallest natures are grouped under Others by the query, "
+      "so it should not."]),
 
     # ---- Summary: TB | MB5B | Difference as master columns, plants as master rows -------
     # Its own controls, exactly like Overview: the toggle decides whether the periods under

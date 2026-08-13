@@ -254,7 +254,7 @@ pasting out of order gives "cannot be determined" on a measure that is perfectly
 ### Checkpoint — do not go to Part 4 until all three are true
 
 1. Type `Value` into the Data pane search box: `Value ₹ Cr` is there, with a calculator icon.
-2. Count the measures (calculator icons) — there must be **66**. Fewer means Appendix B is
+2. Count the measures (calculator icons) — there must be **67**. Fewer means Appendix B is
    not finished; the pages will fail on whichever one is missing.
 3. None of these six old names survive: `Closing Value`, `Inv RM`, `Inv FG`,
    `Inv Consumables`, `TB Value`, `Prev Month`. Delete any you find (right-click → **Delete
@@ -530,13 +530,13 @@ Position: Horizontal 200, Vertical 20, Width 216, Height 52.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title' and set it to Off.
 
-**4.15** **Slicer** — Tick nothing and the chart shows the last 5 months by itself. Tick more than 5 and it shows the 5 most recent of your ticks. In quarter mode this is the quarter picker.
+**4.15** **Slicer** — Tick nothing and you get March — the year-end close — followed by the last four months that have data, five columns in all, or fewer early in the year: in April just March and April. Tick your own months and they replace that, up to the 5 most recent of your ticks. In quarter mode this is the quarter picker and the last 4 quarters apply.
 
 | Well | Field |
 |---|---|
 | Field | `dimDate[MonthName]` |
 
-Title: `Months (Leave Empty for the Last 5)`
+Title: `Months (Leave Empty for March Plus the Last 4)`
 
 Position: Horizontal 424, Vertical 20, Width 268, Height 52.
 
@@ -612,7 +612,7 @@ Position: Horizontal 200, Vertical 88, Width 700, Height 336.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'use the measure instead of typed words' and set it to click the fx button beside Text, choose 'Field value', and pick the measure Period Title. The heading then reads 'Inventory by Month (Rs Cr.)' or 'Inventory by Quarter (Rs Cr., Average of Month-Ends)' to match the toggle.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
 
-**4.19** **Matrix** — The same five columns as the chart directly above it, for readers who want the figures rather than the shape. Only as tall as its four rows, so no white gap is left under it.
+**4.19** **Matrix** — The same five columns as the chart directly above it, for readers who want the figures rather than the shape. Only as tall as its four rows, so no white gap is left under it. Left to itself the first column is always March — the year-end close — and the four columns after it are the last four months that have data, so in July you get Mar, Apr, May, Jun, Jul and in April just Mar and Apr. Tick five months in the picker and your ticks replace that entirely. That behaviour lives in the In Window filter, so the chart above obeys it too.
 
 | Well | Field |
 |---|---|
@@ -635,16 +635,16 @@ Position: Horizontal 200, Vertical 432, Width 700, Height 136.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D.
 
-**4.20** **Line and clustered column chart** — The long view, under the table: one bar per month for the last twelve months that have data, or fewer if that is all there is. Two numbers on every month — the bar prints the crore figure, the line above it prints the change on the month before as a percentage. Each bar is that month's closing stock on its own, so nothing here is ever added across months.
+**4.20** **Line and clustered column chart** — The long view, under the table: one bar per month for the last twelve months that have data, or fewer if that is all there is. Two numbers on every month — the bar prints the megawatts held, the line above it prints the change on the month before as a percentage. It is in MW rather than rupees on purpose: this strip is about how much product is sitting there, which prices cannot flatter. Each bar is that month's closing stock on its own, so nothing here is ever added across months.
 
 | Well | Field |
 |---|---|
 | X-axis | `dimDate[MonthName]` |
-| Column y-axis | `Value ₹ Cr` |
-| Line y-axis | `Value ₹ Cr % vs LM` |
+| Column y-axis | `MW` |
+| Line y-axis | `MW % vs LM` |
 | Filters | `In Last 12  →  is 1` |
 
-Title: `Total Inventory by Month, Last 12 Months (Rs Cr. and % vs Last Month)`
+Title: `Total Inventory by Month, Last 12 Months (MW and % vs Last Month)`
 
 Position: Horizontal 200, Vertical 576, Width 700, Height 130.
 
@@ -654,8 +654,8 @@ Position: Horizontal 200, Vertical 576, Width 700, Height 130.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 - This one must ignore the two controls at the top, or it would shrink back to five months. Click the 'By Month / By Quarter' slicer once, then ribbon Format → Edit interactions; small icons appear on every other visual. On this chart click the circle-with-a-line (None). Do the same after selecting the 'Months' slicer. Leave Plant and Type set to filter, so those two still work on it.
-- In the Visualizations pane click the paintbrush icon, then click 'Data labels: On. Then open 'Apply settings to'', then 'Series and pick 'Value ₹ Cr'' and set it to Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Display units: None, Value decimal places: 0, Position: Inside end.
-- Still under Data labels, switch 'Apply settings to' → Series to 'Value ₹ Cr % vs LM': Font: Arial, Font size: 8, Colour: #14532D, Value decimal places: 0, Position: Above. That is the second number you asked for — the percentage sits over the bar, the crore figure sits inside it, so the two never collide.
+- In the Visualizations pane click the paintbrush icon, then click 'Data labels: On. Then open 'Apply settings to'', then 'Series and pick MW' and set it to Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, Display units: None, Value decimal places: 1, Position: Inside end — white, because this number is printed on the green bar.
+- Still under Data labels, switch 'Apply settings to' → Series to 'MW % vs LM': Font: Arial, Font size: 8, Colour: #14532D, Value decimal places: 0, Position: Above. That is the second number you asked for — the percentage sits over the bar, the crore figure sits inside it, so the two never collide.
 - In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off, and Secondary y-axis: Off. Both numbers are printed on the chart, so two scales up the sides would only eat the height.
 - In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24, Concatenate labels: Off, and Maximum height: 20%.
 - In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Inner padding: 30%, and Format pane', then 'General', then 'Properties', then 'Padding' and set it to Left 12, Right 12. The padding is what stops the first and last bar touching the sides of the card, and it pulls both edges in by the same amount.
@@ -663,43 +663,47 @@ Position: Horizontal 200, Vertical 576, Width 700, Height 130.
 - In the Visualizations pane click the paintbrush icon, then click 'Legend' and set it to Off. Two series, both labelled on the chart, so a key would repeat what the labels already say.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 
-**4.21** **Donut chart** — RM against FG against consumables, as a percentage of the selected months.
+**4.21** **Donut chart** — What the finished goods are made of in the latest month that has data — the module technologies, largest slice first. It is pinned to the latest month by the In Latest Month filter, because adding one month-end of stock to another would be meaningless; the Plant and Type slicers still narrow it.
 
 | Well | Field |
 |---|---|
-| Legend | `dimCategory[Category]` |
-| Values | `Inventory Rs Cr` |
+| Legend | `dimNature[Nature]` |
+| Values | `Value ₹ Cr` |
+| Filters | `dimCategory[Category]  →  is FG`, `In Latest Month  →  is 1` |
 
-Title: `Share by Type (%)`
+Title: `FG Components, Latest Month (Rs Cr. and % Share)`
 
 Position: Horizontal 916, Vertical 88, Width 348, Height 306.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
-- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Percent of total, Font: Arial, Font size: 10, Colour: #1F2A24, Value decimal places: 1.
-- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Position' and set it to Outside, so a thin slice still shows its percentage.
+- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total, Font: Arial, Font size: 9, Colour: #1F2A24, Value decimal places: 1.
+- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Position' and set it to Outside, so a thin technology still shows its percentage.
 - In the Visualizations pane click the paintbrush icon, then click 'Legend', then 'Position' and set it to Bottom center, Font size: 9.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
+- Right-click a slice → Drill through → Detail to see the materials inside that technology.
 
-**4.22** **Donut chart** — The same money split by plant instead of by type.
+**4.22** **Donut chart** — The same for raw materials in the latest month — cell, glass, frame, POE, packing and the rest — so the two donuts read as a pair: what the finished stock is, and what the raw stock is.
 
 | Well | Field |
 |---|---|
-| Legend | `dimPlant[Plant]` |
-| Values | `Inventory Rs Cr` |
+| Legend | `dimNature[Nature]` |
+| Values | `Value ₹ Cr` |
+| Filters | `dimCategory[Category]  →  is RM`, `In Latest Month  →  is 1` |
 
-Title: `Share by Plant (%)`
+Title: `RM Components, Latest Month (Rs Cr. and % Share)`
 
 Position: Horizontal 916, Vertical 402, Width 348, Height 304.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
-- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Percent of total, Font: Arial, Font size: 10, Colour: #1F2A24, Value decimal places: 1.
+- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total, Font: Arial, Font size: 9, Colour: #1F2A24, Value decimal places: 1.
 - In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Position' and set it to Outside.
 - In the Visualizations pane click the paintbrush icon, then click 'Legend', then 'Position' and set it to Bottom center, Font size: 9.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
+- If the legend runs to more than about eight natures, Format pane → Legend → Font size: 8 and it still fits; the smallest natures are grouped under Others by the query, so it should not.
 
 ---
 
@@ -1528,7 +1532,7 @@ Find the words Power BI showed you in the left column.
 | `Mark as date table` will not accept any column | nothing is wrong | skip 2.4 entirely; a monthly table is deliberate and no measure needs it |
 | `dimMetric cannot find table` | `dimCategory` / `dimMetric` / `dimMeasure` were never created | paste those three queries, Close & Apply, then paste the measure again |
 | `Value ₹ Cr cannot be determined. Either the column does not exist, or there is no current row` | either `factInventory` has no `CloseVal` column, or you pasted measures out of order | check `CloseVal` exists in `factInventory`; if it does, paste Appendix B again strictly top to bottom |
-| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 66 from Appendix B, then delete the six old names listed in 3.7 |
+| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 67 from Appendix B, then delete the six old names listed in 3.7 |
 | RM and FG matrices show numbers under `In ₹ Cr` but nothing under `In Days` | the `Days` measure was deleted as an "old name" | paste `Days = [Days of Inventory]` back in; it is in Appendix B |
 | on a card, the number is fine but the wording is cut in half | the card's default text is too big for the space | set **Callout value** → Font size **24**, **General → Title** → Font size **12**, and Height **96** (every card in Part 4 is 96 high). A **Category label**, if your version has one, goes to **10** or off — the title says the same thing |
 | the paintbrush list has a **Callout value** but no **Category label** | you are on the newer Card visual, which has no category label | nothing to fix: the heading comes from **General → Title → Text**, which Part 4 gives you the wording for |
@@ -1566,7 +1570,7 @@ Nothing here is destructive.
    `dimCategory`, `dimMetric`, `dimMeasure`. Then **Close & Apply**.
 2. **Relationships.** Manage relationships must match 2.3 exactly — 11 rows, all Single,
    nothing on `dimMetric` or `dimMeasure`.
-3. **Measures.** Add all 66 from Appendix B top to bottom (adding beside old ones is safe),
+3. **Measures.** Add all 67 from Appendix B top to bottom (adding beside old ones is safe),
    then delete the six old names in 3.7 — keeping `Days`, whose formula you overwrite instead.
 4. **Sorting.** Set the five sort-by columns in 2.5 and 2.6.
 
@@ -2873,14 +2877,26 @@ IF(
 
 In Window =
 VAR Mode = SELECTEDVALUE('Period'[Period Order], 0)
-VAR Keep = IF(Mode = 1, 4, 5)
+VAR Picked = IF(Mode = 1, ISFILTERED(dimDate[Quarter]), ISFILTERED(dimDate[MonthName]))
+VAR Keep = IF(Mode = 1, 4, IF(Picked, 5, 4))
 VAR Place =
     IF(
         Mode = 1,
         RANKX(ALLSELECTED(dimDate[QuarterSort]), CALCULATE(MAX(dimDate[QuarterSort])), , DESC),
         RANKX(ALLSELECTED(dimDate[MonthIndex]), CALCULATE(MAX(dimDate[MonthIndex])), , DESC)
     )
-RETURN IF(Place <= Keep, 1, 0)
+VAR MarchIdx =
+    CALCULATE(
+        MAX(dimDate[MonthIndex]),
+        REMOVEFILTERS(dimDate),
+        dimDate[FYMonthNo] = 12,
+        dimDate[MonthIndex] <= [Latest Month Index]
+    )
+VAR IsMarch =
+    IF(Mode <> 1 && NOT Picked && MAX(dimDate[MonthIndex]) = MarchIdx, 1, 0)
+RETURN IF(Place <= Keep || IsMarch = 1, 1, 0)
+
+MW % vs LM = DIVIDE([MW] - [MW LM], [MW LM])
 
 In Last 12 =
 VAR LastM = [Latest Month Index]
