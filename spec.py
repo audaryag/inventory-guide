@@ -297,7 +297,7 @@ VISUALS = [
       ("Columns", ["Period[Period]"]),
       ("Values", ["Inventory Rs Cr"]),
       ("Filters", ["In Window  \u2192  is 1"])],
-     (252, 432, 664, 146),
+     (252, 432, 664, 136),
      "The same five columns as the chart directly above it, for readers who want the "
      "figures rather than the shape. Only as tall as its four rows, so no white gap is left "
      "under it.",
@@ -307,31 +307,42 @@ VISUALS = [
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 10, Colour: #14532D."]),
 
-    ("Overview", "Clustered column chart", "Total Inventory by Month, Last 12 Months (Rs Cr.)",
+    ("Overview", "Line and clustered column chart",
+     "Total Inventory by Month, Last 12 Months (Rs Cr. and % vs Last Month)",
      [("X-axis", ["dimDate[MonthName]"]),
-      ("Y-axis", ["Value \u20b9 Cr"]),
+      ("Column y-axis", ["Value \u20b9 Cr"]),
+      ("Line y-axis", ["Value \u20b9 Cr % vs LM"]),
       ("Filters", ["In Last 12  \u2192  is 1"])],
-     (252, 586, 664, 120),
-     "The long view, under the table: one bar per month for the last twelve months that "
-     "have data, or fewer if that is all there is. Each bar is that month's closing stock "
-     "on its own \u2014 inventory is a level, so nothing here is ever added across months.",
+     (252, 576, 664, 130),
+     "The long view, under the table: one bar per month for the last twelve months that have "
+     "data, or fewer if that is all there is. Two numbers on every month \u2014 the bar prints the "
+     "crore figure, the line above it prints the change on the month before as a percentage. "
+     "Each bar is that month's closing stock on its own, so nothing here is ever added across "
+     "months.",
      ["This one must ignore the two controls at the top, or it would shrink back to five "
       "months. Click the 'By Month / By Quarter' slicer once, then ribbon Format \u2192 Edit "
       "interactions; small icons appear on every other visual. On this chart click the "
       "circle-with-a-line (None). Do the same after selecting the 'Months' slicer. Leave "
       "Plant and Type set to filter, so those two still work on it.",
-      "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #14532D, "
-      "Display units: None, Value decimal places: 0. Twelve bars is too tight for a decimal, "
-      "and the table above carries the exact figures.",
-      "Format pane \u2192 Data labels \u2192 Options \u2192 Position: Outside end, Orientation: "
-      "Horizontal.",
-      "Format pane \u2192 Y-axis: Off. The number is printed on each bar, so the scale up the "
-      "side is only eating height.",
-      "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24.",
-      "Format pane \u2192 X-axis \u2192 Inner padding: 45%. That is what keeps the bars slim and "
-      "grouped towards the middle when only three or four months exist \u2014 without it Power BI "
-      "stretches four bars across the whole width.",
-      "Format pane \u2192 Columns \u2192 Colour: #2E7D46.",
+      "Format pane \u2192 Data labels: On. Then open 'Apply settings to' \u2192 Series and pick "
+      "'Value \u20b9 Cr': Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Display units: "
+      "None, Value decimal places: 0, Position: Inside end.",
+      "Still under Data labels, switch 'Apply settings to' \u2192 Series to "
+      "'Value \u20b9 Cr % vs LM': Font: Arial, Font size: 8, Colour: #6B7280, Value decimal "
+      "places: 0, Position: Above. That is the second number you asked for \u2014 the percentage "
+      "sits over the bar, the crore figure sits inside it, so the two never collide.",
+      "Format pane \u2192 Y-axis: Off, and Secondary y-axis: Off. Both numbers are printed on "
+      "the chart, so two scales up the sides would only eat the height.",
+      "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24, "
+      "Concatenate labels: Off, and Maximum height: 20%.",
+      "Format pane \u2192 X-axis \u2192 Inner padding: 30%, and Format pane \u2192 General \u2192 "
+      "Properties \u2192 Padding: Left 12, Right 12. The padding is what stops the first and last "
+      "bar touching the sides of the card, and it pulls both edges in by the same amount.",
+      "Format pane \u2192 Columns \u2192 Colour: #2E7D46. Format pane \u2192 Lines \u2192 Colour: "
+      "#9AA79F, Stroke width: 1, Show marker: On, Marker size: 3 \u2014 the line is only there to "
+      "carry its labels, so it is deliberately quiet.",
+      "Format pane \u2192 Legend: Off. Two series, both labelled on the chart, so a key would "
+      "repeat what the labels already say.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 11, Colour: #14532D."]),
 
     # ---- Overview donuts -----------------------------------------------------------------

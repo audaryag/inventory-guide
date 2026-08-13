@@ -658,7 +658,7 @@ Position: Horizontal 252, Vertical 88, Width 664, Height 336.
 
 Title: `Inventory by Month (Rs Cr.)`
 
-Position: Horizontal 252, Vertical 432, Width 664, Height 146.
+Position: Horizontal 252, Vertical 432, Width 664, Height 136.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -670,17 +670,18 @@ Position: Horizontal 252, Vertical 432, Width 664, Height 146.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D.
 
-**4.20** **Clustered column chart** — The long view, under the table: one bar per month for the last twelve months that have data, or fewer if that is all there is. Each bar is that month's closing stock on its own — inventory is a level, so nothing here is ever added across months.
+**4.20** **Line and clustered column chart** — The long view, under the table: one bar per month for the last twelve months that have data, or fewer if that is all there is. Two numbers on every month — the bar prints the crore figure, the line above it prints the change on the month before as a percentage. Each bar is that month's closing stock on its own, so nothing here is ever added across months.
 
 | Well | Field |
 |---|---|
 | X-axis | `dimDate[MonthName]` |
-| Y-axis | `Value ₹ Cr` |
+| Column y-axis | `Value ₹ Cr` |
+| Line y-axis | `Value ₹ Cr % vs LM` |
 | Filters | `In Last 12  →  is 1` |
 
-Title: `Total Inventory by Month, Last 12 Months (Rs Cr.)`
+Title: `Total Inventory by Month, Last 12 Months (Rs Cr. and % vs Last Month)`
 
-Position: Horizontal 252, Vertical 586, Width 664, Height 120.
+Position: Horizontal 252, Vertical 576, Width 664, Height 130.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -688,12 +689,13 @@ Position: Horizontal 252, Vertical 586, Width 664, Height 120.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 - This one must ignore the two controls at the top, or it would shrink back to five months. Click the 'By Month / By Quarter' slicer once, then ribbon Format → Edit interactions; small icons appear on every other visual. On this chart click the circle-with-a-line (None). Do the same after selecting the 'Months' slicer. Leave Plant and Type set to filter, so those two still work on it.
-- In the Visualizations pane click the paintbrush icon, then click 'Data labels' and set it to On, Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Display units: None, Value decimal places: 0. Twelve bars is too tight for a decimal, and the table above carries the exact figures.
-- In the Visualizations pane click the paintbrush icon, then click 'Data labels', then 'Options', then 'Position' and set it to Outside end, Orientation: Horizontal.
-- In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off. The number is printed on each bar, so the scale up the side is only eating height.
-- In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Inner padding' and set it to 45%. That is what keeps the bars slim and grouped towards the middle when only three or four months exist — without it Power BI stretches four bars across the whole width.
-- In the Visualizations pane click the paintbrush icon, then click 'Columns', then 'Colour' and set it to #2E7D46.
+- In the Visualizations pane click the paintbrush icon, then click 'Data labels: On. Then open 'Apply settings to'', then 'Series and pick 'Value ₹ Cr'' and set it to Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Display units: None, Value decimal places: 0, Position: Inside end.
+- Still under Data labels, switch 'Apply settings to' → Series to 'Value ₹ Cr % vs LM': Font: Arial, Font size: 8, Colour: #6B7280, Value decimal places: 0, Position: Above. That is the second number you asked for — the percentage sits over the bar, the crore figure sits inside it, so the two never collide.
+- In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off, and Secondary y-axis: Off. Both numbers are printed on the chart, so two scales up the sides would only eat the height.
+- In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24, Concatenate labels: Off, and Maximum height: 20%.
+- In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Inner padding: 30%, and Format pane', then 'General', then 'Properties', then 'Padding' and set it to Left 12, Right 12. The padding is what stops the first and last bar touching the sides of the card, and it pulls both edges in by the same amount.
+- In the Visualizations pane click the paintbrush icon, then click 'Columns', then 'Colour: #2E7D46. Format pane', then 'Lines', then 'Colour' and set it to #9AA79F, Stroke width: 1, Show marker: On, Marker size: 3 — the line is only there to carry its labels, so it is deliberately quiet.
+- In the Visualizations pane click the paintbrush icon, then click 'Legend' and set it to Off. Two series, both labelled on the chart, so a key would repeat what the labels already say.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 
 **4.21** **Donut chart** — RM against FG against consumables, as a percentage of the selected months.
