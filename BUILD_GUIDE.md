@@ -1401,7 +1401,7 @@ Position: Horizontal 928, Vertical 16, Width 336, Height 96.
 
 Title: `Split by Category`
 
-Position: Horizontal 16, Vertical 120, Width 404, Height 296.
+Position: Horizontal 16, Vertical 120, Width 404, Height 232.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
@@ -1417,7 +1417,7 @@ Position: Horizontal 16, Vertical 120, Width 404, Height 296.
 
 Title: `Split by Technology / Nature`
 
-Position: Horizontal 428, Vertical 120, Width 404, Height 296.
+Position: Horizontal 428, Vertical 120, Width 404, Height 232.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
@@ -1433,7 +1433,7 @@ Position: Horizontal 428, Vertical 120, Width 404, Height 296.
 
 Title: `Split by Plant`
 
-Position: Horizontal 840, Vertical 120, Width 424, Height 296.
+Position: Horizontal 840, Vertical 120, Width 424, Height 232.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
@@ -1449,7 +1449,7 @@ Position: Horizontal 840, Vertical 120, Width 424, Height 296.
 
 Title: `Materials Behind This Number — Click + to Open a Nature`
 
-Position: Horizontal 16, Vertical 428, Width 1248, Height 284.
+Position: Horizontal 16, Vertical 364, Width 1248, Height 348.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1460,6 +1460,10 @@ Position: Horizontal 16, Vertical 428, Width 1248, Height 284.
 - In the Visualizations pane click the paintbrush icon, then click 'Grid', then 'Options', then 'Keep column headers visible' and set it to On. The headings then stay put while the rows scroll inside the visual, so a long list never makes the visual (or the page) grow.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On, so a closed nature row still shows its total.
 - Click the Value ₹ Cr column header once so it sorts largest first.
+- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Text size' and set it to 9 and Row padding: 1. At 348 high that is about eighteen rows on screen at once, roughly twice what the default padding allows.
+- How to scroll it: put the mouse pointer inside the matrix, not on the page around it, and use the wheel — the scrollbar is hidden until the pointer is over the visual. Two-finger drag on a trackpad does the same.
+- If the wheel still does nothing, the page itself is being scrolled instead: ribbon View → Page view → Fit to page, so the whole canvas is on screen and the wheel belongs to the visual under the pointer.
+- For a really long list use Focus mode — hover the visual, click the diagonal-arrows icon in its top-right, and it fills the page with far more rows visible; the back arrow returns you. Or collapse a nature with its − icon to jump past it.
 
 ---
 

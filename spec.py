@@ -865,21 +865,21 @@ VISUALS = [
     ("Detail", "Pie chart", "Split by category",
      [("Legend", ["dimCategory[Category]"]),
       ("Values", ["Value ₹ Cr"])],
-     (16, 120, 404, 296),
+     (16, 120, 404, 232),
      "RM / FG / consumables for exactly what you clicked.",
      ["Format pane → Detail labels → Label contents: Category, percent of total."]),
 
     ("Detail", "Donut chart", "Split by technology / nature",
      [("Legend", ["dimNature[Nature]"]),
       ("Values", ["Value ₹ Cr"])],
-     (428, 120, 404, 296),
+     (428, 120, 404, 232),
      "Which technology or material nature the slice is made of.",
      ["Format pane → Detail labels → Label contents: Category, percent of total."]),
 
     ("Detail", "Pie chart", "Split by plant",
      [("Legend", ["dimPlant[Plant]"]),
       ("Values", ["Value ₹ Cr"])],
-     (840, 120, 424, 296),
+     (840, 120, 424, 232),
      "Where the slice sits. A single-colour pie means it is one plant already.",
      ["Format pane → Detail labels → Label contents: Category, percent of total."]),
 
@@ -887,7 +887,7 @@ VISUALS = [
      [("Rows", ["dimNature[Nature]", "factInventory[Material]",
                 "factInventory[MaterialDesc]"]),
       ("Values", ["Value ₹ Cr", "MW", "Days", "INR per Wp", "Share of Total %"])],
-     (16, 428, 1248, 284),
+     (16, 364, 1248, 348),
      "The line-item detail. A Matrix rather than a Table, so it opens nature → material "
      "instead of being one long flat list — that is the difference between clicking and "
      "scrolling.",
@@ -898,7 +898,18 @@ VISUALS = [
       "visual (or the page) grow.",
       "Format pane → Subtotals → Row subtotals: On, so a closed nature row still shows its "
       "total.",
-      "Click the Value ₹ Cr column header once so it sorts largest first."]),
+      "Click the Value ₹ Cr column header once so it sorts largest first.",
+      "Format pane → Values → Text size: 9 and Row padding: 1. At 348 high that is about "
+      "eighteen rows on screen at once, roughly twice what the default padding allows.",
+      "How to scroll it: put the mouse pointer inside the matrix, not on the page around it, "
+      "and use the wheel — the scrollbar is hidden until the pointer is over the visual. "
+      "Two-finger drag on a trackpad does the same.",
+      "If the wheel still does nothing, the page itself is being scrolled instead: ribbon "
+      "View → Page view → Fit to page, so the whole canvas is on screen and the wheel "
+      "belongs to the visual under the pointer.",
+      "For a really long list use Focus mode — hover the visual, click the diagonal-arrows "
+      "icon in its top-right, and it fills the page with far more rows visible; the back "
+      "arrow returns you. Or collapse a nature with its − icon to jump past it."]),
 
 ]
 
