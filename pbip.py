@@ -366,7 +366,7 @@ def card_objects():
             "wordWrap": [{"properties": {"show": literal("true")}}]}
 
 
-def slicer_objects():
+def slicer_objects(single=False):
     return {"general": [{"properties": {"outlineColor": {"solid": {"color": txt("#DCE5DC")}},
                                         "outlineWeight": literal("1D")}}],
             "header": [{"properties": {"show": literal("true"), "fontFamily": txt("Arial"),
@@ -374,7 +374,28 @@ def slicer_objects():
                                        "textSize": literal("9D")}}],
             "items": [{"properties": {"fontFamily": txt("Arial"),
                                       "textSize": literal("9D")}}],
+            # singleSelect off means a plain click adds to the selection, so several
+            # months can be ticked without holding CTRL
+            "selection": [{"properties": {
+                "singleSelect": literal("true" if single else "false"),
+                "strictSingleSelect": literal("true" if single else "false"),
+                "selectAllCheckboxEnabled": literal("false" if single else "true")}}],
             "data": [{"properties": {"mode": txt("Dropdown")}}]}
+
+
+def not_blank_filter(fname, entity, prop):
+    """Keeps the blank member out of a slicer list. It appears whenever a fact row has a
+    code the dimension does not, and there is nothing to pick in it."""
+    col = {"Column": {"Expression": {"SourceRef": {"Source": "f"}}, "Property": prop}}
+    return {"name": fname, "type": "Advanced",
+            "field": {"Column": {"Expression": {"SourceRef": {"Entity": entity}},
+                                 "Property": prop}},
+            "filter": {"Version": 2,
+                       "From": [{"Name": "f", "Entity": entity, "Type": 0}],
+                       "Where": [{"Condition": {"Not": {"Expression": {"Comparison": {
+                           "ComparisonKind": 0, "Left": col,
+                           "Right": {"Literal": {"Value": "null"}}}}}}}]},
+            "howCreated": "User"}
 
 
 def categorical_filter(fname, entity, prop, values, exclude=False):
@@ -454,7 +475,11 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
     elif vt == "card":
         objects = card_objects()
     elif vt == "slicer":
-        objects = slicer_objects()
+        # the two-button toggle keeps exactly one choice; every other slicer multi-selects
+        objects = slicer_objects(single=any(
+            p["field"].get("Column", {}).get("Expression", {})
+             .get("SourceRef", {}).get("Entity") == "Period"
+            for p in qstate.get("Values", {}).get("projections", [])))
     elif vt == "decompositionTreeVisual":
         objects = {}
     else:
@@ -475,8 +500,18 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
            "position": {"x": x, "y": y, "z": idx, "width": w, "height": h,
                         "tabOrder": idx * 100},
            "visual": visual}
-    if extra_filters:
-        out["filterConfig"] = {"filters": extra_filters}
+    filters = list(extra_filters)
+    if vt == "slicer":
+        for p in qstate.get("Values", {}).get("projections", []):
+            col = p["field"].get("Column")
+            # the field parameter's own slicer is left alone: its two rows are the
+            # parameter values, and filtering them would disable the toggle
+            if col and col["Expression"]["SourceRef"]["Entity"] != "Period":
+                filters.append(not_blank_filter(
+                    f"nb{vname(page, idx)}", col["Expression"]["SourceRef"]["Entity"],
+                    col["Property"]))
+    if filters:
+        out["filterConfig"] = {"filters": filters}
     return out
 
 

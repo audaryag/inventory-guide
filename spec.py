@@ -258,7 +258,9 @@ VISUALS = [
      "months that have data, five columns in all, or fewer early in the year: in April just "
      "March and April. Tick your own months and they replace that, up to the 5 most recent of "
      "your ticks. In quarter mode this is the quarter picker and the last 4 quarters apply.",
-     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Slicer settings \u2192 Selection: switch OFF 'Multi-select with CTRL' so "
       "ticking several needs no keyboard.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
@@ -268,7 +270,9 @@ VISUALS = [
      [("Field", ["dimPlant[Plant]"])],
      (700, 8, 262, 76),
      "Filters the history and the donuts. The panel on the left ignores it on purpose.",
-     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
       "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
 
@@ -276,7 +280,9 @@ VISUALS = [
      [("Field", ["dimCategory[Category]"])],
      (970, 8, 294, 76),
      "RM, FG or consumables.",
-     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
       "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
 
@@ -426,7 +432,9 @@ VISUALS = [
      "the months you want and it shows those, up to twelve \u2014 tick more than twelve and it "
      "keeps the twelve most recent of your ticks, because 3 master columns \u00d7 12 months is "
      "already 36 columns of figures.",
-     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Slicer settings \u2192 Selection: switch OFF 'Multi-select with CTRL' so "
       "ticking several needs no keyboard.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
@@ -437,7 +445,9 @@ VISUALS = [
      (564, 8, 240, 76),
      "The picker for quarter mode, and it behaves the same way: empty means the last 4, or "
      "tick the quarters you want. In month mode leave it empty.",
-     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Slicer settings \u2192 Selection: switch OFF 'Multi-select with CTRL'.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
       "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
@@ -446,7 +456,9 @@ VISUALS = [
      [("Field", ["dimPlant[Plant]"])],
      (820, 8, 220, 76),
      "Narrows both matrices to one plant when you want to read it on its own.",
-     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
       "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
 
@@ -454,7 +466,9 @@ VISUALS = [
      [("Field", ["dimCategory[Category]"])],
      (1056, 8, 208, 76),
      "RM, FG or consumables, when you want the reconciliation for one of them only.",
-     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
       "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
 
@@ -584,7 +598,9 @@ VISUALS = [
      (248, 8, 300, 76),
      "Which months appear under each master column. Tick nothing and it shows the last four "
      "with data; tick your own and it shows those, up to twelve.",
-     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Slicer settings → Selection → switch OFF 'Multi-select with CTRL', so "
       "months can be ticked by clicking.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24.",
@@ -595,7 +611,9 @@ VISUALS = [
      (564, 8, 240, 76),
      "The same idea in quarter mode: empty means the last four fiscal quarters, or tick the "
      "ones you want, up to twelve.",
-     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Slicer settings → Selection → 'Multi-select with CTRL': Off.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24.",
       "It has no effect while the toggle says By Month — that is intended, not a fault."]),
@@ -605,14 +623,18 @@ VISUALS = [
      (820, 8, 220, 76),
      "One plant, or all of them. It filters the technology matrix and all three charts, so "
      "picking Dholera Cell turns the page into a Dholera Cell page.",
-     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
 
     ("FG", "Slicer", "Technology",
      [("Field", ["dimNature[Nature]"])],
      (1056, 8, 208, 76),
      "One module technology, when you want the page to be about that technology only.",
-     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
 
     ("FG", "Matrix", "FG by Plant — MW · Rs Cr. · Days",
@@ -743,7 +765,9 @@ VISUALS = [
      (248, 8, 300, 76),
      "Which months appear under each master column, and on both charts along the bottom. "
      "Nothing ticked means the last four with data; tick your own for up to twelve.",
-     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Slicer settings → Selection → 'Multi-select with CTRL': Off.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
 
@@ -751,7 +775,9 @@ VISUALS = [
      [("Field", ["dimDate[Quarter]"])],
      (564, 8, 240, 76),
      "The quarter-mode equivalent: empty means the last four fiscal quarters.",
-     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Slicer settings → Selection → 'Multi-select with CTRL': Off.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
 
@@ -759,7 +785,9 @@ VISUALS = [
      [("Field", ["dimPlant[Plant]"])],
      (820, 8, 220, 76),
      "One plant, or all three.",
-     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
 
     ("RM", "Slicer", "Group Nature",
@@ -767,7 +795,9 @@ VISUALS = [
      (1056, 8, 208, 76),
      "Module or Cell, when you want the page to be about one of the two only — the same "
      "split the Excel sheet had as its Module and Cell blocks.",
-     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+     [
+      "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
+     "Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
 
     ("RM", "Matrix", "RM Inventory by Plant — Rs Cr. · Days",

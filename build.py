@@ -477,6 +477,15 @@ there.</li>
 until you restart.</li>
 </ol>
 
+<blockquote><strong>Build 6 &mdash; 13 Aug:</strong> three fixes on top of build 5. Every
+slicer except the two-button toggle now multi-selects on a plain click, so several months can be
+ticked without holding CTRL. Every slicer also carries an <em>is not blank</em> filter, so the
+empty row no longer appears in the Plant, Technology and Group Nature lists. And the material
+attributes (nature, group nature, technology, BOM std qty) are now matched a second time on the
+material number alone: matching on plant <em>and</em> material misses every row when the master
+sheet has no valuation area column or writes the plant differently, which is what left the nature
+donuts blank and every technology row empty.</blockquote>
+
 <blockquote><strong>Build 5 &mdash; 13 Aug:</strong> the project opens and refreshes. One thing
 was wrong in the generated model: the <code>Period</code> field parameter was missing the
 <em>group by</em> link between its visible label and its hidden <code>NAMEOF</code> column, so every
