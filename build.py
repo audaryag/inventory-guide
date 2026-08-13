@@ -450,6 +450,144 @@ than an invented number.</td></tr>
 </table>
 """
 
+AUTO = r"""
+<h2>Automatic routes — try them in this order</h2>
+<p class="sub">Nothing here is typed by hand. One download holds four folders; you only ever open
+one of them. If a route fails, close Power BI, open the next route, and lose nothing — the manual
+tabs stay exactly as they are.</p>
+
+<p><a href="InventoryReport-pbip.zip"><strong>Download InventoryReport-pbip.zip</strong></a> &nbsp;
+Right-click it &rarr; <strong>Extract All&hellip;</strong> &rarr; put the extracted folder on your
+<strong>Desktop</strong>. Open the extracted folder and you will see:</p>
+<pre>1 - full report\        the whole thing, five pages of visuals already drawn
+2 - model only\         same queries and measures, blank pages
+3 - tabular editor\     add-all-measures.csx
+4 - plain text\         every query as .m, every measure as .dax
+set-proot.ps1           sets your folder path for you
+inventory-theme.json    the theme, if you ever need to re-import it</pre>
+
+<h3>Before anything: one Power BI setting, once</h3>
+<ol>
+<li>Open Power BI Desktop &rarr; <strong>File &rarr; Options and settings &rarr; Options</strong>.</li>
+<li>Left list, under GLOBAL, click <strong>Preview features</strong>.</li>
+<li>Tick <strong>every</strong> box whose name mentions <em>pbip</em>, <em>Power BI Project</em> or
+<em>enhanced report format (PBIR)</em>. Which ones exist depends on your version — tick whatever is
+there.</li>
+<li><strong>OK</strong>, then close Power BI Desktop completely and reopen it. The ticks do nothing
+until you restart.</li>
+</ol>
+
+<h3>Route A &mdash; the full report (try this first)</h3>
+<ol>
+<li>Open the <code>1 - full report</code> folder and double-click
+<strong>Inventory Report.pbip</strong>.</li>
+<li>Blank visuals and red errors at this point are expected: it has not read your files yet.</li>
+<li><strong>Home</strong> &rarr; small arrow under <strong>Transform data</strong> &rarr;
+<strong>Edit parameters</strong> &rarr; put your folder path in <strong>pRoot</strong>, with no
+backslash on the end, e.g. <code>C:\Users\alisha\Desktop\Inventory Report</code>. Copy it from
+the File Explorer address bar rather than typing it.</li>
+<li><strong>Home &rarr; Refresh</strong>, wait, then <strong>Ctrl+S</strong>.</li>
+<li>Overview showing numbers means you are finished. <strong>File &rarr; Save as</strong> &rarr;
+<strong>Power BI files (*.pbix)</strong> if you want a single file to share.</li>
+</ol>
+<p class="sub">Prefer not to type the path at all? Before step 1, right-click
+<strong>set-proot.ps1</strong> &rarr; <strong>Run with PowerShell</strong>, paste your folder path
+when it asks, and it writes <code>pRoot</code> into both project folders for you. If Windows blocks
+it, open PowerShell in the extracted folder and run:
+<code>powershell -ExecutionPolicy Bypass -File .\set-proot.ps1 -Root "C:\Users\alisha\Desktop\Inventory Report"</code></p>
+
+<h3>Route B &mdash; model only (if A will not open)</h3>
+<p class="sub">Same 32 queries, 72 measures, 11 relationships and five named pages, but no visuals,
+so there is far less for an older Power BI to reject. If A fails on the report format, B usually
+opens.</p>
+<ol>
+<li>Open <code>2 - model only</code> &rarr; double-click <strong>Inventory Report.pbip</strong>.</li>
+<li>Set <code>pRoot</code> and <strong>Refresh</strong> exactly as in Route A, steps 3&ndash;4.</li>
+<li>The data is then all there. Draw the visuals with the <strong>Build it</strong> tab — that is
+the only part left, and it is clicking, not typing.</li>
+</ol>
+
+<h3>Route C &mdash; Tabular Editor, one paste for all 72 measures</h3>
+<p class="sub">Use this if you already have a working .pbix and only the measures are missing or out
+of date. It cannot create the queries — Power Query is not scriptable from outside — so it pairs
+with the <strong>Queries</strong> tab, not with Route A.</p>
+<ol>
+<li>Install <strong>Tabular Editor 2</strong> (free): <a href="https://github.com/TabularEditor/TabularEditor/releases/latest" target="_blank" rel="noopener">github.com/TabularEditor/TabularEditor/releases/latest</a>
+&rarr; download <code>TabularEditor.Installer.msi</code> &rarr; run it.</li>
+<li>Open your .pbix in Power BI Desktop and leave it open.</li>
+<li>In Power BI Desktop: <strong>External Tools</strong> tab &rarr; <strong>Tabular Editor</strong>.
+(No External Tools tab? Then Tabular Editor is not installed, or Power BI needs a restart.)</li>
+<li>In Tabular Editor: the <strong>C# Script</strong> tab at the top of the big pane.</li>
+<li>Open <code>3 - tabular editor\add-all-measures.csx</code> in Notepad, Ctrl+A, Ctrl+C, and paste
+it into that C# Script tab.</li>
+<li>Press <strong>F5</strong>. A box reports how many were created and how many updated.</li>
+<li><strong>Ctrl+S</strong> in Tabular Editor, then switch back to Power BI Desktop and
+<strong>Ctrl+S</strong> there too.</li>
+</ol>
+<p class="sub">It is safe to run twice: a measure that already exists is overwritten with the same
+formula rather than duplicated.</p>
+
+<h3>Route D &mdash; plain text, if you end up doing it by hand</h3>
+<p class="sub"><code>4 - plain text</code> holds each query as its own <code>.m</code> file and each
+measure as its own <code>.dax</code> file, numbered in the order they must be added, so you can open
+them in Notepad and copy without hunting through a web page. Same content as the
+<strong>Queries</strong> and <strong>Measures</strong> tabs.</p>
+
+<h3>Route E &mdash; let Microsoft open it for you, in the cloud (free 60-day trial)</h3>
+<p class="sub">This is the route that gets round the fact that these files were generated on Linux:
+Microsoft Fabric reads the project straight out of the GitHub repo and builds the report on its own
+servers, so no Power BI Desktop version can refuse it. You need no purchase &mdash; the Fabric trial
+is free for 60 days and asks for no card.</p>
+<ol>
+<li>Go to <a href="https://app.powerbi.com" target="_blank" rel="noopener">app.powerbi.com</a> and
+sign in with your work account.</li>
+<li>Bottom-left, click your account name &rarr; <strong>Free trial</strong> (or
+<strong>Start trial</strong>) and accept. If you see no such option, your IT admin has trials
+switched off &mdash; ask them for a Fabric trial capacity.</li>
+<li><strong>Workspaces</strong> &rarr; <strong>New workspace</strong>. Name it
+<code>Inventory</code>. Open <strong>Advanced</strong> and set the licence mode to
+<strong>Trial</strong> (or Fabric capacity). Git integration does not appear on a workspace that is
+still on the free shared capacity.</li>
+<li>In the workspace: <strong>Workspace settings</strong> &rarr; <strong>Git integration</strong>
+&rarr; <strong>GitHub</strong>. Sign in and authorise.</li>
+<li>Repository <code>audaryag/inventory-guide</code>, branch <code>main</code>, folder
+<code>pbip</code>. <strong>Connect and sync</strong>.</li>
+<li>Wait for the sync to finish, then open the workspace. <strong>Inventory Report</strong> is now
+there as a semantic model and a report.</li>
+<li>It has no data yet, because the cloud cannot see your Desktop. Two ways to fix that, pick one:
+  <ul>
+  <li><strong>Move the folder to OneDrive or SharePoint</strong> (recommended anyway), then in the
+  workspace open the semantic model &rarr; <strong>Settings</strong> &rarr; set
+  <code>pRoot</code> to the SharePoint path and refresh in the cloud.</li>
+  <li><strong>Keep the folder local</strong>: install the <strong>On-premises data gateway
+  (personal mode)</strong> on your laptop, then the cloud refresh reads your Desktop folder through
+  it whenever your laptop is on.</li>
+  </ul>
+</li>
+<li>Want it back as one file on your laptop? Open the report &rarr; <strong>File &rarr; Download
+this file</strong>. Note Microsoft sometimes greys that out for models deployed through Git &mdash;
+if it is greyed out, use the report in the browser, or fall back to Route A or B.</li>
+</ol>
+<p class="sub">The <code>pbip</code> folder in the repo is kept in step with this guide, so a
+<strong>Sync</strong> in the workspace is all it takes to pick up any change I publish later.</p>
+
+<h3>Honest limits</h3>
+<ul>
+<li>Power BI Desktop is Windows-only. Every file here was generated and checked on Linux — the
+model against Microsoft's own Analysis Services object model, the report against Microsoft's
+published report schemas, and every field a visual names against the model — but
+<strong>none of it has ever been opened in Power BI Desktop</strong>. Your first open is the first
+real test.</li>
+<li>Some Power BI builds refuse the project format whatever is ticked. That is a version
+limitation, not something in these files. Route B is the fallback, then the manual tabs.</li>
+<li>There is no way to paste all the queries at once. Power Query has no import-many box, and no
+external tool can write M into a .pbix. Routes A and B get around it by shipping the queries
+already inside the file, which is as close as Power BI allows.</li>
+<li>If anything goes red, send me the exact text. Every failure so far has been one line to
+fix.</li>
+</ul>
+"""
+
 HTML = f"""<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -466,6 +604,7 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
 
 <nav class="tabs">
   <button data-tab="f" class="on">Start here</button>
+  <button data-tab="a">Auto</button>
   <button data-tab="q">Queries ({len(queries)})</button>
   <button data-tab="m">Measures ({len(measures)})</button>
   <button data-tab="n">New ({len(new_tables) + len(new_measures)})</button>
@@ -478,6 +617,8 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
 <div class="bar" id="qbar" style="display:none"><span id="ptext"></span><span class="track"><span class="fill" id="pfill"></span></span></div>
 
 <div class="panel on" id="tab-f">{FAST}</div>
+
+<div class="panel" id="tab-a">{AUTO}</div>
 
 <div class="panel" id="tab-q">
   <p class="sub">One query per box, in this order. For each: <strong>Home → New Source → Blank Query</strong>,

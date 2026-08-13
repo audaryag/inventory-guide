@@ -1,0 +1,2206 @@
+{
+  "name": "Inventory Report",
+  "compatibilityLevel": 1567,
+  "model": {
+    "culture": "en-US",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "factInventory",
+        "columns": [
+          {
+            "name": "SourceFile",
+            "dataType": "string",
+            "sourceColumn": "SourceFile",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "ValuationArea",
+            "dataType": "string",
+            "sourceColumn": "ValuationArea",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Material",
+            "dataType": "string",
+            "sourceColumn": "Material",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "MatKey",
+            "dataType": "string",
+            "sourceColumn": "MatKey",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "isHidden": true
+          },
+          {
+            "name": "MaterialDesc",
+            "dataType": "string",
+            "sourceColumn": "MaterialDesc",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "FromDate",
+            "dataType": "dateTime",
+            "sourceColumn": "FromDate",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "ToDate",
+            "dataType": "dateTime",
+            "sourceColumn": "ToDate",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "OpenQty",
+            "dataType": "double",
+            "sourceColumn": "OpenQty",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "OpenVal",
+            "dataType": "double",
+            "sourceColumn": "OpenVal",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "ReceiptQty",
+            "dataType": "double",
+            "sourceColumn": "ReceiptQty",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "ReceiptVal",
+            "dataType": "double",
+            "sourceColumn": "ReceiptVal",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "IssueQty",
+            "dataType": "double",
+            "sourceColumn": "IssueQty",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "IssueVal",
+            "dataType": "double",
+            "sourceColumn": "IssueVal",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "CloseQty",
+            "dataType": "double",
+            "sourceColumn": "CloseQty",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "CloseVal",
+            "dataType": "double",
+            "sourceColumn": "CloseVal",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "BaseUOM",
+            "dataType": "string",
+            "sourceColumn": "BaseUOM",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "SpecialStock",
+            "dataType": "string",
+            "sourceColumn": "SpecialStock",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Currency",
+            "dataType": "string",
+            "sourceColumn": "Currency",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Month",
+            "dataType": "dateTime",
+            "sourceColumn": "Month",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "Category",
+            "dataType": "string",
+            "sourceColumn": "Category",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Nature",
+            "dataType": "string",
+            "sourceColumn": "Nature",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "GroupNature",
+            "dataType": "string",
+            "sourceColumn": "GroupNature",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "BOMStdQty",
+            "dataType": "double",
+            "sourceColumn": "BOMStdQty",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Item",
+            "dataType": "string",
+            "sourceColumn": "Item",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "AttrMissing",
+            "dataType": "boolean",
+            "sourceColumn": "AttrMissing",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "MW",
+            "dataType": "double",
+            "sourceColumn": "MW",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Rate",
+            "dataType": "double",
+            "sourceColumn": "Rate",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "RateParseFailed",
+            "dataType": "boolean",
+            "sourceColumn": "RateParseFailed",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Mid",
+            "dataType": "string",
+            "sourceColumn": "Mid",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Base",
+            "dataType": "string",
+            "sourceColumn": "Base",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "INR_WP",
+            "dataType": "double",
+            "sourceColumn": "INR_WP",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "factInventory",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Combined = Table.Combine({factRM, factFG, factConble}),\n    Wanted   = {\"SourceFile\",\"ValuationArea\",\"Material\",\"MatKey\",\"MaterialDesc\",\n                \"FromDate\",\"ToDate\",\"OpenQty\",\"OpenVal\",\"ReceiptQty\",\"ReceiptVal\",\n                \"IssueQty\",\"IssueVal\",\"CloseQty\",\"CloseVal\",\"BaseUOM\",\"SpecialStock\",\n                \"Currency\",\"Month\",\"Category\",\"Nature\",\"GroupNature\",\"BOMStdQty\",\"Item\",\n                \"AttrMissing\",\"MW\",\"Rate\",\"RateParseFailed\",\"Mid\",\"Base\",\"INR_WP\"},\n    Padded   = List.Accumulate(List.Difference(Wanted, Table.ColumnNames(Combined)),\n                   Combined, (t, c) => Table.AddColumn(t, c, each null)),\n    Kept     = Table.SelectColumns(Padded, Wanted),\n    Typed    = Table.TransformColumnTypes(Kept, {\n                   {\"SourceFile\", type text}, {\"ValuationArea\", type text},\n                   {\"Material\", type text}, {\"MatKey\", type text},\n                   {\"MaterialDesc\", type text}, {\"FromDate\", type date},\n                   {\"ToDate\", type date}, {\"OpenQty\", type number},\n                   {\"OpenVal\", type number}, {\"ReceiptQty\", type number},\n                   {\"ReceiptVal\", type number}, {\"IssueQty\", type number},\n                   {\"IssueVal\", type number}, {\"CloseQty\", type number},\n                   {\"CloseVal\", type number}, {\"BaseUOM\", type text},\n                   {\"SpecialStock\", type text}, {\"Currency\", type text},\n                   {\"Month\", type date}, {\"Category\", type text},\n                   {\"Nature\", type text}, {\"GroupNature\", type text},\n                   {\"BOMStdQty\", type number}, {\"Item\", type text},\n                   {\"AttrMissing\", type logical}, {\"MW\", type number},\n                   {\"Rate\", type number}, {\"RateParseFailed\", type logical},\n                   {\"Mid\", type text}, {\"Base\", type text}, {\"INR_WP\", type number}})\nin\n    Typed"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "measures": [
+          {
+            "name": "Value ₹ Cr",
+            "expression": "DIVIDE(SUM(factInventory[CloseVal]), 10000000)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "As On",
+            "expression": "\"as on \" & FORMAT(EOMONTH(MAX(dimDate[Month]), 0), \"dd MMM yyyy\")",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Value ₹ Cr Title",
+            "expression": "\"Value ₹ Cr \" & [As On]",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Opening Value ₹ Cr",
+            "expression": "DIVIDE(SUM(factInventory[OpenVal]), 10000000)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Receipts ₹ Cr",
+            "expression": "DIVIDE(SUM(factInventory[ReceiptVal]), 10000000)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Issues ₹ Cr",
+            "expression": "DIVIDE(SUM(factInventory[IssueVal]), 10000000)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Closing Qty",
+            "expression": "SUM(factInventory[CloseQty])",
+            "formatString": "#,##0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "RM ₹ Cr",
+            "expression": "CALCULATE([Value ₹ Cr], factInventory[Category] = \"RM\")",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "FG ₹ Cr",
+            "expression": "CALCULATE([Value ₹ Cr], factInventory[Category] = \"FG\")",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Consumables ₹ Cr",
+            "expression": "CALCULATE([Value ₹ Cr], factInventory[Category] = \"Consumables\")",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Share of Total %",
+            "expression": "DIVIDE([Value ₹ Cr], CALCULATE([Value ₹ Cr], ALL(factInventory[Category])))",
+            "formatString": "0.0%",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "MW",
+            "expression": "SUM(factInventory[MW])",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "FG MW",
+            "expression": "CALCULATE([MW], factInventory[Category] = \"FG\")",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Capacity MW",
+            "expression": "SUM(dimCapacity[CapacityMW])",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Capacity MW (plant)",
+            "expression": "CALCULATE(SUM(dimCapacity[CapacityMW]), REMOVEFILTERS(dimNature))",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Days of Inventory",
+            "expression": "VAR Cap = IF(ISBLANK([Capacity MW]), [Capacity MW (plant)], [Capacity MW])\nRETURN DIVIDE([MW], Cap)",
+            "formatString": "#,##0.0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "FG Days",
+            "expression": "DIVIDE([FG MW], [Capacity MW])",
+            "formatString": "#,##0.0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "INR per Wp",
+            "expression": "SUM(factInventory[INR_WP])",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Value ₹ Cr LM",
+            "expression": "VAR PrevIdx = MAX(dimDate[MonthIndex]) - 1\nRETURN CALCULATE([Value ₹ Cr], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Value ₹ Cr vs LM",
+            "expression": "[Value ₹ Cr] - [Value ₹ Cr LM]",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Value ₹ Cr % vs LM",
+            "expression": "DIVIDE([Value ₹ Cr vs LM], [Value ₹ Cr LM])",
+            "formatString": "0.0%",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Value ₹ Cr LY",
+            "expression": "VAR PrevIdx = MAX(dimDate[MonthIndex]) - 12\nRETURN CALCULATE([Value ₹ Cr], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Value ₹ Cr % vs LY",
+            "expression": "DIVIDE([Value ₹ Cr] - [Value ₹ Cr LY], [Value ₹ Cr LY])",
+            "formatString": "0.0%",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "MW LM",
+            "expression": "VAR PrevIdx = MAX(dimDate[MonthIndex]) - 1\nRETURN CALCULATE([MW], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "MW vs LM",
+            "expression": "[MW] - [MW LM]",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Days LM",
+            "expression": "VAR PrevIdx = MAX(dimDate[MonthIndex]) - 1\nRETURN CALCULATE([Days of Inventory], ALL(dimDate), dimDate[MonthIndex] = PrevIdx)",
+            "formatString": "#,##0.0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Days vs LM",
+            "expression": "[Days of Inventory] - [Days LM]",
+            "formatString": "#,##0.0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Avg Value ₹ Cr",
+            "expression": "AVERAGEX(VALUES(dimDate[MonthIndex]), [Value ₹ Cr])",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Peak Value ₹ Cr",
+            "expression": "MAXX(VALUES(dimDate[MonthIndex]), [Value ₹ Cr])",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Latest Month Value ₹ Cr",
+            "expression": "VAR LastIdx = CALCULATE(MAX(dimDate[MonthIndex]), ALLSELECTED(dimDate))\nRETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "TB ₹ Cr",
+            "expression": "DIVIDE(SUM(factTB[Amount]), 10000000)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Difference ₹ Cr",
+            "expression": "[TB ₹ Cr] - [Value ₹ Cr]",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Difference %",
+            "expression": "DIVIDE([Difference ₹ Cr], [TB ₹ Cr])",
+            "formatString": "0.0%",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Stock Recon ₹ Cr",
+            "expression": "[Opening Value ₹ Cr] + [Receipts ₹ Cr] - [Issues ₹ Cr] - [Value ₹ Cr]",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Rows Missing Attr",
+            "expression": "CALCULATE(COUNTROWS(factInventory), factInventory[AttrMissing] = TRUE())",
+            "formatString": "#,##0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Unmapped TB ₹ Cr",
+            "expression": "DIVIDE(SUM(factTB_Unmapped[Amount]), 10000000)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Days",
+            "expression": "[Days of Inventory]",
+            "formatString": "#,##0.0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Summary Value ₹ Cr",
+            "expression": "SWITCH(SELECTEDVALUE(dimMetric[Metric]),\n    \"Inventory (TB)\",   [TB ₹ Cr],\n    \"Inventory (MB5B)\", [Value ₹ Cr],\n    \"Difference\",       [Difference ₹ Cr],\n    [Value ₹ Cr])",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Unit Value",
+            "expression": "SWITCH(SELECTEDVALUE(dimMeasure[Measure]),\n    \"MW\",      [MW],\n    \"In ₹ Cr\", [Value ₹ Cr],\n    \"In Days\", [Days],\n    [Value ₹ Cr])",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Last 4 Months",
+            "expression": "VAR LastIdx = CALCULATE(MAX(dimDate[MonthIndex]), ALL(dimDate))\nRETURN IF(MAX(dimDate[MonthIndex]) > LastIdx - 4, 1, 0)",
+            "formatString": "#,##0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Latest Month Index",
+            "expression": "CALCULATE(MAX(dimDate[MonthIndex]), REMOVEFILTERS())",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "As On Text",
+            "expression": "\"As on \" & CALCULATE(MAX(dimDate[MonthName]), REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index])",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Ticker Rs Cr",
+            "expression": "CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index])",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Ticker RM Rs Cr",
+            "expression": "CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimCategory[Category] = \"RM\")",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Ticker FG Rs Cr",
+            "expression": "CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimCategory[Category] = \"FG\")",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Ticker Consumables Rs Cr",
+            "expression": "CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimCategory[Category] = \"Consumables\")",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Ticker 1900 Rs Cr",
+            "expression": "CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimPlant[ValuationArea] = \"1900\")",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Ticker 1902 Rs Cr",
+            "expression": "CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimPlant[ValuationArea] = \"1902\")",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Ticker 1905 Rs Cr",
+            "expression": "CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimPlant[ValuationArea] = \"1905\")",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Ticker Prev Rs Cr",
+            "expression": "CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index] - 1)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Ticker Change Rs Cr",
+            "expression": "[Ticker Rs Cr] - [Ticker Prev Rs Cr]",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Ticker Change %",
+            "expression": "DIVIDE([Ticker Change Rs Cr], [Ticker Prev Rs Cr])",
+            "formatString": "0.0%",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Ticker Change Text",
+            "expression": "IF(\n    ISBLANK([Ticker Prev Rs Cr]),\n    \"No earlier month to compare\",\n    FORMAT([Ticker Change Rs Cr], \"+#,##0.0;-#,##0.0\") & \" Rs Cr.   (\"\n        & FORMAT([Ticker Change %], \"+0.0%;-0.0%\") & \")\"\n)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Inventory Rs Cr",
+            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Value ₹ Cr]),\n    [Value ₹ Cr]\n)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "In Window",
+            "expression": "VAR Mode = SELECTEDVALUE('Period'[Period Order], 0)\nVAR Picked = IF(Mode = 1, ISFILTERED(dimDate[Quarter]), ISFILTERED(dimDate[MonthName]))\nVAR Keep = IF(Mode = 1, 4, IF(Picked, 5, 4))\nVAR Place =\n    IF(\n        Mode = 1,\n        RANKX(ALLSELECTED(dimDate[QuarterSort]), CALCULATE(MAX(dimDate[QuarterSort])), , DESC),\n        RANKX(ALLSELECTED(dimDate[MonthIndex]), CALCULATE(MAX(dimDate[MonthIndex])), , DESC)\n    )\nVAR MarchIdx =\n    CALCULATE(\n        MAX(dimDate[MonthIndex]),\n        REMOVEFILTERS(dimDate),\n        dimDate[FYMonthNo] = 12,\n        dimDate[MonthIndex] <= [Latest Month Index]\n    )\nVAR IsMarch =\n    IF(Mode <> 1 && NOT Picked && MAX(dimDate[MonthIndex]) = MarchIdx, 1, 0)\nRETURN IF(Place <= Keep || IsMarch = 1, 1, 0)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "MW % vs LM",
+            "expression": "DIVIDE([MW] - [MW LM], [MW LM])",
+            "formatString": "0.0%",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "RM MW",
+            "expression": "CALCULATE([MW], factInventory[Category] = \"RM\")",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "RM Days",
+            "expression": "DIVIDE([RM MW], [Capacity MW (plant)])",
+            "formatString": "#,##0.0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Total Days (RM + FG)",
+            "expression": "DIVIDE([RM MW] + [FG MW], [Capacity MW (plant)])",
+            "formatString": "#,##0.0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "RM Days All Plants",
+            "expression": "VAR M = CALCULATE([RM MW], REMOVEFILTERS(dimPlant))\nVAR Cap = CALCULATE([Capacity MW (plant)], REMOVEFILTERS(dimPlant))\nRETURN DIVIDE(M, Cap)",
+            "formatString": "#,##0.0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "RM Days All Plants by Period",
+            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [RM Days All Plants]),\n    [RM Days All Plants]\n)",
+            "formatString": "#,##0.0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "In Last 12",
+            "expression": "VAR LastM = [Latest Month Index]\nVAR ThisM = MAX(dimDate[MonthIndex])\nRETURN IF(ThisM > LastM - 12 && ThisM <= LastM, 1, 0)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Period Title",
+            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    \"Inventory by Quarter (Rs Cr., Average of Month-Ends)\",\n    \"Inventory by Month (Rs Cr.)\"\n)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Summary Value Rs Cr",
+            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Summary Value ₹ Cr]),\n    [Summary Value ₹ Cr]\n)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "In Summary Window",
+            "expression": "VAR Mode = SELECTEDVALUE('Period'[Period Order], 0)\nVAR Picked =\n    IF(\n        Mode = 1,\n        COUNTROWS(ALLSELECTED(dimDate[QuarterSort])),\n        COUNTROWS(ALLSELECTED(dimDate[MonthIndex]))\n    )\nVAR Chosen = IF(Mode = 1, ISFILTERED(dimDate[Quarter]), ISFILTERED(dimDate[MonthName]))\nVAR Keep = IF(Chosen, MIN(Picked, 12), 4)\nVAR Place =\n    IF(\n        Mode = 1,\n        RANKX(ALLSELECTED(dimDate[QuarterSort]), CALCULATE(MAX(dimDate[QuarterSort])), , DESC),\n        RANKX(ALLSELECTED(dimDate[MonthIndex]), CALCULATE(MAX(dimDate[MonthIndex])), , DESC)\n    )\nRETURN IF(Place <= Keep, 1, 0)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "TB Inventory Rs Cr",
+            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [TB ₹ Cr]),\n    [TB ₹ Cr]\n)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Difference Inventory Rs Cr",
+            "expression": "[TB Inventory Rs Cr] - [Inventory Rs Cr]",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Difference Inventory %",
+            "expression": "DIVIDE([Difference Inventory Rs Cr], [TB Inventory Rs Cr])",
+            "formatString": "0.0%",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Unit Value by Period",
+            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Unit Value]),\n    [Unit Value]\n)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "In Latest Month",
+            "expression": "IF(MAX(dimDate[MonthIndex]) = [Latest Month Index], 1, 0)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Days by Period",
+            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Days]),\n    [Days]\n)",
+            "formatString": "#,##0.0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Summary Title",
+            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    \"Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr., Average of Month-Ends)\",\n    \"Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr.)\"\n)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          }
+        ]
+      },
+      {
+        "name": "factTB",
+        "columns": [
+          {
+            "name": "SourceFile",
+            "dataType": "string",
+            "sourceColumn": "SourceFile",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Month",
+            "dataType": "dateTime",
+            "sourceColumn": "Month",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "GLAccount",
+            "dataType": "string",
+            "sourceColumn": "GLAccount",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "GLDesc",
+            "dataType": "string",
+            "sourceColumn": "GLDesc",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "ProfitCentre",
+            "dataType": "string",
+            "sourceColumn": "ProfitCentre",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "ProfitCentreDesc",
+            "dataType": "string",
+            "sourceColumn": "ProfitCentreDesc",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Amount",
+            "dataType": "double",
+            "sourceColumn": "Amount",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "PlantCode",
+            "dataType": "string",
+            "sourceColumn": "PlantCode",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "isHidden": true
+          },
+          {
+            "name": "ValuationArea",
+            "dataType": "string",
+            "sourceColumn": "ValuationArea",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Nature",
+            "dataType": "string",
+            "sourceColumn": "Nature",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "TBPlant",
+            "dataType": "string",
+            "sourceColumn": "TBPlant",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "TBSort",
+            "dataType": "int64",
+            "sourceColumn": "TBSort",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Category",
+            "dataType": "string",
+            "sourceColumn": "Category",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "factTB",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Mapped  = Table.NestedJoin(factTB_Staged, {\"GLAccount\"}, dimTBMaster, {\"GLAccount\"},\n                  \"tpl\", JoinKind.Inner),\n    Expand  = Table.ExpandTableColumn(Mapped, \"tpl\", {\"Nature\",\"TBPlant\",\"TBSort\"}),\n    // RM / FG / Consumables from whatever the Nature (or GL description) says\n    Bucket  = (n as any, d as any) as text =>\n                  let T = Text.Upper(Text.From(n ?? \"\") & \" \" & Text.From(d ?? \"\")) in\n                  if Text.Contains(T, \"FINISH\") or Text.Contains(T, \"FG\")\n                      then \"FG\"\n                  else if Text.Contains(T, \"CONSUM\") or Text.Contains(T, \"STORE\")\n                      or Text.Contains(T, \"SPARE\") or Text.Contains(T, \"PACK\")\n                      then \"Consumables\"\n                  else if Text.Contains(T, \"RAW\") or Text.Contains(T, \"RM\")\n                      or Text.Contains(T, \"WIP\") or Text.Contains(T, \"SEMI\")\n                      then \"RM\"\n                  else \"RM\",\n    Cat     = Table.AddColumn(Expand, \"Category\",\n                  each Bucket([Nature], [GLDesc]), type text),\n    // exact column list and types, so the table is the same shape every refresh\n    Wanted  = {\"SourceFile\",\"Month\",\"GLAccount\",\"GLDesc\",\"ProfitCentre\",\"ProfitCentreDesc\",\n               \"Amount\",\"PlantCode\",\"ValuationArea\",\"Nature\",\"TBPlant\",\"TBSort\",\"Category\"},\n    Padded  = List.Accumulate(List.Difference(Wanted, Table.ColumnNames(Cat)), Cat,\n                  (t, c) => Table.AddColumn(t, c, each null)),\n    Kept    = Table.SelectColumns(Padded, Wanted),\n    Typed   = Table.TransformColumnTypes(Kept, {\n                  {\"SourceFile\", type text}, {\"Month\", type date},\n                  {\"GLAccount\", type text}, {\"GLDesc\", type text},\n                  {\"ProfitCentre\", type text}, {\"ProfitCentreDesc\", type text},\n                  {\"Amount\", type number}, {\"PlantCode\", type text},\n                  {\"ValuationArea\", type text}, {\"Nature\", type text},\n                  {\"TBPlant\", type text}, {\"TBSort\", Int64.Type},\n                  {\"Category\", type text}})\nin\n    Typed"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "factTB_Unmapped",
+        "columns": [
+          {
+            "name": "GLAccount",
+            "dataType": "string",
+            "sourceColumn": "GLAccount",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "GLDesc",
+            "dataType": "string",
+            "sourceColumn": "GLDesc",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Amount",
+            "dataType": "double",
+            "sourceColumn": "Amount",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Rows",
+            "dataType": "int64",
+            "sourceColumn": "Rows",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "factTB_Unmapped",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Anti  = Table.NestedJoin(factTB_Staged, {\"GLAccount\"}, dimTBMaster, {\"GLAccount\"},\n                \"tpl\", JoinKind.LeftAnti),\n    Clean = Table.RemoveColumns(Anti, {\"tpl\"}),\n    Group = Table.Group(Clean, {\"GLAccount\",\"GLDesc\"},\n                {{\"Amount\", each List.Sum([Amount]), type number},\n                 {\"Rows\",   each Table.RowCount(_), Int64.Type}})\nin\n    Group"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "isHidden": true
+      },
+      {
+        "name": "dimPlant",
+        "columns": [
+          {
+            "name": "ValuationArea",
+            "dataType": "string",
+            "sourceColumn": "ValuationArea",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Plant",
+            "dataType": "string",
+            "sourceColumn": "Plant",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "sortByColumn": "PlantSort"
+          },
+          {
+            "name": "PlantSort",
+            "dataType": "int64",
+            "sourceColumn": "PlantSort",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "isHidden": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dimPlant",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Src = #table(\n        type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type],\n        {\n            {\"1900\", \"Jaipur Module\",  1},\n            {\"1902\", \"Dholera Module\", 2},\n            {\"1905\", \"Dholera Cell\",   3}\n        })\nin\n    Src"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "dimDate",
+        "columns": [
+          {
+            "name": "Month",
+            "dataType": "dateTime",
+            "sourceColumn": "Month",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "MonthName",
+            "dataType": "string",
+            "sourceColumn": "MonthName",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "sortByColumn": "MonthSort"
+          },
+          {
+            "name": "MonthSort",
+            "dataType": "int64",
+            "sourceColumn": "MonthSort",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "isHidden": true
+          },
+          {
+            "name": "MonthIndex",
+            "dataType": "int64",
+            "sourceColumn": "MonthIndex",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "isHidden": true
+          },
+          {
+            "name": "FY",
+            "dataType": "string",
+            "sourceColumn": "FY",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "FYMonthNo",
+            "dataType": "int64",
+            "sourceColumn": "FYMonthNo",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "isHidden": true
+          },
+          {
+            "name": "QuarterNo",
+            "dataType": "int64",
+            "sourceColumn": "QuarterNo",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "isHidden": true
+          },
+          {
+            "name": "Quarter",
+            "dataType": "string",
+            "sourceColumn": "Quarter",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "sortByColumn": "QuarterSort"
+          },
+          {
+            "name": "QuarterSort",
+            "dataType": "int64",
+            "sourceColumn": "QuarterSort",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "isHidden": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dimDate",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    MinD   = Date.StartOfMonth(List.Min(factInventory[Month])),\n    MaxD   = Date.StartOfMonth(List.Max(factInventory[Month])),\n    Start  = #date(Date.Year(MinD) - (if Date.Month(MinD) < 4 then 1 else 0), 4, 1),\n    Count  = (Date.Year(MaxD) * 12 + Date.Month(MaxD))\n             - (Date.Year(Start) * 12 + Date.Month(Start)) + 1,\n    Months = List.Transform({0..Count - 1}, (i) => Date.AddMonths(Start, i)),\n    T      = Table.TransformColumnTypes(\n                 Table.FromList(Months, Splitter.SplitByNothing(), {\"Month\"}),\n                 {{\"Month\", type date}}),\n    MN     = Table.AddColumn(T, \"MonthName\", each Date.ToText([Month], \"MMM''yy\"), type text),\n    MS     = Table.AddColumn(MN, \"MonthSort\",\n                 each Date.Year([Month]) * 100 + Date.Month([Month]), Int64.Type),\n    MI     = Table.AddColumn(MS, \"MonthIndex\",\n                 each Date.Year([Month]) * 12 + Date.Month([Month]), Int64.Type),\n    FY     = Table.AddColumn(MI, \"FY\", each\n                 let y = if Date.Month([Month]) >= 4 then Date.Year([Month]) else Date.Year([Month]) - 1\n                 in  \"FY \" & Text.From(y) & \"-\" & Text.End(Text.From(y + 1), 2), type text),\n    // the year starts on 1 April, so Apr-Jun is Q1 and Jan-Mar is Q4\n    FYMonth = Table.AddColumn(FY, \"FYMonthNo\",\n                 each Number.Mod(Date.Month([Month]) - 4, 12) + 1, Int64.Type),\n    Qtr    = Table.AddColumn(FYMonth, \"QuarterNo\",\n                 each Number.RoundUp([FYMonthNo] / 3), Int64.Type),\n    QName  = Table.AddColumn(Qtr, \"Quarter\",\n                 each \"Q\" & Text.From([QuarterNo]) & \" \" & [FY], type text),\n    QSort  = Table.AddColumn(QName, \"QuarterSort\", each\n                 let y = if Date.Month([Month]) >= 4 then Date.Year([Month]) else Date.Year([Month]) - 1\n                 in  y * 10 + [QuarterNo], Int64.Type),\n    Out    = Table.SelectColumns(QSort,\n                 {\"Month\",\"MonthName\",\"MonthSort\",\"MonthIndex\",\"FY\",\n                  \"FYMonthNo\",\"QuarterNo\",\"Quarter\",\"QuarterSort\"})\nin\n    Out"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "dimNature",
+        "columns": [
+          {
+            "name": "Nature",
+            "dataType": "string",
+            "sourceColumn": "Nature",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dimNature",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    FromRM  = List.RemoveNulls(dimMaterialAttr[Nature]),\n    FromFG  = List.RemoveNulls(dimFGAttr[Nature]),\n    FromCap = List.RemoveNulls(varMWCapacity[Tech]),\n    All     = List.Distinct(List.Combine({FromRM, FromFG, FromCap})),\n    T       = Table.FromList(All, Splitter.SplitByNothing(), {\"Nature\"}),\n    Typed   = Table.TransformColumnTypes(T, {{\"Nature\", type text}})\nin\n    Typed"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "dimCapacity",
+        "columns": [
+          {
+            "name": "Tech",
+            "dataType": "string",
+            "sourceColumn": "Tech",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "ValuationArea",
+            "dataType": "string",
+            "sourceColumn": "ValuationArea",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Month",
+            "dataType": "dateTime",
+            "sourceColumn": "Month",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "CapacityMW",
+            "dataType": "double",
+            "sourceColumn": "CapacityMW",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dimCapacity",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Months   = List.Distinct(List.Sort(factInventory[Month])),\n    Combos   = Table.Distinct(Table.SelectColumns(varMWCapacity, {\"Tech\",\"ValuationArea\"})),\n    Grid     = Table.AddColumn(Combos, \"Month\", each Months),\n    Expanded = Table.ExpandListColumn(Grid, \"Month\"),\n    AsOf     = Table.AddColumn(Expanded, \"CapacityMW\", (row) =>\n                   let\n                       Rows   = Table.SelectRows(varMWCapacity, each\n                                    [Tech] = row[Tech]\n                                    and [ValuationArea] = row[ValuationArea]\n                                    and [EffectiveFrom] <= row[Month]),\n                       Sorted = Table.Sort(Rows, {{\"EffectiveFrom\", Order.Descending}}),\n                       Val    = try Sorted{0}[MW] otherwise null\n                   in  Val, type number),\n    Typed    = Table.TransformColumnTypes(AsOf, {{\"Month\", type date}})\nin\n    Typed"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "dimTBMaster",
+        "columns": [
+          {
+            "name": "GLAccount",
+            "dataType": "string",
+            "sourceColumn": "GLAccount",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "GLDescMaster",
+            "dataType": "string",
+            "sourceColumn": "GLDescMaster",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Nature",
+            "dataType": "string",
+            "sourceColumn": "Nature",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "TBPlant",
+            "dataType": "string",
+            "sourceColumn": "TBPlant",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "TBSort",
+            "dataType": "int64",
+            "sourceColumn": "TBSort",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dimTBMaster",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Raw      = fnVarSheet(\n                   {\"TB Master\", \"TBMaster\", \"TB\"},\n                   {\n                     {{\"GL Account Number\",\"gl Account Number\",\"GLAccountNumber\",\n                       \"GL Account\",\"G/L Account\",\"GL No\"},                    \"GLAccount\"},\n                     {{\"GL Account Description\",\"GL Description\",\"GLDescription\",\n                       \"Account Description\",\"Account Name\"},                  \"GLDescMaster\"},\n                     {{\"Nature\"},                                             \"Nature\"},\n                     {{\"Plant\",\"Valuation Area\"},                             \"TBPlant\"},\n                     {{\"Sort Order\",\"SortOrder\",\"Sort\"},                       \"TBSort\"}\n                   }),\n    Keys     = Table.TransformColumns(Raw, {\n                   {\"GLAccount\", each Text.TrimStart(Text.Trim(Text.From(_ ?? \"\")), \"0\"), type text}}),\n    NoBlank  = Table.SelectRows(Keys, each [GLAccount] <> null and [GLAccount] <> \"\"),\n    Wanted   = {\"GLAccount\",\"GLDescMaster\",\"Nature\",\"TBPlant\",\"TBSort\"},\n    Present  = Table.ColumnNames(NoBlank),\n    Padded   = List.Accumulate(List.Difference(Wanted, Present), NoBlank,\n                   (t, c) => Table.AddColumn(t, c, each null)),\n    Slim     = Table.SelectColumns(Padded, Wanted),\n    Typed    = Table.TransformColumnTypes(Slim, {\n                   {\"GLAccount\", type text}, {\"GLDescMaster\", type text},\n                   {\"Nature\", type text}, {\"TBPlant\", type text},\n                   {\"TBSort\", Int64.Type}}),\n    Dedup    = Table.Distinct(Typed, {\"GLAccount\"})\nin\n    Dedup"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "dimCategory",
+        "columns": [
+          {
+            "name": "Category",
+            "dataType": "string",
+            "sourceColumn": "Category",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "sortByColumn": "CategorySort"
+          },
+          {
+            "name": "CategorySort",
+            "dataType": "int64",
+            "sourceColumn": "CategorySort",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "isHidden": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dimCategory",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Src = #table(\n        type table [Category = text, CategorySort = Int64.Type],\n        {\n            {\"RM\",          1},\n            {\"FG\",          2},\n            {\"Consumables\", 3}\n        })\nin\n    Src"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "dimMetric",
+        "columns": [
+          {
+            "name": "Metric",
+            "dataType": "string",
+            "sourceColumn": "Metric",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "sortByColumn": "MetricSort"
+          },
+          {
+            "name": "MetricSort",
+            "dataType": "int64",
+            "sourceColumn": "MetricSort",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "isHidden": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dimMetric",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Src = #table(\n        type table [Metric = text, MetricSort = Int64.Type],\n        {\n            {\"Inventory (TB)\",    1},\n            {\"Inventory (MB5B)\",  2},\n            {\"Difference\",        3}\n        })\nin\n    Src"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "dimMeasure",
+        "columns": [
+          {
+            "name": "Measure",
+            "dataType": "string",
+            "sourceColumn": "Measure",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "sortByColumn": "MeasureSort"
+          },
+          {
+            "name": "MeasureSort",
+            "dataType": "int64",
+            "sourceColumn": "MeasureSort",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "isHidden": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dimMeasure",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Src = #table(\n        type table [Measure = text, MeasureSort = Int64.Type],\n        {\n            {\"MW\",       1},\n            {\"In ₹ Cr\",  2},\n            {\"In Days\",  3}\n        })\nin\n    Src"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "qcHeaders",
+        "columns": [
+          {
+            "name": "Folder",
+            "dataType": "string",
+            "sourceColumn": "Folder",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Name",
+            "dataType": "string",
+            "sourceColumn": "Name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "SheetNames",
+            "dataType": "string",
+            "sourceColumn": "SheetNames",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Headers",
+            "dataType": "string",
+            "sourceColumn": "Headers",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "qcHeaders",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Folders  = {\"RM Raw\", \"FG Raw\", \"Consble Raw\", \"TB\"},\n    AllFiles = Table.Combine(List.Transform(Folders, (f) =>\n                   Table.AddColumn(\n                       Table.SelectRows(Folder.Files(pRoot & \"\\\" & f),\n                           each Text.Lower([Extension]) = \".xlsx\"\n                           and not Text.StartsWith([Name], \"~$\")\n                           and not Text.StartsWith([Name], \".\")),\n                       \"Folder\", each f, type text))),\n    Slim     = Table.SelectColumns(AllFiles, {\"Folder\",\"Name\",\"Content\"}),\n    Hdrs     = Table.AddColumn(Slim, \"Headers\", each\n                   let\n                       Wb = Excel.Workbook([Content], null, true),\n                       Sh = Table.SelectRows(Wb, each [Kind] = \"Sheet\"),\n                       D  = try Sh{[Item=\"Sheet1\", Kind=\"Sheet\"]}[Data] otherwise Sh{0}[Data],\n                       P  = Table.PromoteHeaders(D, [PromoteAllScalars=true])\n                   in\n                       Text.Combine(List.Transform(Table.ColumnNames(P), Text.From), \" | \"),\n                   type text),\n    Sheets   = Table.AddColumn(Hdrs, \"SheetNames\", each\n                   let Wb = Excel.Workbook([Content], null, true)\n                   in  Text.Combine(Table.SelectRows(Wb, each [Kind] = \"Sheet\")[Item], \" | \"),\n                   type text),\n    Out      = Table.SelectColumns(Sheets, {\"Folder\",\"Name\",\"SheetNames\",\"Headers\"})\nin\n    Out"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "isHidden": true
+      },
+      {
+        "name": "qcVarHeaders",
+        "columns": [
+          {
+            "name": "SheetName",
+            "dataType": "string",
+            "sourceColumn": "SheetName",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Headers",
+            "dataType": "string",
+            "sourceColumn": "Headers",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "DataRows",
+            "dataType": "int64",
+            "sourceColumn": "DataRows",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "qcVarHeaders",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Wb    = Excel.Workbook(File.Contents(pVarsFile), null, true),\n    Sh    = Table.SelectRows(Wb, each [Kind] = \"Sheet\"),\n    Slim  = Table.SelectColumns(Sh, {\"Item\",\"Data\"}),\n    Hdrs  = Table.AddColumn(Slim, \"Headers\", each\n                Text.Combine(List.Transform(\n                    Table.ColumnNames(Table.PromoteHeaders([Data], [PromoteAllScalars=true])),\n                    Text.From), \" | \"), type text),\n    Rows  = Table.AddColumn(Hdrs, \"DataRows\", each Table.RowCount([Data]) - 1, Int64.Type),\n    Out   = Table.RenameColumns(Table.SelectColumns(Rows, {\"Item\",\"Headers\",\"DataRows\"}),\n                {{\"Item\",\"SheetName\"}})\nin\n    Out"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "isHidden": true
+      },
+      {
+        "name": "qcNatureNoCapacity",
+        "columns": [
+          {
+            "name": "Nature",
+            "dataType": "string",
+            "sourceColumn": "Nature",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "qcNatureNoCapacity",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    FGNatures = List.Distinct(List.RemoveNulls(dimFGAttr[Nature])),\n    CapTechs  = List.Distinct(List.RemoveNulls(varMWCapacity[Tech])),\n    Orphans   = List.Difference(FGNatures, CapTechs),\n    T         = Table.FromList(Orphans, Splitter.SplitByNothing(), {\"Nature\"}),\n    Typed     = Table.TransformColumnTypes(T, {{\"Nature\", type text}})\nin\n    Typed"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "isHidden": true
+      },
+      {
+        "name": "Period",
+        "columns": [
+          {
+            "name": "Period",
+            "dataType": "string",
+            "sourceColumn": "[Value1]",
+            "type": "calculatedTableColumn",
+            "isNameInferred": false,
+            "sortByColumn": "Period Order",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Period Fields",
+            "dataType": "string",
+            "sourceColumn": "[Value2]",
+            "type": "calculatedTableColumn",
+            "isNameInferred": false,
+            "isHidden": true,
+            "sortByColumn": "Period Order",
+            "summarizeBy": "none",
+            "extendedProperties": [
+              {
+                "name": "ParameterMetadata",
+                "type": "json",
+                "value": {
+                  "version": 3,
+                  "kind": 2
+                }
+              }
+            ],
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Period Order",
+            "dataType": "int64",
+            "sourceColumn": "[Value3]",
+            "type": "calculatedTableColumn",
+            "isNameInferred": false,
+            "isHidden": true,
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Period",
+            "mode": "import",
+            "source": {
+              "type": "calculated",
+              "expression": "{\n    (\"By Month\",   NAMEOF('dimDate'[MonthName]), 0),\n    (\"By Quarter\", NAMEOF('dimDate'[Quarter]),   1)\n}"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "PBI_Id",
+            "value": "Period"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "rel01_dimDate_factInventory_Month",
+        "fromTable": "factInventory",
+        "fromColumn": "Month",
+        "toTable": "dimDate",
+        "toColumn": "Month",
+        "joinOnDateBehavior": "datePartOnly"
+      },
+      {
+        "name": "rel02_dimDate_factTB_Month",
+        "fromTable": "factTB",
+        "fromColumn": "Month",
+        "toTable": "dimDate",
+        "toColumn": "Month",
+        "joinOnDateBehavior": "datePartOnly"
+      },
+      {
+        "name": "rel03_dimDate_dimCapacity_Month",
+        "fromTable": "dimCapacity",
+        "fromColumn": "Month",
+        "toTable": "dimDate",
+        "toColumn": "Month",
+        "joinOnDateBehavior": "datePartOnly"
+      },
+      {
+        "name": "rel04_dimPlant_factInventory_ValuationArea",
+        "fromTable": "factInventory",
+        "fromColumn": "ValuationArea",
+        "toTable": "dimPlant",
+        "toColumn": "ValuationArea"
+      },
+      {
+        "name": "rel05_dimPlant_factTB_ValuationArea",
+        "fromTable": "factTB",
+        "fromColumn": "ValuationArea",
+        "toTable": "dimPlant",
+        "toColumn": "ValuationArea"
+      },
+      {
+        "name": "rel06_dimPlant_dimCapacity_ValuationArea",
+        "fromTable": "dimCapacity",
+        "fromColumn": "ValuationArea",
+        "toTable": "dimPlant",
+        "toColumn": "ValuationArea"
+      },
+      {
+        "name": "rel07_dimNature_factInventory_Nature",
+        "fromTable": "factInventory",
+        "fromColumn": "Nature",
+        "toTable": "dimNature",
+        "toColumn": "Nature"
+      },
+      {
+        "name": "rel08_dimNature_dimCapacity_Tech",
+        "fromTable": "dimCapacity",
+        "fromColumn": "Tech",
+        "toTable": "dimNature",
+        "toColumn": "Nature"
+      },
+      {
+        "name": "rel09_dimTBMaster_factTB_GLAccount",
+        "fromTable": "factTB",
+        "fromColumn": "GLAccount",
+        "toTable": "dimTBMaster",
+        "toColumn": "GLAccount"
+      },
+      {
+        "name": "rel10_dimCategory_factInventory_Category",
+        "fromTable": "factInventory",
+        "fromColumn": "Category",
+        "toTable": "dimCategory",
+        "toColumn": "Category"
+      },
+      {
+        "name": "rel11_dimCategory_factTB_Category",
+        "fromTable": "factTB",
+        "fromColumn": "Category",
+        "toTable": "dimCategory",
+        "toColumn": "Category"
+      }
+    ],
+    "expressions": [
+      {
+        "name": "pRoot",
+        "kind": "m",
+        "expression": "\"C:\\Data\\Inventory Report\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Text"
+          }
+        ]
+      },
+      {
+        "name": "pVarsFile",
+        "kind": "m",
+        "expression": "pRoot & \"\\Variables and Calculations.xlsx\"",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Text"
+          }
+        ]
+      },
+      {
+        "name": "fnCleanMB5B",
+        "kind": "m",
+        "expression": "let\n    fnCleanMB5B = (content as binary) as table =>\n    let\n        Wb        = Excel.Workbook(content, null, true),\n        // take the sheet named Sheet1 if it exists, otherwise the first sheet\n        Sheets    = Table.SelectRows(Wb, each [Kind] = \"Sheet\"),\n        Picked    = try Sheets{[Item=\"Sheet1\", Kind=\"Sheet\"]}[Data] otherwise Sheets{0}[Data],\n\n        // strip out fully blank leading rows, then promote whichever row is the header.\n        // SAP downloads often carry a title or a blank line above the real header.\n        Norm      = (n as any) as text =>\n                        Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? \"\")),\n                                               {\" \", \".\", \"_\", \"-\", \"/\", \"(\", \")\"})),\n        IsHdrRow  = (row as list) as logical =>\n                        List.Contains(List.Transform(row, Norm), \"MATERIAL\"),\n        AllRows   = Table.ToRows(Picked),\n        HdrIndex  = List.PositionOf(List.Transform(AllRows, IsHdrRow), true),\n        Trimmed   = if HdrIndex > 0 then Table.Skip(Picked, HdrIndex) else Picked,\n        Promoted  = Table.PromoteHeaders(Trimmed, [PromoteAllScalars=true]),\n\n        // map whatever the file calls a column onto our internal name.\n        // matching is done on the normalised form, so case and spacing don't matter.\n        Aliases   = {\n            {\"VALUATIONAREA\",         \"ValuationArea\"},\n            {\"VALAREA\",               \"ValuationArea\"},\n            {\"PLANT\",                 \"ValuationArea\"},\n            {\"MATERIAL\",              \"Material\"},\n            {\"MATERIALNO\",            \"Material\"},\n            {\"MATERIALDESCRIPTION\",   \"MaterialDesc\"},\n            {\"MATERIALDESC\",          \"MaterialDesc\"},\n            {\"FROMDATE\",              \"FromDate\"},\n            {\"TODATE\",                \"ToDate\"},\n            {\"OPENINGSTOCK\",          \"OpenQty\"},\n            {\"OPENINGVALUE\",          \"OpenVal\"},\n            {\"TOTALRECEIPTQTIES\",     \"ReceiptQty\"},\n            {\"TOTALRECEIPTQTY\",       \"ReceiptQty\"},\n            {\"TOTALRECEIPTQUANTITY\",  \"ReceiptQty\"},\n            {\"TOTALRECEIPTQUANTITIES\",\"ReceiptQty\"},\n            {\"TOTALRECEIPTVALUE\",     \"ReceiptVal\"},\n            {\"TOTALRECEIPTVALUES\",    \"ReceiptVal\"},\n            {\"TOTALISSUEQTIES\",       \"IssueQty\"},\n            {\"TOTALISSUEQTY\",         \"IssueQty\"},\n            {\"TOTALISSUEQUANTITY\",    \"IssueQty\"},\n            {\"TOTALISSUEQUANTITIES\",  \"IssueQty\"},\n            {\"TOTALISSUEVALUE\",       \"IssueVal\"},\n            {\"TOTALISSUEVALUES\",      \"IssueVal\"},\n            {\"CLOSINGSTOCK\",          \"CloseQty\"},\n            {\"CLOSINGVALUE\",          \"CloseVal\"},\n            {\"BASICUNITOFMEASURE\",    \"BaseUOM\"},\n            {\"BASEUNITOFMEASURE\",     \"BaseUOM\"},\n            {\"BASEUNITMEASURE\",       \"BaseUOM\"},\n            {\"BUN\",                   \"BaseUOM\"},\n            {\"SPECIALSTOCK\",          \"SpecialStock\"},\n            {\"CURRENCY\",              \"Currency\"}\n        },\n        LookupAlias = (n as text) as nullable text =>\n            let hit = List.Select(Aliases, each _{0} = Norm(n))\n            in  if List.Count(hit) > 0 then hit{0}{1} else null,\n\n        Actual    = Table.ColumnNames(Promoted),\n        RenamePrs = List.RemoveNulls(List.Transform(Actual,\n                        each let t = LookupAlias(_) in if t = null then null else {_, t})),\n        Renamed   = Table.RenameColumns(Promoted, RenamePrs),\n\n        Wanted    = {\"ValuationArea\",\"Material\",\"MaterialDesc\",\"FromDate\",\"ToDate\",\n                     \"OpenQty\",\"OpenVal\",\"ReceiptQty\",\"ReceiptVal\",\"IssueQty\",\"IssueVal\",\n                     \"CloseQty\",\"CloseVal\",\"BaseUOM\",\"SpecialStock\",\"Currency\"},\n        Present   = Table.ColumnNames(Renamed),\n        Missing   = List.Difference(Wanted, Present),\n        // any column the file genuinely doesn't have is added as blank, so one odd\n        // export can't stop the whole refresh\n        Padded    = List.Accumulate(Missing, Renamed,\n                        (tbl, col) => Table.AddColumn(tbl, col, each null)),\n        Kept      = Table.SelectColumns(Padded, Wanted),\n\n        Keys      = Table.TransformColumns(Kept, {\n                        {\"ValuationArea\", each Text.Trim(Text.From(_ ?? \"\")), type text},\n                        {\"Material\",      each Text.TrimStart(Text.Trim(Text.From(_ ?? \"\")), \"0\"), type text},\n                        {\"MaterialDesc\",  each Text.Trim(Text.From(_ ?? \"\")), type text}}),\n        Typed     = Table.TransformColumnTypes(Keys, {\n                        {\"FromDate\", type date}, {\"ToDate\", type date},\n                        {\"OpenQty\", type number},   {\"OpenVal\", type number},\n                        {\"ReceiptQty\", type number},{\"ReceiptVal\", type number},\n                        {\"IssueQty\", type number},  {\"IssueVal\", type number},\n                        {\"CloseQty\", type number},  {\"CloseVal\", type number},\n                        {\"BaseUOM\", type text}, {\"SpecialStock\", type text},\n                        {\"Currency\", type text}}),\n        NoJunk    = Table.SelectRows(Typed, each\n                        [Material] <> null and [Material] <> \"\"\n                        and not Text.StartsWith([MaterialDesc] ?? \"\", \"Total\", Comparer.OrdinalIgnoreCase)\n                        and [FromDate] <> null),\n        WithMonth = Table.AddColumn(NoJunk, \"Month\",\n                        each Date.StartOfMonth([FromDate]), type date),\n        MatKey    = Table.AddColumn(WithMonth, \"MatKey\",\n                        each [ValuationArea] & \"|\" & [Material], type text)\n    in\n        MatKey\nin\n    fnCleanMB5B",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ]
+      },
+      {
+        "name": "fnVarSheet",
+        "kind": "m",
+        "expression": "let\n    // Reads a sheet from Variables and Calculations by fuzzy name, promotes the header\n    // row, and renames columns using an alias list. Case, spaces, dots, underscores,\n    // hyphens and brackets are all ignored on both sheet names and column names.\n    fnVarSheet = (sheetAliases as list, columnAliases as list) as table =>\n    let\n        Norm     = (n as any) as text =>\n                       Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? \"\")),\n                                  {\" \", \".\", \"_\", \"-\", \"/\", \"(\", \")\", \",\", \"'\"})),\n        Wb       = Excel.Workbook(File.Contents(pVarsFile), null, true),\n        Sheets   = Table.SelectRows(Wb, each [Kind] = \"Sheet\"),\n        WantedNm = List.Transform(sheetAliases, Norm),\n        Hit      = Table.SelectRows(Sheets, each List.Contains(WantedNm, Norm([Item]))),\n        Data     = if Table.RowCount(Hit) = 0\n                   then error \"No sheet matching: \" & Text.Combine(sheetAliases, \" / \")\n                        & \". Sheets present: \"\n                        & Text.Combine(List.Transform(Sheets[Item], Text.From), \" | \")\n                   else Hit{0}[Data],\n        Promoted = Table.PromoteHeaders(Data, [PromoteAllScalars=true]),\n        Actual   = Table.ColumnNames(Promoted),\n        Pairs    = List.RemoveNulls(List.Transform(Actual, (a) =>\n                       let hit = List.Select(columnAliases, each List.Contains(\n                                     List.Transform(_{0}, Norm), Norm(a)))\n                       in  if List.Count(hit) > 0 then {a, hit{0}{1}} else null)),\n        Renamed  = Table.RenameColumns(Promoted, Pairs)\n    in\n        Renamed\nin\n    fnVarSheet",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ]
+      },
+      {
+        "name": "stgRM",
+        "kind": "m",
+        "expression": "let\n    Files    = Folder.Files(pRoot & \"\\RM Raw\"),\n    OnlyXlsx = Table.SelectRows(Files, each\n                   Text.Lower([Extension]) = \".xlsx\"\n                   and not Text.StartsWith([Name], \"~$\")\n                   and not Text.StartsWith([Name], \".\")),\n    Cleaned  = Table.AddColumn(OnlyXlsx, \"Data\", each fnCleanMB5B([Content])),\n    Slim     = Table.SelectColumns(Cleaned, {\"Name\",\"Data\"}),\n    Expanded = Table.ExpandTableColumn(Slim, \"Data\",\n                   {\"ValuationArea\",\"Material\",\"MatKey\",\"MaterialDesc\",\"FromDate\",\"ToDate\",\n                    \"OpenQty\",\"OpenVal\",\"ReceiptQty\",\"ReceiptVal\",\"IssueQty\",\"IssueVal\",\n                    \"CloseQty\",\"CloseVal\",\"BaseUOM\",\"SpecialStock\",\"Currency\",\"Month\"}),\n    Tagged   = Table.AddColumn(Expanded, \"Category\", each \"RM\", type text),\n    Renamed  = Table.RenameColumns(Tagged, {{\"Name\",\"SourceFile\"}})\nin\n    Renamed",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "stgFG",
+        "kind": "m",
+        "expression": "let\n    Files    = Folder.Files(pRoot & \"\\FG Raw\"),\n    OnlyXlsx = Table.SelectRows(Files, each\n                   Text.Lower([Extension]) = \".xlsx\"\n                   and not Text.StartsWith([Name], \"~$\")\n                   and not Text.StartsWith([Name], \".\")),\n    Cleaned  = Table.AddColumn(OnlyXlsx, \"Data\", each fnCleanMB5B([Content])),\n    Slim     = Table.SelectColumns(Cleaned, {\"Name\",\"Data\"}),\n    Expanded = Table.ExpandTableColumn(Slim, \"Data\",\n                   {\"ValuationArea\",\"Material\",\"MatKey\",\"MaterialDesc\",\"FromDate\",\"ToDate\",\n                    \"OpenQty\",\"OpenVal\",\"ReceiptQty\",\"ReceiptVal\",\"IssueQty\",\"IssueVal\",\n                    \"CloseQty\",\"CloseVal\",\"BaseUOM\",\"SpecialStock\",\"Currency\",\"Month\"}),\n    Tagged   = Table.AddColumn(Expanded, \"Category\", each \"FG\", type text),\n    Renamed  = Table.RenameColumns(Tagged, {{\"Name\",\"SourceFile\"}})\nin\n    Renamed",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "stgConble",
+        "kind": "m",
+        "expression": "let\n    Files    = Folder.Files(pRoot & \"\\Consble Raw\"),\n    OnlyXlsx = Table.SelectRows(Files, each\n                   Text.Lower([Extension]) = \".xlsx\"\n                   and not Text.StartsWith([Name], \"~$\")\n                   and not Text.StartsWith([Name], \".\")),\n    Cleaned  = Table.AddColumn(OnlyXlsx, \"Data\", each fnCleanMB5B([Content])),\n    Slim     = Table.SelectColumns(Cleaned, {\"Name\",\"Data\"}),\n    Expanded = Table.ExpandTableColumn(Slim, \"Data\",\n                   {\"ValuationArea\",\"Material\",\"MatKey\",\"MaterialDesc\",\"FromDate\",\"ToDate\",\n                    \"OpenQty\",\"OpenVal\",\"ReceiptQty\",\"ReceiptVal\",\"IssueQty\",\"IssueVal\",\n                    \"CloseQty\",\"CloseVal\",\"BaseUOM\",\"SpecialStock\",\"Currency\",\"Month\"}),\n    Tagged   = Table.AddColumn(Expanded, \"Category\", each \"Consumables\", type text),\n    Renamed  = Table.RenameColumns(Tagged, {{\"Name\",\"SourceFile\"}})\nin\n    Renamed",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "dimMaterialAttr",
+        "kind": "m",
+        "expression": "let\n    Raw      = fnVarSheet(\n                   {\"RM Nature\", \"RM Master\", \"RMNature\"},\n                   {\n                     {{\"Valuation Area\",\"Val Area\",\"Plant\",\"Valuation area\"}, \"ValuationArea\"},\n                     {{\"Material\",\"Material No\",\"Material Number\"},           \"Material\"},\n                     {{\"Material Description\",\"Merterial Description\",\"Material Desc\",\n                       \"Material description\"},                              \"MaterialDescVar\"},\n                     {{\"Nature\"},                                             \"Nature\"},\n                     {{\"Group Nature\",\"GroupNature\",\"Nature Group\"},           \"GroupNature\"},\n                     {{\"BOM Std Qty\",\"BOM StdQty\",\"BOMStdQty\",\"Std Qty\"},      \"BOMStdQty\"},\n                     {{\"Item\"},                                               \"Item\"}\n                   }),\n    Keys     = Table.TransformColumns(Raw, {\n                   {\"ValuationArea\", each Text.Trim(Text.From(_ ?? \"\")), type text},\n                   {\"Material\",      each Text.TrimStart(Text.Trim(Text.From(_ ?? \"\")), \"0\"), type text}}),\n    NoBlank  = Table.SelectRows(Keys, each [Material] <> null and [Material] <> \"\"),\n    MatKey   = Table.AddColumn(NoBlank, \"MatKey\",\n                   each [ValuationArea] & \"|\" & [Material], type text),\n    Typed    = Table.TransformColumnTypes(MatKey, {\n                   {\"Nature\", type text}, {\"GroupNature\", type text},\n                   {\"BOMStdQty\", type number}, {\"Item\", type text}}),\n    Slim     = Table.SelectColumns(Typed, {\"MatKey\",\"Nature\",\"GroupNature\",\"BOMStdQty\",\"Item\"}),\n    Dedup    = Table.Distinct(Slim, {\"MatKey\"}),\n    Buffered = Table.Buffer(Dedup)\nin\n    Buffered",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "dimFGAttr",
+        "kind": "m",
+        "expression": "let\n    Raw      = fnVarSheet(\n                   {\"FG Master\", \"FM Master\", \"FG Nature\", \"FGMaster\"},\n                   {\n                     {{\"Valuation Area\",\"Val Area\",\"Plant\",\"Valuation area\"}, \"ValuationArea\"},\n                     {{\"Material\",\"Material No\",\"Material Number\"},           \"Material\"},\n                     {{\"Material Description\",\"Merterial Description\",\"Material Desc\",\n                       \"Material description\"},                              \"MaterialDescVar\"},\n                     {{\"Nature\",\"Tech\",\"Technology\"},                         \"Nature\"}\n                   }),\n    Keys     = Table.TransformColumns(Raw, {\n                   {\"ValuationArea\", each Text.Trim(Text.From(_ ?? \"\")), type text},\n                   {\"Material\",      each Text.TrimStart(Text.Trim(Text.From(_ ?? \"\")), \"0\"), type text},\n                   {\"Nature\",        each Text.Trim(Text.From(_ ?? \"\")), type text}}),\n    NoBlank  = Table.SelectRows(Keys, each [Material] <> null and [Material] <> \"\"),\n    MatKey   = Table.AddColumn(NoBlank, \"MatKey\",\n                   each [ValuationArea] & \"|\" & [Material], type text),\n    Slim     = Table.SelectColumns(MatKey, {\"MatKey\",\"Nature\"}),\n    Dedup    = Table.Distinct(Slim, {\"MatKey\"}),\n    Buffered = Table.Buffer(Dedup)\nin\n    Buffered",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "varConstants",
+        "kind": "m",
+        "expression": "let\n    Raw      = fnVarSheet(\n                   {\"Constants\", \"Constant\", \"Variables\"},\n                   {\n                     {{\"Effective From\",\"EffectiveFrom\",\"Effective Date\",\"From Date\",\"Date\"}, \"EffectiveFrom\"},\n                     {{\"Constant Name\",\"ConstantName\",\"Name\",\"Constant\"},                    \"ConstantName\"},\n                     {{\"Value\",\"Amount\",\"Number\"},                                           \"Value\"}\n                   }),\n    Wanted   = {\"EffectiveFrom\",\"ConstantName\",\"Value\"},\n    Padded   = List.Accumulate(List.Difference(Wanted, Table.ColumnNames(Raw)), Raw,\n                   (t, c) => Table.AddColumn(t, c, each null)),\n    Slim     = Table.SelectColumns(Padded, Wanted),\n    // no date given = applies from the beginning of time\n    Filled   = Table.TransformColumns(Slim, {\n                   {\"EffectiveFrom\", each if _ = null then #date(1900,1,1) else DateTime.Date(DateTime.From(_)), type date}}),\n    Typed    = Table.TransformColumnTypes(Filled, {\n                   {\"ConstantName\", type text}, {\"Value\", type number}}),\n    NoBlank  = Table.SelectRows(Typed, each [ConstantName] <> null and [ConstantName] <> \"\"),\n    Buffered = Table.Buffer(NoBlank)\nin\n    Buffered",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "fnConstantAsOf",
+        "kind": "m",
+        "expression": "let\n    fnConstantAsOf = (name as text, asOf as date) as nullable number =>\n    let\n        Rows   = Table.SelectRows(varConstants,\n                     each [ConstantName] = name and [EffectiveFrom] <= asOf),\n        Sorted = Table.Sort(Rows, {{\"EffectiveFrom\", Order.Descending}}),\n        Val    = try Sorted{0}[Value] otherwise null\n    in\n        Val\nin\n    fnConstantAsOf",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ]
+      },
+      {
+        "name": "factRM",
+        "kind": "m",
+        "expression": "let\n    Src      = stgRM,\n    Merged   = Table.NestedJoin(Src, {\"MatKey\"}, dimMaterialAttr, {\"MatKey\"},\n                   \"attr\", JoinKind.LeftOuter),\n    Expanded = Table.ExpandTableColumn(Merged, \"attr\",\n                   {\"Nature\",\"GroupNature\",\"BOMStdQty\",\"Item\"}),\n    Flag     = Table.AddColumn(Expanded, \"AttrMissing\",\n                   each [Nature] = null, type logical),\n    // RM MW = Closing Stock / BOM Std Qty * RM_MW_FACTOR / 10^6\n    // (the 580 you had hardcoded, now read from the Constants sheet)\n    MW       = Table.AddColumn(Flag, \"MW\", each\n                   let f = fnConstantAsOf(\"RM_MW_FACTOR\", [Month])\n                   in  try [CloseQty] / [BOMStdQty] * f / 1000000 otherwise null,\n                   type number)\nin\n    MW",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "factFG",
+        "kind": "m",
+        "expression": "let\n    Src      = stgFG,\n    Merged   = Table.NestedJoin(Src, {\"MatKey\"}, dimFGAttr, {\"MatKey\"},\n                   \"attr\", JoinKind.LeftOuter),\n    Expanded = Table.ExpandTableColumn(Merged, \"attr\", {\"Nature\"}),\n    Flag     = Table.AddColumn(Expanded, \"AttrMissing\", each [Nature] = null, type logical),\n\n    // Rate = RIGHT(desc,3)\n    RateTxt  = Table.AddColumn(Flag, \"RateText\",\n                   each Text.End(Text.Trim([MaterialDesc] ?? \"\"), 3), type text),\n    Rate     = Table.AddColumn(RateTxt, \"Rate\",\n                   each try Number.From(Text.Select([RateText], {\"0\"..\"9\",\".\"})) otherwise null,\n                   type number),\n    RateBad  = Table.AddColumn(Rate, \"RateParseFailed\",\n                   each [Rate] = null, type logical),\n\n    // Mid = MID(desc,13,13)  -- M is 0-based, so start = 12\n    MidCol   = Table.AddColumn(RateBad, \"Mid\",\n                   each try Text.Middle(Text.Trim([MaterialDesc] ?? \"\"), 12, 13) otherwise null,\n                   type text),\n    // Base = LEFT(desc,6)\n    BaseCol  = Table.AddColumn(MidCol, \"Base\",\n                   each try Text.Start(Text.Trim([MaterialDesc] ?? \"\"), 6) otherwise null,\n                   type text),\n\n    // MW = Closing Stock * Rate / 10^6\n    MW       = Table.AddColumn(BaseCol, \"MW\",\n                   each try [CloseQty] * [Rate] / 1000000 otherwise null, type number),\n\n    // Inr Wp = Closing Value / (MW * 10^6)\n    INRwp    = Table.AddColumn(MW, \"INR_WP\",\n                   each try [CloseVal] / ([MW] * 1000000) otherwise null, type number),\n\n    Cleaned  = Table.RemoveColumns(INRwp, {\"RateText\"})\nin\n    Cleaned",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "factConble",
+        "kind": "m",
+        "expression": "stgConble",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "varMWCapacity",
+        "kind": "m",
+        "expression": "let\n    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),\n    Sh      = Table.SelectRows(Wb, each [Kind] = \"Sheet\"),\n    Norm    = (n as any) as text =>\n                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? \"\")), {\" \",\".\",\"_\",\"-\",\"/\",\"(\",\")\"})),\n    Hit     = Table.SelectRows(Sh, each\n                  List.Contains({\"MW\",\"MWCAPACITY\",\"CAPACITY\",\"MWCAP\"}, Norm([Item]))),\n    Data    = if Table.IsEmpty(Hit)\n                  then error \"No sheet called MW / MW Capacity in the Variables workbook.\"\n                  else Hit{0}[Data],\n    Rows    = Table.ToRows(Data),\n    Codes   = {\"1900\",\"1902\",\"1905\"},\n    AsTxt   = (v as any) as text => Text.Trim(Text.From(v ?? \"\")),\n    IsCode  = (v as any) as logical => List.Contains(Codes, AsTxt(v)),\n\n    // ---- decide which layout this sheet is -------------------------------------------------\n    // long layout is identified by an Effective From header; wide layout by a row of plant codes\n    DateHdr = {\"EFFECTIVEFROM\",\"EFFECTIVEDATE\",\"FROMDATE\"},\n    LongIdx = List.PositionOf(\n                  List.Transform(Rows, (r) =>\n                      List.AnyTrue(List.Transform(r, (c) => List.Contains(DateHdr, Norm(c))))), true),\n    WideIdx = List.PositionOf(\n                  List.Transform(Rows, (r) => List.Count(List.Select(r, IsCode)) >= 2), true),\n\n    // ---- long layout: one row per Tech per plant --------------------------------------------\n    Long    = let\n                  Hdr   = Rows{LongIdx},\n                  Find  = (alts as list) as number =>\n                              let Idxs = List.Select({0..List.Count(Hdr) - 1},\n                                             (i) => List.Contains(alts, Norm(Hdr{i})))\n                              in  if List.IsEmpty(Idxs) then -1 else List.First(Idxs),\n                  iDate = Find({\"EFFECTIVEFROM\",\"EFFECTIVEDATE\",\"FROMDATE\",\"DATE\"}),\n                  iTech = Find({\"TECH\",\"TECHNOLOGY\",\"NATURE\"}),\n                  iArea = Find({\"VALUATIONAREA\",\"VALAREA\",\"PLANT\",\"PLANTCODE\"}),\n                  iMW   = Find({\"MW\",\"CAPACITYMW\",\"CAPACITY\"}),\n                  Chk   = if iTech < 0 or iArea < 0 or iMW < 0\n                              then error \"The MW sheet has an Effective From column but I could not \"\n                                       & \"find Tech, Valuation Area and MW next to it. Read qcMWSheet.\"\n                              else true,\n                  Body  = if Chk then List.Skip(Rows, LongIdx + 1) else {},\n                  Keep  = List.Select(Body, (r) =>\n                              AsTxt(r{iTech}) <> \"\" and AsTxt(r{iArea}) <> \"\"),\n                  Recs  = List.Transform(Keep, (r) =>\n                              [ EffectiveFrom = (if iDate < 0 then #date(1900,1,1)\n                                                 else try DateTime.Date(DateTime.From(r{iDate}))\n                                                      otherwise #date(1900,1,1)),\n                                Tech          = AsTxt(r{iTech}),\n                                ValuationArea = AsTxt(r{iArea}),\n                                MW            = (try Number.From(r{iMW}) otherwise 0) ])\n              in  Recs,\n\n    // ---- wide layout: plant codes across the top --------------------------------------------\n    Wide    = let\n                  Hdr   = Rows{WideIdx},\n                  Map   = List.Select(\n                              List.Transform({0..List.Count(Hdr) - 1},\n                                  (i) => [Idx = i, Code = AsTxt(Hdr{i})]),\n                              (m) => List.Contains(Codes, m[Code])),\n                  Body  = List.Skip(Rows, WideIdx + 1),\n                  Keep  = List.Select(Body, (r) =>\n                              AsTxt(List.First(r)) <> \"\" and not IsCode(List.First(r))\n                              and List.AnyTrue(List.Transform(Map,\n                                  (m) => (try r{m[Idx]} otherwise null) <> null))),\n                  Recs  = List.TransformMany(Keep, (r) => Map, (r, m) =>\n                              [ EffectiveFrom = #date(1900,1,1),\n                                Tech          = AsTxt(List.First(r)),\n                                ValuationArea = m[Code],\n                                MW            = (try Number.From(r{m[Idx]}) otherwise 0) ])\n              in  Recs,\n\n    Pairs   = if LongIdx >= 0 then Long\n              else if WideIdx >= 0 then Wide\n              else error \"The MW sheet is neither layout I recognise: no Effective From/Tech header \"\n                       & \"row, and no row containing two of 1900/1902/1905. Read qcMWSheet.\",\n    T       = Table.FromRecords(Pairs,\n                  type table [EffectiveFrom = date, Tech = text, ValuationArea = text, MW = number]),\n    Out     = Table.Buffer(T)\nin\n    Out",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "factTB_Staged",
+        "kind": "m",
+        "expression": "let\n    Norm     = (n as any) as text =>\n                   Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? \"\")), {\" \",\".\",\"_\",\"-\",\"/\",\"(\",\")\"})),\n    GLNames  = {\"GLACCOUNTNUMBER\",\"GLACCOUNT\",\"GLACCOUNTNO\",\"GLACCNO\",\"ACCOUNTNUMBER\",\"GLCODE\"},\n    Alias    = {\n                   {GLNames, \"GLAccount\"},\n                   {{\"GLACCOUNTDESCRIPTION\",\"GLACCOUNTDESC\",\"ACCOUNTDESCRIPTION\",\n                     \"GLDESCRIPTION\",\"GLDESC\",\"ACCOUNTNAME\"}, \"GLDesc\"},\n                   {{\"PROFITCENTRE\",\"PROFITCENTER\",\"PROFITCTR\",\"PRCTR\"}, \"ProfitCentre\"},\n                   {{\"PROFITCENTREDESCRIPTION\",\"PROFITCENTERDESCRIPTION\",\n                     \"PROFITCENTREDESC\",\"PROFITCENTERDESC\"}, \"ProfitCentreDesc\"},\n                   {{\"AMOUNT\",\"AMOUNTINLOCALCURRENCY\",\"AMOUNTINLC\",\"AMTINLOCCUR\",\n                     \"BALANCE\",\"CLOSINGBALANCE\"}, \"Amount\"}\n               },\n    Wanted   = {\"GLAccount\",\"GLDesc\",\"ProfitCentre\",\"ProfitCentreDesc\",\"Amount\"},\n\n    Clean    = (content as binary) as table =>\n                   let\n                       Wb       = Excel.Workbook(content, null, true),\n                       Sheets   = Table.SelectRows(Wb, each [Kind] = \"Sheet\"),\n                       Picked   = try Sheets{[Item = \"Sheet1\", Kind = \"Sheet\"]}[Data]\n                                  otherwise Sheets{0}[Data],\n                       // find the header row: the one holding a GL-account-ish cell\n                       RowsL    = Table.ToRows(Picked),\n                       HdrIdx   = List.PositionOf(\n                                      List.Transform(RowsL, (r) =>\n                                          List.AnyTrue(List.Transform(r,\n                                              (c) => List.Contains(GLNames, Norm(c))))), true),\n                       Skipped  = if HdrIdx <= 0 then Picked else Table.Skip(Picked, HdrIdx),\n                       Promoted = Table.PromoteHeaders(Skipped, [PromoteAllScalars = true]),\n\n                       Lookup   = (c as any) as nullable text =>\n                                      let Hits = List.Select(Alias, (a) => List.Contains(a{0}, Norm(c)))\n                                      in  if List.IsEmpty(Hits) then null else Hits{0}{1},\n                       Pairs    = List.RemoveNulls(\n                                      List.Transform(Table.ColumnNames(Promoted),\n                                          (c) => let t = Lookup(c) in if t = null then null else {c, t})),\n                       // if two source columns map to the same name, keep the first\n                       Renames  = List.Accumulate(Pairs, {}, (acc, pr) =>\n                                      if List.Contains(List.Transform(acc, (x) => x{1}), pr{1})\n                                      then acc else acc & {pr}),\n                       Renamed  = Table.RenameColumns(Promoted, Renames),\n                       Padded   = List.Accumulate(\n                                      List.Difference(Wanted, Table.ColumnNames(Renamed)), Renamed,\n                                      (tbl, col) => Table.AddColumn(tbl, col, each null)),\n                       Kept     = Table.SelectColumns(Padded, Wanted),\n                       NoJunk   = Table.SelectRows(Kept, each\n                                      [GLAccount] <> null\n                                      and Text.Trim(Text.From([GLAccount])) <> \"\"\n                                      and not Text.StartsWith(Text.From([GLAccount]), \"Total\",\n                                              Comparer.OrdinalIgnoreCase))\n                   in\n                       NoJunk,\n\n    Files    = Folder.Files(pRoot & \"\\TB\"),\n    OnlyXlsx = Table.SelectRows(Files, each\n                   Text.StartsWith(Text.Lower([Extension]), \".xls\")\n                   and not Text.StartsWith([Name], \"~$\")\n                   and not Text.StartsWith([Name], \".\")),\n    Loaded   = Table.AddColumn(OnlyXlsx, \"Data\", each Clean([Content])),\n\n    // month from the file name: TB_YYYYMM.xlsx\n    WithMonth = Table.AddColumn(Loaded, \"Month\", each\n                   let\n                       digits = Text.Select([Name], {\"0\"..\"9\"}),\n                       yyyymm = Text.Middle(digits, 0, 6)\n                   in\n                       try #date(Number.From(Text.Start(yyyymm, 4)),\n                                 Number.From(Text.Middle(yyyymm, 4, 2)), 1)\n                       otherwise null, type date),\n    Slim     = Table.SelectColumns(WithMonth, {\"Name\",\"Month\",\"Data\"}),\n    Expanded = Table.ExpandTableColumn(Slim, \"Data\", Wanted),\n    Renamed  = Table.RenameColumns(Expanded, {{\"Name\",\"SourceFile\"}}),\n    Keys     = Table.TransformColumns(Renamed, {\n                   {\"GLAccount\",    each Text.TrimStart(Text.Trim(Text.From(_ ?? \"\")), \"0\"), type text},\n                   {\"ProfitCentre\", each Text.Trim(Text.From(_ ?? \"\")), type text}}),\n    // plant = characters 3-6 of the profit centre  (0-based start = 2)\n    PlantRaw = Table.AddColumn(Keys, \"PlantCode\",\n                   each try Text.Middle([ProfitCentre], 2, 4) otherwise null, type text),\n    Known    = List.Buffer(dimPlant[ValuationArea]),\n    PlantCol = Table.AddColumn(PlantRaw, \"ValuationArea\",\n                   each if List.Contains(Known, [PlantCode]) then [PlantCode] else \"Unallocated\",\n                   type text),\n    Typed    = Table.TransformColumnTypes(PlantCol, {{\"Amount\", type number}})\nin\n    Typed",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      },
+      {
+        "name": "qcMWSheet",
+        "kind": "m",
+        "expression": "let\n    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),\n    Sh      = Table.SelectRows(Wb, each [Kind] = \"Sheet\"),\n    Norm    = (n as any) as text =>\n                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? \"\")), {\" \",\".\",\"_\",\"-\"})),\n    Hit     = Table.SelectRows(Sh, each\n                  List.Contains({\"MW\",\"MWCAPACITY\",\"CAPACITY\",\"MWCAP\"}, Norm([Item]))),\n    Data    = Hit{0}[Data],\n    AsText  = Table.TransformColumns(Data,\n                  List.Transform(Table.ColumnNames(Data),\n                      (c) => {c, each Text.From(_ ?? \"\"), type text}))\nin\n    AsText",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ]
+      }
+    ],
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"pRoot\", \"pVarsFile\", \"fnCleanMB5B\", \"fnVarSheet\", \"stgRM\", \"stgFG\", \"stgConble\", \"dimMaterialAttr\", \"dimFGAttr\", \"varConstants\", \"fnConstantAsOf\", \"factRM\", \"factFG\", \"factConble\", \"varMWCapacity\", \"factTB_Staged\", \"qcMWSheet\", \"factInventory\", \"factTB\", \"factTB_Unmapped\", \"dimPlant\", \"dimDate\", \"dimNature\", \"dimCapacity\", \"dimTBMaster\", \"dimCategory\", \"dimMetric\", \"dimMeasure\", \"qcHeaders\", \"qcVarHeaders\", \"qcNatureNoCapacity\"]"
+      },
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "generated"
+      }
+    ]
+  }
+}

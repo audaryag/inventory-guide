@@ -7,7 +7,7 @@ The semantic model is TMSL (model.bim): every Power Query query, every relations
 sort-by-column, hidden columns and all 40 measures. The report is PBIR (JSON per visual)
 built from spec.py, so the pages match the guide exactly.
 """
-import json, pathlib, re, shutil, sys, hashlib, uuid
+import json, os, pathlib, re, shutil, sys, hashlib, uuid
 
 HERE = pathlib.Path(__file__).parent
 sys.path.insert(0, str(HERE))
@@ -15,7 +15,8 @@ import build          # noqa: E402  (parse_queries / parse_measures; also rewrit
 import spec           # noqa: E402
 
 GUIDE = pathlib.Path("/home/ubuntu/BUILD_GUIDE.md")
-OUT = pathlib.Path("/home/ubuntu/pbip")
+EMPTY = bool(os.environ.get("PBIP_EMPTY"))
+OUT = pathlib.Path("/home/ubuntu/pbip-empty" if EMPTY else "/home/ubuntu/pbip")
 NAME = "Inventory Report"
 
 md = GUIDE.read_text()
@@ -164,6 +165,34 @@ def model_bim():
                                    "Text" if n in ("pRoot", "pVarsFile") else "Table")}]}
              for n in EXPRESSION_ORDER]
 
+    # 'Period' is the field parameter, a DAX calculated table rather than a query
+    tables.append({
+        "name": "Period",
+        "columns": [
+            {"name": "Period", "dataType": S, "sourceColumn": "[Value1]",
+             "type": "calculatedTableColumn", "isNameInferred": False,
+             "sortByColumn": "Period Order", "summarizeBy": "none",
+             "annotations": [{"name": "SummarizationSetBy", "value": "Automatic"}]},
+            {"name": "Period Fields", "dataType": S, "sourceColumn": "[Value2]",
+             "type": "calculatedTableColumn", "isNameInferred": False, "isHidden": True,
+             "sortByColumn": "Period Order", "summarizeBy": "none",
+             "extendedProperties": [{"name": "ParameterMetadata", "type": "json",
+                                     "value": {"version": 3, "kind": 2}}],
+             "annotations": [{"name": "SummarizationSetBy", "value": "Automatic"}]},
+            {"name": "Period Order", "dataType": I, "sourceColumn": "[Value3]",
+             "type": "calculatedTableColumn", "isNameInferred": False, "isHidden": True,
+             "summarizeBy": "none",
+             "annotations": [{"name": "SummarizationSetBy", "value": "Automatic"}]},
+        ],
+        "partitions": [{"name": "Period", "mode": "import",
+                        "source": {"type": "calculated",
+                                   "expression": "{\n"
+                                   "    (\"By Month\",   NAMEOF('dimDate'[MonthName]), 0),\n"
+                                   "    (\"By Quarter\", NAMEOF('dimDate'[Quarter]),   1)\n"
+                                   "}"}}],
+        "annotations": [{"name": "PBI_Id", "value": "Period"}],
+    })
+
     order = EXPRESSION_ORDER + list(TABLES)
     return {
         "name": NAME,
@@ -197,7 +226,7 @@ VISUAL_TYPE = {
     "Card": "card", "Slicer": "slicer", "Matrix": "pivotTable", "Table": "tableEx",
     "Stacked column chart": "columnChart", "Clustered column chart": "clusteredColumnChart",
     "Line and clustered column chart": "lineClusteredColumnComboChart",
-    "Pie chart": "pieChart", "Donut chart": "donutChart",
+    "Pie chart": "pieChart", "Donut chart": "donutChart", "Line chart": "lineChart",
     "Decomposition tree": "decompositionTreeVisual",
 }
 
@@ -210,7 +239,8 @@ ROLE = {
     "columnChart": {"X-axis": "Category", "Y-axis": "Y", "Legend": "Series"},
     "clusteredColumnChart": {"X-axis": "Category", "Y-axis": "Y", "Legend": "Series"},
     "lineClusteredColumnComboChart": {"X-axis": "Category", "Column y-axis": "Y",
-                                      "Line y-axis": "Y2"},
+                                      "Line y-axis": "Y2", "Column legend": "Series"},
+    "lineChart": {"X-axis": "Category", "Y-axis": "Y", "Legend": "Series"},
     "pieChart": {"Legend": "Category", "Values": "Y"},
     "donutChart": {"Legend": "Category", "Values": "Y"},
     "decompositionTreeVisual": {"Analyze": "Analyze", "Explain by": "Explain"},
@@ -504,6 +534,8 @@ def write_report(root):
             indent=2, ensure_ascii=False))
 
         idx = 0
+        if EMPTY:                      # model-only variant: pages exist, visuals do not
+            continue
         if page in spec.BAND_PAGES:
             for mname, x, y, w, h, cap in spec.CARDS:
                 idx += 1
@@ -574,7 +606,7 @@ def main():
     platform(rp, "Report")
     write_report(rp)
 
-    missing = set(queries) - set(TABLES) - set(EXPRESSION_ORDER)
+    missing = set(queries) - set(TABLES) - set(EXPRESSION_ORDER) - {"Period"}
     if missing:
         raise SystemExit(f"queries in the guide but not in the model: {sorted(missing)}")
     n_vis = len(list((rp / "definition" / "pages").rglob("visual.json")))

@@ -1,0 +1,119 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/1.0.0/schema.json",
+  "name": "pga254c25adc7d10d7",
+  "displayName": "Detail",
+  "displayOption": "FitToPage",
+  "width": 1280,
+  "height": 720,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F4F7F4'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#FFFFFF'"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "pageBinding": {
+    "name": "pga254c25adc7d10d7_drill",
+    "type": "Drillthrough"
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "drill0",
+        "type": "Categorical",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dimPlant"
+              }
+            },
+            "Property": "Plant"
+          }
+        },
+        "howCreated": "Drillthrough"
+      },
+      {
+        "name": "drill1",
+        "type": "Categorical",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dimDate"
+              }
+            },
+            "Property": "MonthName"
+          }
+        },
+        "howCreated": "Drillthrough"
+      },
+      {
+        "name": "drill2",
+        "type": "Categorical",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dimCategory"
+              }
+            },
+            "Property": "Category"
+          }
+        },
+        "howCreated": "Drillthrough"
+      },
+      {
+        "name": "drill3",
+        "type": "Categorical",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dimNature"
+              }
+            },
+            "Property": "Nature"
+          }
+        },
+        "howCreated": "Drillthrough"
+      }
+    ]
+  }
+}
