@@ -254,7 +254,7 @@ pasting out of order gives "cannot be determined" on a measure that is perfectly
 ### Checkpoint — do not go to Part 4 until all three are true
 
 1. Type `Value` into the Data pane search box: `Value ₹ Cr` is there, with a calculator icon.
-2. Count the measures (calculator icons) — there must be **57**. Fewer means Appendix B is
+2. Count the measures (calculator icons) — there must be **60**. Fewer means Appendix B is
    not finished; the pages will fail on whichever one is missing.
 3. None of these six old names survive: `Closing Value`, `Inv RM`, `Inv FG`,
    `Inv Consumables`, `TB Value`, `Prev Month`. Delete any you find (right-click → **Delete
@@ -1155,7 +1155,7 @@ Find the words Power BI showed you in the left column.
 | `Mark as date table` will not accept any column | nothing is wrong | skip 2.4 entirely; a monthly table is deliberate and no measure needs it |
 | `dimMetric cannot find table` | `dimCategory` / `dimMetric` / `dimMeasure` were never created | paste those three queries, Close & Apply, then paste the measure again |
 | `Value ₹ Cr cannot be determined. Either the column does not exist, or there is no current row` | either `factInventory` has no `CloseVal` column, or you pasted measures out of order | check `CloseVal` exists in `factInventory`; if it does, paste Appendix B again strictly top to bottom |
-| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 57 from Appendix B, then delete the six old names listed in 3.7 |
+| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 60 from Appendix B, then delete the six old names listed in 3.7 |
 | RM and FG matrices show numbers under `In ₹ Cr` but nothing under `In Days` | the `Days` measure was deleted as an "old name" | paste `Days = [Days of Inventory]` back in; it is in Appendix B |
 | on a card, the number is fine but the wording is cut in half | the card's default text is too big for the space | set **Callout value** → Font size **24**, **General → Title** → Font size **12**, and Height **96** (every card in Part 4 is 96 high). A **Category label**, if your version has one, goes to **10** or off — the title says the same thing |
 | the paintbrush list has a **Callout value** but no **Category label** | you are on the newer Card visual, which has no category label | nothing to fix: the heading comes from **General → Title → Text**, which Part 4 gives you the wording for |
@@ -1193,7 +1193,7 @@ Nothing here is destructive.
    `dimCategory`, `dimMetric`, `dimMeasure`. Then **Close & Apply**.
 2. **Relationships.** Manage relationships must match 2.3 exactly — 11 rows, all Single,
    nothing on `dimMetric` or `dimMeasure`.
-3. **Measures.** Add all 57 from Appendix B top to bottom (adding beside old ones is safe),
+3. **Measures.** Add all 60 from Appendix B top to bottom (adding beside old ones is safe),
    then delete the six old names in 3.7 — keeping `Days`, whose formula you overwrite instead.
 4. **Sorting.** Set the five sort-by columns in 2.5 and 2.6.
 
@@ -2520,4 +2520,45 @@ IF(
     "Inventory by Quarter (Rs Cr., Average of Month-Ends)",
     "Inventory by Month (Rs Cr.)"
 )
+
+Summary Value Rs Cr =
+IF(
+    SELECTEDVALUE('Period'[Period Order]) = 1,
+    AVERAGEX(VALUES(dimDate[MonthIndex]), [Summary Value ₹ Cr]),
+    [Summary Value ₹ Cr]
+)
+
+In Summary Window =
+VAR Mode = SELECTEDVALUE('Period'[Period Order], 0)
+VAR Picked =
+    IF(
+        Mode = 1,
+        COUNTROWS(ALLSELECTED(dimDate[QuarterSort])),
+        COUNTROWS(ALLSELECTED(dimDate[MonthIndex]))
+    )
+VAR Chosen = IF(Mode = 1, ISFILTERED(dimDate[Quarter]), ISFILTERED(dimDate[MonthName]))
+VAR Keep = IF(Chosen, MIN(Picked, 12), 4)
+VAR Place =
+    IF(
+        Mode = 1,
+        RANKX(ALLSELECTED(dimDate[QuarterSort]), CALCULATE(MAX(dimDate[QuarterSort])), , DESC),
+        RANKX(ALLSELECTED(dimDate[MonthIndex]), CALCULATE(MAX(dimDate[MonthIndex])), , DESC)
+    )
+RETURN IF(Place <= Keep, 1, 0)
+
+Summary Title =
+IF(
+    SELECTEDVALUE('Period'[Period Order]) = 1,
+    "Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr., Average of Month-Ends)",
+    "Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr.)"
+)
 ```
+
+`Summary Value Rs Cr` is the Summary page's only figure. It is `Summary Value ₹ Cr` with the
+quarter rule added: in month mode it hands back the month-end, in quarter mode it averages
+that quarter's three month-ends, so switching the toggle never turns a stock level into a sum.
+
+`In Summary Window` is the Summary twin of `In Window`, and the only difference is the count:
+nothing ticked means the **last 4** periods, and ticking your own means up to **twelve** of
+them, the twelve most recent if you tick more. Put it in the Filters pane of both Summary
+matrices and set it to **is 1**.

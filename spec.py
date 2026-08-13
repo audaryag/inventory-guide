@@ -24,11 +24,11 @@ PANEL_SUB = "#BFE3C6"    # the small wording on the green panel
 BOX = "#FFFFFF"          # the three white boxes inside the panel
 UP, DOWN = "#2E7D32", "#B3261E"
 
-# Overview carries the ticker panel and its own controls, so it is built visual by visual.
-# The other pages still share the older card-and-slicer band.
-BAND_PAGES = ["Summary", "FG", "RM"]
+# Overview and Summary carry their own controls, so they are built visual by visual.
+# FG and RM still share the older card-and-slicer band.
+BAND_PAGES = ["FG", "RM"]
 
-# ---- header band for Summary / FG / RM ---------------------------------------------------
+# ---- header band for FG / RM -------------------------------------------------------------
 # 96 high, not 88: a card has to hold a 12pt title strip above a 24pt number, and 88
 # clips the lower one of the two.
 CARDS = [
@@ -380,47 +380,137 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D."]),
 
     # ---- Summary: TB | MB5B | Difference as master columns, plants as master rows -------
-    ("Summary", "Matrix", "Inventory (TB) · Inventory (MB5B) · Difference — ₹ Cr",
+    # Its own controls, exactly like Overview: the toggle decides whether the periods under
+    # each master column are months or quarters, and the pickers decide which ones.
+    ("Summary", "Slicer", "By month / By quarter",
+     [("Field", ["Period[Period]"])],
+     (16, 20, 216, 52),
+     "The same toggle as Overview, on this page too. By quarter turns every period column "
+     "into a quarter and each figure into the average of that quarter's month-ends.",
+     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Tile, so it reads as two buttons "
+      "rather than a list.",
+      "Format pane \u2192 Slicer settings \u2192 Selection: switch ON 'Single select'.",
+      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #14532D.",
+      "Format pane \u2192 General \u2192 Title: Off.",
+      "Do NOT sync this slicer to the other pages: View \u2192 Sync slicers, and leave every box "
+      "on its row unticked. Overview has its own copy of the toggle."]),
+
+    ("Summary", "Slicer", "Months (leave empty for the last 4)",
+     [("Field", ["dimDate[MonthName]"])],
+     (248, 20, 300, 52),
+     "Tick nothing and the matrix shows the last 4 months under each master column. Tick "
+     "the months you want and it shows those, up to twelve \u2014 tick more than twelve and it "
+     "keeps the twelve most recent of your ticks, because 3 master columns \u00d7 12 months is "
+     "already 36 columns of figures.",
+     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+      "Format pane \u2192 Slicer settings \u2192 Selection: switch OFF 'Multi-select with CTRL' so "
+      "ticking several needs no keyboard.",
+      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
+
+    ("Summary", "Slicer", "Quarters (leave empty for the last 4)",
+     [("Field", ["dimDate[Quarter]"])],
+     (564, 20, 240, 52),
+     "The picker for quarter mode, and it behaves the same way: empty means the last 4, or "
+     "tick the quarters you want. In month mode leave it empty.",
+     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+      "Format pane \u2192 Slicer settings \u2192 Selection: switch OFF 'Multi-select with CTRL'.",
+      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
+
+    ("Summary", "Slicer", "Plant",
+     [("Field", ["dimPlant[Plant]"])],
+     (820, 20, 220, 52),
+     "Narrows both matrices to one plant when you want to read it on its own.",
+     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
+
+    ("Summary", "Slicer", "Type",
+     [("Field", ["dimCategory[Category]"])],
+     (1056, 20, 208, 52),
+     "RM, FG or consumables, when you want the reconciliation for one of them only.",
+     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
+      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
+
+    ("Summary", "Matrix",
+     "Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr.)",
      [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
-      ("Columns", ["dimMetric[Metric]", "dimDate[MonthName]"]),
-      ("Values", ["Summary Value ₹ Cr"]),
-      ("Filters", ["Last 4 Months  →  is 1"])],
-     (16, 168, 1248, 300),
-     "The whole reconciliation in one grid, exactly as it is read out: three master columns "
-     "(TB, MB5B, Difference), the last four months under each, one row per plant with RM, "
-     "FG and consumables beneath it, and a Total row. Everything in crore rupees.",
+      ("Columns", ["dimMetric[Metric]", "Period[Period]"]),
+      ("Values", ["Summary Value Rs Cr"]),
+      ("Filters", ["In Summary Window  →  is 1"])],
+     (16, 88, 1248, 300),
+     "The whole reconciliation in one grid: three master columns \u2014 Inventory (TB), "
+     "Inventory (MB5B), Difference \u2014 with the periods under each, one row per plant "
+     "(Jaipur Module, Dholera Module, Dholera Cell) opening into RM, FG and Consumables, "
+     "and a total for each plant. Everything in crore rupees.",
      ["Order of the two Columns fields matters: dimMetric[Metric] FIRST, then "
-      "dimDate[MonthName]. That is what makes TB / MB5B / Difference the master columns "
-      "with months nested inside.",
-      "Format pane → Row headers → Stepped layout: Off (so Plant and Category get their "
-      "own columns).",
-      "Format pane → Row headers → +/- icons: On (that is the click-to-expand control).",
-      "Format pane → Subtotals → Row subtotals: On. Then switch Column subtotals to Off, "
-      "and turn on 'Per row level' so each plant shows its own total. The grand total row "
-      "at the bottom is the Total row you asked for.",
-      "Colour the differences: in the Values box, click the small down-arrow next to "
-      "Summary Value ₹ Cr, click 'Conditional formatting', then 'Background color'. Set "
+      "Period[Period]. That is what makes TB / MB5B / Difference the master columns with "
+      "the periods nested inside. Period[Period] rather than dimDate[MonthName] is what "
+      "lets the toggle swap months for quarters.",
+      "Format pane \u2192 Row headers \u2192 Stepped layout: Off, so Plant and Type get a column "
+      "each instead of being indented into one.",
+      "Format pane \u2192 Row headers \u2192 +/- icons: On \u2014 that is the click-to-expand control on "
+      "each plant.",
+      "Format pane \u2192 Subtotals \u2192 Row subtotals: On, and switch ON 'Per row level' so each "
+      "plant shows its own total. Column subtotals: Off.",
+      "Format pane \u2192 Subtotals \u2192 Grand total: Off on this matrix. The total of the totals, "
+      "split by RM / FG / Consumables, is the second matrix underneath \u2014 a matrix can only "
+      "give one flat grand total row, so the split has to be its own visual.",
+      "Colour the differences: in the Values box click the small down-arrow next to "
+      "Summary Value Rs Cr, click 'Conditional formatting', then 'Background color'. Set "
       "Format style to Diverging, tick 'Add a middle colour', set the middle number to 0, "
       "and make both the Minimum and Maximum colours red. A difference either direction is "
       "equally wrong, so both ends are red.",
-      "Right-click any plant row in the matrix, click 'Expand', then 'All', so RM, FG and "
-      "consumables show under every plant. Then press Ctrl+S — Power BI remembers it."]),
+      "Right-click any plant row, click 'Expand', then 'All', so RM, FG and Consumables "
+      "show under every plant. Then press Ctrl+S \u2014 Power BI remembers it.",
+      "Format pane \u2192 General \u2192 Title \u2192 use the measure instead of typed words: click the "
+      "fx button beside Text, choose 'Field value', and pick the measure Summary Title. The "
+      "heading then says by Month or by Quarter to match the toggle, so nobody reads a "
+      "quarter average as a month-end.",
+      "With twelve periods ticked this is 36 columns of figures, so a scrollbar appears "
+      "along the bottom of the matrix. That is normal: scroll it sideways, or untick "
+      "periods until it fits."]),
 
-    ("Summary", "Clustered column chart", "Difference ₹ Cr by plant — click a bar",
-     [("X-axis", ["dimPlant[Plant]"]),
-      ("Y-axis", ["Difference ₹ Cr"])],
-     (16, 480, 620, 232),
-     "The reconciliation as a picture. Click a bar and the matrix above filters to that "
-     "plant; right-click → Drill through → Detail for the materials behind it.",
-     ["Format pane → Columns → Colour → fx → Format style: Rules, and colour any negative "
-      "value red. A difference either direction is equally wrong."]),
+    ("Summary", "Matrix", "Total across All Plants by Type (Rs Cr.)",
+     [("Rows", ["dimCategory[Category]"]),
+      ("Columns", ["dimMetric[Metric]", "Period[Period]"]),
+      ("Values", ["Summary Value Rs Cr"]),
+      ("Filters", ["In Summary Window  →  is 1"])],
+     (16, 396, 1248, 156),
+     "The bottom block: the same three master columns, but every plant added together \u2014 one "
+     "row for RM, one for FG, one for Consumables, so you can read total RM across all "
+     "plants at a glance, and a Total row under them which is the total inventory.",
+     ["Same column order as the matrix above: dimMetric[Metric] first, then Period[Period]. "
+      "Keep the same periods ticked, so the two matrices line up column for column.",
+      "Format pane \u2192 Row headers \u2192 Stepped layout: Off.",
+      "Format pane \u2192 Subtotals \u2192 Row subtotals: On \u2014 that bottom row is the total of the "
+      "totals, the whole inventory. Column subtotals: Off.",
+      "Format pane \u2192 Row headers \u2192 Font: Arial, Font size: 9, Bold: On, so this block reads "
+      "as the summary of the one above rather than as more detail.",
+      "This matrix has no Plant field on purpose. Leave the Plant slicer on 'All' when you "
+      "want the across-all-plants figure \u2014 picking one plant filters this block too."]),
 
-    ("Summary", "Clustered column chart", "Inventory (TB) vs Inventory (MB5B) by month",
-     [("X-axis", ["dimDate[MonthName]"]),
-      ("Y-axis", ["TB ₹ Cr", "Value ₹ Cr"])],
-     (644, 480, 620, 232),
-     "Two bars per month, books against stock report — a gap that is opening up shows here "
-     "before anyone notices it in the numbers.", []),
+    ("Summary", "Clustered column chart", "Difference (Rs Cr.) by Plant — Click a Bar",
+     [("X-axis", ["dimPlant[Plant]", "dimCategory[Category]"]),
+      ("Y-axis", ["Difference \u20b9 Cr"])],
+     (16, 560, 1248, 144),
+     "The reconciliation as a picture, so a plant that has drifted is visible without "
+     "reading twelve columns. Click a bar and both matrices above filter to that plant; "
+     "right-click \u2192 Drill through \u2192 Detail for the materials behind it.",
+     ["The two X-axis fields are a drill hierarchy, not a legend: turn on drill mode with "
+      "the double-down-arrow in the visual's top-right corner, and clicking a plant bar "
+      "then opens RM / FG / Consumables inside it.",
+      "Format pane \u2192 Columns \u2192 Colour \u2192 fx \u2192 Format style: Rules, and colour any value "
+      "below 0 red. A difference either direction is equally wrong, so red both ways.",
+      "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Colour: #1F2A24, Value "
+      "decimal places: 2, Display units: None.",
+      "Format pane \u2192 Y-axis: Off \u2014 the label on each bar is the number, so the scale up "
+      "the side is only eating height.",
+      "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane \u2192 Legend: Off. One measure, one colour, nothing for a legend to name.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D."]),
 
     # ---- FG: MW | In ₹ Cr | In Days as master columns ----------------------------------
     ("FG", "Matrix", "FG by plant — MW · In ₹ Cr · In Days",

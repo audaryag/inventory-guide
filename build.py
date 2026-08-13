@@ -502,11 +502,22 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
   <p class="sub">Report view → <strong>Home → New measure</strong>, paste, Enter. One per box.
   They are also in the Measures tab at the bottom, so do not paste them twice.</p>
   {cards(new_measures, 'nm')}
-  <h2>3 &mdash; then rebuild the Overview page</h2>
-  <p class="sub">Go to <strong>Build it</strong> and work through the Overview steps. Delete the
-  old cards, slicers and charts on Overview first — the page is laid out differently now
-  (green panel down the left, chart above table, two donuts on the right). The Summary, FG,
-  RM and Detail pages are untouched.</p>
+  <h2>3 &mdash; then rebuild the Overview and Summary pages</h2>
+  <p class="sub">Go to <strong>Build it</strong> and work through the Overview steps, then the
+  Summary steps. On both pages, delete what is there first — select everything on the page with
+  <strong>Ctrl+A</strong> and press <strong>Delete</strong> — because both are laid out
+  differently now.</p>
+  <p class="sub"><strong>Overview:</strong> green panel down the left, chart above table, two
+  donuts on the right, twelve-month strip along the bottom.</p>
+  <p class="sub"><strong>Summary:</strong> no header band of cards any more. It has its own five
+  controls, then one matrix with <em>Inventory (TB)</em>, <em>Inventory (MB5B)</em> and
+  <em>Difference</em> as master columns and the plants opening into RM / FG / Consumables, then
+  the across-all-plants block, then the difference chart. It needs the two new measures
+  <code>Summary Value Rs Cr</code> and <code>In Summary Window</code> from section 2 above, so
+  paste those before you start.</p>
+  <p class="sub">The FG, RM and Detail pages are untouched — but the header band of cards is now
+  built on <strong>FG</strong> and copied to <strong>RM</strong> only, since Summary no longer
+  carries it.</p>
 </div>
 
 <div class="panel" id="tab-b">
