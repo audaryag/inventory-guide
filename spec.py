@@ -817,49 +817,40 @@ VISUALS = [
       "Right-click a material row → Drill through → Detail for the material-by-material "
       "list behind it."]),
 
-    ("RM", "Clustered column chart", "RM Inventory (Rs Cr.) by Plant",
-     [("X-axis", ["Period[Period]"]),
-      ("Legend", ["dimPlant[Plant]"]),
-      ("Y-axis", ["Inventory Rs Cr"]),
-      ("Filters", ["dimCategory[Category]  →  is RM",
-                   "In Summary Window  →  is 1"])],
-     (16, 496, 616, 208),
-     "The first of the two charts you wanted: raw material held in crore rupees, one group per "
-     "period along the bottom and the three plants side by side inside each group, so you read "
-     "the months left to right and compare the plants within a month. It follows the pickers "
-     "above, so it is four periods by default and up to twelve if you tick them.",
-     ["Period[Period] goes in the X-axis and dimPlant[Plant] in Legend — that order is what "
-      "gives three bars per month rather than four bars per plant.",
-      "Y-axis takes Inventory Rs Cr, the period-aware one, so quarter mode averages the "
-      "month-ends instead of adding them.",
-      "Format pane → Data labels: On, Font: Arial, Font size: 8, Colour: #1F2A24, Display "
-      "units: None, Value decimal places: 0, Position: Inside end.",
-      "Format pane → Y-axis: Off — every bar carries its own number.",
-      "Format pane → X-axis → Values → Font: Arial, Font size: 9, Colour: #1F2A24.",
-      "Format pane → Legend → Position: Top center, Font: Arial, Font size: 8. Keep it on: "
-      "it is the only thing naming the plants.",
-      "Format pane → General → Title → Font: Arial, Font size: 11, Colour: #14532D.",
-      "Clicking one plant's bar filters both matrices to that plant and that period."]),
-
-    ("RM", "Clustered column chart", "RM Inventory (Days) by Plant",
-     [("X-axis", ["Period[Period]"]),
-      ("Legend", ["dimPlant[Plant]"]),
-      ("Y-axis", ["Days by Period"]),
-      ("Filters", ["dimCategory[Category]  →  is RM",
-                   "In Summary Window  →  is 1"])],
-     (648, 496, 616, 208),
-     "The same chart in days rather than rupees — how long each plant's raw material would "
-     "last at its own capacity, again three plant bars per month. Read together with the one "
-     "beside it, this is what tells you whether a bigger rupee figure is actually more stock "
-     "or just a dearer month.",
-     ["Build it by copying the chart beside it (Ctrl+C, Ctrl+V) and swapping the Y-axis "
-      "measure from Inventory Rs Cr to Days by Period. Everything else stays.",
-      "Format pane → Data labels → Value decimal places: 0, and Display units: None. Days "
-      "read as whole numbers, exactly as the old sheet printed them.",
-      "Format pane → Y-axis: Off, Legend → Position: Top center.",
-      "Format pane → General → Title → Font: Arial, Font size: 11, Colour: #14532D.",
-      "A plant with no capacity figure comes out blank rather than zero — that is correct, "
-      "not a fault. Days is MW ÷ capacity MW, and dividing by nothing has no answer."]),
+    ("RM", "Line chart", "Days of Inventory by Month, Last 12 Months \u2014 RM, FG and Total",
+     [("X-axis", ["dimDate[MonthName]"]),
+      ("Y-axis", ["RM Days", "FG Days", "Total Days (RM + FG)"]),
+      ("Filters", ["In Last 12  \u2192  is 1"])],
+     (16, 496, 1248, 208),
+     "One chart in place of the two plant charts: three lines across the last twelve months "
+     "that have data, or fewer if that is all there is \u2014 raw material days, finished goods "
+     "days, and the two added together, which is what the Overview card calls Days of "
+     "inventory (RM + FG). Every month is its own closing figure divided by capacity, so "
+     "nothing is added across months. Read it for shape: RM climbing while FG is flat means "
+     "material is arriving faster than it is being consumed.",
+     ["This chart must ignore the five controls at the top, or it would drop back to four "
+      "periods. Click the 'By Month / By Quarter' slicer, then ribbon Format \u2192 Edit "
+      "interactions, and on this chart click the circle-with-a-line (None). Repeat for the "
+      "Months and Quarters slicers. Leave Plant and Group Nature filtering, so those two "
+      "still work on it \u2014 picking a plant re-bases all three lines on that plant's capacity.",
+      "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #14532D, "
+      "Display units: None, Value decimal places: 0, Position: Above. Twelve months \u00d7 three "
+      "lines is a lot of numbers: if they collide, set Data labels \u2192 Apply settings to \u2192 "
+      "Series and switch the Total line's labels off, since it is the sum of the other two.",
+      "Format pane \u2192 Lines \u2192 Stroke width: 2, Show marker: On, Marker size: 4. Then Lines "
+      "\u2192 Apply settings to \u2192 Series: RM Days #2E7D46, FG Days #7FBB84, "
+      "Total Days (RM + FG) #14532D \u2014 the total is the darkest, so it reads as the envelope.",
+      "Format pane \u2192 Legend \u2192 Position: Top center, Font: Arial, Font size: 9, Colour: "
+      "#1F2A24. Three series need a key, unlike the single-series charts elsewhere.",
+      "Format pane \u2192 Y-axis \u2192 Title: On, Text: 'Days', Font: Arial, Font size: 9, Colour: "
+      "#1F2A24, Display units: None. A days axis earns its title because the number is a "
+      "ratio, not rupees.",
+      "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24, "
+      "Concatenate labels: Off.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D.",
+      "If a plant has no capacity row in the Variables workbook its days go blank rather than "
+      "zero, so a gap in a line means missing capacity, not zero stock.",
+      "Right-click a point \u2192 Drill through \u2192 Detail for the materials behind that month."]),
 
     ("Detail", "Card", "Value ₹ Cr of what you clicked",
      [("Fields", ["Value ₹ Cr"])],
