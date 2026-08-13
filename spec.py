@@ -297,14 +297,42 @@ VISUALS = [
       ("Columns", ["Period[Period]"]),
       ("Values", ["Inventory Rs Cr"]),
       ("Filters", ["In Window  \u2192  is 1"])],
-     (252, 432, 664, 274),
+     (252, 432, 664, 146),
      "The same five columns as the chart directly above it, for readers who want the "
-     "figures rather than the shape.",
+     "figures rather than the shape. Only as tall as its four rows, so no white gap is left "
+     "under it.",
      ["Format pane \u2192 Row headers \u2192 Stepped layout: Off.",
       "Format pane \u2192 Subtotals \u2192 Row subtotals: On, Column subtotals: Off. Here the total "
       "row earns its place, because the three types add up to the month.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 10, Colour: #14532D."]),
+
+    ("Overview", "Clustered column chart", "Total Inventory by Month, Last 12 Months (Rs Cr.)",
+     [("X-axis", ["dimDate[MonthName]"]),
+      ("Y-axis", ["Value \u20b9 Cr"]),
+      ("Filters", ["In Last 12  \u2192  is 1"])],
+     (252, 586, 664, 120),
+     "The long view, under the table: one bar per month for the last twelve months that "
+     "have data, or fewer if that is all there is. Each bar is that month's closing stock "
+     "on its own \u2014 inventory is a level, so nothing here is ever added across months.",
+     ["This one must ignore the two controls at the top, or it would shrink back to five "
+      "months. Click the 'By Month / By Quarter' slicer once, then ribbon Format \u2192 Edit "
+      "interactions; small icons appear on every other visual. On this chart click the "
+      "circle-with-a-line (None). Do the same after selecting the 'Months' slicer. Leave "
+      "Plant and Type set to filter, so those two still work on it.",
+      "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #14532D, "
+      "Display units: None, Value decimal places: 0. Twelve bars is too tight for a decimal, "
+      "and the table above carries the exact figures.",
+      "Format pane \u2192 Data labels \u2192 Options \u2192 Position: Outside end, Orientation: "
+      "Horizontal.",
+      "Format pane \u2192 Y-axis: Off. The number is printed on each bar, so the scale up the "
+      "side is only eating height.",
+      "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24.",
+      "Format pane \u2192 X-axis \u2192 Inner padding: 45%. That is what keeps the bars slim and "
+      "grouped towards the middle when only three or four months exist \u2014 without it Power BI "
+      "stretches four bars across the whole width.",
+      "Format pane \u2192 Columns \u2192 Colour: #2E7D46.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 11, Colour: #14532D."]),
 
     # ---- Overview donuts -----------------------------------------------------------------
     ("Overview", "Donut chart", "Share by Type (%)",
