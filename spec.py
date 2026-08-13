@@ -492,25 +492,53 @@ VISUALS = [
       "This matrix has no Plant field on purpose. Leave the Plant slicer on 'All' when you "
       "want the across-all-plants figure \u2014 picking one plant filters this block too."]),
 
-    ("Summary", "Clustered column chart", "Difference (Rs Cr.) by Plant — Click a Bar",
-     [("X-axis", ["dimPlant[Plant]", "dimCategory[Category]"]),
-      ("Y-axis", ["Difference \u20b9 Cr"])],
-     (16, 560, 1248, 144),
-     "The reconciliation as a picture, so a plant that has drifted is visible without "
-     "reading twelve columns. Click a bar and both matrices above filter to that plant; "
-     "right-click \u2192 Drill through \u2192 Detail for the materials behind it.",
-     ["The two X-axis fields are a drill hierarchy, not a legend: turn on drill mode with "
-      "the double-down-arrow in the visual's top-right corner, and clicking a plant bar "
-      "then opens RM / FG / Consumables inside it.",
-      "Format pane \u2192 Columns \u2192 Colour \u2192 fx \u2192 Format style: Rules, and colour any value "
+    ("Summary", "Clustered column chart",
+     "Inventory (TB) vs Inventory (MB5B) by Month (Rs Cr.)",
+     [("X-axis", ["Period[Period]"]),
+      ("Y-axis", ["TB Inventory Rs Cr", "Inventory Rs Cr"]),
+      ("Filters", ["In Summary Window  \u2192  is 1"])],
+     (16, 560, 616, 144),
+     "The books against the stock report, two bars per period: the same figures as the "
+     "matrix above, but you can see a gap opening without reading a single number. Same "
+     "periods as the matrices, because it carries the same filter.",
+     ["Both measures go in the Y-axis, TB Inventory Rs Cr first \u2014 that fixes the order of "
+      "the two bars, so the books are always the left-hand one.",
+      "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Colour: #1F2A24, Display "
+      "units: None, Value decimal places: 0, Position: Inside end.",
+      "Format pane \u2192 Y-axis: Off. The label on each bar is the number, so a scale up the "
+      "side only eats the height.",
+      "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24.",
+      "Format pane \u2192 Legend \u2192 Position: Top center, Font: Arial, Font size: 8. Two "
+      "measures here, so the legend is the only thing naming them \u2014 leave it on.",
+      "Format pane \u2192 X-axis \u2192 Inner padding: 30%, and General \u2192 Properties \u2192 Padding: "
+      "Left 12, Right 12, so the first and last bar keep off the card edges.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 11, Colour: #14532D."]),
+
+    ("Summary", "Line and clustered column chart",
+     "Difference by Month (Rs Cr. and % of TB)",
+     [("X-axis", ["Period[Period]"]),
+      ("Column y-axis", ["Difference Inventory Rs Cr"]),
+      ("Line y-axis", ["Difference Inventory %"]),
+      ("Filters", ["In Summary Window  \u2192  is 1"])],
+     (648, 560, 616, 144),
+     "The question the reconciliation is really asking: is the gap widening or closing. The "
+     "bar is the difference in crore rupees, the line above it the same difference as a "
+     "percentage of the trial balance, so a small gap on a big month reads as small.",
+     ["Format pane \u2192 Columns \u2192 Colour \u2192 fx \u2192 Format style: Rules, and colour any value "
       "below 0 red. A difference either direction is equally wrong, so red both ways.",
-      "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Colour: #1F2A24, Value "
-      "decimal places: 2, Display units: None.",
-      "Format pane \u2192 Y-axis: Off \u2014 the label on each bar is the number, so the scale up "
-      "the side is only eating height.",
-      "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
-      "Format pane \u2192 Legend: Off. One measure, one colour, nothing for a legend to name.",
-      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D."]),
+      "Format pane \u2192 Data labels: On. Then 'Apply settings to' \u2192 Series: Difference "
+      "Inventory Rs Cr \u2014 Font: Arial, Font size: 8, Colour: #1F2A24, Display units: None, "
+      "Value decimal places: 2, Position: Inside end.",
+      "Still under Data labels, switch 'Apply settings to' \u2192 Series to Difference "
+      "Inventory %: Font: Arial, Font size: 8, Colour: #6B7280, Value decimal places: 1, "
+      "Position: Above. Two numbers per period, and they cannot collide.",
+      "Format pane \u2192 Y-axis: Off, Secondary y-axis: Off. Both numbers are printed on the "
+      "chart already.",
+      "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24.",
+      "Format pane \u2192 Lines \u2192 Colour: #9AA79F, Stroke width: 1, Markers: On, Marker size: 3.",
+      "Format pane \u2192 Legend: Off \u2014 the title says which is which, and 144 pixels of height "
+      "has none to spare.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 11, Colour: #14532D."]),
 
     # ---- FG: MW | In ₹ Cr | In Days as master columns ----------------------------------
     ("FG", "Matrix", "FG by plant — MW · In ₹ Cr · In Days",
