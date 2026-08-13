@@ -16,11 +16,12 @@ DRILL_FIELDS = ["dimPlant[Plant]", "dimDate[MonthName]", "dimCategory[Category]"
 
 # ---- colours and type, quoted by every step so nothing is left to taste -----------------
 FONT = "Arial"
-INK = "#1F2A24"          # body text
+INK = "#1F2A24"          # body text, and the figures inside the white ticker boxes
 HEAD = "#14532D"         # headings
 PANEL = "#14532D"        # the ticker panel down the left
-PANEL_INK = "#FFFFFF"    # text on the panel
-PANEL_SUB = "#BFE3C6"    # the small wording on the panel
+PANEL_INK = "#FFFFFF"    # text sitting straight on the green panel
+PANEL_SUB = "#BFE3C6"    # the small wording on the green panel
+BOX = "#FFFFFF"          # the three white boxes inside the panel
 UP, DOWN = "#2E7D32", "#B3261E"
 
 # Overview carries the ticker panel and its own controls, so it is built visual by visual.
@@ -51,138 +52,181 @@ SLICERS = [
 DECOR = [
     ("Overview", "Rectangle", "", 0, 0, 236, 720,
      "The ticker panel. Fill %s, no border, no rounded corners. Right-click it and choose "
-     "Send to back so the cards sit on top of it." % PANEL),
+     "Send to back so everything else sits on top of it." % PANEL),
     ("Overview", "Image", "", 20, 16, 56, 56,
      "Empty box for the company logo. Insert → Image, pick any small file for now, then "
      "swap it later by clicking the image and choosing Browse."),
     ("Overview", "Text box", "Inventory Overview", 88, 20, 140, 30,
      "Arial 15, bold, colour %s." % PANEL_INK),
-    ("Overview", "Text box", "By type", 20, 92, 196, 20,
-     "Arial 10, bold, colour %s. Section heading for the three category cards." % PANEL_SUB),
-    ("Overview", "Text box", "By plant", 20, 306, 196, 20,
-     "Arial 10, bold, colour %s. Section heading for the three plant cards." % PANEL_SUB),
+    ("Overview", "Text box", "By Type", 20, 84, 196, 18,
+     "Arial 10, bold, colour %s. Section heading above the first white box." % PANEL_SUB),
+    ("Overview", "Rectangle", "", 12, 104, 212, 200,
+     "White box number 1, the one the RM, FG and Consumables cards sit inside. Fill %s, "
+     "rounded corners 8, no border. Right-click it and choose Send backward once so it "
+     "covers the green panel but stays under the cards." % BOX),
+    ("Overview", "Text box", "By Plant", 20, 312, 196, 18,
+     "Arial 10, bold, colour %s. Section heading above the second white box." % PANEL_SUB),
+    ("Overview", "Rectangle", "", 12, 332, 212, 200,
+     "White box number 2, for the three plant cards. Fill %s, rounded corners 8, no border, "
+     "then Send backward once." % BOX),
+    ("Overview", "Rectangle", "", 12, 540, 212, 168,
+     "White box number 3, for Total, Change since Last Month and the As on line. Fill %s, "
+     "rounded corners 8, no border, then Send backward once." % BOX),
 ]
 
 # ---- one entry per visual ----------------------------------------------------------------
 # wells: list of (well name, [fields])  |  pos: (x, y, w, h)  |  extra: list of extra clicks
 VISUALS = [
-    # ---- Overview: the ticker panel, fixed to the latest month, then the history ---------
+    # ---- Overview: the ticker panel, three white boxes, fixed to the latest month -------
     ("Overview", "Card", "RM",
      [("Fields", ["Ticker RM Rs Cr"])],
-     (20, 116, 196, 60),
-     "Panel figure. It reads the latest month that has data and ignores every slicer on "
-     "the page, because stock is a level, not something you add up across months.",
+     (20, 110, 196, 60),
+     "Panel figure, sitting inside the white box. It reads the latest month that has data "
+     "and ignores every slicer on the page, because stock is a level, not something you "
+     "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
-      "Power BI writing 2.5K instead of 2,539.4.",
-      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "behind it is white now). Display units None is what stops Power BI writing 2.5K "
+      "instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
       "Text: the title above.",
-      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
-      "panel behind shows through.",
-      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
+      "comes from the box shape underneath, so the card itself stays see-through.",
+      "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
+      "Vertical (Y) to 20 and 110 exactly, or the card will not sit square inside its box."],
+     ),
 
     ("Overview", "Card", "FG",
      [("Fields", ["Ticker FG Rs Cr"])],
-     (20, 180, 196, 60),
-     "Panel figure. It reads the latest month that has data and ignores every slicer on "
-     "the page, because stock is a level, not something you add up across months.",
+     (20, 174, 196, 60),
+     "Panel figure, sitting inside the white box. It reads the latest month that has data "
+     "and ignores every slicer on the page, because stock is a level, not something you "
+     "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
-      "Power BI writing 2.5K instead of 2,539.4.",
-      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "behind it is white now). Display units None is what stops Power BI writing 2.5K "
+      "instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
       "Text: the title above.",
-      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
-      "panel behind shows through.",
-      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
+      "comes from the box shape underneath, so the card itself stays see-through.",
+      "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
+      "Vertical (Y) to 20 and 174 exactly, or the card will not sit square inside its box."],
+     ),
 
     ("Overview", "Card", "Consumables",
      [("Fields", ["Ticker Consumables Rs Cr"])],
-     (20, 244, 196, 60),
-     "Panel figure. It reads the latest month that has data and ignores every slicer on "
-     "the page, because stock is a level, not something you add up across months.",
+     (20, 238, 196, 60),
+     "Panel figure, sitting inside the white box. It reads the latest month that has data "
+     "and ignores every slicer on the page, because stock is a level, not something you "
+     "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
-      "Power BI writing 2.5K instead of 2,539.4.",
-      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "behind it is white now). Display units None is what stops Power BI writing 2.5K "
+      "instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
       "Text: the title above.",
-      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
-      "panel behind shows through.",
-      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
+      "comes from the box shape underneath, so the card itself stays see-through.",
+      "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
+      "Vertical (Y) to 20 and 238 exactly, or the card will not sit square inside its box."],
+     ),
 
     ("Overview", "Card", "1900 Jaipur Module",
      [("Fields", ["Ticker 1900 Rs Cr"])],
-     (20, 330, 196, 60),
-     "Panel figure. It reads the latest month that has data and ignores every slicer on "
-     "the page, because stock is a level, not something you add up across months.",
+     (20, 338, 196, 60),
+     "Panel figure, sitting inside the white box. It reads the latest month that has data "
+     "and ignores every slicer on the page, because stock is a level, not something you "
+     "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
-      "Power BI writing 2.5K instead of 2,539.4.",
-      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "behind it is white now). Display units None is what stops Power BI writing 2.5K "
+      "instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
       "Text: the title above.",
-      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
-      "panel behind shows through.",
-      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
+      "comes from the box shape underneath, so the card itself stays see-through.",
+      "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
+      "Vertical (Y) to 20 and 338 exactly, or the card will not sit square inside its box."],
+     ),
 
     ("Overview", "Card", "1902 Dholera Module",
      [("Fields", ["Ticker 1902 Rs Cr"])],
-     (20, 394, 196, 60),
-     "Panel figure. It reads the latest month that has data and ignores every slicer on "
-     "the page, because stock is a level, not something you add up across months.",
+     (20, 402, 196, 60),
+     "Panel figure, sitting inside the white box. It reads the latest month that has data "
+     "and ignores every slicer on the page, because stock is a level, not something you "
+     "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
-      "Power BI writing 2.5K instead of 2,539.4.",
-      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "behind it is white now). Display units None is what stops Power BI writing 2.5K "
+      "instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
       "Text: the title above.",
-      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
-      "panel behind shows through.",
-      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
+      "comes from the box shape underneath, so the card itself stays see-through.",
+      "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
+      "Vertical (Y) to 20 and 402 exactly, or the card will not sit square inside its box."],
+     ),
 
     ("Overview", "Card", "1905 Dholera Cell",
      [("Fields", ["Ticker 1905 Rs Cr"])],
-     (20, 458, 196, 60),
-     "Panel figure. It reads the latest month that has data and ignores every slicer on "
-     "the page, because stock is a level, not something you add up across months.",
+     (20, 466, 196, 60),
+     "Panel figure, sitting inside the white box. It reads the latest month that has data "
+     "and ignores every slicer on the page, because stock is a level, not something you "
+     "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
-      "Power BI writing 2.5K instead of 2,539.4.",
-      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "behind it is white now). Display units None is what stops Power BI writing 2.5K "
+      "instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
       "Text: the title above.",
-      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
-      "panel behind shows through.",
-      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
+      "comes from the box shape underneath, so the card itself stays see-through.",
+      "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
+      "Vertical (Y) to 20 and 466 exactly, or the card will not sit square inside its box."],
+     ),
 
     ("Overview", "Card", "Total",
      [("Fields", ["Ticker Rs Cr"])],
-     (20, 526, 196, 64),
-     "Panel figure. It reads the latest month that has data and ignores every slicer on "
-     "the page, because stock is a level, not something you add up across months.",
+     (20, 546, 196, 62),
+     "Panel figure, sitting inside the white box. It reads the latest month that has data "
+     "and ignores every slicer on the page, because stock is a level, not something you "
+     "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Colour: #FFFFFF. Display units None is what stops "
-      "Power BI writing 2.5K instead of 2,539.4.",
-      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6, "
+      "Font: Arial, Font size: 22, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "behind it is white now). Display units None is what stops Power BI writing 2.5K "
+      "instead of 2,539.4.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
       "Text: the title above.",
-      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off, so the green "
-      "panel behind shows through.",
-      "Format pane \u2192 General \u2192 Advanced options: nothing to change here."]),
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
+      "comes from the box shape underneath, so the card itself stays see-through.",
+      "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
+      "Vertical (Y) to 20 and 546 exactly, or the card will not sit square inside its box."],
+     ),
 
-    ("Overview", "Card", "Change since last month",
+    ("Overview", "Card", "Change since Last Month",
      [("Fields", ["Ticker Change Text"])],
-     (20, 598, 196, 60),
+     (20, 612, 196, 58),
      "One line reading, for example, +12.4 Rs Cr. (+2.1%) \u2014 the amount and the percentage "
-     "together, each labelled, so nobody has to ask which is which. Green when stock rose, "
-     "red when it fell.",
-     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 14, Colour: #FFFFFF.",
-      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #BFE3C6.",
+     "together, each labelled, so nobody has to ask which is which. Same white box as Total, "
+     "directly under it.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 15, Bold: On, "
+      "Colour: #1F2A24. Green and red would fight with the white box, so the sign carries "
+      "the meaning instead.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
+      "Text: Change since Last Month.",
       "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, Border: Off.",
-      "The measure writes its own + or \u2212 sign and both units, so leave Display units alone."]),
+      "The measure writes its own + or \u2212 sign and both units, so leave Display units alone."],
+     ),
 
     ("Overview", "Card", "As on",
      [("Fields", ["As On Text"])],
-     (20, 662, 196, 44),
-     "Says which month the panel is showing, so a reader never has to guess.",
-     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 11, Colour: #BFE3C6.",
+     (20, 674, 196, 28),
+     "Says which month the whole panel is showing, so a reader never has to guess.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 10, Colour: #4B5563.",
       "Format pane \u2192 General \u2192 Title: Off \u2014 the sentence says it all.",
-      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, Border: Off."]),
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, Border: Off."],
+     ),
 
     # ---- Overview controls ---------------------------------------------------------------
     ("Overview", "Slicer", "By month / By quarter",
@@ -234,16 +278,18 @@ VISUALS = [
      "Five months side by side, or four quarters if the toggle is set to By quarter, in "
      "which case each bar is the average of that quarter's month-ends. The In Window filter "
      "is what keeps it to five (or four) without you having to prune the slicer.",
-     ["Format pane \u2192 Data labels: On, Font: Arial, Font size: 9, Colour: #1F2A24, Display "
-      "units: None, Value decimal places: 1. Every bar segment then prints its own number.",
+     ["Format pane \u2192 Data labels: On, Font: Arial, Font size: 9, Bold: On, Colour: "
+      "#FFFFFF, Display units: None, Value decimal places: 1. Every bar segment then prints "
+      "its own number, in white because it is printed on top of the colour.",
       "Format pane \u2192 Data labels \u2192 Options \u2192 Position: Inside center, Orientation: "
       "Horizontal.",
-      "Format pane \u2192 Total labels: On, Font size 9 \u2014 that prints the whole month's figure "
-      "above each bar.",
+      "Format pane \u2192 Total labels: On, Font: Arial, Font size: 9, Bold: On, Colour: "
+      "#14532D \u2014 that prints the whole month's figure above each bar, on the white card, so "
+      "this one is dark green rather than white.",
       "Format pane \u2192 General \u2192 Title \u2192 use the measure instead of typed words: click the "
       "fx button beside Text, choose 'Field value', and pick the measure Period Title. The "
       "heading then reads 'Inventory by Month (Rs Cr.)' or 'Inventory by Quarter (Rs Cr., "
-      "average of month-ends)' to match the toggle.",
+      "Average of Month-Ends)' to match the toggle.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D."]),
 
     ("Overview", "Matrix", "Inventory by Month (Rs Cr.)",
@@ -476,3 +522,47 @@ VISUALS = [
       "Click the Value ₹ Cr column header once so it sorts largest first."]),
 
 ]
+
+
+# ---- headings: Title Case everywhere ------------------------------------------------------
+# Every word gets a capital except the short joining words, and even those get one when they
+# open a heading or follow a dash, a colon or a middle dot. Done here, once, so a title can
+# never disagree between the guide, the steps and the generated project.
+SMALL = {"a", "an", "and", "as", "at", "but", "by", "for", "from", "in", "into", "nor",
+         "of", "on", "or", "per", "since", "the", "to", "vs", "via", "with"}
+_BREAK = {"\u2014", "\u2013", "-", "\u00b7", ":", "|", "/"}
+
+
+def title_case(text):
+    if not text:
+        return text
+    words = text.split(" ")
+    out, opening = [], True
+    for w in words:
+        if w in _BREAK or w.endswith(("\u2014", ":")):
+            out.append(w)
+            opening = True
+            continue
+        core = w.lstrip("(\u201c'\u2018")
+        lead = w[:len(w) - len(core)]
+        bare = core.rstrip(")\u201d'\u2019.,%")
+        tail = core[len(bare):]
+        low = bare.lower()
+        if bare[:1].isupper():                            # already capital: never undo it
+            fixed = bare
+        elif low in SMALL and not opening:
+            fixed = low
+        elif bare[:1].isalpha():
+            fixed = bare[0].upper() + bare[1:]
+        else:
+            fixed = bare
+        out.append(lead + fixed + tail)
+        opening = False
+    return " ".join(out)
+
+
+CARDS = [(m, x, y, w, h, title_case(t)) for m, x, y, w, h, t in CARDS]
+SLICERS = [(f, x, y, w, h, title_case(t)) for f, x, y, w, h, t in SLICERS]
+DECOR = [(p, k, title_case(t), x, y, w, h, n) for p, k, t, x, y, w, h, n in DECOR]
+VISUALS = [(p, k, title_case(t), wells, pos, why, extra)
+           for p, k, t, wells, pos, why, extra in VISUALS]

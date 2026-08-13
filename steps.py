@@ -1,6 +1,6 @@
 """Turns spec.py into (a) guided one-at-a-time steps and (b) the PART 4 markdown."""
 from spec import (CANVAS, PAGES, CARDS, SLICERS, VISUALS, DRILL_PAGE, DRILL_FIELDS,
-                  BAND_PAGES, DECOR, FONT, PANEL, PANEL_INK, PANEL_SUB, HEAD, INK)
+                  BAND_PAGES, DECOR, title_case, FONT, PANEL, PANEL_INK, PANEL_SUB, BOX, HEAD, INK)
 
 W, H = CANVAS
 
@@ -188,7 +188,7 @@ def _decor_steps():
     out = []
     for kind, text, x, y, w, h, note in [(d[1], d[2], d[3], d[4], d[5], d[6], d[7])
                                          for d in DECOR if d[0] == "Overview"]:
-        if kind == "Rectangle":
+        if kind == "Rectangle" and h > 400:
             do = ["At the bottom of the window click the tab named Overview.",
                   "Click once on an empty part of the page so nothing is selected.",
                   "At the top of the window click the Insert tab, then click Shapes, then "
@@ -202,7 +202,7 @@ def _decor_steps():
             do += ["Right-click the rectangle and choose Send to back. Everything you add "
                    "next will sit on top of it."]
             out.append(dict(
-                title="Overview — the green panel down the left",
+                title="Overview \u2014 the Green Panel down the Left",
                 page="Overview", do=do,
                 fields=[("Shape", "Rectangle"), ("Fill colour (Hex)", PANEL),
                         ("Border", "Off")] + _pos_rows(x, y, w, h),
@@ -211,8 +211,44 @@ def _decor_steps():
                 check="A dark green stripe runs down the whole left edge of the page, from "
                       "the very top to the very bottom.",
                 stuck="If it hides something you built earlier, right-click it and choose "
-                      "Send to back again. If the green is the wrong shade, reopen Fill → "
+                      "Send to back again. If the green is the wrong shade, reopen Fill \u2192 "
                       "Custom colour and retype %s." % PANEL))
+        elif kind == "Rectangle":
+            which = {104: ("1", "RM, FG and Consumables"),
+                     332: ("2", "the three plants"),
+                     540: ("3", "Total, Change since Last Month and the As on line")}[y]
+            do = ["At the bottom of the window click the tab named Overview.",
+                  "Click once on an empty part of the page so nothing is selected.",
+                  "At the top of the window click the Insert tab, then click Shapes, then "
+                  "click Rectangle.",
+                  "In the Format pane click Shape, then Style, then Fill, click the colour "
+                  "box, choose 'Custom colour' and type %s into the Hex box, then press "
+                  "Enter. The shape turns white." % BOX,
+                  "Still under Style, click Border and switch it Off.",
+                  "Under Shape, set Rounded corners to 8, so the box has soft corners.",
+                  "Click General, then Effects, then Shadow, and switch it On, Preset: "
+                  "Outer \u2014 Bottom right. That lifts the white box off the green.",
+                  ]
+            do += _place(x, y, w, h, in_format=True)
+            do += ["Right-click the box and choose Send backward once \u2014 not Send to back. "
+                   "It must cover the green panel but stay underneath the cards you put "
+                   "inside it in the next steps.",
+                   "If you have already built the cards, right-click the box and choose Send "
+                   "backward again until the numbers show through."]
+            out.append(dict(
+                title="Overview \u2014 White Box %s, for %s" % which,
+                page="Overview", do=do,
+                fields=[("Shape", "Rectangle"), ("Fill colour (Hex)", BOX),
+                        ("Rounded corners", "8"),
+                        ("Border", "Off")] + _pos_rows(x, y, w, h),
+                note="Three white boxes, not nine: the box is what groups the figures, so the "
+                     "eye reads by type, then by plant, then the total and the change. The "
+                     "cards themselves stay see-through and simply sit on top.",
+                check="A white rounded box sits on the green panel at the position below, "
+                      "with room inside it for three lines.",
+                stuck="If the box hides the cards, right-click it \u2192 Send backward. If it "
+                      "hides the green panel entirely, its Width is wrong \u2014 set it to %d. "
+                      "If the corners are square, Rounded corners is still 0." % w))
         elif kind == "Image":
             do = ["At the bottom of the window click the tab named Overview.",
                   "At the top of the window click the Insert tab, then click Image.",
@@ -592,6 +628,9 @@ def steps():
                         "hand-edited — the numbers on every page are wrong until that is "
                         "fixed. The qc* queries are still in the model if you want to put "
                         "them on a page of their own to see why."))
+    # every step heading in Title Case, in one place
+    for d in S:
+        d["title"] = title_case(d["title"])
     return S
 
 
@@ -636,20 +675,23 @@ def part4_markdown():
          "---", "", "## The furniture on `Overview` (no data in any of it)", "",
          "| What | Insert it with | Text / fill | Horizontal (X) | Vertical (Y) | Width | "
          "Height |", "|---|---|---|---|---|---|---|"] + \
-        ["| %s | Insert → %s | %s | %d | %d | %d | %d |"
-         % ("the green panel" if k == "Rectangle" else
+        ["| %s | Insert \u2192 %s | %s | %d | %d | %d | %d |"
+         % (("the green panel" if h > 400 else "white box for %s" %
+             {104: "RM, FG, Consumables", 332: "the three plants",
+              540: "Total, Change since Last Month, As on"}[y]) if k == "Rectangle" else
             ("the logo box" if k == "Image" else "text '%s'" % t),
-            "Shapes → Rectangle" if k == "Rectangle" else k,
-            PANEL if k == "Rectangle" else ("any picture for now" if k == "Image"
-                                            else "%s, %s" % (FONT, PANEL_INK if h >= 28
-                                                             else PANEL_SUB)),
+            "Shapes \u2192 Rectangle" if k == "Rectangle" else k,
+            (PANEL if h > 400 else "%s, rounded corners 8" % BOX) if k == "Rectangle"
+            else ("any picture for now" if k == "Image"
+                  else "%s, %s" % (FONT, PANEL_INK if h >= 28 else PANEL_SUB)),
             x, y, w, h)
          for (pg, k, t, x, y, w, h, note) in DECOR if pg == "Overview"] + \
         ["",
-         "Build the rectangle first and **right-click → Send to back**; everything else on",
-         "the panel sits on top of it. Each card on the panel then has **General → Effects →",
-         "Background: Off**, so the green shows through and the nine figures read as one",
-         "block.", "",
+         "Build the green panel first and **right-click → Send to back**. Then the three",
+         "white boxes, each **right-click → Send backward** once, so they cover the green but",
+         "stay under the cards. Every card on the panel has **General → Effects →",
+         "Background: Off**, and its number in **%s** \u2014 the white box behind it is what "
+         "supplies the white." % INK, "",
          "---", "", "## The header band — build once on %s, then copy" % BAND_PAGES[0], "",
          "**4.1** %d **Card** visuals (**Insert → Card**), one measure each:" % len(CARDS), "",
          "| Card | Measure | Horizontal (X) | Vertical (Y) | Width | Height |", "|---|---|---|---|---|---|"]
