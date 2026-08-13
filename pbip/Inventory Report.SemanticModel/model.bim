@@ -318,9 +318,9 @@
             ]
           },
           {
-            "name": "MW",
+            "name": "MW Qty",
             "dataType": "double",
-            "sourceColumn": "MW",
+            "sourceColumn": "MW Qty",
             "summarizeBy": "none",
             "annotations": [
               {
@@ -396,7 +396,7 @@
             "mode": "import",
             "source": {
               "type": "m",
-              "expression": "let\n    Combined = Table.Combine({factRM, factFG, factConble}),\n    Wanted   = {\"SourceFile\",\"ValuationArea\",\"Material\",\"MatKey\",\"MaterialDesc\",\n                \"FromDate\",\"ToDate\",\"OpenQty\",\"OpenVal\",\"ReceiptQty\",\"ReceiptVal\",\n                \"IssueQty\",\"IssueVal\",\"CloseQty\",\"CloseVal\",\"BaseUOM\",\"SpecialStock\",\n                \"Currency\",\"Month\",\"Category\",\"Nature\",\"GroupNature\",\"BOMStdQty\",\"Item\",\n                \"AttrMissing\",\"MW\",\"Rate\",\"RateParseFailed\",\"Mid\",\"Base\",\"INR_WP\"},\n    Padded   = List.Accumulate(List.Difference(Wanted, Table.ColumnNames(Combined)),\n                   Combined, (t, c) => Table.AddColumn(t, c, each null)),\n    Kept     = Table.SelectColumns(Padded, Wanted),\n    Typed    = Table.TransformColumnTypes(Kept, {\n                   {\"SourceFile\", type text}, {\"ValuationArea\", type text},\n                   {\"Material\", type text}, {\"MatKey\", type text},\n                   {\"MaterialDesc\", type text}, {\"FromDate\", type date},\n                   {\"ToDate\", type date}, {\"OpenQty\", type number},\n                   {\"OpenVal\", type number}, {\"ReceiptQty\", type number},\n                   {\"ReceiptVal\", type number}, {\"IssueQty\", type number},\n                   {\"IssueVal\", type number}, {\"CloseQty\", type number},\n                   {\"CloseVal\", type number}, {\"BaseUOM\", type text},\n                   {\"SpecialStock\", type text}, {\"Currency\", type text},\n                   {\"Month\", type date}, {\"Category\", type text},\n                   {\"Nature\", type text}, {\"GroupNature\", type text},\n                   {\"BOMStdQty\", type number}, {\"Item\", type text},\n                   {\"AttrMissing\", type logical}, {\"MW\", type number},\n                   {\"Rate\", type number}, {\"RateParseFailed\", type logical},\n                   {\"Mid\", type text}, {\"Base\", type text}, {\"INR_WP\", type number}})\nin\n    Typed"
+              "expression": "let\n    Combined = Table.Combine({factRM, factFG, factConble}),\n    Wanted   = {\"SourceFile\",\"ValuationArea\",\"Material\",\"MatKey\",\"MaterialDesc\",\n                \"FromDate\",\"ToDate\",\"OpenQty\",\"OpenVal\",\"ReceiptQty\",\"ReceiptVal\",\n                \"IssueQty\",\"IssueVal\",\"CloseQty\",\"CloseVal\",\"BaseUOM\",\"SpecialStock\",\n                \"Currency\",\"Month\",\"Category\",\"Nature\",\"GroupNature\",\"BOMStdQty\",\"Item\",\n                \"AttrMissing\",\"MW\",\"Rate\",\"RateParseFailed\",\"Mid\",\"Base\",\"INR_WP\"},\n    Padded   = List.Accumulate(List.Difference(Wanted, Table.ColumnNames(Combined)),\n                   Combined, (t, c) => Table.AddColumn(t, c, each null)),\n    Kept     = Table.SelectColumns(Padded, Wanted),\n    Typed    = Table.TransformColumnTypes(Kept, {\n                   {\"SourceFile\", type text}, {\"ValuationArea\", type text},\n                   {\"Material\", type text}, {\"MatKey\", type text},\n                   {\"MaterialDesc\", type text}, {\"FromDate\", type date},\n                   {\"ToDate\", type date}, {\"OpenQty\", type number},\n                   {\"OpenVal\", type number}, {\"ReceiptQty\", type number},\n                   {\"ReceiptVal\", type number}, {\"IssueQty\", type number},\n                   {\"IssueVal\", type number}, {\"CloseQty\", type number},\n                   {\"CloseVal\", type number}, {\"BaseUOM\", type text},\n                   {\"SpecialStock\", type text}, {\"Currency\", type text},\n                   {\"Month\", type date}, {\"Category\", type text},\n                   {\"Nature\", type text}, {\"GroupNature\", type text},\n                   {\"BOMStdQty\", type number}, {\"Item\", type text},\n                   {\"AttrMissing\", type logical}, {\"MW\", type number},\n                   {\"Rate\", type number}, {\"RateParseFailed\", type logical},\n                   {\"Mid\", type text}, {\"Base\", type text}, {\"INR_WP\", type number}}),\n    // the megawatt column is renamed because Power BI will not let a table hold a column\n    // and a measure with the same name, and the report needs the measure to be called MW\n    Renamed  = Table.RenameColumns(Typed, {{\"MW\", \"MW Qty\"}})\nin\n    Renamed"
             }
           }
         ],
@@ -473,7 +473,7 @@
           },
           {
             "name": "MW",
-            "expression": "SUM(factInventory[MW])",
+            "expression": "SUM(factInventory[MW Qty])",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },

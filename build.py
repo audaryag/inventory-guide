@@ -477,6 +477,14 @@ there.</li>
 until you restart.</li>
 </ol>
 
+<blockquote><strong>Fixed 13 Aug (second fix):</strong> the model then failed with
+<em>&ldquo;The 'MW' measure cannot be created because a column with the same name already
+exists&rdquo;</em> &mdash; Power BI will not hold a column and a measure of the same name in one
+table. The megawatt column in <code>factInventory</code> is now called <code>MW Qty</code>
+(last step of that query renames it) and the <code>MW</code> measure reads
+<code>SUM(factInventory[MW Qty])</code>. If you built the model by hand, make those two edits.
+Nothing else changes &mdash; the measure is still called <code>MW</code> everywhere.</blockquote>
+
 <blockquote><strong>Fixed 13 Aug:</strong> the first build of Route A failed with
 <em>&ldquo;ReportDefinition: Required artifact is missing&rdquo;</em>. The cause was in my files, not
 your Power BI &mdash; the report was written against the 2023 file-format versions, and one property

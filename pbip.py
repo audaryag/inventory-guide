@@ -36,7 +36,7 @@ MB5B_COLS = [
     ("ReceiptQty", D), ("ReceiptVal", D), ("IssueQty", D), ("IssueVal", D),
     ("CloseQty", D), ("CloseVal", D), ("BaseUOM", S), ("SpecialStock", S), ("Currency", S),
     ("Month", T), ("Category", S), ("Nature", S), ("GroupNature", S), ("BOMStdQty", D),
-    ("Item", S), ("AttrMissing", B), ("MW", D), ("Rate", D), ("RateParseFailed", B),
+    ("Item", S), ("AttrMissing", B), ("MW Qty", D), ("Rate", D), ("RateParseFailed", B),
     ("Mid", S), ("Base", S), ("INR_WP", D),
 ]
 
