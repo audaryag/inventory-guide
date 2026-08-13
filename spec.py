@@ -6,7 +6,9 @@ steps.py turns this into (a) the guided click-by-click steps on the web page and
 
 CANVAS = (1280, 720)
 
-PAGES = ["Overview", "Summary", "FG", "RM", "Detail"]
+# Checks is last on purpose: the five report pages come first, and it is the page you
+# open when a figure looks wrong, so a refresh problem names itself.
+PAGES = ["Overview", "Summary", "FG", "RM", "Detail", "Checks"]
 
 # The drill-through page: right-click any bar, row or slice on the other pages and choose
 # Drill through → Detail, and these fields carry the clicked context across.
@@ -94,7 +96,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -112,7 +114,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -130,7 +132,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -148,7 +150,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -166,7 +168,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -184,7 +186,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -239,25 +241,14 @@ VISUALS = [
      ),
 
     # ---- Overview controls ---------------------------------------------------------------
-    ("Overview", "Slicer", "By month / By quarter",
-     [("Field", ["Period[Period]"])],
-     (200, 8, 216, 76),
-     "The toggle. Period is the field parameter you made in the New tab; picking By quarter "
-     "swaps the chart and the table from months to quarters and averages the month-ends.",
-     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Tile, so it reads as two buttons "
-      "rather than a list.",
-      "Format pane \u2192 Slicer settings \u2192 Selection: switch ON 'Single select' so exactly one "
-      "of the two is always chosen.",
-      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #14532D.",
-      "Format pane \u2192 General \u2192 Title: Off."]),
-
     ("Overview", "Slicer", "Months (leave empty for March plus the last 4)",
      [("Field", ["dimDate[MonthName]"])],
-     (424, 8, 268, 76),
+     (192, 8, 268, 76),
      "Tick nothing and you get March — the year-end close — followed by the last four "
      "months that have data, five columns in all, or fewer early in the year: in April just "
      "March and April. Tick your own months and they replace that, up to the 5 most recent of "
-     "your ticks. In quarter mode this is the quarter picker and the last 4 quarters apply.",
+     "your ticks. Months are the only period on this page: the columns and the bars are "
+     "dimDate[MonthName] itself, not a switchable parameter.",
      [
       "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
      "Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
@@ -268,7 +259,7 @@ VISUALS = [
 
     ("Overview", "Slicer", "Plant",
      [("Field", ["dimPlant[Plant]"])],
-     (700, 8, 262, 76),
+     (468, 8, 262, 76),
      "Filters the history and the donuts. The panel on the left ignores it on purpose.",
      [
       "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
@@ -278,7 +269,7 @@ VISUALS = [
 
     ("Overview", "Slicer", "Type",
      [("Field", ["dimCategory[Category]"])],
-     (970, 8, 294, 76),
+     (738, 8, 294, 76),
      "RM, FG or consumables.",
      [
       "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
@@ -288,14 +279,13 @@ VISUALS = [
 
     # ---- Overview history: chart above, the same numbers as a table below ----------------
     ("Overview", "Stacked column chart", "Inventory by Month (Rs Cr.)",
-     [("X-axis", ["Period[Period]"]),
+     [("X-axis", ["dimDate[MonthName]"]),
       ("Y-axis", ["Inventory Rs Cr"]),
       ("Legend", ["dimCategory[Category]"]),
       ("Filters", ["In Window  \u2192  is 1"])],
      (200, 88, 700, 336),
-     "Five months side by side, or four quarters if the toggle is set to By quarter, in "
-     "which case each bar is the average of that quarter's month-ends. The In Window filter "
-     "is what keeps it to five (or four) without you having to prune the slicer.",
+     "Five months side by side. The In Window filter is what keeps it to five without you "
+     "having to prune the slicer.",
      ["Format pane \u2192 Data labels: Off. The segment figures are deliberately not printed: "
       "the consumables slice is too thin to hold one, so some months showed a number and "
       "others did not. Hover a segment for RM, FG or consumables in that month, and click it "
@@ -305,15 +295,13 @@ VISUALS = [
       "bar is the only printed number, dark green because it sits on the white card.",
       "Drag Share of Total % into the visual's Tooltips well, so hovering gives the share as "
       "well as the figure.",
-      "Format pane \u2192 General \u2192 Title \u2192 use the measure instead of typed words: click the "
-      "fx button beside Text, choose 'Field value', and pick the measure Period Title. The "
-      "heading then reads 'Inventory by Month (Rs Cr.)' or 'Inventory by Quarter (Rs Cr., "
-      "Average of Month-Ends)' to match the toggle.",
+      "Format pane \u2192 General \u2192 Title \u2192 Text: type the heading above. It is typed "
+      "words, not a measure \u2014 the axis is always months, so the heading never has to change.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D."]),
 
     ("Overview", "Matrix", "Inventory by Month (Rs Cr.)",
      [("Rows", ["dimCategory[Category]"]),
-      ("Columns", ["Period[Period]"]),
+      ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Inventory Rs Cr"]),
       ("Filters", ["In Window  \u2192  is 1"])],
      (200, 432, 700, 136),
@@ -345,10 +333,9 @@ VISUALS = [
      "Each bar is that month's closing stock on its own, so nothing here is ever added across "
      "months.",
      ["This one must ignore the two controls at the top, or it would shrink back to five "
-      "months. Click the 'By Month / By Quarter' slicer once, then ribbon Format \u2192 Edit "
-      "interactions; small icons appear on every other visual. On this chart click the "
-      "circle-with-a-line (None). Do the same after selecting the 'Months' slicer. Leave "
-      "Plant and Type set to filter, so those two still work on it.",
+      "months. Click the 'Months' slicer once, then ribbon Format \u2192 Edit interactions; "
+      "small icons appear on every other visual. On this chart click the circle-with-a-line "
+      "(None). Leave Plant and Type set to filter, so those two still work on it.",
       "Format pane \u2192 Data labels: On. Then open 'Apply settings to' \u2192 Series and pick "
       "MW: Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, Display units: "
       "None, Value decimal places: 1, Position: Inside end \u2014 white, because this number is "
@@ -410,24 +397,11 @@ VISUALS = [
       "so it should not."]),
 
     # ---- Summary: TB | MB5B | Difference as master columns, plants as master rows -------
-    # Its own controls, exactly like Overview: the toggle decides whether the periods under
-    # each master column are months or quarters, and the pickers decide which ones.
-    ("Summary", "Slicer", "By month / By quarter",
-     [("Field", ["Period[Period]"])],
-     (16, 8, 216, 76),
-     "The same toggle as Overview, on this page too. By quarter turns every period column "
-     "into a quarter and each figure into the average of that quarter's month-ends.",
-     ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Tile, so it reads as two buttons "
-      "rather than a list.",
-      "Format pane \u2192 Slicer settings \u2192 Selection: switch ON 'Single select'.",
-      "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #14532D.",
-      "Format pane \u2192 General \u2192 Title: Off.",
-      "Do NOT sync this slicer to the other pages: View \u2192 Sync slicers, and leave every box "
-      "on its row unticked. Overview has its own copy of the toggle."]),
-
+    # Its own controls, exactly like Overview. The periods under each master column are
+    # months: dimDate[MonthName] itself, so nothing has to swap a field for them to appear.
     ("Summary", "Slicer", "Months (leave empty for the last 4)",
      [("Field", ["dimDate[MonthName]"])],
-     (248, 8, 300, 76),
+     (16, 8, 300, 76),
      "Tick nothing and the matrix shows the last 4 months under each master column. Tick "
      "the months you want and it shows those, up to twelve \u2014 tick more than twelve and it "
      "keeps the twelve most recent of your ticks, because 3 master columns \u00d7 12 months is "
@@ -442,9 +416,9 @@ VISUALS = [
 
     ("Summary", "Slicer", "Quarters (leave empty for the last 4)",
      [("Field", ["dimDate[Quarter]"])],
-     (564, 8, 240, 76),
-     "The picker for quarter mode, and it behaves the same way: empty means the last 4, or "
-     "tick the quarters you want. In month mode leave it empty.",
+     (332, 8, 240, 76),
+     "A second, coarser filter: tick Q1 and only that quarter's months are left for the "
+     "matrices and the charts to show. Leave it empty to see every month.",
      [
       "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
      "Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
@@ -454,7 +428,7 @@ VISUALS = [
 
     ("Summary", "Slicer", "Plant",
      [("Field", ["dimPlant[Plant]"])],
-     (820, 8, 220, 76),
+     (588, 8, 220, 76),
      "Narrows both matrices to one plant when you want to read it on its own.",
      [
       "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
@@ -464,7 +438,7 @@ VISUALS = [
 
     ("Summary", "Slicer", "Type",
      [("Field", ["dimCategory[Category]"])],
-     (1056, 8, 208, 76),
+     (824, 8, 208, 76),
      "RM, FG or consumables, when you want the reconciliation for one of them only.",
      [
       "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
@@ -475,7 +449,7 @@ VISUALS = [
     ("Summary", "Matrix",
      "Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr.)",
      [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
-      ("Columns", ["dimMetric[Metric]", "Period[Period]"]),
+      ("Columns", ["dimMetric[Metric]", "dimDate[MonthName]"]),
       ("Values", ["Summary Value Rs Cr"]),
       ("Filters", ["In Summary Window  →  is 1"])],
      (16, 88, 1248, 212),
@@ -484,9 +458,9 @@ VISUALS = [
      "(Jaipur Module, Dholera Module, Dholera Cell) opening into RM, FG and Consumables, "
      "and a total for each plant. Everything in crore rupees.",
      ["Order of the two Columns fields matters: dimMetric[Metric] FIRST, then "
-      "Period[Period]. That is what makes TB / MB5B / Difference the master columns with "
-      "the periods nested inside. Period[Period] rather than dimDate[MonthName] is what "
-      "lets the toggle swap months for quarters.",
+      "dimDate[MonthName]. That is what makes TB / MB5B / Difference the master columns "
+      "with the months nested inside; the other way round gives you months with three "
+      "metrics inside each.",
       "Format pane \u2192 Row headers \u2192 Stepped layout: Off, so Plant and Type get a column "
       "each instead of being indented into one.",
       "Format pane \u2192 Row headers \u2192 +/- icons: On \u2014 that is the click-to-expand control on "
@@ -503,25 +477,24 @@ VISUALS = [
       "equally wrong, so both ends are red.",
       "Right-click any plant row, click 'Expand', then 'All', so RM, FG and Consumables "
       "show under every plant. Then press Ctrl+S \u2014 Power BI remembers it.",
-      "Format pane \u2192 General \u2192 Title \u2192 use the measure instead of typed words: click the "
-      "fx button beside Text, choose 'Field value', and pick the measure Summary Title. The "
-      "heading then says by Month or by Quarter to match the toggle, so nobody reads a "
-      "quarter average as a month-end.",
+      "Format pane \u2192 General \u2192 Title \u2192 Text: type the heading above, and leave the fx "
+      "button alone. The columns are always months, so the heading is always right.",
       "With twelve periods ticked this is 36 columns of figures, so a scrollbar appears "
       "along the bottom of the matrix. That is normal: scroll it sideways, or untick "
       "periods until it fits."]),
 
     ("Summary", "Matrix", "Total across All Plants by Type (Rs Cr.)",
      [("Rows", ["dimCategory[Category]"]),
-      ("Columns", ["dimMetric[Metric]", "Period[Period]"]),
+      ("Columns", ["dimMetric[Metric]", "dimDate[MonthName]"]),
       ("Values", ["Summary Value Rs Cr"]),
       ("Filters", ["In Summary Window  →  is 1"])],
      (16, 308, 1248, 112),
      "The bottom block: the same three master columns, but every plant added together \u2014 one "
      "row for RM, one for FG, one for Consumables, so you can read total RM across all "
      "plants at a glance, and a Total row under them which is the total inventory.",
-     ["Same column order as the matrix above: dimMetric[Metric] first, then Period[Period]. "
-      "Keep the same periods ticked, so the two matrices line up column for column.",
+     ["Same column order as the matrix above: dimMetric[Metric] first, then "
+      "dimDate[MonthName]. Keep the same months ticked, so the two matrices line up column "
+      "for column.",
       "Format pane \u2192 Row headers \u2192 Stepped layout: Off.",
       "Format pane \u2192 Subtotals \u2192 Row subtotals: On \u2014 that bottom row is the total of the "
       "totals, the whole inventory. Column subtotals: Off.",
@@ -532,7 +505,7 @@ VISUALS = [
 
     ("Summary", "Clustered column chart",
      "Inventory (TB) vs Inventory (MB5B) by Month (Rs Cr.)",
-     [("X-axis", ["Period[Period]"]),
+     [("X-axis", ["dimDate[MonthName]"]),
       ("Y-axis", ["TB Inventory Rs Cr", "Inventory Rs Cr"]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
      (16, 428, 616, 112),
@@ -554,7 +527,7 @@ VISUALS = [
 
     ("Summary", "Line and clustered column chart",
      "Difference by Month (Rs Cr. and % of TB)",
-     [("X-axis", ["Period[Period]"]),
+     [("X-axis", ["dimDate[MonthName]"]),
       ("Column y-axis", ["Difference Inventory Rs Cr"]),
       ("Line y-axis", ["Difference Inventory %"]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
@@ -579,23 +552,9 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 11, Colour: #14532D."]),
 
     # ---- FG: its own controls, then MW | Rs Cr. | Days as master columns ---------------
-    ("FG", "Slicer", "By Month / By Quarter",
-     [("Field", ["Period[Period]"])],
-     (16, 8, 216, 76),
-     "The same two-button toggle as Overview and Summary. By Month puts the months you pick "
-     "under each master column; By Quarter puts fiscal quarters there instead, each one the "
-     "average of its three month-ends, because stock cannot be added up across months.",
-     ["Format pane → Slicer settings → Options → Style: Tile. Two buttons side by side, not "
-      "a dropdown.",
-      "Format pane → Slicer settings → Selection → Single select: On, Show 'Select all': "
-      "Off. Exactly one of the two is always chosen.",
-      "Format pane → Values → Font: Arial, Font size: 10, Colour: #14532D.",
-      "Leave it out of View → Sync slicers. FG keeps its own toggle, so changing the mode "
-      "here must not move Overview or Summary."]),
-
     ("FG", "Slicer", "Months (leave empty for the last 4)",
      [("Field", ["dimDate[MonthName]"])],
-     (248, 8, 300, 76),
+     (16, 8, 300, 76),
      "Which months appear under each master column. Tick nothing and it shows the last four "
      "with data; tick your own and it shows those, up to twelve.",
      [
@@ -608,19 +567,19 @@ VISUALS = [
 
     ("FG", "Slicer", "Quarters (leave empty for the last 4)",
      [("Field", ["dimDate[Quarter]"])],
-     (564, 8, 240, 76),
-     "The same idea in quarter mode: empty means the last four fiscal quarters, or tick the "
-     "ones you want, up to twelve.",
+     (332, 8, 240, 76),
+     "A coarser filter over the same months: tick Q1 and only April, May and June are left "
+     "for the two matrices to show. Leave it empty to see every month.",
      [
       "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
      "Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Slicer settings → Selection → 'Multi-select with CTRL': Off.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24.",
-      "It has no effect while the toggle says By Month — that is intended, not a fault."]),
+      "It filters the months rather than replacing them, so the columns stay months."]),
 
     ("FG", "Slicer", "Plant",
      [("Field", ["dimPlant[Plant]"])],
-     (820, 8, 220, 76),
+     (588, 8, 220, 76),
      "One plant, or all of them. It filters the technology matrix and all three charts, so "
      "picking Dholera Cell turns the page into a Dholera Cell page.",
      [
@@ -630,7 +589,7 @@ VISUALS = [
 
     ("FG", "Slicer", "Technology",
      [("Field", ["dimNature[Nature]"])],
-     (1056, 8, 208, 76),
+     (824, 8, 208, 76),
      "One module technology, when you want the page to be about that technology only.",
      [
       "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
@@ -639,7 +598,7 @@ VISUALS = [
 
     ("FG", "Matrix", "FG by Plant — MW · Rs Cr. · Days",
      [("Rows", ["dimPlant[Plant]"]),
-      ("Columns", ["dimMeasure[Measure]", "Period[Period]"]),
+      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
       ("Values", ["Unit Value by Period"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Summary Window  →  is 1"])],
@@ -647,12 +606,13 @@ VISUALS = [
      "Finished goods per plant in all three units at once — megawatts, crore rupees and "
      "days — with four periods under each of the three master columns by default. Days is "
      "MW ÷ capacity MW, so a plant with no capacity figure is blank on purpose.",
-     ["dimMeasure[Measure] goes in Columns FIRST, then Period[Period]. That order is what "
+     ["dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName]. That order is what "
       "makes MW, Rs Cr. and Days the master columns with the periods nested inside them; "
       "the other way round gives you periods with three units inside each, which is not "
       "what you want.",
-      "Values takes Unit Value by Period, not Unit Value — the by-Period one averages the "
-      "month-ends in quarter mode instead of adding them.",
+      "Values takes Unit Value by Period, not Unit Value. They are the same figure in a "
+      "month column; the difference is the Total column, where the by-Period one averages "
+      "the month-ends instead of adding them, because stock is a level.",
       "Filters pane → drag dimCategory[Category] in → tick FG only. Then drag the measure "
       "In Summary Window in and set 'is 1' — that is what limits it to four periods, or to "
       "the ones you tick, up to twelve.",
@@ -667,7 +627,7 @@ VISUALS = [
 
     ("FG", "Matrix", "FG by Technology — MW · Rs Cr. · Days",
      [("Rows", ["dimNature[Nature]"]),
-      ("Columns", ["dimMeasure[Measure]", "Period[Period]"]),
+      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
       ("Values", ["Unit Value by Period"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Summary Window  →  is 1"])],
@@ -717,10 +677,9 @@ VISUALS = [
      "number anyone argues about.",
      ["Filters pane → drag In Last 12 in → is 1, so this always shows the last twelve "
       "months whatever the pickers above say.",
-      "This chart must ignore the two period controls, or it drops back to four months: "
-      "click the By Month / By Quarter slicer → Format tab → Edit interactions → set this "
-      "chart to None (the circle-with-a-line icon). Do the same after clicking the Months "
-      "slicer and the Quarters slicer.",
+      "This chart must ignore the two period pickers, or it drops back to four months: "
+      "click the Months slicer → Format tab → Edit interactions → set this chart to None "
+      "(the circle-with-a-line icon). Do the same after clicking the Quarters slicer.",
       "Format pane → Data labels: On. 'Apply settings to' → Series: Days — Font: Arial, "
       "Font size: 8, Colour: #1F2A24, Value decimal places: 0, Position: Inside end.",
       "Switch 'Apply settings to' → Series to Days vs LM: Font: Arial, Font size: 8, "
@@ -749,20 +708,9 @@ VISUALS = [
       "releases it."]),
 
     # ---- RM: its own controls, Rs Cr. | Days master columns, then two plant charts -----
-    ("RM", "Slicer", "By Month / By Quarter",
-     [("Field", ["Period[Period]"])],
-     (16, 8, 216, 76),
-     "The same toggle as the other pages. It decides whether the columns under Rs Cr. and "
-     "Days are months or fiscal quarters, a quarter being the average of its three "
-     "month-ends.",
-     ["Format pane → Slicer settings → Options → Style: Tile.",
-      "Format pane → Slicer settings → Selection → Single select: On, Show 'Select all': Off.",
-      "Format pane → Values → Font: Arial, Font size: 10, Colour: #14532D.",
-      "Do not sync it with any other page."]),
-
     ("RM", "Slicer", "Months (leave empty for the last 4)",
      [("Field", ["dimDate[MonthName]"])],
-     (248, 8, 300, 76),
+     (16, 8, 300, 76),
      "Which months appear under each master column, and on both charts along the bottom. "
      "Nothing ticked means the last four with data; tick your own for up to twelve.",
      [
@@ -773,7 +721,7 @@ VISUALS = [
 
     ("RM", "Slicer", "Quarters (leave empty for the last 4)",
      [("Field", ["dimDate[Quarter]"])],
-     (564, 8, 240, 76),
+     (332, 8, 240, 76),
      "The quarter-mode equivalent: empty means the last four fiscal quarters.",
      [
       "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
@@ -783,7 +731,7 @@ VISUALS = [
 
     ("RM", "Slicer", "Plant",
      [("Field", ["dimPlant[Plant]"])],
-     (820, 8, 220, 76),
+     (588, 8, 220, 76),
      "One plant, or all three.",
      [
       "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
@@ -792,7 +740,7 @@ VISUALS = [
 
     ("RM", "Slicer", "Group Nature",
      [("Field", ["factInventory[GroupNature]"])],
-     (1056, 8, 208, 76),
+     (824, 8, 208, 76),
      "Module or Cell, when you want the page to be about one of the two only — the same "
      "split the Excel sheet had as its Module and Cell blocks.",
      [
@@ -802,7 +750,7 @@ VISUALS = [
 
     ("RM", "Matrix", "RM Inventory by Plant — Rs Cr. · Days",
      [("Rows", ["dimPlant[Plant]"]),
-      ("Columns", ["dimMeasure[Measure]", "Period[Period]"]),
+      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
       ("Values", ["Unit Value by Period"]),
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "dimMeasure[Measure]  →  untick MW",
@@ -811,13 +759,13 @@ VISUALS = [
      "The top block of the old RM sheet, rebuilt: one row per plant, with Rs Cr. and Days as "
      "master columns and the periods under each. MW is unticked because an RM megawatt "
      "figure is derived from a BOM, not measured, so it does not belong beside the other two.",
-     ["dimMeasure[Measure] goes in Columns FIRST, then Period[Period] — that order is what "
+     ["dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName] — that order is what "
       "makes Rs Cr. and Days the master columns.",
       "Filters pane → dimCategory[Category] → tick RM only; then drag dimMeasure[Measure] in "
       "and untick MW so only Rs Cr. and Days remain; then drag In Summary Window in and set "
       "'is 1' for the four-periods-by-default behaviour.",
-      "Values takes Unit Value by Period — the plain Unit Value would add three month-ends "
-      "together in quarter mode.",
+      "Values takes Unit Value by Period — in the Total column the plain Unit Value would "
+      "add the month-ends together instead of averaging them.",
       "Format pane → Row headers → Stepped layout: Off.",
       "Format pane → Subtotals → Row subtotals: On (that is the Grand Total row the Excel "
       "sheet had), Column subtotals: Off.",
@@ -826,7 +774,7 @@ VISUALS = [
 
     ("RM", "Matrix", "RM Inventory by Group Nature and Nature — Rs Cr. · Days",
      [("Rows", ["factInventory[GroupNature]", "dimNature[Nature]"]),
-      ("Columns", ["dimMeasure[Measure]", "Period[Period]"]),
+      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
       ("Values", ["Unit Value by Period"]),
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "dimMeasure[Measure]  →  untick MW",
@@ -848,7 +796,7 @@ VISUALS = [
       "list behind it."]),
 
     ("RM", "Clustered column chart", "RM Inventory (Rs Cr.) by Plant",
-     [("X-axis", ["Period[Period]"]),
+     [("X-axis", ["dimDate[MonthName]"]),
       ("Legend", ["dimPlant[Plant]"]),
       ("Y-axis", ["Inventory Rs Cr"]),
       ("Filters", ["dimCategory[Category]  \u2192  is RM",
@@ -858,7 +806,7 @@ VISUALS = [
      "plants side by side inside each group, so you read the months left to right and compare "
      "the plants within a month. It follows the pickers above, so it is four periods by "
      "default and up to twelve if you tick them.",
-     ["Period[Period] goes in the X-axis and dimPlant[Plant] in Legend \u2014 that order is what "
+     ["dimDate[MonthName] goes in the X-axis and dimPlant[Plant] in Legend \u2014 that order is what "
       "gives three bars per month rather than four bars per plant.",
       "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, "
       "Display units: None, Value decimal places: 0, Position: Inside end.",
@@ -873,7 +821,7 @@ VISUALS = [
 
     ("RM", "Line and clustered column chart",
      "RM Inventory (Days) by Plant, with Total Days across All Plants",
-     [("X-axis", ["Period[Period]"]),
+     [("X-axis", ["dimDate[MonthName]"]),
       ("Column legend", ["dimPlant[Plant]"]),
       ("Column y-axis", ["Days by Period"]),
       ("Line y-axis", ["RM Days All Plants by Period"]),
@@ -889,7 +837,7 @@ VISUALS = [
      "actually more stock or just a dearer month.",
      ["The line comes from RM Days All Plants by Period, which strips the plant filter off "
       "both the megawatts and the capacity, so a bar can be tall while the line is calm.",
-      "Use Days by Period for the bars, not Days. Days is a ratio, so quarter mode has to average the three "
+      "Use Days by Period for the bars, not Days. Days is a ratio, so a total column has to average the three "
       "month-ends rather than add them, and that is the only difference between the two "
       "measures.",
       "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, "
@@ -922,11 +870,11 @@ VISUALS = [
      "inventory (RM + FG). Every month is its own closing figure divided by capacity, so "
      "nothing is added across months. Read it for shape: RM climbing while FG is flat means "
      "material is arriving faster than it is being consumed.",
-     ["This chart must ignore the five controls at the top of Summary, or it would drop back to four "
-      "periods. Click the 'By Month / By Quarter' slicer, then ribbon Format \u2192 Edit "
+     ["This chart must ignore the period pickers at the top of Summary, or it would drop "
+      "back to four months. Click the 'Months' slicer, then ribbon Format \u2192 Edit "
       "interactions, and on this chart click the circle-with-a-line (None). Repeat for the "
-      "Months and Quarters slicers. Leave Plant and Type filtering, so those two still work "
-      "on it \u2014 picking a plant re-bases all three lines on that plant's capacity.",
+      "Quarters slicer. Leave Plant and Type filtering, so those two still work on it \u2014 "
+      "picking a plant re-bases all three lines on that plant's capacity.",
       "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #14532D, "
       "Display units: None, Value decimal places: 0, Position: Above. Twelve months \u00d7 three "
       "lines is a lot of numbers: if they collide, set Data labels \u2192 Apply settings to \u2192 "
@@ -1018,6 +966,83 @@ VISUALS = [
       "For a really long list use Focus mode — hover the visual, click the diagonal-arrows "
       "icon in its top-right, and it fills the page with far more rows visible; the back "
       "arrow returns you. Or collapse a nature with its − icon to jump past it."]),
+
+    # ---- Checks: the page that tells you what the source files did not give -------------
+    ("Checks", "Card", "Stock rows loaded",
+     [("Fields", ["Check MB5B Rows"])],
+     (16, 56, 240, 88),
+     "How many rows came out of RM Raw, FG Raw and Consble Raw together. Zero means pRoot is "
+     "wrong or the three folders are named differently.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 16, Colour: #14532D.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: #FFFFFF."]),
+
+    ("Checks", "Card", "Trial balance rows loaded",
+     [("Fields", ["Check TB Rows"])],
+     (264, 56, 240, 88),
+     "Zero here is the reason Inventory (TB) reads as empty on Summary: either the TB folder "
+     "has no TB_YYYYMM.xlsx files, or the GL numbers in them match nothing on TB Master.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 16, Colour: #14532D.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: #FFFFFF."]),
+
+    ("Checks", "Card", "Months of data",
+     [("Fields", ["Check Months of Data"])],
+     (512, 56, 240, 88),
+     "How many month-ends the stock files cover. One month means only one file was read, and "
+     "then every monthly chart has a single bar however it is built.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 16, Colour: #14532D.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: #FFFFFF."]),
+
+    ("Checks", "Card", "Plant codes in the data",
+     [("Fields", ["Check Plant Codes"])],
+     (760, 56, 240, 88),
+     "More than three means the stock files carry a valuation area beyond the three plants; "
+     "those now appear as 'Plant xxxx' rather than as a blank row.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 16, Colour: #14532D.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: #FFFFFF."]),
+
+    ("Checks", "Card", "Rows with no nature (%)",
+     [("Fields", ["Check Unassigned %"])],
+     (1008, 56, 256, 88),
+     "The share of stock rows the master sheets do not cover. Anything above zero is what "
+     "shows up as an Unassigned slice on the donuts and an Unassigned row in the technology "
+     "matrix \u2014 the material numbers differ between the master sheet and the raw files.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 16, Colour: #B3261E.",
+      "Format pane \u2192 General \u2192 Effects \u2192 Background: #FFFFFF."]),
+
+    ("Checks", "Table", "Every file the four folders gave, with its sheets",
+     [("Columns", ["qcHeaders[Folder]", "qcHeaders[Name]", "qcHeaders[SheetNames]"])],
+     (16, 160, 620, 264),
+     "One row per file actually read. If a month is missing from the report, it is missing "
+     "from this list first \u2014 check the file is in the folder and is a real .xlsx.",
+     ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
+
+    ("Checks", "Table", "Sheets found in Variables and Calculations",
+     [("Columns", ["qcVarHeaders[SheetName]", "qcVarHeaders[DataRows]"])],
+     (644, 160, 620, 264),
+     "The workbook that carries RM Nature, FG Master, TB Master, Constants and MW. A sheet "
+     "missing from this list, or showing 0 rows, is why the natures or the trial balance are "
+     "empty.",
+     ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
+
+    ("Checks", "Table", "GL accounts in the TB files that TB Master does not list",
+     [("Columns", ["factTB_Unmapped[GLAccount]", "factTB_Unmapped[GLDesc]",
+                   "factTB_Unmapped[Amount]"])],
+     (16, 432, 620, 264),
+     "Empty is good. A long list here with 0 trial-balance rows above means TB Master is not "
+     "matching your GL numbers at all, and the report is showing the whole trial balance "
+     "rather than the inventory accounts.",
+     ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
+
+    ("Checks", "Table", "FG technologies with no capacity on the MW sheet",
+     [("Columns", ["qcNatureNoCapacity[Nature]"])],
+     (644, 432, 620, 264),
+     "Each of these gets blank Days, because days of inventory divides by capacity. Add the "
+     "technology to the MW sheet and it fills in by itself.",
+     ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
 
 ]
 

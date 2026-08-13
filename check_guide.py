@@ -23,8 +23,8 @@ import spec
 
 GUIDE = pathlib.Path("/home/ubuntu/BUILD_GUIDE.md")
 txt = GUIDE.read_text()
-app_a = txt.split("# Appendix A")[1].split("# Appendix C")[0]
-app_c = txt.split("# Appendix C")[1].split("# Appendix B")[0]
+app_a = txt.split("# Appendix A")[1].split("# Appendix B")[0]
+app_c = ""
 app_b = txt.split("# Appendix B")[1]
 parts = txt.split("# Appendix A")[0]
 

@@ -168,38 +168,6 @@ def model_bim():
                                    "Text" if n in ("pRoot", "pVarsFile") else "Table")}]}
              for n in EXPRESSION_ORDER]
 
-    # 'Period' is the field parameter, a DAX calculated table rather than a query
-    tables.append({
-        "name": "Period",
-        "columns": [
-            # groupByColumns is what makes the visible label swap the field it stands for;
-            # without it a visual treats the label as an ordinary two-row category
-            {"name": "Period", "dataType": S, "sourceColumn": "[Value1]",
-             "type": "calculatedTableColumn", "isNameInferred": False,
-             "sortByColumn": "Period Order", "summarizeBy": "none",
-             "relatedColumnDetails": {
-                 "groupByColumns": [{"groupingColumn": "Period Fields"}]},
-             "annotations": [{"name": "SummarizationSetBy", "value": "Automatic"}]},
-            {"name": "Period Fields", "dataType": S, "sourceColumn": "[Value2]",
-             "type": "calculatedTableColumn", "isNameInferred": False, "isHidden": True,
-             "sortByColumn": "Period Order", "summarizeBy": "none",
-             "extendedProperties": [{"name": "ParameterMetadata", "type": "json",
-                                     "value": {"version": 3, "kind": 2}}],
-             "annotations": [{"name": "SummarizationSetBy", "value": "Automatic"}]},
-            {"name": "Period Order", "dataType": I, "sourceColumn": "[Value3]",
-             "type": "calculatedTableColumn", "isNameInferred": False, "isHidden": True,
-             "summarizeBy": "none",
-             "annotations": [{"name": "SummarizationSetBy", "value": "Automatic"}]},
-        ],
-        "partitions": [{"name": "Period", "mode": "import",
-                        "source": {"type": "calculated",
-                                   "expression": "{\n"
-                                   "    (\"By Month\",   NAMEOF('dimDate'[MonthName]), 0),\n"
-                                   "    (\"By Quarter\", NAMEOF('dimDate'[Quarter]),   1)\n"
-                                   "}"}}],
-        "annotations": [{"name": "PBI_Id", "value": "Period"}],
-    })
-
     order = EXPRESSION_ORDER + list(TABLES)
     return {
         "name": NAME,
@@ -242,7 +210,7 @@ ROLE = {
     "card": {"Fields": "Values", "Values": "Values"},
     "slicer": {"Field": "Values", "Values": "Values"},
     "pivotTable": {"Rows": "Rows", "Columns": "Columns", "Values": "Values"},
-    "tableEx": {"Values": "Values"},
+    "tableEx": {"Values": "Values", "Columns": "Values"},
     "columnChart": {"X-axis": "Category", "Y-axis": "Y", "Legend": "Series"},
     "clusteredColumnChart": {"X-axis": "Category", "Y-axis": "Y", "Legend": "Series"},
     "lineClusteredColumnComboChart": {"X-axis": "Category", "Column y-axis": "Y",
@@ -303,6 +271,24 @@ def title_objects(text):
                                        "radius": literal("4D")}}]}
 
 
+def table_objects():
+    """tableEx takes none of a chart's objects: no legend, no axes, no data labels."""
+    return {
+        "columnHeaders": [{"properties": {
+            "fontFamily": txt("Arial"), "fontSize": literal("9D"), "bold": literal("true"),
+            "fontColor": {"solid": {"color": txt(DARK)}},
+            "backColor": {"solid": {"color": txt("#EEF3EF")}}}}],
+        "values": [{"properties": {
+            "fontFamily": txt("Arial"), "fontSize": literal("9D"),
+            "fontColor": {"solid": {"color": txt("#1F2A24")}},
+            "backColor": {"solid": {"color": txt("#FFFFFF")}}}}],
+        "grid": [{"properties": {"rowPadding": literal("2D"),
+                                 "gridVertical": literal("true"),
+                                 "gridVerticalColor": {"solid": {"color": txt("#E6EDE6")}},
+                                 "gridHorizontalColor": {"solid": {"color": txt("#E6EDE6")}}}}],
+    }
+
+
 def matrix_objects(rows_levels, expand, subtotals=True):
     o = {
         "rowHeaders": [{"properties": {
@@ -356,8 +342,12 @@ def chart_objects(kind, labels=False):
 
 
 def card_objects():
+    # 16pt, not 22: a 58-high card carrying a category label above the figure clips a 22pt
+    # number top and bottom, and a four-figure crore value is unreadable when clipped.
     return {"labels": [{"properties": {"fontFamily": txt("Arial"),
-                                       "fontSize": literal("22D"),
+                                       "fontSize": literal("16D"),
+                                       "labelDisplayUnits": literal("1D"),
+                                       "labelPrecision": literal("1D"),
                                        "color": {"solid": {"color": txt(DARK)}}}}],
             "categoryLabels": [{"properties": {"show": literal("true"),
                                                "fontFamily": txt("Arial"),
@@ -366,7 +356,7 @@ def card_objects():
             "wordWrap": [{"properties": {"show": literal("true")}}]}
 
 
-def slicer_objects(single=False):
+def slicer_objects():
     return {"general": [{"properties": {"outlineColor": {"solid": {"color": txt("#DCE5DC")}},
                                         "outlineWeight": literal("1D")}}],
             "header": [{"properties": {"show": literal("true"), "fontFamily": txt("Arial"),
@@ -377,9 +367,9 @@ def slicer_objects(single=False):
             # singleSelect off means a plain click adds to the selection, so several
             # months can be ticked without holding CTRL
             "selection": [{"properties": {
-                "singleSelect": literal("true" if single else "false"),
-                "strictSingleSelect": literal("true" if single else "false"),
-                "selectAllCheckboxEnabled": literal("false" if single else "true")}}],
+                "singleSelect": literal("false"),
+                "strictSingleSelect": literal("false"),
+                "selectAllCheckboxEnabled": literal("true")}}],
             "data": [{"properties": {"mode": txt("Dropdown")}}]}
 
 
@@ -475,11 +465,12 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
     elif vt == "card":
         objects = card_objects()
     elif vt == "slicer":
-        # the two-button toggle keeps exactly one choice; every other slicer multi-selects
-        objects = slicer_objects(single=any(
-            p["field"].get("Column", {}).get("Expression", {})
-             .get("SourceRef", {}).get("Entity") == "Period"
-            for p in qstate.get("Values", {}).get("projections", [])))
+        # every slicer multi-selects on a plain click: singleSelect off is what Power BI
+        # calls 'Multi-select with CTRL', and leaving it on is why several months could
+        # not be ticked
+        objects = slicer_objects()
+    elif vt == "tableEx":
+        objects = table_objects()
     elif vt == "decompositionTreeVisual":
         objects = {}
     else:
@@ -504,9 +495,7 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
     if vt == "slicer":
         for p in qstate.get("Values", {}).get("projections", []):
             col = p["field"].get("Column")
-            # the field parameter's own slicer is left alone: its two rows are the
-            # parameter values, and filtering them would disable the toggle
-            if col and col["Expression"]["SourceRef"]["Entity"] != "Period":
+            if col:
                 filters.append(not_blank_filter(
                     f"nb{vname(page, idx)}", col["Expression"]["SourceRef"]["Entity"],
                     col["Property"]))
@@ -693,7 +682,7 @@ def main():
         platform(rp, "Report")
         write_report(rp)
 
-    missing = set(queries) - set(TABLES) - set(EXPRESSION_ORDER) - {"Period"}
+    missing = set(queries) - set(TABLES) - set(EXPRESSION_ORDER)
     if missing:
         raise SystemExit(f"queries in the guide but not in the model: {sorted(missing)}")
     n_vis = len(list((rp / "definition" / "pages").rglob("visual.json"))) if not LEGACY else 0

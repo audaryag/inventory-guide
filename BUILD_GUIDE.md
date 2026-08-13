@@ -254,7 +254,7 @@ pasting out of order gives "cannot be determined" on a measure that is perfectly
 ### Checkpoint — do not go to Part 4 until all three are true
 
 1. Type `Value` into the Data pane search box: `Value ₹ Cr` is there, with a calculator icon.
-2. Count the measures (calculator icons) — there must be **72**. Fewer means Appendix B is
+2. Count the measures (calculator icons) — there must be **75**. Fewer means Appendix B is
    not finished; the pages will fail on whichever one is missing.
 3. None of these six old names survive: `Closing Value`, `Inv RM`, `Inv FG`,
    `Inv Consumables`, `TB Value`, `Prev Month`. Delete any you find (right-click → **Delete
@@ -322,7 +322,7 @@ asks you to colour anything.
 
 Only two colours are ever used for a printed number, and never grey: **#FFFFFF** bold when the number sits on top of a coloured bar or slice, and **#14532D** (or **#1F2A24** for plain figures) when it sits on the white card. If a number anywhere looks faint grey — inside a bar, above a line, on an axis — that visual predates this theme: re-import the theme file, then check the visual's **Data labels → Colour**. On a combo chart the two series are set separately, under **Data labels → Apply settings to → Series**: the column series #FFFFFF, the line series #14532D.
 
-**Create the 5 pages** with the **+** at the bottom, named: `Overview` · `Summary` · `FG` · `RM` · `Detail`.
+**Create the 6 pages** with the **+** at the bottom, named: `Overview` · `Summary` · `FG` · `RM` · `Detail` · `Checks`.
 
 ---
 
@@ -362,7 +362,7 @@ Position: Horizontal 14, Vertical 122, Width 156, Height 58.
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 122 exactly, or the card will not sit square inside its box.
@@ -380,7 +380,7 @@ Position: Horizontal 14, Vertical 182, Width 156, Height 58.
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 182 exactly, or the card will not sit square inside its box.
@@ -398,7 +398,7 @@ Position: Horizontal 14, Vertical 242, Width 156, Height 58.
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 242 exactly, or the card will not sit square inside its box.
@@ -416,7 +416,7 @@ Position: Horizontal 14, Vertical 332, Width 156, Height 58.
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 332 exactly, or the card will not sit square inside its box.
@@ -434,7 +434,7 @@ Position: Horizontal 14, Vertical 392, Width 156, Height 58.
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 392 exactly, or the card will not sit square inside its box.
@@ -452,7 +452,7 @@ Position: Horizontal 14, Vertical 452, Width 156, Height 58.
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 452 exactly, or the card will not sit square inside its box.
@@ -510,27 +510,7 @@ Position: Horizontal 14, Vertical 652, Width 156, Height 28.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title' and set it to Off — the sentence says it all.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, Border: Off.
 
-**4.14** **Slicer** — The toggle. Period is the field parameter you made in the New tab; picking By quarter swaps the chart and the table from months to quarters and averages the month-ends.
-
-| Well | Field |
-|---|---|
-| Field | `Period[Period]` |
-
-Title: `By Month / By Quarter`
-
-Position: Horizontal 200, Vertical 20, Width 216, Height 52.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
-- Click 'Y-axis' and set Font size to 9.
-- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
-- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
-- In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Tile, so it reads as two buttons rather than a list.
-- In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection' and set it to switch ON 'Single select' so exactly one of the two is always chosen.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title' and set it to Off.
-
-**4.15** **Slicer** — Tick nothing and you get March — the year-end close — followed by the last four months that have data, five columns in all, or fewer early in the year: in April just March and April. Tick your own months and they replace that, up to the 5 most recent of your ticks. In quarter mode this is the quarter picker and the last 4 quarters apply.
+**4.14** **Slicer** — Tick nothing and you get March — the year-end close — followed by the last four months that have data, five columns in all, or fewer early in the year: in April just March and April. Tick your own months and they replace that, up to the 5 most recent of your ticks. Months are the only period on this page: the columns and the bars are dimDate[MonthName] itself, not a switchable parameter.
 
 | Well | Field |
 |---|---|
@@ -538,19 +518,20 @@ Position: Horizontal 200, Vertical 20, Width 216, Height 52.
 
 Title: `Months (Leave Empty for March Plus the Last 4)`
 
-Position: Horizontal 424, Vertical 20, Width 268, Height 52.
+Position: Horizontal 192, Vertical 8, Width 268, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection' and set it to switch OFF 'Multi-select with CTRL' so ticking several needs no keyboard.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font size' and set it to 10, Colour: #14532D.
 
-**4.16** **Slicer** — Filters the history and the donuts. The panel on the left ignores it on purpose.
+**4.15** **Slicer** — Filters the history and the donuts. The panel on the left ignores it on purpose.
 
 | Well | Field |
 |---|---|
@@ -558,18 +539,19 @@ Position: Horizontal 424, Vertical 20, Width 268, Height 52.
 
 Title: `Plant`
 
-Position: Horizontal 700, Vertical 20, Width 262, Height 52.
+Position: Horizontal 468, Vertical 8, Width 262, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font size' and set it to 10, Colour: #14532D.
 
-**4.17** **Slicer** — RM, FG or consumables.
+**4.16** **Slicer** — RM, FG or consumables.
 
 | Well | Field |
 |---|---|
@@ -577,22 +559,23 @@ Position: Horizontal 700, Vertical 20, Width 262, Height 52.
 
 Title: `Type`
 
-Position: Horizontal 970, Vertical 20, Width 294, Height 52.
+Position: Horizontal 738, Vertical 8, Width 294, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font size' and set it to 10, Colour: #14532D.
 
-**4.18** **Stacked column chart** — Five months side by side, or four quarters if the toggle is set to By quarter, in which case each bar is the average of that quarter's month-ends. The In Window filter is what keeps it to five (or four) without you having to prune the slicer.
+**4.17** **Stacked column chart** — Five months side by side. The In Window filter is what keeps it to five without you having to prune the slicer.
 
 | Well | Field |
 |---|---|
-| X-axis | `Period[Period]` |
+| X-axis | `dimDate[MonthName]` |
 | Y-axis | `Inventory Rs Cr` |
 | Legend | `dimCategory[Category]` |
 | Filters | `In Window  →  is 1` |
@@ -609,15 +592,15 @@ Position: Horizontal 200, Vertical 88, Width 700, Height 336.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels' and set it to Off. The segment figures are deliberately not printed: the consumables slice is too thin to hold one, so some months showed a number and others did not. Hover a segment for RM, FG or consumables in that month, and click it to filter the rest of the page to it.
 - In the Visualizations pane click the paintbrush icon, then click 'Total labels' and set it to On, Font: Arial, Font size: 9, Bold: On, Colour: #14532D, Display units: None, Value decimal places: 1 — the month total above each bar is the only printed number, dark green because it sits on the white card.
 - Drag Share of Total % into the visual's Tooltips well, so hovering gives the share as well as the figure.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'use the measure instead of typed words' and set it to click the fx button beside Text, choose 'Field value', and pick the measure Period Title. The heading then reads 'Inventory by Month (Rs Cr.)' or 'Inventory by Quarter (Rs Cr., Average of Month-Ends)' to match the toggle.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Text' and set it to type the heading above. It is typed words, not a measure — the axis is always months, so the heading never has to change.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
 
-**4.19** **Matrix** — The same five columns as the chart directly above it, for readers who want the figures rather than the shape. Only as tall as its four rows, so no white gap is left under it. Left to itself the first column is always March — the year-end close — and the four columns after it are the last four months that have data, so in July you get Mar, Apr, May, Jun, Jul and in April just Mar and Apr. Tick five months in the picker and your ticks replace that entirely. That behaviour lives in the In Window filter, so the chart above obeys it too.
+**4.18** **Matrix** — The same five columns as the chart directly above it, for readers who want the figures rather than the shape. Only as tall as its four rows, so no white gap is left under it. Left to itself the first column is always March — the year-end close — and the four columns after it are the last four months that have data, so in July you get Mar, Apr, May, Jun, Jul and in April just Mar and Apr. Tick five months in the picker and your ticks replace that entirely. That behaviour lives in the In Window filter, so the chart above obeys it too.
 
 | Well | Field |
 |---|---|
 | Rows | `dimCategory[Category]` |
-| Columns | `Period[Period]` |
+| Columns | `dimDate[MonthName]` |
 | Values | `Inventory Rs Cr` |
 | Filters | `In Window  →  is 1` |
 
@@ -635,7 +618,7 @@ Position: Horizontal 200, Vertical 432, Width 700, Height 136.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D.
 
-**4.20** **Line and clustered column chart** — The long view, under the table: one bar per month for the last twelve months that have data, or fewer if that is all there is. Two numbers on every month — the bar prints the megawatts held, the line above it prints the change on the month before as a percentage. It is in MW rather than rupees on purpose: this strip is about how much product is sitting there, which prices cannot flatter. Each bar is that month's closing stock on its own, so nothing here is ever added across months.
+**4.19** **Line and clustered column chart** — The long view, under the table: one bar per month for the last twelve months that have data, or fewer if that is all there is. Two numbers on every month — the bar prints the megawatts held, the line above it prints the change on the month before as a percentage. It is in MW rather than rupees on purpose: this strip is about how much product is sitting there, which prices cannot flatter. Each bar is that month's closing stock on its own, so nothing here is ever added across months.
 
 | Well | Field |
 |---|---|
@@ -653,7 +636,7 @@ Position: Horizontal 200, Vertical 576, Width 700, Height 130.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
-- This one must ignore the two controls at the top, or it would shrink back to five months. Click the 'By Month / By Quarter' slicer once, then ribbon Format → Edit interactions; small icons appear on every other visual. On this chart click the circle-with-a-line (None). Do the same after selecting the 'Months' slicer. Leave Plant and Type set to filter, so those two still work on it.
+- This one must ignore the two controls at the top, or it would shrink back to five months. Click the 'Months' slicer once, then ribbon Format → Edit interactions; small icons appear on every other visual. On this chart click the circle-with-a-line (None). Leave Plant and Type set to filter, so those two still work on it.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels: On. Then open 'Apply settings to'', then 'Series and pick MW' and set it to Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, Display units: None, Value decimal places: 1, Position: Inside end — white, because this number is printed on the green bar.
 - Still under Data labels, switch 'Apply settings to' → Series to 'MW % vs LM': Font: Arial, Font size: 8, Colour: #14532D, Value decimal places: 0, Position: Above. That is the second number you asked for — the percentage sits over the bar, the crore figure sits inside it, so the two never collide.
 - In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off, and Secondary y-axis: Off. Both numbers are printed on the chart, so two scales up the sides would only eat the height.
@@ -663,7 +646,7 @@ Position: Horizontal 200, Vertical 576, Width 700, Height 130.
 - In the Visualizations pane click the paintbrush icon, then click 'Legend' and set it to Off. Two series, both labelled on the chart, so a key would repeat what the labels already say.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 
-**4.21** **Donut chart** — What the finished goods are made of in the latest month that has data — the module technologies, largest slice first. It is pinned to the latest month by the In Latest Month filter, because adding one month-end of stock to another would be meaningless; the Plant and Type slicers still narrow it.
+**4.20** **Donut chart** — What the finished goods are made of in the latest month that has data — the module technologies, largest slice first. It is pinned to the latest month by the In Latest Month filter, because adding one month-end of stock to another would be meaningless; the Plant and Type slicers still narrow it.
 
 | Well | Field |
 |---|---|
@@ -684,7 +667,7 @@ Position: Horizontal 916, Vertical 88, Width 348, Height 306.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
 - Right-click a slice → Drill through → Detail to see the materials inside that technology.
 
-**4.22** **Donut chart** — The same for raw materials in the latest month — cell, glass, frame, POE, packing and the rest — so the two donuts read as a pair: what the finished stock is, and what the raw stock is.
+**4.21** **Donut chart** — The same for raw materials in the latest month — cell, glass, frame, POE, packing and the rest — so the two donuts read as a pair: what the finished stock is, and what the raw stock is.
 
 | Well | Field |
 |---|---|
@@ -709,28 +692,7 @@ Position: Horizontal 916, Vertical 402, Width 348, Height 304.
 
 ## Page — Summary
 
-**4.23** **Slicer** — The same toggle as Overview, on this page too. By quarter turns every period column into a quarter and each figure into the average of that quarter's month-ends.
-
-| Well | Field |
-|---|---|
-| Field | `Period[Period]` |
-
-Title: `By Month / By Quarter`
-
-Position: Horizontal 16, Vertical 20, Width 216, Height 52.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
-- Click 'Y-axis' and set Font size to 9.
-- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
-- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
-- In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Tile, so it reads as two buttons rather than a list.
-- In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection' and set it to switch ON 'Single select'.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title' and set it to Off.
-- Do NOT sync this slicer to the other pages: View → Sync slicers, and leave every box on its row unticked. Overview has its own copy of the toggle.
-
-**4.24** **Slicer** — Tick nothing and the matrix shows the last 4 months under each master column. Tick the months you want and it shows those, up to twelve — tick more than twelve and it keeps the twelve most recent of your ticks, because 3 master columns × 12 months is already 36 columns of figures.
+**4.22** **Slicer** — Tick nothing and the matrix shows the last 4 months under each master column. Tick the months you want and it shows those, up to twelve — tick more than twelve and it keeps the twelve most recent of your ticks, because 3 master columns × 12 months is already 36 columns of figures.
 
 | Well | Field |
 |---|---|
@@ -738,19 +700,20 @@ Position: Horizontal 16, Vertical 20, Width 216, Height 52.
 
 Title: `Months (Leave Empty for the Last 4)`
 
-Position: Horizontal 248, Vertical 20, Width 300, Height 52.
+Position: Horizontal 16, Vertical 8, Width 300, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection' and set it to switch OFF 'Multi-select with CTRL' so ticking several needs no keyboard.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font size' and set it to 10, Colour: #14532D.
 
-**4.25** **Slicer** — The picker for quarter mode, and it behaves the same way: empty means the last 4, or tick the quarters you want. In month mode leave it empty.
+**4.23** **Slicer** — A second, coarser filter: tick Q1 and only that quarter's months are left for the matrices and the charts to show. Leave it empty to see every month.
 
 | Well | Field |
 |---|---|
@@ -758,19 +721,20 @@ Position: Horizontal 248, Vertical 20, Width 300, Height 52.
 
 Title: `Quarters (Leave Empty for the Last 4)`
 
-Position: Horizontal 564, Vertical 20, Width 240, Height 52.
+Position: Horizontal 332, Vertical 8, Width 240, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection' and set it to switch OFF 'Multi-select with CTRL'.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font size' and set it to 10, Colour: #14532D.
 
-**4.26** **Slicer** — Narrows both matrices to one plant when you want to read it on its own.
+**4.24** **Slicer** — Narrows both matrices to one plant when you want to read it on its own.
 
 | Well | Field |
 |---|---|
@@ -778,18 +742,19 @@ Position: Horizontal 564, Vertical 20, Width 240, Height 52.
 
 Title: `Plant`
 
-Position: Horizontal 820, Vertical 20, Width 220, Height 52.
+Position: Horizontal 588, Vertical 8, Width 220, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font size' and set it to 10, Colour: #14532D.
 
-**4.27** **Slicer** — RM, FG or consumables, when you want the reconciliation for one of them only.
+**4.25** **Slicer** — RM, FG or consumables, when you want the reconciliation for one of them only.
 
 | Well | Field |
 |---|---|
@@ -797,23 +762,24 @@ Position: Horizontal 820, Vertical 20, Width 220, Height 52.
 
 Title: `Type`
 
-Position: Horizontal 1056, Vertical 20, Width 208, Height 52.
+Position: Horizontal 824, Vertical 8, Width 208, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font size' and set it to 10, Colour: #14532D.
 
-**4.28** **Matrix** — The whole reconciliation in one grid: three master columns — Inventory (TB), Inventory (MB5B), Difference — with the periods under each, one row per plant (Jaipur Module, Dholera Module, Dholera Cell) opening into RM, FG and Consumables, and a total for each plant. Everything in crore rupees.
+**4.26** **Matrix** — The whole reconciliation in one grid: three master columns — Inventory (TB), Inventory (MB5B), Difference — with the periods under each, one row per plant (Jaipur Module, Dholera Module, Dholera Cell) opening into RM, FG and Consumables, and a total for each plant. Everything in crore rupees.
 
 | Well | Field |
 |---|---|
 | Rows | `dimPlant[Plant]`, `dimCategory[Category]` |
-| Columns | `dimMetric[Metric]`, `Period[Period]` |
+| Columns | `dimMetric[Metric]`, `dimDate[MonthName]` |
 | Values | `Summary Value Rs Cr` |
 | Filters | `In Summary Window  →  is 1` |
 
@@ -826,22 +792,22 @@ Position: Horizontal 16, Vertical 88, Width 1248, Height 212.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Order of the two Columns fields matters: dimMetric[Metric] FIRST, then Period[Period]. That is what makes TB / MB5B / Difference the master columns with the periods nested inside. Period[Period] rather than dimDate[MonthName] is what lets the toggle swap months for quarters.
+- Order of the two Columns fields matters: dimMetric[Metric] FIRST, then dimDate[MonthName]. That is what makes TB / MB5B / Difference the master columns with the months nested inside; the other way round gives you months with three metrics inside each.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, so Plant and Type get a column each instead of being indented into one.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then '+/- icons' and set it to On — that is the click-to-expand control on each plant.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On, and switch ON 'Per row level' so each plant shows its own total. Column subtotals: Off.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Grand total' and set it to Off on this matrix. The total of the totals, split by RM / FG / Consumables, is the second matrix underneath — a matrix can only give one flat grand total row, so the split has to be its own visual.
 - Colour the differences: in the Values box click the small down-arrow next to Summary Value Rs Cr, click 'Conditional formatting', then 'Background color'. Set Format style to Diverging, tick 'Add a middle colour', set the middle number to 0, and make both the Minimum and Maximum colours red. A difference either direction is equally wrong, so both ends are red.
 - Right-click any plant row, click 'Expand', then 'All', so RM, FG and Consumables show under every plant. Then press Ctrl+S — Power BI remembers it.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'use the measure instead of typed words' and set it to click the fx button beside Text, choose 'Field value', and pick the measure Summary Title. The heading then says by Month or by Quarter to match the toggle, so nobody reads a quarter average as a month-end.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Text' and set it to type the heading above, and leave the fx button alone. The columns are always months, so the heading is always right.
 - With twelve periods ticked this is 36 columns of figures, so a scrollbar appears along the bottom of the matrix. That is normal: scroll it sideways, or untick periods until it fits.
 
-**4.29** **Matrix** — The bottom block: the same three master columns, but every plant added together — one row for RM, one for FG, one for Consumables, so you can read total RM across all plants at a glance, and a Total row under them which is the total inventory.
+**4.27** **Matrix** — The bottom block: the same three master columns, but every plant added together — one row for RM, one for FG, one for Consumables, so you can read total RM across all plants at a glance, and a Total row under them which is the total inventory.
 
 | Well | Field |
 |---|---|
 | Rows | `dimCategory[Category]` |
-| Columns | `dimMetric[Metric]`, `Period[Period]` |
+| Columns | `dimMetric[Metric]`, `dimDate[MonthName]` |
 | Values | `Summary Value Rs Cr` |
 | Filters | `In Summary Window  →  is 1` |
 
@@ -854,17 +820,17 @@ Position: Horizontal 16, Vertical 308, Width 1248, Height 112.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Same column order as the matrix above: dimMetric[Metric] first, then Period[Period]. Keep the same periods ticked, so the two matrices line up column for column.
+- Same column order as the matrix above: dimMetric[Metric] first, then dimDate[MonthName]. Keep the same months ticked, so the two matrices line up column for column.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On — that bottom row is the total of the totals, the whole inventory. Column subtotals: Off.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Font' and set it to Arial, Font size: 9, Bold: On, so this block reads as the summary of the one above rather than as more detail.
 - This matrix has no Plant field on purpose. Leave the Plant slicer on 'All' when you want the across-all-plants figure — picking one plant filters this block too.
 
-**4.30** **Clustered column chart** — The books against the stock report, two bars per period: the same figures as the matrix above, but you can see a gap opening without reading a single number. Same periods as the matrices, because it carries the same filter.
+**4.28** **Clustered column chart** — The books against the stock report, two bars per period: the same figures as the matrix above, but you can see a gap opening without reading a single number. Same periods as the matrices, because it carries the same filter.
 
 | Well | Field |
 |---|---|
-| X-axis | `Period[Period]` |
+| X-axis | `dimDate[MonthName]` |
 | Y-axis | `TB Inventory Rs Cr`, `Inventory Rs Cr` |
 | Filters | `In Summary Window  →  is 1` |
 
@@ -885,11 +851,11 @@ Position: Horizontal 16, Vertical 428, Width 616, Height 112.
 - In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Inner padding: 30%, and General', then 'Properties', then 'Padding' and set it to Left 12, Right 12, so the first and last bar keep off the card edges.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 
-**4.31** **Line and clustered column chart** — The question the reconciliation is really asking: is the gap widening or closing. The bar is the difference in crore rupees, the line above it the same difference as a percentage of the trial balance, so a small gap on a big month reads as small.
+**4.29** **Line and clustered column chart** — The question the reconciliation is really asking: is the gap widening or closing. The bar is the difference in crore rupees, the line above it the same difference as a percentage of the trial balance, so a small gap on a big month reads as small.
 
 | Well | Field |
 |---|---|
-| X-axis | `Period[Period]` |
+| X-axis | `dimDate[MonthName]` |
 | Column y-axis | `Difference Inventory Rs Cr` |
 | Line y-axis | `Difference Inventory %` |
 | Filters | `In Summary Window  →  is 1` |
@@ -912,7 +878,7 @@ Position: Horizontal 648, Vertical 428, Width 616, Height 112.
 - In the Visualizations pane click the paintbrush icon, then click 'Legend' and set it to Off — the title says which is which, and 144 pixels of height has none to spare.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 
-**4.32** **Line chart** — The long view under the reconciliation: three lines across the last twelve months that have data, or fewer if that is all there is — raw material days, finished goods days, and the two added together, which is what the Overview card calls Days of inventory (RM + FG). Every month is its own closing figure divided by capacity, so nothing is added across months. Read it for shape: RM climbing while FG is flat means material is arriving faster than it is being consumed.
+**4.30** **Line chart** — The long view under the reconciliation: three lines across the last twelve months that have data, or fewer if that is all there is — raw material days, finished goods days, and the two added together, which is what the Overview card calls Days of inventory (RM + FG). Every month is its own closing figure divided by capacity, so nothing is added across months. Read it for shape: RM climbing while FG is flat means material is arriving faster than it is being consumed.
 
 | Well | Field |
 |---|---|
@@ -929,7 +895,7 @@ Position: Horizontal 16, Vertical 548, Width 1248, Height 156.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
-- This chart must ignore the five controls at the top of Summary, or it would drop back to four periods. Click the 'By Month / By Quarter' slicer, then ribbon Format → Edit interactions, and on this chart click the circle-with-a-line (None). Repeat for the Months and Quarters slicers. Leave Plant and Type filtering, so those two still work on it — picking a plant re-bases all three lines on that plant's capacity.
+- This chart must ignore the period pickers at the top of Summary, or it would drop back to four months. Click the 'Months' slicer, then ribbon Format → Edit interactions, and on this chart click the circle-with-a-line (None). Repeat for the Quarters slicer. Leave Plant and Type filtering, so those two still work on it — picking a plant re-bases all three lines on that plant's capacity.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Display units: None, Value decimal places: 0, Position: Above. Twelve months × three lines is a lot of numbers: if they collide, set Data labels', then 'Apply settings to', then 'Series and switch the Total line's labels off, since it is the sum of the other two'.
 - In the Visualizations pane click the paintbrush icon, then click 'Lines', then 'Stroke width: 2, Show marker: On, Marker size: 4. Then Lines', then 'Apply settings to', then 'Series' and set it to RM Days #2E7D46, FG Days #7FBB84, Total Days (RM + FG) #14532D — the total is the darkest, so it reads as the envelope.
 - In the Visualizations pane click the paintbrush icon, then click 'Legend', then 'Position' and set it to Top center, Font: Arial, Font size: 9, Colour: #1F2A24. Three series need a key, unlike the single-series charts elsewhere.
@@ -943,27 +909,7 @@ Position: Horizontal 16, Vertical 548, Width 1248, Height 156.
 
 ## Page — FG
 
-**4.33** **Slicer** — The same two-button toggle as Overview and Summary. By Month puts the months you pick under each master column; By Quarter puts fiscal quarters there instead, each one the average of its three month-ends, because stock cannot be added up across months.
-
-| Well | Field |
-|---|---|
-| Field | `Period[Period]` |
-
-Title: `By Month / By Quarter`
-
-Position: Horizontal 16, Vertical 20, Width 216, Height 52.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
-- Click 'Y-axis' and set Font size to 9.
-- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
-- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
-- In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Tile. Two buttons side by side, not a dropdown.
-- In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection', then 'Single select' and set it to On, Show 'Select all': Off. Exactly one of the two is always chosen.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D.
-- Leave it out of View → Sync slicers. FG keeps its own toggle, so changing the mode here must not move Overview or Summary.
-
-**4.34** **Slicer** — Which months appear under each master column. Tick nothing and it shows the last four with data; tick your own and it shows those, up to twelve.
+**4.31** **Slicer** — Which months appear under each master column. Tick nothing and it shows the last four with data; tick your own and it shows those, up to twelve.
 
 | Well | Field |
 |---|---|
@@ -971,19 +917,20 @@ Position: Horizontal 16, Vertical 20, Width 216, Height 52.
 
 Title: `Months (Leave Empty for the Last 4)`
 
-Position: Horizontal 248, Vertical 20, Width 300, Height 52.
+Position: Horizontal 16, Vertical 8, Width 300, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection', then 'switch OFF 'Multi-select with CTRL', so months can be ticked by clicking'.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - Do not sync this one either. Both FG matrices read it, and nothing else should.
 
-**4.35** **Slicer** — The same idea in quarter mode: empty means the last four fiscal quarters, or tick the ones you want, up to twelve.
+**4.32** **Slicer** — A coarser filter over the same months: tick Q1 and only April, May and June are left for the two matrices to show. Leave it empty to see every month.
 
 | Well | Field |
 |---|---|
@@ -991,19 +938,20 @@ Position: Horizontal 248, Vertical 20, Width 300, Height 52.
 
 Title: `Quarters (Leave Empty for the Last 4)`
 
-Position: Horizontal 564, Vertical 20, Width 240, Height 52.
+Position: Horizontal 332, Vertical 8, Width 240, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection', then ''Multi-select with CTRL'' and set it to Off.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
-- It has no effect while the toggle says By Month — that is intended, not a fault.
+- It filters the months rather than replacing them, so the columns stay months.
 
-**4.36** **Slicer** — One plant, or all of them. It filters the technology matrix and all three charts, so picking Dholera Cell turns the page into a Dholera Cell page.
+**4.33** **Slicer** — One plant, or all of them. It filters the technology matrix and all three charts, so picking Dholera Cell turns the page into a Dholera Cell page.
 
 | Well | Field |
 |---|---|
@@ -1011,17 +959,18 @@ Position: Horizontal 564, Vertical 20, Width 240, Height 52.
 
 Title: `Plant`
 
-Position: Horizontal 820, Vertical 20, Width 220, Height 52.
+Position: Horizontal 588, Vertical 8, Width 220, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.37** **Slicer** — One module technology, when you want the page to be about that technology only.
+**4.34** **Slicer** — One module technology, when you want the page to be about that technology only.
 
 | Well | Field |
 |---|---|
@@ -1029,22 +978,23 @@ Position: Horizontal 820, Vertical 20, Width 220, Height 52.
 
 Title: `Technology`
 
-Position: Horizontal 1056, Vertical 20, Width 208, Height 52.
+Position: Horizontal 824, Vertical 8, Width 208, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.38** **Matrix** — Finished goods per plant in all three units at once — megawatts, crore rupees and days — with four periods under each of the three master columns by default. Days is MW ÷ capacity MW, so a plant with no capacity figure is blank on purpose.
+**4.35** **Matrix** — Finished goods per plant in all three units at once — megawatts, crore rupees and days — with four periods under each of the three master columns by default. Days is MW ÷ capacity MW, so a plant with no capacity figure is blank on purpose.
 
 | Well | Field |
 |---|---|
 | Rows | `dimPlant[Plant]` |
-| Columns | `dimMeasure[Measure]`, `Period[Period]` |
+| Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
 | Values | `Unit Value by Period` |
 | Filters | `dimCategory[Category]  →  is FG`, `In Summary Window  →  is 1` |
 
@@ -1057,8 +1007,8 @@ Position: Horizontal 16, Vertical 88, Width 1248, Height 140.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- dimMeasure[Measure] goes in Columns FIRST, then Period[Period]. That order is what makes MW, Rs Cr. and Days the master columns with the periods nested inside them; the other way round gives you periods with three units inside each, which is not what you want.
-- Values takes Unit Value by Period, not Unit Value — the by-Period one averages the month-ends in quarter mode instead of adding them.
+- dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName]. That order is what makes MW, Rs Cr. and Days the master columns with the periods nested inside them; the other way round gives you periods with three units inside each, which is not what you want.
+- Values takes Unit Value by Period, not Unit Value. They are the same figure in a month column; the difference is the Total column, where the by-Period one averages the month-ends instead of adding them, because stock is a level.
 - Filters pane → drag dimCategory[Category] in → tick FG only. Then drag the measure In Summary Window in and set 'is 1' — that is what limits it to four periods, or to the ones you tick, up to twelve.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On, Column subtotals: Off.
@@ -1067,12 +1017,12 @@ Position: Horizontal 16, Vertical 88, Width 1248, Height 140.
 - Click a plant row and the technology matrix and the charts below follow it.
 - With twelve periods ticked this is 36 number columns, so the matrix scrolls sideways. That is normal — scroll inside it, do not widen it.
 
-**4.39** **Matrix** — Exactly the same three master columns and the same periods, but by module technology rather than by plant — which is where a build-up in one technology shows up.
+**4.36** **Matrix** — Exactly the same three master columns and the same periods, but by module technology rather than by plant — which is where a build-up in one technology shows up.
 
 | Well | Field |
 |---|---|
 | Rows | `dimNature[Nature]` |
-| Columns | `dimMeasure[Measure]`, `Period[Period]` |
+| Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
 | Values | `Unit Value by Period` |
 | Filters | `dimCategory[Category]  →  is FG`, `In Summary Window  →  is 1` |
 
@@ -1092,7 +1042,7 @@ Position: Horizontal 16, Vertical 236, Width 1248, Height 252.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On, Column subtotals: Off.
 - With the Plant slicer on one plant, this becomes that plant's technology split.
 
-**4.40** **Clustered column chart** — Which technology is holding the megawatts right now. It is deliberately pinned to the latest month with data: there is no period on the axis here, so without that pin it would add four months of stock together and read four times too high.
+**4.37** **Clustered column chart** — Which technology is holding the megawatts right now. It is deliberately pinned to the latest month with data: there is no period on the axis here, so without that pin it would add four months of stock together and read four times too high.
 
 | Well | Field |
 |---|---|
@@ -1117,7 +1067,7 @@ Position: Horizontal 16, Vertical 496, Width 412, Height 208.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 - Clicking a bar filters both matrices to that technology; right-click → Drill through → Detail for the materials behind it.
 
-**4.41** **Line and clustered column chart** — How long the finished goods on hand would last, month by month, with the change on last month printed above each bar — so a slow build-up is visible before it becomes a number anyone argues about.
+**4.38** **Line and clustered column chart** — How long the finished goods on hand would last, month by month, with the change on last month printed above each bar — so a slow build-up is visible before it becomes a number anyone argues about.
 
 | Well | Field |
 |---|---|
@@ -1136,7 +1086,7 @@ Position: Horizontal 444, Vertical 496, Width 428, Height 208.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 - Filters pane → drag In Last 12 in → is 1, so this always shows the last twelve months whatever the pickers above say.
-- This chart must ignore the two period controls, or it drops back to four months: click the By Month / By Quarter slicer → Format tab → Edit interactions → set this chart to None (the circle-with-a-line icon). Do the same after clicking the Months slicer and the Quarters slicer.
+- This chart must ignore the two period pickers, or it drops back to four months: click the Months slicer → Format tab → Edit interactions → set this chart to None (the circle-with-a-line icon). Do the same after clicking the Quarters slicer.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels: On. 'Apply settings to'', then 'Series' and set it to Days — Font: Arial, Font size: 8, Colour: #1F2A24, Value decimal places: 0, Position: Inside end.
 - Switch 'Apply settings to' → Series to Days vs LM: Font: Arial, Font size: 8, Colour: #14532D, Value decimal places: 0, Position: Above.
 - In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off, Secondary y-axis: Off.
@@ -1145,7 +1095,7 @@ Position: Horizontal 444, Vertical 496, Width 428, Height 208.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 - Right-click any bar → Drill through → Detail for the split behind that month.
 
-**4.42** **Donut chart** — Where the finished goods are sitting, as a share of the whole. Pinned to the latest month for the same reason as the bar chart: a share of four added-up months would mean nothing.
+**4.39** **Donut chart** — Where the finished goods are sitting, as a share of the whole. Pinned to the latest month for the same reason as the bar chart: a share of four added-up months would mean nothing.
 
 | Well | Field |
 |---|---|
@@ -1170,27 +1120,7 @@ Position: Horizontal 888, Vertical 496, Width 376, Height 208.
 
 ## Page — RM
 
-**4.43** **Slicer** — The same toggle as the other pages. It decides whether the columns under Rs Cr. and Days are months or fiscal quarters, a quarter being the average of its three month-ends.
-
-| Well | Field |
-|---|---|
-| Field | `Period[Period]` |
-
-Title: `By Month / By Quarter`
-
-Position: Horizontal 16, Vertical 20, Width 216, Height 52.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
-- Click 'Y-axis' and set Font size to 9.
-- Click 'Legend' and set Font size to 9 and Position to 'Top center'.
-- Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
-- In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Tile.
-- In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection', then 'Single select' and set it to On, Show 'Select all': Off.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D.
-- Do not sync it with any other page.
-
-**4.44** **Slicer** — Which months appear under each master column, and on both charts along the bottom. Nothing ticked means the last four with data; tick your own for up to twelve.
+**4.40** **Slicer** — Which months appear under each master column, and on both charts along the bottom. Nothing ticked means the last four with data; tick your own for up to twelve.
 
 | Well | Field |
 |---|---|
@@ -1198,18 +1128,19 @@ Position: Horizontal 16, Vertical 20, Width 216, Height 52.
 
 Title: `Months (Leave Empty for the Last 4)`
 
-Position: Horizontal 248, Vertical 20, Width 300, Height 52.
+Position: Horizontal 16, Vertical 8, Width 300, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection', then ''Multi-select with CTRL'' and set it to Off.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.45** **Slicer** — The quarter-mode equivalent: empty means the last four fiscal quarters.
+**4.41** **Slicer** — The quarter-mode equivalent: empty means the last four fiscal quarters.
 
 | Well | Field |
 |---|---|
@@ -1217,18 +1148,19 @@ Position: Horizontal 248, Vertical 20, Width 300, Height 52.
 
 Title: `Quarters (Leave Empty for the Last 4)`
 
-Position: Horizontal 564, Vertical 20, Width 240, Height 52.
+Position: Horizontal 332, Vertical 8, Width 240, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection', then ''Multi-select with CTRL'' and set it to Off.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.46** **Slicer** — One plant, or all three.
+**4.42** **Slicer** — One plant, or all three.
 
 | Well | Field |
 |---|---|
@@ -1236,17 +1168,18 @@ Position: Horizontal 564, Vertical 20, Width 240, Height 52.
 
 Title: `Plant`
 
-Position: Horizontal 820, Vertical 20, Width 220, Height 52.
+Position: Horizontal 588, Vertical 8, Width 220, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.47** **Slicer** — Module or Cell, when you want the page to be about one of the two only — the same split the Excel sheet had as its Module and Cell blocks.
+**4.43** **Slicer** — Module or Cell, when you want the page to be about one of the two only — the same split the Excel sheet had as its Module and Cell blocks.
 
 | Well | Field |
 |---|---|
@@ -1254,22 +1187,23 @@ Position: Horizontal 820, Vertical 20, Width 220, Height 52.
 
 Title: `Group Nature`
 
-Position: Horizontal 1056, Vertical 20, Width 208, Height 52.
+Position: Horizontal 824, Vertical 8, Width 208, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
+- Filters pane → drag the same field into this visual's own Filters box → Filter type: Advanced filtering → 'is not blank' → Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.48** **Matrix** — The top block of the old RM sheet, rebuilt: one row per plant, with Rs Cr. and Days as master columns and the periods under each. MW is unticked because an RM megawatt figure is derived from a BOM, not measured, so it does not belong beside the other two.
+**4.44** **Matrix** — The top block of the old RM sheet, rebuilt: one row per plant, with Rs Cr. and Days as master columns and the periods under each. MW is unticked because an RM megawatt figure is derived from a BOM, not measured, so it does not belong beside the other two.
 
 | Well | Field |
 |---|---|
 | Rows | `dimPlant[Plant]` |
-| Columns | `dimMeasure[Measure]`, `Period[Period]` |
+| Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
 | Values | `Unit Value by Period` |
 | Filters | `dimCategory[Category]  →  is RM`, `dimMeasure[Measure]  →  untick MW`, `In Summary Window  →  is 1` |
 
@@ -1282,20 +1216,20 @@ Position: Horizontal 16, Vertical 88, Width 1248, Height 140.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- dimMeasure[Measure] goes in Columns FIRST, then Period[Period] — that order is what makes Rs Cr. and Days the master columns.
+- dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName] — that order is what makes Rs Cr. and Days the master columns.
 - Filters pane → dimCategory[Category] → tick RM only; then drag dimMeasure[Measure] in and untick MW so only Rs Cr. and Days remain; then drag In Summary Window in and set 'is 1' for the four-periods-by-default behaviour.
-- Values takes Unit Value by Period — the plain Unit Value would add three month-ends together in quarter mode.
+- Values takes Unit Value by Period — in the Total column the plain Unit Value would add the month-ends together instead of averaging them.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On (that is the Grand Total row the Excel sheet had), Column subtotals: Off.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
 - Clicking a plant row filters the material matrix and both charts below it.
 
-**4.49** **Matrix** — The second block of the old sheet: Module and Cell, each opening into its materials — cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — in the same two units and the same periods, with a subtotal on each group and a grand total under them.
+**4.45** **Matrix** — The second block of the old sheet: Module and Cell, each opening into its materials — cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — in the same two units and the same periods, with a subtotal on each group and a grand total under them.
 
 | Well | Field |
 |---|---|
 | Rows | `factInventory[GroupNature]`, `dimNature[Nature]` |
-| Columns | `dimMeasure[Measure]`, `Period[Period]` |
+| Columns | `dimMeasure[Measure]`, `dimDate[MonthName]` |
 | Values | `Unit Value by Period` |
 | Filters | `dimCategory[Category]  →  is RM`, `dimMeasure[Measure]  →  untick MW`, `In Summary Window  →  is 1` |
 
@@ -1314,11 +1248,11 @@ Position: Horizontal 16, Vertical 236, Width 1248, Height 252.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On, and switch 'Per row level' On so both the Total Module and Total Cell lines appear, not only the grand total.
 - Right-click a material row → Drill through → Detail for the material-by-material list behind it.
 
-**4.50** **Clustered column chart** — Raw material held in crore rupees: one group per period along the bottom and the three plants side by side inside each group, so you read the months left to right and compare the plants within a month. It follows the pickers above, so it is four periods by default and up to twelve if you tick them.
+**4.46** **Clustered column chart** — Raw material held in crore rupees: one group per period along the bottom and the three plants side by side inside each group, so you read the months left to right and compare the plants within a month. It follows the pickers above, so it is four periods by default and up to twelve if you tick them.
 
 | Well | Field |
 |---|---|
-| X-axis | `Period[Period]` |
+| X-axis | `dimDate[MonthName]` |
 | Legend | `dimPlant[Plant]` |
 | Y-axis | `Inventory Rs Cr` |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
@@ -1332,7 +1266,7 @@ Position: Horizontal 16, Vertical 496, Width 616, Height 208.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
-- Period[Period] goes in the X-axis and dimPlant[Plant] in Legend — that order is what gives three bars per month rather than four bars per plant.
+- dimDate[MonthName] goes in the X-axis and dimPlant[Plant] in Legend — that order is what gives three bars per month rather than four bars per plant.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels' and set it to On, Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, Display units: None, Value decimal places: 0, Position: Inside end.
 - In the Visualizations pane click the paintbrush icon, then click 'Legend', then 'Position' and set it to Top center, Font: Arial, Font size: 8. Keep it on: it is the only thing naming the plants.
 - In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off — every bar is labelled, so the scale would only eat width.
@@ -1340,11 +1274,11 @@ Position: Horizontal 16, Vertical 496, Width 616, Height 208.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
 - Clicking one plant's bar filters both matrices to that plant and that period.
 
-**4.51** **Line and clustered column chart** — The same chart in days rather than rupees — how long each plant's raw material would last at its own capacity, three plant bars per month, and over them a line for the whole business: every plant's RM megawatts added together over every plant's capacity added together. The line is not the average of the three bars, and it is not their sum: it is one big plant's worth of days, which is the figure to quote for the company. Read together with the chart beside it, this tells you whether a bigger rupee figure is actually more stock or just a dearer month.
+**4.47** **Line and clustered column chart** — The same chart in days rather than rupees — how long each plant's raw material would last at its own capacity, three plant bars per month, and over them a line for the whole business: every plant's RM megawatts added together over every plant's capacity added together. The line is not the average of the three bars, and it is not their sum: it is one big plant's worth of days, which is the figure to quote for the company. Read together with the chart beside it, this tells you whether a bigger rupee figure is actually more stock or just a dearer month.
 
 | Well | Field |
 |---|---|
-| X-axis | `Period[Period]` |
+| X-axis | `dimDate[MonthName]` |
 | Column legend | `dimPlant[Plant]` |
 | Column y-axis | `Days by Period` |
 | Line y-axis | `RM Days All Plants by Period` |
@@ -1360,7 +1294,7 @@ Position: Horizontal 648, Vertical 496, Width 616, Height 208.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
 - The line comes from RM Days All Plants by Period, which strips the plant filter off both the megawatts and the capacity, so a bar can be tall while the line is calm.
-- Use Days by Period for the bars, not Days. Days is a ratio, so quarter mode has to average the three month-ends rather than add them, and that is the only difference between the two measures.
+- Use Days by Period for the bars, not Days. Days is a ratio, so a total column has to average the three month-ends rather than add them, and that is the only difference between the two measures.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels' and set it to On, Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, Display units: None, Value decimal places: 0, Position: Inside end.
 - Data labels → Apply settings to → Series → RM Days All Plants by Period: Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Value decimal places: 0, Position: Above — dark green on the white card, because this label is not printed on a bar.
 - In the Visualizations pane click the paintbrush icon, then click 'Lines', then 'Colour: #14532D, Stroke width: 2, Show marker: On, Marker size: 4. Format pane', then 'Lines', then 'Smooth line' and set it to Off, so the shape is honest.
@@ -1374,7 +1308,7 @@ Position: Horizontal 648, Vertical 496, Width 616, Height 208.
 
 ## Page — Detail
 
-**4.52** **Card** — The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.
+**4.48** **Card** — The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.
 
 | Well | Field |
 |---|---|
@@ -1388,7 +1322,7 @@ Position: Horizontal 16, Vertical 16, Width 296, Height 96.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
 
-**4.53** **Card** — Same slice in megawatts.
+**4.49** **Card** — Same slice in megawatts.
 
 | Well | Field |
 |---|---|
@@ -1402,7 +1336,7 @@ Position: Horizontal 320, Vertical 16, Width 296, Height 96.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
 
-**4.54** **Card** — Stock in MW divided by the MW capacity on the Variables sheet. With no category picked that MW is RM plus FG over the same capacity, so the two add up — the title says so rather than leaving a reader to assume it means FG alone. Blank where the plant has no capacity row — 1905.
+**4.50** **Card** — Stock in MW divided by the MW capacity on the Variables sheet. With no category picked that MW is RM plus FG over the same capacity, so the two add up — the title says so rather than leaving a reader to assume it means FG alone. Blank where the plant has no capacity row — 1905.
 
 | Well | Field |
 |---|---|
@@ -1416,7 +1350,7 @@ Position: Horizontal 624, Vertical 16, Width 296, Height 96.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
 
-**4.55** **Card** — How big this slice is against the whole.
+**4.51** **Card** — How big this slice is against the whole.
 
 | Well | Field |
 |---|---|
@@ -1430,7 +1364,7 @@ Position: Horizontal 928, Vertical 16, Width 336, Height 96.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
 
-**4.56** **Pie chart** — RM / FG / consumables for exactly what you clicked.
+**4.52** **Pie chart** — RM / FG / consumables for exactly what you clicked.
 
 | Well | Field |
 |---|---|
@@ -1446,7 +1380,7 @@ Position: Horizontal 16, Vertical 120, Width 404, Height 232.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
 - In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total.
 
-**4.57** **Donut chart** — Which technology or material nature the slice is made of.
+**4.53** **Donut chart** — Which technology or material nature the slice is made of.
 
 | Well | Field |
 |---|---|
@@ -1462,7 +1396,7 @@ Position: Horizontal 428, Vertical 120, Width 404, Height 232.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
 - In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total.
 
-**4.58** **Pie chart** — Where the slice sits. A single-colour pie means it is one plant already.
+**4.54** **Pie chart** — Where the slice sits. A single-colour pie means it is one plant already.
 
 | Well | Field |
 |---|---|
@@ -1478,7 +1412,7 @@ Position: Horizontal 840, Vertical 120, Width 424, Height 232.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
 - In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total.
 
-**4.59** **Matrix** — The line-item detail. A Matrix rather than a Table, so it opens nature → material instead of being one long flat list — that is the difference between clicking and scrolling.
+**4.55** **Matrix** — The line-item detail. A Matrix rather than a Table, so it opens nature → material instead of being one long flat list — that is the difference between clicking and scrolling.
 
 | Well | Field |
 |---|---|
@@ -1505,9 +1439,165 @@ Position: Horizontal 16, Vertical 364, Width 1248, Height 348.
 
 ---
 
+## Page — Checks
+
+**4.56** **Card** — How many rows came out of RM Raw, FG Raw and Consble Raw together. Zero means pRoot is wrong or the three folders are named differently.
+
+| Well | Field |
+|---|---|
+| Fields | `Check MB5B Rows` |
+
+Title: `Stock Rows Loaded`
+
+Position: Horizontal 16, Vertical 56, Width 240, Height 88.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Callout value' (that is the big number) and set Font size to 24.
+- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 16, Colour: #14532D.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to #FFFFFF.
+
+**4.57** **Card** — Zero here is the reason Inventory (TB) reads as empty on Summary: either the TB folder has no TB_YYYYMM.xlsx files, or the GL numbers in them match nothing on TB Master.
+
+| Well | Field |
+|---|---|
+| Fields | `Check TB Rows` |
+
+Title: `Trial Balance Rows Loaded`
+
+Position: Horizontal 264, Vertical 56, Width 240, Height 88.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Callout value' (that is the big number) and set Font size to 24.
+- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 16, Colour: #14532D.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to #FFFFFF.
+
+**4.58** **Card** — How many month-ends the stock files cover. One month means only one file was read, and then every monthly chart has a single bar however it is built.
+
+| Well | Field |
+|---|---|
+| Fields | `Check Months of Data` |
+
+Title: `Months of Data`
+
+Position: Horizontal 512, Vertical 56, Width 240, Height 88.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Callout value' (that is the big number) and set Font size to 24.
+- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 16, Colour: #14532D.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to #FFFFFF.
+
+**4.59** **Card** — More than three means the stock files carry a valuation area beyond the three plants; those now appear as 'Plant xxxx' rather than as a blank row.
+
+| Well | Field |
+|---|---|
+| Fields | `Check Plant Codes` |
+
+Title: `Plant Codes in the Data`
+
+Position: Horizontal 760, Vertical 56, Width 240, Height 88.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Callout value' (that is the big number) and set Font size to 24.
+- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 16, Colour: #14532D.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to #FFFFFF.
+
+**4.60** **Card** — The share of stock rows the master sheets do not cover. Anything above zero is what shows up as an Unassigned slice on the donuts and an Unassigned row in the technology matrix — the material numbers differ between the master sheet and the raw files.
+
+| Well | Field |
+|---|---|
+| Fields | `Check Unassigned %` |
+
+Title: `Rows with No Nature (%)`
+
+Position: Horizontal 1008, Vertical 56, Width 256, Height 88.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Callout value' (that is the big number) and set Font size to 24.
+- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 16, Colour: #B3261E.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to #FFFFFF.
+
+**4.61** **Table** — One row per file actually read. If a month is missing from the report, it is missing from this list first — check the file is in the folder and is a real .xlsx.
+
+| Well | Field |
+|---|---|
+| Columns | `qcHeaders[Folder]`, `qcHeaders[Name]`, `qcHeaders[SheetNames]` |
+
+Title: `Every File the Four Folders Gave, with Its Sheets`
+
+Position: Horizontal 16, Vertical 160, Width 620, Height 264.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
+- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
+- Click 'Values' and set Font size to 10.
+- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
+- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
+- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
+
+**4.62** **Table** — The workbook that carries RM Nature, FG Master, TB Master, Constants and MW. A sheet missing from this list, or showing 0 rows, is why the natures or the trial balance are empty.
+
+| Well | Field |
+|---|---|
+| Columns | `qcVarHeaders[SheetName]`, `qcVarHeaders[DataRows]` |
+
+Title: `Sheets Found in Variables and Calculations`
+
+Position: Horizontal 644, Vertical 160, Width 620, Height 264.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
+- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
+- Click 'Values' and set Font size to 10.
+- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
+- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
+- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
+
+**4.63** **Table** — Empty is good. A long list here with 0 trial-balance rows above means TB Master is not matching your GL numbers at all, and the report is showing the whole trial balance rather than the inventory accounts.
+
+| Well | Field |
+|---|---|
+| Columns | `factTB_Unmapped[GLAccount]`, `factTB_Unmapped[GLDesc]`, `factTB_Unmapped[Amount]` |
+
+Title: `GL Accounts in the TB Files That TB Master Does Not List`
+
+Position: Horizontal 16, Vertical 432, Width 620, Height 264.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
+- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
+- Click 'Values' and set Font size to 10.
+- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
+- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
+- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
+
+**4.64** **Table** — Each of these gets blank Days, because days of inventory divides by capacity. Add the technology to the MW sheet and it fills in by itself.
+
+| Well | Field |
+|---|---|
+| Columns | `qcNatureNoCapacity[Nature]` |
+
+Title: `FG Technologies with No Capacity on the MW Sheet`
+
+Position: Horizontal 644, Vertical 432, Width 620, Height 264.
+
+- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
+- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
+- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
+- Click 'Values' and set Font size to 10.
+- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
+- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
+- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
+
+---
+
 ## Making it clickable
 
-**4.60 Drill through.** On the `Detail` page click the empty area around the visuals so
+**4.65 Drill through.** On the `Detail` page click the empty area around the visuals so
 nothing is selected, then drag these into the **Drill through** well of the
 Visualizations pane (leave *Keep all filters* on):
 
@@ -1520,7 +1610,7 @@ That is the whole trick. A **Back** arrow appears on `Detail` by itself, and eve
 row and slice on the other pages now offers **right-click → Drill through → `Detail`**,
 which opens the pies filtered to whatever was clicked.
 
-**4.61 Interactions.** A *left*-click needs no setup — it already cross-filters the rest
+**4.66 Interactions.** A *left*-click needs no setup — it already cross-filters the rest
 of the page. To change what it does: select a visual → ribbon **Format** →
 **Edit interactions**, then on each other visual pick **filter** (funnel),
 **highlight** (chart) or **none**.
@@ -1564,7 +1654,7 @@ Find the words Power BI showed you in the left column.
 | `Mark as date table` will not accept any column | nothing is wrong | skip 2.4 entirely; a monthly table is deliberate and no measure needs it |
 | `dimMetric cannot find table` | `dimCategory` / `dimMetric` / `dimMeasure` were never created | paste those three queries, Close & Apply, then paste the measure again |
 | `Value ₹ Cr cannot be determined. Either the column does not exist, or there is no current row` | either `factInventory` has no `CloseVal` column, or you pasted measures out of order | check `CloseVal` exists in `factInventory`; if it does, paste Appendix B again strictly top to bottom |
-| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 72 from Appendix B, then delete the six old names listed in 3.7 |
+| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 75 from Appendix B, then delete the six old names listed in 3.7 |
 | RM and FG matrices show numbers under `In ₹ Cr` but nothing under `In Days` | the `Days` measure was deleted as an "old name" | paste `Days = [Days of Inventory]` back in; it is in Appendix B |
 | on a card, the number is fine but the wording is cut in half | the card's default text is too big for the space | set **Callout value** → Font size **24**, **General → Title** → Font size **12**, and Height **96** (every card in Part 4 is 96 high). A **Category label**, if your version has one, goes to **10** or off — the title says the same thing |
 | the paintbrush list has a **Callout value** but no **Category label** | you are on the newer Card visual, which has no category label | nothing to fix: the heading comes from **General → Title → Text**, which Part 4 gives you the wording for |
@@ -1602,7 +1692,7 @@ Nothing here is destructive.
    `dimCategory`, `dimMetric`, `dimMeasure`. Then **Close & Apply**.
 2. **Relationships.** Manage relationships must match 2.3 exactly — 11 rows, all Single,
    nothing on `dimMetric` or `dimMeasure`.
-3. **Measures.** Add all 72 from Appendix B top to bottom (adding beside old ones is safe),
+3. **Measures.** Add all 75 from Appendix B top to bottom (adding beside old ones is safe),
    then delete the six old names in 3.7 — keeping `Days`, whose formula you overwrite instead.
 4. **Sorting.** Set the five sort-by columns in 2.5 and 2.6.
 
@@ -1850,23 +1940,6 @@ in
     fnVarSheet
 ```
 
-## dimPlant
-
-> Hardcoded on purpose: no sheet, no header to mismatch. Add a plant by adding a line.
-
-```
-let
-    Src = #table(
-        type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type],
-        {
-            {"1900", "Jaipur Module",  1},
-            {"1902", "Dholera Module", 2},
-            {"1905", "Dholera Cell",   3}
-        })
-in
-    Src
-```
-
 ## dimMaterialAttr
 
 ```
@@ -1892,7 +1965,7 @@ let
     Typed    = Table.TransformColumnTypes(MatKey, {
                    {"Nature", type text}, {"GroupNature", type text},
                    {"BOMStdQty", type number}, {"Item", type text}}),
-    Slim     = Table.SelectColumns(Typed, {"MatKey","Nature","GroupNature","BOMStdQty","Item"}),
+    Slim     = Table.SelectColumns(Typed, {"MatKey","Material","Nature","GroupNature","BOMStdQty","Item"}),
     Dedup    = Table.Distinct(Slim, {"MatKey"}),
     Buffered = Table.Buffer(Dedup)
 in
@@ -1919,7 +1992,7 @@ let
     NoBlank  = Table.SelectRows(Keys, each [Material] <> null and [Material] <> ""),
     MatKey   = Table.AddColumn(NoBlank, "MatKey",
                    each [ValuationArea] & "|" & [Material], type text),
-    Slim     = Table.SelectColumns(MatKey, {"MatKey","Nature"}),
+    Slim     = Table.SelectColumns(MatKey, {"MatKey","Material","Nature"}),
     Dedup    = Table.Distinct(Slim, {"MatKey"}),
     Buffered = Table.Buffer(Dedup)
 in
@@ -1979,11 +2052,39 @@ let
                    "attr", JoinKind.LeftOuter),
     Expanded = Table.ExpandTableColumn(Merged, "attr",
                    {"Nature","GroupNature","BOMStdQty","Item"}),
-    Flag     = Table.AddColumn(Expanded, "AttrMissing",
+
+    // Second pass on the material alone. Plant and material together is the safer key, but
+    // it misses every row when the master sheet has no valuation area column, or records the
+    // plant differently from the MB5B export -- and then nothing has a nature at all.
+    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(dimMaterialAttr,
+                   {"Material","Nature","GroupNature","BOMStdQty","Item"}), {"Material"})),
+    Second   = Table.NestedJoin(Expanded, {"Material"}, ByMat, {"Material"},
+                   "attr2", JoinKind.LeftOuter),
+    Both     = Table.ExpandTableColumn(Second, "attr2",
+                   {"Nature","GroupNature","BOMStdQty","Item"},
+                   {"Nature2","GroupNature2","BOMStdQty2","Item2"}),
+    Coal     = Table.AddColumn(Both, "NatureX", each [Nature] ?? [Nature2], type text),
+    Coal2    = Table.AddColumn(Coal, "GroupNatureX",
+                   each [GroupNature] ?? [GroupNature2], type text),
+    Coal3    = Table.AddColumn(Coal2, "BOMStdQtyX",
+                   each [BOMStdQty] ?? [BOMStdQty2], type number),
+    Coal4    = Table.AddColumn(Coal3, "ItemX", each [Item] ?? [Item2], type text),
+    Dropped  = Table.RemoveColumns(Coal4, {"Nature","Nature2","GroupNature","GroupNature2",
+                   "BOMStdQty","BOMStdQty2","Item","Item2"}),
+    Attr     = Table.RenameColumns(Dropped, {{"NatureX","Nature"},
+                   {"GroupNatureX","GroupNature"}, {"BOMStdQtyX","BOMStdQty"},
+                   {"ItemX","Item"}}),
+
+    Flag     = Table.AddColumn(Attr, "AttrMissing",
                    each [Nature] = null, type logical),
+    // a row the master sheet does not cover is named rather than left null: a donut slice
+    // reading Unassigned tells you there is work to do, one reading (Blank) tells you nothing
+    Named    = Table.TransformColumns(Flag, {
+                   {"Nature",      each if _ = null or _ = "" then "Unassigned" else _, type text},
+                   {"GroupNature", each if _ = null or _ = "" then "Unassigned" else _, type text}}),
     // RM MW = Closing Stock / BOM Std Qty * RM_MW_FACTOR / 10^6
     // (the 580 you had hardcoded, now read from the Constants sheet)
-    MW       = Table.AddColumn(Flag, "MW", each
+    MW       = Table.AddColumn(Named, "MW", each
                    let f = fnConstantAsOf("RM_MW_FACTOR", [Month])
                    in  try [CloseQty] / [BOMStdQty] * f / 1000000 otherwise null,
                    type number)
@@ -1999,10 +2100,26 @@ let
     Merged   = Table.NestedJoin(Src, {"MatKey"}, dimFGAttr, {"MatKey"},
                    "attr", JoinKind.LeftOuter),
     Expanded = Table.ExpandTableColumn(Merged, "attr", {"Nature"}),
-    Flag     = Table.AddColumn(Expanded, "AttrMissing", each [Nature] = null, type logical),
+
+    // Same second pass as factRM: the material on its own, for rows the plant-qualified
+    // key missed because the FG Master sheet has no valuation area or writes it differently.
+    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(dimFGAttr,
+                   {"Material","Nature"}), {"Material"})),
+    Second   = Table.NestedJoin(Expanded, {"Material"}, ByMat, {"Material"},
+                   "attr2", JoinKind.LeftOuter),
+    Both     = Table.ExpandTableColumn(Second, "attr2", {"Nature"}, {"Nature2"}),
+    Coal     = Table.AddColumn(Both, "NatureX", each [Nature] ?? [Nature2], type text),
+    Dropped  = Table.RemoveColumns(Coal, {"Nature","Nature2"}),
+    Attr     = Table.RenameColumns(Dropped, {{"NatureX","Nature"}}),
+
+    Flag     = Table.AddColumn(Attr, "AttrMissing", each [Nature] = null, type logical),
+    // same as factRM: an FG whose technology the FG Master does not carry is called
+    // Unassigned, so the technology matrix and the donut show it instead of a blank row
+    Named    = Table.TransformColumns(Flag, {
+                   {"Nature", each if _ = null or _ = "" then "Unassigned" else _, type text}}),
 
     // Rate = RIGHT(desc,3)
-    RateTxt  = Table.AddColumn(Flag, "RateText",
+    RateTxt  = Table.AddColumn(Named, "RateText",
                    each Text.End(Text.Trim([MaterialDesc] ?? ""), 3), type text),
     Rate     = Table.AddColumn(RateTxt, "Rate",
                    each try Number.From(Text.Select([RateText], {"0".."9","."})) otherwise null,
@@ -2070,9 +2187,39 @@ let
                    {"BOMStdQty", type number}, {"Item", type text},
                    {"AttrMissing", type logical}, {"MW", type number},
                    {"Rate", type number}, {"RateParseFailed", type logical},
-                   {"Mid", type text}, {"Base", type text}, {"INR_WP", type number}})
+                   {"Mid", type text}, {"Base", type text}, {"INR_WP", type number}}),
+    // the megawatt column is renamed because Power BI will not let a table hold a column
+    // and a measure with the same name, and the report needs the measure to be called MW
+    Renamed  = Table.RenameColumns(Typed, {{"MW", "MW Qty"}})
 in
-    Typed
+    Renamed
+```
+
+## dimPlant
+
+> The three plants are named here - no sheet, no header to mismatch, add a plant by adding a line. Every other code the stock files carry is then added automatically, so no fact row can fall into an unnamed blank member of a slicer.
+
+```
+let
+    Named    = #table(
+        type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type],
+        {
+            {"1900", "Jaipur Module",  1},
+            {"1902", "Dholera Module", 2},
+            {"1905", "Dholera Cell",   3},
+            // factTB_Staged parks a profit centre it cannot place here
+            {"Unallocated", "Unallocated", 98}
+        }),
+    // codes present in the stock files but not named above
+    Seen     = List.Distinct(List.RemoveNulls(factInventory[ValuationArea])),
+    Extra    = List.Difference(Seen, Named[ValuationArea]),
+    ExtraT   = Table.FromRows(
+                   List.Transform(Extra, (c) => {c, "Plant " & Text.From(c), 99}),
+                   type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type]),
+    All      = Table.Combine({Named, ExtraT}),
+    Dedup    = Table.Distinct(All, {"ValuationArea"})
+in
+    Dedup
 ```
 
 ## varMWCapacity
@@ -2193,7 +2340,7 @@ let
     FromRM  = List.RemoveNulls(dimMaterialAttr[Nature]),
     FromFG  = List.RemoveNulls(dimFGAttr[Nature]),
     FromCap = List.RemoveNulls(varMWCapacity[Tech]),
-    All     = List.Distinct(List.Combine({FromRM, FromFG, FromCap})),
+    All     = List.Distinct(List.Combine({FromRM, FromFG, FromCap, {"Unassigned"}})),
     T       = Table.FromList(All, Splitter.SplitByNothing(), {"Nature"}),
     Typed   = Table.TransformColumnTypes(T, {{"Nature", type text}})
 in
@@ -2334,7 +2481,15 @@ in
 let
     Mapped  = Table.NestedJoin(factTB_Staged, {"GLAccount"}, dimTBMaster, {"GLAccount"},
                   "tpl", JoinKind.Inner),
-    Expand  = Table.ExpandTableColumn(Mapped, "tpl", {"Nature","TBPlant","TBSort"}),
+    Joined  = Table.ExpandTableColumn(Mapped, "tpl", {"Nature","TBPlant","TBSort"}),
+    // If the whitelist matched nothing - no TB Master sheet, a sheet under another name, or
+    // GL numbers written differently there than in the TB export - the inner join returns
+    // nothing and Inventory (TB) reads as empty while Difference reads as minus MB5B. Keep
+    // every staged row in that case: an unfiltered trial balance is wrong by whatever
+    // non-inventory GLs it carries, but it is visible, and factTB_Unmapped names them.
+    Raw     = List.Accumulate({"Nature","TBPlant","TBSort"}, factTB_Staged,
+                  (t, c) => Table.AddColumn(t, c, each null)),
+    Expand  = if Table.IsEmpty(Joined) then Raw else Joined,
     // RM / FG / Consumables from whatever the Nature (or GL description) says
     Bucket  = (n as any, d as any) as text =>
                   let T = Text.Upper(Text.From(n ?? "") & " " & Text.From(d ?? "")) in
@@ -2474,8 +2629,8 @@ let
                     Table.ColumnNames(Table.PromoteHeaders([Data], [PromoteAllScalars=true])),
                     Text.From), " | "), type text),
     Rows  = Table.AddColumn(Hdrs, "DataRows", each Table.RowCount([Data]) - 1, Int64.Type),
-    Out   = Table.RenameColumns(Table.SelectColumns(Rows, {"Item","Headers","DataRows"}),
-                {{"Item","SheetName"}})
+    Slim2 = Table.SelectColumns(Rows, {"Item","Headers","DataRows"}),
+    Out   = Table.RenameColumns(Slim2, {{"Item","SheetName"}})
 in
     Out
 ```
@@ -2568,43 +2723,6 @@ in
 
 ---
 
-# Appendix C — tables made with DAX
-
-These are not Power Query queries: they are made in report view, and they exist only inside
-the model. Make them before pasting the measures marked **New**, because those measures read
-this table.
-
-## Period
-
-> The two-button toggle on Overview. Power BI calls this a **field parameter**: one table
-> holding a list of *fields* rather than a list of values, so a slicer built on it swaps the
-> field a chart is drawn by. Make it through the menu, not by typing DAX, so the three
-> columns get their proper names.
->
-> Ribbon **Modeling** → **New parameter** → **Fields**. In the window: Name = `Period`;
-> on the left open `dimDate` and tick `MonthName`, then tick `Quarter`; leave **Add slicer to
-> this page** ticked; click **Create**.
->
-> Then rename the two lines so the buttons read properly: in the Data pane open `Period`,
-> click the table `Period` once, and in the formula bar change `"MonthName"` to `"By Month"`
-> and `"Quarter"` to `"By Quarter"`. Press Enter. Do not touch the `NAMEOF` parts.
->
-> The finished formula looks like this:
-
-```
-Period = {
-    ("By Month",   NAMEOF('dimDate'[MonthName]), 0),
-    ("By Quarter", NAMEOF('dimDate'[Quarter]),   1)
-}
-```
-
-> It gives you three columns: `Period[Period]` (the words on the buttons),
-> `Period[Period Fields]` (the field itself) and `Period[Period Order]` (0 or 1, which the
-> measures test to know which mode you are in). Leave `Period` with **no relationship** to
-> anything.
-
----
-
 # Appendix B — measures
 
 Add these one at a time (**Home → New measure**), with `factInventory` selected. Copy the
@@ -2664,7 +2782,7 @@ Share of Total % = DIVIDE([Value ₹ Cr], CALCULATE([Value ₹ Cr], ALL(factInve
 *megawatts and days*
 
 ```
-MW = SUM(factInventory[MW])
+MW = SUM(factInventory[MW Qty])
 ```
 
 ```
@@ -2772,7 +2890,7 @@ Peak Value ₹ Cr = MAXX(VALUES(dimDate[MonthIndex]), [Value ₹ Cr])
 ```
 Latest Month Value ₹ Cr =
 VAR LastIdx = CALCULATE(MAX(dimDate[MonthIndex]), ALLSELECTED(dimDate))
-RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastIdx)
+RETURN CALCULATE([Value ₹ Cr], FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx))
 ```
 
 *trial balance reconciliation*
@@ -2865,28 +2983,59 @@ raw ratios, and a reader can't tell the difference from the number alone.
 Everything below is new. If you built the pages before this update, paste these in order at
 the end of your existing measures — nothing above changes.
 
-`Period` from Appendix C must exist first, or the last three will not accept.
-
 ```
 Latest Month Index = CALCULATE(MAX(dimDate[MonthIndex]), REMOVEFILTERS())
 
-As On Text = "As on " & CALCULATE(MAX(dimDate[MonthName]), REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index])
+As On Text =
+VAR LastIdx = [Latest Month Index]
+RETURN "As on " & CALCULATE(MAX(dimDate[MonthName]), REMOVEFILTERS(),
+    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx))
 
-Ticker Rs Cr = CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index])
+Ticker Rs Cr =
+VAR LastIdx = [Latest Month Index]
+RETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),
+    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx))
 
-Ticker RM Rs Cr = CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimCategory[Category] = "RM")
+Ticker RM Rs Cr =
+VAR LastIdx = [Latest Month Index]
+RETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),
+    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),
+    FILTER(ALL(dimCategory), dimCategory[Category] = "RM"))
 
-Ticker FG Rs Cr = CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimCategory[Category] = "FG")
+Ticker FG Rs Cr =
+VAR LastIdx = [Latest Month Index]
+RETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),
+    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),
+    FILTER(ALL(dimCategory), dimCategory[Category] = "FG"))
 
-Ticker Consumables Rs Cr = CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimCategory[Category] = "Consumables")
+Ticker Consumables Rs Cr =
+VAR LastIdx = [Latest Month Index]
+RETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),
+    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),
+    FILTER(ALL(dimCategory), dimCategory[Category] = "Consumables"))
 
-Ticker 1900 Rs Cr = CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimPlant[ValuationArea] = "1900")
+Ticker 1900 Rs Cr =
+VAR LastIdx = [Latest Month Index]
+RETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),
+    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),
+    FILTER(ALL(dimPlant), dimPlant[ValuationArea] = "1900"))
 
-Ticker 1902 Rs Cr = CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimPlant[ValuationArea] = "1902")
+Ticker 1902 Rs Cr =
+VAR LastIdx = [Latest Month Index]
+RETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),
+    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),
+    FILTER(ALL(dimPlant), dimPlant[ValuationArea] = "1902"))
 
-Ticker 1905 Rs Cr = CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index], dimPlant[ValuationArea] = "1905")
+Ticker 1905 Rs Cr =
+VAR LastIdx = [Latest Month Index]
+RETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),
+    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx),
+    FILTER(ALL(dimPlant), dimPlant[ValuationArea] = "1905"))
 
-Ticker Prev Rs Cr = CALCULATE([Value ₹ Cr], REMOVEFILTERS(), dimDate[MonthIndex] = [Latest Month Index] - 1)
+Ticker Prev Rs Cr =
+VAR LastIdx = [Latest Month Index]
+RETURN CALCULATE([Value ₹ Cr], REMOVEFILTERS(),
+    FILTER(ALL(dimDate), dimDate[MonthIndex] = LastIdx - 1))
 
 Ticker Change Rs Cr = [Ticker Rs Cr] - [Ticker Prev Rs Cr]
 
@@ -2902,31 +3051,47 @@ IF(
 
 Inventory Rs Cr =
 IF(
-    SELECTEDVALUE('Period'[Period Order]) = 1,
-    AVERAGEX(VALUES(dimDate[MonthIndex]), [Value ₹ Cr]),
-    [Value ₹ Cr]
+    ISINSCOPE(dimDate[MonthName]),
+    [Value ₹ Cr],
+    AVERAGEX(VALUES(dimDate[MonthIndex]), [Value ₹ Cr])
 )
 
 In Window =
-VAR Mode = SELECTEDVALUE('Period'[Period Order], 0)
-VAR Picked = IF(Mode = 1, ISFILTERED(dimDate[Quarter]), ISFILTERED(dimDate[MonthName]))
-VAR Keep = IF(Mode = 1, 4, IF(Picked, 5, 4))
-VAR Place =
-    IF(
-        Mode = 1,
-        RANKX(ALLSELECTED(dimDate[QuarterSort]), CALCULATE(MAX(dimDate[QuarterSort])), , DESC),
-        RANKX(ALLSELECTED(dimDate[MonthIndex]), CALCULATE(MAX(dimDate[MonthIndex])), , DESC)
-    )
+VAR Picked = ISFILTERED(dimDate[MonthName])
+VAR Me = MAX(dimDate[MonthIndex])
+VAR Live =
+    CALCULATETABLE(VALUES(dimDate[MonthIndex]), REMOVEFILTERS(), factInventory)
+VAR LastIdx = MAXX(Live, dimDate[MonthIndex])
 VAR MarchIdx =
-    CALCULATE(
-        MAX(dimDate[MonthIndex]),
-        REMOVEFILTERS(dimDate),
-        dimDate[FYMonthNo] = 12,
-        dimDate[MonthIndex] <= [Latest Month Index]
-    )
-VAR IsMarch =
-    IF(Mode <> 1 && NOT Picked && MAX(dimDate[MonthIndex]) = MarchIdx, 1, 0)
-RETURN IF(Place <= Keep || IsMarch = 1, 1, 0)
+    MAXX(
+        FILTER(
+            ALL(dimDate),
+            dimDate[FYMonthNo] = 12
+                && dimDate[MonthIndex] <= LastIdx
+                && CALCULATE(COUNTROWS(factInventory)) > 0),
+        dimDate[MonthIndex])
+VAR Alive = COUNTROWS(FILTER(Live, dimDate[MonthIndex] = Me))
+VAR Place = COUNTROWS(FILTER(Live, dimDate[MonthIndex] > Me)) + 1
+RETURN
+IF(
+    Picked,
+    1,
+    IF(Alive > 0 && (Place <= 4 || Me = MarchIdx), 1, 0)
+)
+
+In Summary Window =
+VAR Picked = ISFILTERED(dimDate[MonthName])
+VAR Me = MAX(dimDate[MonthIndex])
+VAR Live =
+    CALCULATETABLE(VALUES(dimDate[MonthIndex]), REMOVEFILTERS(), factInventory)
+VAR Alive = COUNTROWS(FILTER(Live, dimDate[MonthIndex] = Me))
+VAR Place = COUNTROWS(FILTER(Live, dimDate[MonthIndex] > Me)) + 1
+RETURN
+IF(
+    Picked,
+    IF(Place <= 12, 1, 0),
+    IF(Alive > 0 && Place <= 4, 1, 0)
+)
 
 MW % vs LM = DIVIDE([MW] - [MW LM], [MW LM])
 
@@ -2943,9 +3108,9 @@ RETURN DIVIDE(M, Cap)
 
 RM Days All Plants by Period =
 IF(
-    SELECTEDVALUE('Period'[Period Order]) = 1,
-    AVERAGEX(VALUES(dimDate[MonthIndex]), [RM Days All Plants]),
-    [RM Days All Plants]
+    ISINSCOPE(dimDate[MonthName]),
+    [RM Days All Plants],
+    AVERAGEX(VALUES(dimDate[MonthIndex]), [RM Days All Plants])
 )
 
 In Last 12 =
@@ -2953,43 +3118,18 @@ VAR LastM = [Latest Month Index]
 VAR ThisM = MAX(dimDate[MonthIndex])
 RETURN IF(ThisM > LastM - 12 && ThisM <= LastM, 1, 0)
 
-Period Title =
-IF(
-    SELECTEDVALUE('Period'[Period Order]) = 1,
-    "Inventory by Quarter (Rs Cr., Average of Month-Ends)",
-    "Inventory by Month (Rs Cr.)"
-)
-
 Summary Value Rs Cr =
 IF(
-    SELECTEDVALUE('Period'[Period Order]) = 1,
-    AVERAGEX(VALUES(dimDate[MonthIndex]), [Summary Value ₹ Cr]),
-    [Summary Value ₹ Cr]
+    ISINSCOPE(dimDate[MonthName]),
+    [Summary Value ₹ Cr],
+    AVERAGEX(VALUES(dimDate[MonthIndex]), [Summary Value ₹ Cr])
 )
-
-In Summary Window =
-VAR Mode = SELECTEDVALUE('Period'[Period Order], 0)
-VAR Picked =
-    IF(
-        Mode = 1,
-        COUNTROWS(ALLSELECTED(dimDate[QuarterSort])),
-        COUNTROWS(ALLSELECTED(dimDate[MonthIndex]))
-    )
-VAR Chosen = IF(Mode = 1, ISFILTERED(dimDate[Quarter]), ISFILTERED(dimDate[MonthName]))
-VAR Keep = IF(Chosen, MIN(Picked, 12), 4)
-VAR Place =
-    IF(
-        Mode = 1,
-        RANKX(ALLSELECTED(dimDate[QuarterSort]), CALCULATE(MAX(dimDate[QuarterSort])), , DESC),
-        RANKX(ALLSELECTED(dimDate[MonthIndex]), CALCULATE(MAX(dimDate[MonthIndex])), , DESC)
-    )
-RETURN IF(Place <= Keep, 1, 0)
 
 TB Inventory Rs Cr =
 IF(
-    SELECTEDVALUE('Period'[Period Order]) = 1,
-    AVERAGEX(VALUES(dimDate[MonthIndex]), [TB ₹ Cr]),
-    [TB ₹ Cr]
+    ISINSCOPE(dimDate[MonthName]),
+    [TB ₹ Cr],
+    AVERAGEX(VALUES(dimDate[MonthIndex]), [TB ₹ Cr])
 )
 
 Difference Inventory Rs Cr = [TB Inventory Rs Cr] - [Inventory Rs Cr]
@@ -2998,9 +3138,9 @@ Difference Inventory % = DIVIDE([Difference Inventory Rs Cr], [TB Inventory Rs C
 
 Unit Value by Period =
 IF(
-    SELECTEDVALUE('Period'[Period Order]) = 1,
-    AVERAGEX(VALUES(dimDate[MonthIndex]), [Unit Value]),
-    [Unit Value]
+    ISINSCOPE(dimDate[MonthName]),
+    [Unit Value],
+    AVERAGEX(VALUES(dimDate[MonthIndex]), [Unit Value])
 )
 
 In Latest Month =
@@ -3008,21 +3148,29 @@ IF(MAX(dimDate[MonthIndex]) = [Latest Month Index], 1, 0)
 
 Days by Period =
 IF(
-    SELECTEDVALUE('Period'[Period Order]) = 1,
-    AVERAGEX(VALUES(dimDate[MonthIndex]), [Days]),
-    [Days]
+    ISINSCOPE(dimDate[MonthName]),
+    [Days],
+    AVERAGEX(VALUES(dimDate[MonthIndex]), [Days])
 )
 
-Summary Title =
-IF(
-    SELECTEDVALUE('Period'[Period Order]) = 1,
-    "Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr., Average of Month-Ends)",
-    "Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr.)"
+Check MB5B Rows = COUNTROWS(factInventory)
+
+Check TB Rows = COUNTROWS(factTB)
+
+Check Months of Data = DISTINCTCOUNT(factInventory[Month])
+
+Check Plant Codes = DISTINCTCOUNT(factInventory[ValuationArea])
+
+Check Unassigned % =
+DIVIDE(
+    COUNTROWS(FILTER(factInventory, factInventory[Nature] = "Unassigned")),
+    COUNTROWS(factInventory)
 )
+
 ```
 
 `Summary Value Rs Cr` is the Summary page's only figure. It is `Summary Value ₹ Cr` with the
-quarter rule added: in month mode it hands back the month-end, in quarter mode it averages
+quarter rule added: at month grain it hands back the month-end, at any total or quarter grain it averages
 that quarter's three month-ends, so switching the toggle never turns a stock level into a sum.
 
 `In Summary Window` is the Summary twin of `In Window`, and the only difference is the count:
@@ -3038,8 +3186,12 @@ Summary read these three, so the chart and the matrix above it can never disagre
 
 `Unit Value by Period` is `Unit Value` with the quarter rule, and it is what the FG matrices
 put in Values. `Unit Value` on its own is still correct for MW and Rs Cr. in a single month,
-but in quarter mode it would add three month-ends together; the by-Period version averages
+but at a quarter or total grain it would add three month-ends together; the by-Period version averages
 them instead.
+
+The five `Check ...` measures are what the **Checks** page reads. `Check TB Rows` at 0 means
+the TB folder produced nothing; `Check Unassigned %` above zero is the share of stock rows the
+master sheets do not cover, which is exactly what turns a donut slice into Unassigned.
 
 `In Latest Month` pins a visual to the newest month that has data. Use it on any chart whose
 axis is **not** a period — the FG technology bar chart and the FG donut are the two — because
@@ -3048,5 +3200,5 @@ times too high. Set it to **is 1** in those two visuals' Filters pane and it nev
 editing again.
 
 `Days by Period` is `Days` with the quarter rule, and the RM page's days chart uses it. Days is
-a ratio of two stock figures, so in quarter mode it has to be the average of the quarter's three
+a ratio of two stock figures, so at a quarter grain it has to be the average of the quarter's three
 month-end ratios; adding them would give a nonsense number three times too big.

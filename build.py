@@ -14,8 +14,8 @@ md = SRC.read_text()
 _p4s, _p4e = md.index("# PART 4 "), md.index("# PART 5 ")
 md = md[:_p4s] + part4_markdown() + "\n" + md[_p4e:]
 SRC.write_text(md)
-appA = md[md.index("# Appendix A"):md.index("# Appendix C")]
-appC = md[md.index("# Appendix C"):md.index("# Appendix B")]
+appA = md[md.index("# Appendix A"):md.index("# Appendix B")]
+appC = ""              # the field-parameter table went with the toggle; nothing is left here
 appB = md[md.index("# Appendix B"):]
 appB_old, appB_new = appB.split("## New in this update")
 guide = md[:md.index("# Appendix A")].rstrip().rstrip("-").rstrip()
@@ -361,8 +361,8 @@ All three must stay together in the same folder.</li>
 
 <h3>3. Open it</h3>
 <ol>
-<li>Double-click <strong>Inventory Report.pbip</strong>. Power BI Desktop opens with all five
-pages already made.</li>
+<li>Double-click <strong>Inventory Report.pbip</strong>. Power BI Desktop opens with all six
+pages already made (Overview, Summary, FG, RM, Detail, Checks).</li>
 <li>It will show errors or blank visuals at first — that is expected, it has not read your
 files yet. Carry on.</li>
 </ol>
@@ -385,6 +385,9 @@ bar, copy what appears, and paste it in.</li>
 and can take a few minutes.</li>
 <li>Press <strong>Ctrl+S</strong>.</li>
 <li>Look at the <strong>Overview</strong> page. If the cards show numbers, you are done.</li>
+<li>If anything looks empty, go to the <strong>Checks</strong> page before changing anything: it
+names the files that were read, the sheets found in the variables workbook, and the rows the master
+sheets do not cover.</li>
 </ol>
 
 <h3>6. Every month after that</h3>
@@ -476,6 +479,27 @@ there.</li>
 <li><strong>OK</strong>, then close Power BI Desktop completely and reopen it. The ticks do nothing
 until you restart.</li>
 </ol>
+
+<blockquote><strong>Build 7 &mdash; 14 Aug:</strong> the month axis is now a real month
+column. Build 5 and 6 put the <code>Period</code> field parameter on every axis and asked Power BI
+to swap the months in behind it; on your machine it drew the parameter's own two rows instead,
+which is why the monthly charts only worked after you changed the axis to <code>MonthName</code> by
+hand. The parameter and the two-button toggle are gone: every chart is bound to
+<code>dimDate[MonthName]</code>, sorted by month, and every matrix has real month columns. The
+measures no longer read the toggle either &mdash; they look at the grain of the visual itself
+(<code>ISINSCOPE</code>), so a month column still shows that month's closing stock and a quarter or
+a total still averages the month-ends instead of adding them up.
+<br><br>Also in build 7: <strong>March is the default first column</strong> &mdash; the newest March
+that has data, then the four newest months, and ticking your own months overrides it completely;
+<strong>the ticker numbers are 16pt</strong> with one decimal and no longer clipped by the card;
+<strong>nothing lands in a blank row any more</strong> &mdash; a material the master sheets do not
+cover is labelled <em>Unassigned</em>, a plant code the sheets do not name appears as
+<em>Plant 1907</em> rather than a blank slicer entry; <strong>the trial balance survives a TB Master
+that does not match</strong> &mdash; if the whitelist matches nothing the report keeps every TB row
+rather than showing an empty Inventory (TB); and there is a new <strong>Checks</strong> page listing
+every file that was read, every sheet found in the variables workbook, the GL accounts TB Master
+does not cover, and the share of rows with no nature &mdash; that page tells you which of your
+source files is the problem, without guessing.</blockquote>
 
 <blockquote><strong>Build 6 &mdash; 13 Aug:</strong> three fixes on top of build 5. Every
 slicer except the two-button toggle now multi-selects on a plain click, so several months can be
