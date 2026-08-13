@@ -16,7 +16,10 @@ import spec           # noqa: E402
 
 GUIDE = pathlib.Path("/home/ubuntu/BUILD_GUIDE.md")
 EMPTY = bool(os.environ.get("PBIP_EMPTY"))
-OUT = pathlib.Path("/home/ubuntu/pbip-empty" if EMPTY else "/home/ubuntu/pbip")
+LEGACY = bool(os.environ.get("PBIP_LEGACY"))     # pre-PBIR layout: one report.json, no
+                                                 # definition/ folder, no preview feature
+OUT = pathlib.Path("/home/ubuntu/pbip-legacy" if LEGACY else
+                   "/home/ubuntu/pbip-empty" if EMPTY else "/home/ubuntu/pbip")
 NAME = "Inventory Report"
 
 md = GUIDE.read_text()
@@ -559,6 +562,42 @@ def write_report(root):
             write_visual(pdir, v)
 
 
+def write_report_legacy(root):
+    """The pre-PBIR layout every .pbip-capable Desktop understands: a single report.json
+    holding the sections, and no definition/ folder. Pages are made and named; the visuals
+    are left to the guide, because the legacy visualContainer format cannot be generated
+    reliably without Desktop to verify it."""
+    theme = json.loads((HERE / "inventory-theme.json").read_text())
+    res = root / "StaticResources" / "RegisteredResources"
+    res.mkdir(parents=True, exist_ok=True)
+    (res / "inventory-theme.json").write_text(json.dumps(theme, indent=2, ensure_ascii=False))
+    sections = []
+    for i, page in enumerate(spec.PAGES):
+        sections.append({
+            "id": i, "name": f"ReportSection{i:02d}", "displayName": page,
+            "filters": "[]", "ordinal": i, "visualContainers": [],
+            "config": json.dumps({"objects": {"background": [{"properties": {
+                "color": {"solid": {"color": {"expr": {"Literal": {
+                    "Value": "'#F4F7F4'"}}}}},
+                "transparency": {"expr": {"Literal": {"Value": "0D"}}}}}]}}),
+            "displayOption": 1, "width": spec.CANVAS[0], "height": spec.CANVAS[1]})
+    (root / "report.json").write_text(json.dumps({
+        "id": 0, "layoutOptimization": 0, "publicCustomVisuals": [],
+        "resourcePackages": [{"resourcePackage": {
+            "disabled": False, "items": [{"name": "inventory-theme.json",
+                                          "path": "inventory-theme.json",
+                                          "type": 202}],
+            "name": "RegisteredResources", "type": 2}}],
+        "sections": sections,
+        "config": json.dumps({
+            "version": "5.55", "themeCollection": {"customTheme": {
+                "name": theme["name"], "reportVersionAtImport": "5.55", "type": 2}},
+            "activeSectionIndex": 0,
+            "settings": {"useStylableVisualContainerHeader": True,
+                         "defaultFilterActionIsDataFilter": True}}),
+    }, indent=2, ensure_ascii=False))
+
+
 def write_visual(pdir, v):
     vd = pdir / "visuals" / v["name"]
     vd.mkdir(parents=True, exist_ok=True)
@@ -585,8 +624,8 @@ def main():
     rp.mkdir(parents=True)
 
     (OUT / f"{NAME}.pbip").write_text(json.dumps({
-        "$schema": "https://developer.microsoft.com/json-schemas/fabric/pbip/"
-                   "pbipProperties/1.0.0/schema.json",
+        **({} if LEGACY else {"$schema": "https://developer.microsoft.com/json-schemas/"
+                              "fabric/pbip/pbipProperties/1.0.0/schema.json"}),
         "version": "1.0",
         "artifacts": [{"report": {"path": f"{NAME}.Report"}}],
         "settings": {"enableAutoRecovery": True}}, indent=2))
@@ -598,18 +637,27 @@ def main():
     (sm / "model.bim").write_text(json.dumps(model_bim(), indent=2, ensure_ascii=False))
     platform(sm, "SemanticModel")
 
-    (rp / "definition.pbir").write_text(json.dumps({
-        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/"
-                   "definitionProperties/2.0.0/schema.json",
-        "version": "4.0",
-        "datasetReference": {"byPath": {"path": f"../{NAME}.SemanticModel"}}}, indent=2))
-    platform(rp, "Report")
-    write_report(rp)
+    if LEGACY:
+        (rp / "definition.pbir").write_text(json.dumps({
+            "version": "1.0",
+            "datasetReference": {"byPath": {"path": f"../{NAME}.SemanticModel"}}}, indent=2))
+        # older Desktop builds look for definition.pbidataset, newer for definition.pbism;
+        # shipping both costs nothing and each build reads the one it knows
+        shutil.copy(sm / "definition.pbism", sm / "definition.pbidataset")
+        write_report_legacy(rp)
+    else:
+        (rp / "definition.pbir").write_text(json.dumps({
+            "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/"
+                       "definitionProperties/2.0.0/schema.json",
+            "version": "4.0",
+            "datasetReference": {"byPath": {"path": f"../{NAME}.SemanticModel"}}}, indent=2))
+        platform(rp, "Report")
+        write_report(rp)
 
     missing = set(queries) - set(TABLES) - set(EXPRESSION_ORDER) - {"Period"}
     if missing:
         raise SystemExit(f"queries in the guide but not in the model: {sorted(missing)}")
-    n_vis = len(list((rp / "definition" / "pages").rglob("visual.json")))
+    n_vis = len(list((rp / "definition" / "pages").rglob("visual.json"))) if not LEGACY else 0
     print(f"wrote {OUT}: {len(TABLES)} tables, {len(EXPRESSION_ORDER)} helper queries, "
           f"{len(measures)} measures, {len(RELATIONSHIPS)} relationships, "
           f"{len(spec.PAGES)} pages, {n_vis} visuals")

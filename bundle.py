@@ -78,18 +78,23 @@ def main():
                    stdout=subprocess.DEVNULL)
     shutil.copytree("/home/ubuntu/pbip", STAGE / "1 - full report")
     subprocess.run([sys.executable, "pbip.py"], cwd=HERE, check=True,
+                   env={"PBIP_LEGACY": "1", "PATH": "/usr/bin:/bin"},
+                   stdout=subprocess.DEVNULL)
+    shutil.copytree("/home/ubuntu/pbip-legacy", STAGE / "2 - older power bi")
+
+    subprocess.run([sys.executable, "pbip.py"], cwd=HERE, check=True,
                    env={"PBIP_EMPTY": "1", "PATH": "/usr/bin:/bin"},
                    stdout=subprocess.DEVNULL)
-    shutil.copytree("/home/ubuntu/pbip-empty", STAGE / "2 - model only")
+    shutil.copytree("/home/ubuntu/pbip-empty", STAGE / "3 - model only")
 
-    (STAGE / "3 - tabular editor" ).mkdir()
-    (STAGE / "3 - tabular editor" / "add-all-measures.csx").write_text(csx())
+    (STAGE / "4 - tabular editor").mkdir()
+    (STAGE / "4 - tabular editor" / "add-all-measures.csx").write_text(csx())
 
     (STAGE / "set-proot.ps1").write_text(PS1)
     shutil.copy(HERE / "inventory-theme.json", STAGE / "inventory-theme.json")
 
-    q = STAGE / "4 - plain text" / "queries"
-    m = STAGE / "4 - plain text" / "measures"
+    q = STAGE / "5 - plain text" / "queries"
+    m = STAGE / "5 - plain text" / "measures"
     q.mkdir(parents=True)
     m.mkdir(parents=True)
     for i, item in enumerate(queries, 1):

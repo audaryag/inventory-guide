@@ -496,18 +496,34 @@ when it asks, and it writes <code>pRoot</code> into both project folders for you
 it, open PowerShell in the extracted folder and run:
 <code>powershell -ExecutionPolicy Bypass -File .\set-proot.ps1 -Root "C:\Users\alisha\Desktop\Inventory Report"</code></p>
 
-<h3>Route B &mdash; model only (if A will not open)</h3>
-<p class="sub">Same 32 queries, 72 measures, 11 relationships and five named pages, but no visuals,
-so there is far less for an older Power BI to reject. If A fails on the report format, B usually
-opens.</p>
+<h3>Route B &mdash; older Power BI (use this if A gave you an error)</h3>
+<p class="sub">If Route A said <em>&ldquo;ReportDefinition: Required artifact is missing&rdquo;</em>,
+that is your Power BI build refusing the new report format &mdash; nothing you ticked is wrong, and
+no amount of retrying fixes it. This folder is written in the old format instead: one
+<code>report.json</code>, no <code>definition</code> folder, and both the old and new semantic-model
+files, so whichever your version looks for is there. No preview feature is needed for it.</p>
 <ol>
-<li>Open <code>2 - model only</code> &rarr; double-click <strong>Inventory Report.pbip</strong>.</li>
+<li>Open <code>2 - older power bi</code> &rarr; double-click
+<strong>Inventory Report.pbip</strong>.</li>
 <li>Set <code>pRoot</code> and <strong>Refresh</strong> exactly as in Route A, steps 3&ndash;4.</li>
-<li>The data is then all there. Draw the visuals with the <strong>Build it</strong> tab — that is
-the only part left, and it is clicking, not typing.</li>
+<li>All 32 queries, 72 measures, 11 relationships and the five named pages are then in the file
+with your real data behind them. The pages are blank, so draw the visuals with the
+<strong>Build it</strong> tab &mdash; that part is clicking, not typing, and it is the only part
+left.</li>
+</ol>
+<p class="sub">Why the pages are blank here and not in Route A: the old format stores each visual as
+a block of hand-written query JSON, and I have no Power BI Desktop to verify it against, so
+shipping guessed visuals would risk a file that opens and then shows errors on every chart. The
+model &mdash; which is the part that takes hours by hand &mdash; is complete either way.</p>
+
+<h3>Route C &mdash; model only, new format (if A errored but B also refuses)</h3>
+<ol>
+<li>Open <code>3 - model only</code> &rarr; double-click <strong>Inventory Report.pbip</strong>.</li>
+<li>Set <code>pRoot</code> and <strong>Refresh</strong> as in Route A.</li>
+<li>Same result as B: full model, blank pages.</li>
 </ol>
 
-<h3>Route C &mdash; Tabular Editor, one paste for all 72 measures</h3>
+<h3>Route D &mdash; Tabular Editor, one paste for all 72 measures</h3>
 <p class="sub">Use this if you already have a working .pbix and only the measures are missing or out
 of date. It cannot create the queries — Power Query is not scriptable from outside — so it pairs
 with the <strong>Queries</strong> tab, not with Route A.</p>
@@ -527,8 +543,8 @@ it into that C# Script tab.</li>
 <p class="sub">It is safe to run twice: a measure that already exists is overwritten with the same
 formula rather than duplicated.</p>
 
-<h3>Route D &mdash; plain text, if you end up doing it by hand</h3>
-<p class="sub"><code>4 - plain text</code> holds each query as its own <code>.m</code> file and each
+<h3>Route F &mdash; plain text, if you end up doing it by hand</h3>
+<p class="sub"><code>5 - plain text</code> holds each query as its own <code>.m</code> file and each
 measure as its own <code>.dax</code> file, numbered in the order they must be added, so you can open
 them in Notepad and copy without hunting through a web page. Same content as the
 <strong>Queries</strong> and <strong>Measures</strong> tabs.</p>
@@ -578,8 +594,12 @@ model against Microsoft's own Analysis Services object model, the report against
 published report schemas, and every field a visual names against the model — but
 <strong>none of it has ever been opened in Power BI Desktop</strong>. Your first open is the first
 real test.</li>
-<li>Some Power BI builds refuse the project format whatever is ticked. That is a version
-limitation, not something in these files. Route B is the fallback, then the manual tabs.</li>
+<li>Some Power BI builds refuse the new project format whatever is ticked &mdash; that is the
+<em>Required artifact is missing</em> error, and it is a version limitation, not something in these
+files. Route B is written in the old format for exactly that case; Route E sidesteps versions
+altogether by letting Microsoft's own servers open it.</li>
+<li>Knowing your version helps me aim: <strong>Help &rarr; About</strong> in Power BI Desktop, and
+send me the version line.</li>
 <li>There is no way to paste all the queries at once. Power Query has no import-many box, and no
 external tool can write M into a .pbix. Routes A and B get around it by shipping the queries
 already inside the file, which is as close as Power BI allows.</li>
