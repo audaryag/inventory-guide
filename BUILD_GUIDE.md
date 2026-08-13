@@ -254,7 +254,7 @@ pasting out of order gives "cannot be determined" on a measure that is perfectly
 ### Checkpoint — do not go to Part 4 until all three are true
 
 1. Type `Value` into the Data pane search box: `Value ₹ Cr` is there, with a calculator icon.
-2. Count the measures (calculator icons) — there must be **70**. Fewer means Appendix B is
+2. Count the measures (calculator icons) — there must be **72**. Fewer means Appendix B is
    not finished; the pages will fail on whichever one is missing.
 3. None of these six old names survive: `Closing Value`, `Inv RM`, `Inv FG`,
    `Inv Consumables`, `TB Value`, `Prev Month`. Delete any you find (right-click → **Delete
@@ -1340,16 +1340,17 @@ Position: Horizontal 16, Vertical 496, Width 616, Height 208.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
 - Clicking one plant's bar filters both matrices to that plant and that period.
 
-**4.51** **Clustered column chart** — The same chart in days rather than rupees — how long each plant's raw material would last at its own capacity, again three plant bars per month. Read together with the one beside it, this is what tells you whether a bigger rupee figure is actually more stock or just a dearer month.
+**4.51** **Line and clustered column chart** — The same chart in days rather than rupees — how long each plant's raw material would last at its own capacity, three plant bars per month, and over them a line for the whole business: every plant's RM megawatts added together over every plant's capacity added together. The line is not the average of the three bars, and it is not their sum: it is one big plant's worth of days, which is the figure to quote for the company. Read together with the chart beside it, this tells you whether a bigger rupee figure is actually more stock or just a dearer month.
 
 | Well | Field |
 |---|---|
 | X-axis | `Period[Period]` |
-| Legend | `dimPlant[Plant]` |
-| Y-axis | `Days by Period` |
+| Column legend | `dimPlant[Plant]` |
+| Column y-axis | `Days by Period` |
+| Line y-axis | `RM Days All Plants by Period` |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
-Title: `RM Inventory (Days) by Plant`
+Title: `RM Inventory (Days) by Plant, with Total Days Across All Plants`
 
 Position: Horizontal 648, Vertical 496, Width 616, Height 208.
 
@@ -1358,10 +1359,14 @@ Position: Horizontal 648, Vertical 496, Width 616, Height 208.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
-- Use Days by Period, not Days. Days is a ratio, so quarter mode has to average the three month-ends rather than add them, and that is the only difference between the two measures.
+- The line comes from RM Days All Plants by Period, which strips the plant filter off both the megawatts and the capacity, so a bar can be tall while the line is calm.
+- Use Days by Period for the bars, not Days. Days is a ratio, so quarter mode has to average the three month-ends rather than add them, and that is the only difference between the two measures.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels' and set it to On, Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, Display units: None, Value decimal places: 0, Position: Inside end.
-- In the Visualizations pane click the paintbrush icon, then click 'Legend', then 'Position' and set it to Top center, Font: Arial, Font size: 8.
-- In the Visualizations pane click the paintbrush icon, then click 'Y-axis: Off. Format pane', then 'X-axis', then 'Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24, Concatenate labels: Off.
+- Data labels → Apply settings to → Series → RM Days All Plants by Period: Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Value decimal places: 0, Position: Above — dark green on the white card, because this label is not printed on a bar.
+- In the Visualizations pane click the paintbrush icon, then click 'Lines', then 'Colour: #14532D, Stroke width: 2, Show marker: On, Marker size: 4. Format pane', then 'Lines', then 'Smooth line' and set it to Off, so the shape is honest.
+- In the Visualizations pane click the paintbrush icon, then click 'Legend', then 'Position' and set it to Top center, Font: Arial, Font size: 8. The line appears in the legend as 'RM Days All Plants by Period' — rename it if you like by double-clicking the field in the well and typing 'Total (All Plants)'.
+- In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off, and Secondary y-axis: Off. Bars and line are both in days on the same scale, so leave 'Align zeros' On if you switch either axis back on, or the line will sit at a misleading height.
+- In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24, Concatenate labels: Off.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
 - A plant with no capacity row in the Variables workbook shows blank here, not zero — that is deliberate, a missing denominator is not the same as no stock.
 
@@ -1559,7 +1564,7 @@ Find the words Power BI showed you in the left column.
 | `Mark as date table` will not accept any column | nothing is wrong | skip 2.4 entirely; a monthly table is deliberate and no measure needs it |
 | `dimMetric cannot find table` | `dimCategory` / `dimMetric` / `dimMeasure` were never created | paste those three queries, Close & Apply, then paste the measure again |
 | `Value ₹ Cr cannot be determined. Either the column does not exist, or there is no current row` | either `factInventory` has no `CloseVal` column, or you pasted measures out of order | check `CloseVal` exists in `factInventory`; if it does, paste Appendix B again strictly top to bottom |
-| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 70 from Appendix B, then delete the six old names listed in 3.7 |
+| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 72 from Appendix B, then delete the six old names listed in 3.7 |
 | RM and FG matrices show numbers under `In ₹ Cr` but nothing under `In Days` | the `Days` measure was deleted as an "old name" | paste `Days = [Days of Inventory]` back in; it is in Appendix B |
 | on a card, the number is fine but the wording is cut in half | the card's default text is too big for the space | set **Callout value** → Font size **24**, **General → Title** → Font size **12**, and Height **96** (every card in Part 4 is 96 high). A **Category label**, if your version has one, goes to **10** or off — the title says the same thing |
 | the paintbrush list has a **Callout value** but no **Category label** | you are on the newer Card visual, which has no category label | nothing to fix: the heading comes from **General → Title → Text**, which Part 4 gives you the wording for |
@@ -1597,7 +1602,7 @@ Nothing here is destructive.
    `dimCategory`, `dimMetric`, `dimMeasure`. Then **Close & Apply**.
 2. **Relationships.** Manage relationships must match 2.3 exactly — 11 rows, all Single,
    nothing on `dimMetric` or `dimMeasure`.
-3. **Measures.** Add all 70 from Appendix B top to bottom (adding beside old ones is safe),
+3. **Measures.** Add all 72 from Appendix B top to bottom (adding beside old ones is safe),
    then delete the six old names in 3.7 — keeping `Days`, whose formula you overwrite instead.
 4. **Sorting.** Set the five sort-by columns in 2.5 and 2.6.
 
@@ -2930,6 +2935,18 @@ RM MW = CALCULATE([MW], factInventory[Category] = "RM")
 RM Days = DIVIDE([RM MW], [Capacity MW (plant)])
 
 Total Days (RM + FG) = DIVIDE([RM MW] + [FG MW], [Capacity MW (plant)])
+
+RM Days All Plants =
+VAR M = CALCULATE([RM MW], REMOVEFILTERS(dimPlant))
+VAR Cap = CALCULATE([Capacity MW (plant)], REMOVEFILTERS(dimPlant))
+RETURN DIVIDE(M, Cap)
+
+RM Days All Plants by Period =
+IF(
+    SELECTEDVALUE('Period'[Period Order]) = 1,
+    AVERAGEX(VALUES(dimDate[MonthIndex]), [RM Days All Plants]),
+    [RM Days All Plants]
+)
 
 In Last 12 =
 VAR LastM = [Latest Month Index]

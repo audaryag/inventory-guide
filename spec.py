@@ -841,24 +841,41 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D.",
       "Clicking one plant's bar filters both matrices to that plant and that period."]),
 
-    ("RM", "Clustered column chart", "RM Inventory (Days) by Plant",
+    ("RM", "Line and clustered column chart",
+     "RM Inventory (Days) by Plant, with Total Days across All Plants",
      [("X-axis", ["Period[Period]"]),
-      ("Legend", ["dimPlant[Plant]"]),
-      ("Y-axis", ["Days by Period"]),
+      ("Column legend", ["dimPlant[Plant]"]),
+      ("Column y-axis", ["Days by Period"]),
+      ("Line y-axis", ["RM Days All Plants by Period"]),
       ("Filters", ["dimCategory[Category]  \u2192  is RM",
                    "In Summary Window  \u2192  is 1"])],
      (648, 496, 616, 208),
      "The same chart in days rather than rupees \u2014 how long each plant's raw material would "
-     "last at its own capacity, again three plant bars per month. Read together with the one "
-     "beside it, this is what tells you whether a bigger rupee figure is actually more stock "
-     "or just a dearer month.",
-     ["Use Days by Period, not Days. Days is a ratio, so quarter mode has to average the three "
+     "last at its own capacity, three plant bars per month, and over them a line for the "
+     "whole business: every plant's RM megawatts added together over every plant's capacity "
+     "added together. The line is not the average of the three bars, and it is not their sum: "
+     "it is one big plant's worth of days, which is the figure to quote for the company. Read "
+     "together with the chart beside it, this tells you whether a bigger rupee figure is "
+     "actually more stock or just a dearer month.",
+     ["The line comes from RM Days All Plants by Period, which strips the plant filter off "
+      "both the megawatts and the capacity, so a bar can be tall while the line is calm.",
+      "Use Days by Period for the bars, not Days. Days is a ratio, so quarter mode has to average the three "
       "month-ends rather than add them, and that is the only difference between the two "
       "measures.",
       "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, "
       "Display units: None, Value decimal places: 0, Position: Inside end.",
-      "Format pane \u2192 Legend \u2192 Position: Top center, Font: Arial, Font size: 8.",
-      "Format pane \u2192 Y-axis: Off. Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font "
+      "Data labels \u2192 Apply settings to \u2192 Series \u2192 RM Days All Plants by Period: Font: "
+      "Arial, Font size: 8, Bold: On, Colour: #14532D, Value decimal places: 0, Position: "
+      "Above \u2014 dark green on the white card, because this label is not printed on a bar.",
+      "Format pane \u2192 Lines \u2192 Colour: #14532D, Stroke width: 2, Show marker: On, Marker "
+      "size: 4. Format pane \u2192 Lines \u2192 Smooth line: Off, so the shape is honest.",
+      "Format pane \u2192 Legend \u2192 Position: Top center, Font: Arial, Font size: 8. The line "
+      "appears in the legend as 'RM Days All Plants by Period' \u2014 rename it if you like by "
+      "double-clicking the field in the well and typing 'Total (All Plants)'.",
+      "Format pane \u2192 Y-axis: Off, and Secondary y-axis: Off. Bars and line are both in days "
+      "on the same scale, so leave 'Align zeros' On if you switch either axis back on, or the "
+      "line will sit at a misleading height.",
+      "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font "
       "size: 8, Colour: #1F2A24, Concatenate labels: Off.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D.",
       "A plant with no capacity row in the Variables workbook shows blank here, not zero \u2014 "
