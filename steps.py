@@ -395,117 +395,118 @@ def steps():
     # ---- the furniture on Overview: panel, logo box, wording ---------------------------
     S.extend(_decor_steps())
 
-    # header band, on the pages that still use it
-    BAND = BAND_PAGES[0]
-    for i, (measure, x, y, w, h, what) in enumerate(CARDS, 1):
-        S.append(dict(
-            title="Header card %d of %d — %s (on %s)" % (i, len(CARDS), what, BAND),
-            page=BAND,
-            do=_insert("Card") + [
-                _drag(measure, "Fields"),
-                "The card now shows one big number.",
-                "In the Visualizations pane click the paintbrush icon, then click 'Callout "
-                "value' and set Font size to 24. The callout value is the big number "
-                "itself.",
-                "Now give it a heading. Click General, then Title, switch Title On, and "
-                "type the words shown as Title below into the Text box, then set Font size "
-                "to 12. The title is drawn in its own strip above the number, so it can "
-                "never be cut in half.",
-                "Look down the paintbrush list for 'Category label'. If it is there, that "
-                "is the small grey wording Power BI prints under the number (it repeats the "
-                "measure's name): set its Font size to 10, or switch it off since the title "
-                "already says the same thing. If there is no 'Category label' in your list, "
-                "you have the newer Card visual, which does not have one — the title you "
-                "just typed is the heading, and there is nothing else to set."]
-            + _place(x, y, w, h, in_format=True),
-            fields=[("Measure", measure), ("Title", what),
-                    ("Callout value font size", "24"), ("Title font size", "12"),
-                    ("Category label font size (if you have one)", "10")]
-                   + _pos_rows(x, y, w, h),
-            note="If the number looks wrong, you probably ticked a column instead of the "
-                 "measure — measures have a calculator icon.",
-            check="The card shows one number with the heading '%s' above it, both readable "
-                  "in full, sitting in the top band of the page." % what,
-            stuck="'(Blank)' means no data reached it — check that factInventory has rows and "
-                  "that no slicer is filtering everything out. A word instead of a number "
-                  "means a text column was dropped in: remove it from the Fields box and drag "
-                  "the measure instead (calculator icon, not a table icon)."))
+    # header band — only if some page still uses it (all five pages now have own controls)
+    if BAND_PAGES:
+        BAND = BAND_PAGES[0]
+        for i, (measure, x, y, w, h, what) in enumerate(CARDS, 1):
+            S.append(dict(
+                title="Header card %d of %d — %s (on %s)" % (i, len(CARDS), what, BAND),
+                page=BAND,
+                do=_insert("Card") + [
+                    _drag(measure, "Fields"),
+                    "The card now shows one big number.",
+                    "In the Visualizations pane click the paintbrush icon, then click 'Callout "
+                    "value' and set Font size to 24. The callout value is the big number "
+                    "itself.",
+                    "Now give it a heading. Click General, then Title, switch Title On, and "
+                    "type the words shown as Title below into the Text box, then set Font size "
+                    "to 12. The title is drawn in its own strip above the number, so it can "
+                    "never be cut in half.",
+                    "Look down the paintbrush list for 'Category label'. If it is there, that "
+                    "is the small grey wording Power BI prints under the number (it repeats the "
+                    "measure's name): set its Font size to 10, or switch it off since the title "
+                    "already says the same thing. If there is no 'Category label' in your list, "
+                    "you have the newer Card visual, which does not have one — the title you "
+                    "just typed is the heading, and there is nothing else to set."]
+                + _place(x, y, w, h, in_format=True),
+                fields=[("Measure", measure), ("Title", what),
+                        ("Callout value font size", "24"), ("Title font size", "12"),
+                        ("Category label font size (if you have one)", "10")]
+                       + _pos_rows(x, y, w, h),
+                note="If the number looks wrong, you probably ticked a column instead of the "
+                     "measure — measures have a calculator icon.",
+                check="The card shows one number with the heading '%s' above it, both readable "
+                      "in full, sitting in the top band of the page." % what,
+                stuck="'(Blank)' means no data reached it — check that factInventory has rows and "
+                      "that no slicer is filtering everything out. A word instead of a number "
+                      "means a text column was dropped in: remove it from the Fields box and drag "
+                      "the measure instead (calculator icon, not a table icon)."))
 
-    for (field, x, y, w, h, what) in SLICERS:
-        multi = field in ("dimDate[MonthName]", "dimDate[Quarter]")
-        S.append(dict(
-            title="Header slicer — %s (on %s)" % (what, BAND),
-            page=BAND,
-            do=_insert("Slicer") + [
-                _drag(field, "Field"),
-                "In the Visualizations pane click the paintbrush icon, then click "
-                "'Slicer settings', then 'Options', and set Style to Dropdown."]
-               + (["Still under 'Slicer settings', click 'Selection' and switch OFF "
-                   "'Multi-select with CTRL'. After that you can tick as many %s as you "
-                   "like just by clicking them — no keyboard needed."
-                   % ("months" if "Month" in field else "quarters")] if multi else [])
-               + _place(x, y, w, h, in_format=True),
-            fields=[("Field", field)] + _pos_rows(x, y, w, h),
-            note="",
-            check="A closed dropdown sits in the header band; clicking it lists the values of "
-                  "%s, and clicking one changes the numbers on the cards above." % field,
-            stuck="An empty dropdown means the field came from the wrong table — remove it and "
-                  "drag %s exactly. A slider instead of a list means a number column was "
-                  "used; check the field name again." % field))
+        for (field, x, y, w, h, what) in SLICERS:
+            multi = field in ("dimDate[MonthName]", "dimDate[Quarter]")
+            S.append(dict(
+                title="Header slicer — %s (on %s)" % (what, BAND),
+                page=BAND,
+                do=_insert("Slicer") + [
+                    _drag(field, "Field"),
+                    "In the Visualizations pane click the paintbrush icon, then click "
+                    "'Slicer settings', then 'Options', and set Style to Dropdown."]
+                   + (["Still under 'Slicer settings', click 'Selection' and switch OFF "
+                       "'Multi-select with CTRL'. After that you can tick as many %s as you "
+                       "like just by clicking them — no keyboard needed."
+                       % ("months" if "Month" in field else "quarters")] if multi else [])
+                   + _place(x, y, w, h, in_format=True),
+                fields=[("Field", field)] + _pos_rows(x, y, w, h),
+                note="",
+                check="A closed dropdown sits in the header band; clicking it lists the values of "
+                      "%s, and clicking one changes the numbers on the cards above." % field,
+                stuck="An empty dropdown means the field came from the wrong table — remove it and "
+                      "drag %s exactly. A slider instead of a list means a number column was "
+                      "used; check the field name again." % field))
 
-    n_band = len(CARDS) + len(SLICERS)
-    others = [p for p in BAND_PAGES if p != BAND]
-    if others:
-        S.append(dict(
-            title="Copy the header band to the other pages",
-            page=BAND,
-            do=["Click once on the first card. Then hold Ctrl and click each of the other %d "
-                "cards and all %d slicers, so %d things are selected at once."
-                % (len(CARDS) - 1, len(SLICERS), n_band),
-                "Press Ctrl+C.",
-                "Click the tab at the bottom for the next page in the list below, then press "
-                "Ctrl+V. If Power BI asks about the data, click 'Keep'.",
-                "Repeat for every page in the list. The cards land in the same place on each "
-                "page, so nothing needs moving."],
-            fields=[("Paste on", p) for p in others],
-            note="Not on %s — that page is filtered by whatever you clicked to get there, so "
-                 "a slicer on it would fight the drill-through." % DRILL_PAGE,
-            check="These pages now each have the same row of cards and dropdowns across the "
-                  "top, in the same place: " + ", ".join(others) + ".",
-            stuck="If the band lands crooked, do not nudge it by hand — press Ctrl+Z, reselect "
-                  "all %d items and paste again. If only one card pasted, the Ctrl+click "
-                  "selection was lost partway; select them all again." % n_band))
+        n_band = len(CARDS) + len(SLICERS)
+        others = [p for p in BAND_PAGES if p != BAND]
+        if others:
+            S.append(dict(
+                title="Copy the header band to the other pages",
+                page=BAND,
+                do=["Click once on the first card. Then hold Ctrl and click each of the other %d "
+                    "cards and all %d slicers, so %d things are selected at once."
+                    % (len(CARDS) - 1, len(SLICERS), n_band),
+                    "Press Ctrl+C.",
+                    "Click the tab at the bottom for the next page in the list below, then press "
+                    "Ctrl+V. If Power BI asks about the data, click 'Keep'.",
+                    "Repeat for every page in the list. The cards land in the same place on each "
+                    "page, so nothing needs moving."],
+                fields=[("Paste on", p) for p in others],
+                note="Not on %s — that page is filtered by whatever you clicked to get there, so "
+                     "a slicer on it would fight the drill-through." % DRILL_PAGE,
+                check="These pages now each have the same row of cards and dropdowns across the "
+                      "top, in the same place: " + ", ".join(others) + ".",
+                stuck="If the band lands crooked, do not nudge it by hand — press Ctrl+Z, reselect "
+                      "all %d items and paste again. If only one card pasted, the Ctrl+click "
+                      "selection was lost partway; select them all again." % n_band))
 
-        S.append(dict(
-            title="Sync the slicers across pages",
-            page="—",
-            do=["At the top of the window click the View tab, then tick the box called "
-                "'Sync slicers'. A new pane opens on the right.",
-                "Click once on the Month slicer on the page.",
-                "In the 'Sync slicers' pane, tick BOTH boxes (Sync and Visible) on the rows "
-                "for these pages: " + ", ".join(BAND_PAGES) + ".",
-                "Then click the Quarter slicer and do the same, then the Plant slicer, then "
-                "the Category slicer."],
-            fields=[], note="Skip this and each page filters on its own, so two pages will "
-                            "show different totals for the same month.",
-            check="Pick one month on %s, then click through %s — the same month is still "
-                  "picked on each of them." % (BAND, ", ".join(BAND_PAGES[1:])),
-            stuck="If a page ignores the choice, its row in the Sync slicers pane is unticked "
-                  "— tick both boxes on that row. Leave the %s row unticked everywhere."
-                  % DRILL_PAGE))
-    else:
-        S.append(dict(
-            title="Leave these slicers on this page only",
-            page=BAND,
-            do=["%s is the only page carrying this band, so there is nothing to copy and "
-                "nothing to sync." % BAND,
-                "If you have used 'Sync slicers' before, open View → Sync slicers and make "
-                "sure every other page's row is unticked for these four — Overview, Summary "
-                "and FG each have their own controls, and a synced slicer would fight them."],
-            fields=[], note="",
-            check="Clicking a month here changes only this page.",
-            stuck="If picking a month here also changes Overview, Summary or FG, untick that "
-                  "page's row in the Sync slicers pane."))
+            S.append(dict(
+                title="Sync the slicers across pages",
+                page="—",
+                do=["At the top of the window click the View tab, then tick the box called "
+                    "'Sync slicers'. A new pane opens on the right.",
+                    "Click once on the Month slicer on the page.",
+                    "In the 'Sync slicers' pane, tick BOTH boxes (Sync and Visible) on the rows "
+                    "for these pages: " + ", ".join(BAND_PAGES) + ".",
+                    "Then click the Quarter slicer and do the same, then the Plant slicer, then "
+                    "the Category slicer."],
+                fields=[], note="Skip this and each page filters on its own, so two pages will "
+                                "show different totals for the same month.",
+                check="Pick one month on %s, then click through %s — the same month is still "
+                      "picked on each of them." % (BAND, ", ".join(BAND_PAGES[1:])),
+                stuck="If a page ignores the choice, its row in the Sync slicers pane is unticked "
+                      "— tick both boxes on that row. Leave the %s row unticked everywhere."
+                      % DRILL_PAGE))
+        else:
+            S.append(dict(
+                title="Leave these slicers on this page only",
+                page=BAND,
+                do=["%s is the only page carrying this band, so there is nothing to copy and "
+                    "nothing to sync." % BAND,
+                    "If you have used 'Sync slicers' before, open View → Sync slicers and make "
+                    "sure every other page's row is unticked for these four — Overview, Summary "
+                    "and FG each have their own controls, and a synced slicer would fight them."],
+                fields=[], note="",
+                check="Clicking a month here changes only this page.",
+                stuck="If picking a month here also changes Overview, Summary or FG, untick that "
+                      "page's row in the Sync slicers pane."))
 
     # one step per visual
     by_page = {}
@@ -717,31 +718,36 @@ def part4_markdown():
          "white boxes, each **right-click → Send backward** once, so they cover the green but",
          "stay under the cards. Every card on the panel has **General → Effects →",
          "Background: Off**, and its number in **%s** \u2014 the white box behind it is what "
-         "supplies the white." % INK, "",
-         "---", "", "## The header band — build once on %s, then copy" % BAND_PAGES[0], "",
-         "**4.1** %d **Card** visuals (**Insert → Card**), one measure each:" % len(CARDS), "",
-         "| Card | Measure | Horizontal (X) | Vertical (Y) | Width | Height |", "|---|---|---|---|---|---|"]
-    for i, (m, x, y, w, h, what) in enumerate(CARDS, 1):
-        L.append("| %d — %s | `%s` | %d | %d | %d | %d |" % (i, what, m, x, y, w, h))
-    L += ["",
-          "For each card: **Callout value** → Font size **24**; **General → Title** → On,",
-          "Text = the wording in the Card column above, Font size **12**; and if your version",
-          "has a **Category label**, Font size **10** or switch it off (the newer Card visual",
-          "has none).", "",
-          "**4.2** %d **Slicer** visuals (**Insert → Slicer**), each set to" % len(SLICERS),
-          "**Format → Slicer settings → Style: Dropdown**:", "",
-          "| Slicer | Field | Horizontal (X) | Vertical (Y) | Width | Height |", "|---|---|---|---|---|---|"]
-    for (f, x, y, w, h, what) in SLICERS:
-        L.append("| %s | `%s` | %d | %d | %d | %d |" % (what, f, x, y, w, h))
-    L += ["", "**4.3** Select all %d → **Ctrl+C** → **Ctrl+V** on %s. Positions come with "
-          "them." % (len(CARDS) + len(SLICERS),
-                     ", ".join("`%s`" % p for p in BAND_PAGES if p != BAND_PAGES[0])), "",
-          "Not on `%s` — it is filtered by whatever you clicked to get there. Not on "
-          "`Overview` either: that page has its own controls, and its left-hand panel is "
-          "meant to ignore them." % DRILL_PAGE, "",
-          "**4.4** Ribbon **View** → tick **Sync slicers**; for each slicer tick **Sync** and",
-          "**Visible** on " + ", ".join("`%s`" % p for p in BAND_PAGES) + ". Without it, two",
-          "pages can disagree about the same month.", ""]
+         "supplies the white." % INK, ""]
+
+    if BAND_PAGES:
+        L += ["---", "", "## The header band — build once on %s, then copy" % BAND_PAGES[0], "",
+              "**4.1** %d **Card** visuals (**Insert → Card**), one measure each:" % len(CARDS),
+              "",
+              "| Card | Measure | Horizontal (X) | Vertical (Y) | Width | Height |",
+              "|---|---|---|---|---|---|"]
+        for i, (m, x, y, w, h, what) in enumerate(CARDS, 1):
+            L.append("| %d — %s | `%s` | %d | %d | %d | %d |" % (i, what, m, x, y, w, h))
+        L += ["",
+              "For each card: **Callout value** → Font size **24**; **General → Title** → On,",
+              "Text = the wording in the Card column above, Font size **12**; and if your "
+              "version has a **Category label**, Font size **10** or switch it off (the newer "
+              "Card visual has none).", "",
+              "**4.2** %d **Slicer** visuals (**Insert → Slicer**), each set to" % len(SLICERS),
+              "**Format → Slicer settings → Style: Dropdown**:", "",
+              "| Slicer | Field | Horizontal (X) | Vertical (Y) | Width | Height |",
+              "|---|---|---|---|---|---|"]
+        for (f, x, y, w, h, what) in SLICERS:
+            L.append("| %s | `%s` | %d | %d | %d | %d |" % (what, f, x, y, w, h))
+        L += ["", "**4.3** Select all %d → **Ctrl+C** → **Ctrl+V** on %s. Positions come with "
+              "them." % (len(CARDS) + len(SLICERS),
+                         ", ".join("`%s`" % p for p in BAND_PAGES if p != BAND_PAGES[0])), "",
+              "Not on `%s` — it is filtered by whatever you clicked to get there. Not on "
+              "`Overview` either: that page has its own controls, and its left-hand panel is "
+              "meant to ignore them." % DRILL_PAGE, "",
+              "**4.4** Ribbon **View** → tick **Sync slicers**; for each slicer tick **Sync** "
+              "and", "**Visible** on " + ", ".join("`%s`" % p for p in BAND_PAGES) +
+              ". Without it, two", "pages can disagree about the same month.", ""]
 
     by_page = {}
     for v in VISUALS:

@@ -25,8 +25,8 @@ BOX = "#FFFFFF"          # the three white boxes inside the panel
 UP, DOWN = "#2E7D32", "#B3261E"
 
 # Overview and Summary carry their own controls, so they are built visual by visual.
-# RM is the only page still using the older card-and-slicer band.
-BAND_PAGES = ["RM"]
+# No page uses the old card-and-slicer band any more: all five carry their own controls.
+BAND_PAGES = []
 
 # ---- header band for RM -------------------------------------------------------------
 # 96 high, not 88: a card has to hold a 12pt title strip above a 24pt number, and 88
@@ -702,48 +702,139 @@ VISUALS = [
       "Clicking a slice filters the rest of the page to that plant; clicking it again "
       "releases it."]),
 
-    # ---- RM: plant first, then group nature / nature, in ₹ Cr and days -----------------
-    ("RM", "Matrix", "RM by plant — In ₹ Cr · In Days",
+    # ---- RM: its own controls, Rs Cr. | Days master columns, then two plant charts -----
+    ("RM", "Slicer", "By Month / By Quarter",
+     [("Field", ["Period[Period]"])],
+     (16, 20, 216, 52),
+     "The same toggle as the other pages. It decides whether the columns under Rs Cr. and "
+     "Days are months or fiscal quarters, a quarter being the average of its three "
+     "month-ends.",
+     ["Format pane → Slicer settings → Options → Style: Tile.",
+      "Format pane → Slicer settings → Selection → Single select: On, Show 'Select all': Off.",
+      "Format pane → Values → Font: Arial, Font size: 10, Colour: #14532D.",
+      "Do not sync it with any other page."]),
+
+    ("RM", "Slicer", "Months (leave empty for the last 4)",
+     [("Field", ["dimDate[MonthName]"])],
+     (248, 20, 300, 52),
+     "Which months appear under each master column, and on both charts along the bottom. "
+     "Nothing ticked means the last four with data; tick your own for up to twelve.",
+     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+      "Format pane → Slicer settings → Selection → 'Multi-select with CTRL': Off.",
+      "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
+
+    ("RM", "Slicer", "Quarters (leave empty for the last 4)",
+     [("Field", ["dimDate[Quarter]"])],
+     (564, 20, 240, 52),
+     "The quarter-mode equivalent: empty means the last four fiscal quarters.",
+     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+      "Format pane → Slicer settings → Selection → 'Multi-select with CTRL': Off.",
+      "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
+
+    ("RM", "Slicer", "Plant",
+     [("Field", ["dimPlant[Plant]"])],
+     (820, 20, 220, 52),
+     "One plant, or all three.",
+     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+      "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
+
+    ("RM", "Slicer", "Group Nature",
+     [("Field", ["factInventory[GroupNature]"])],
+     (1056, 20, 208, 52),
+     "Module or Cell, when you want the page to be about one of the two only — the same "
+     "split the Excel sheet had as its Module and Cell blocks.",
+     ["Format pane → Slicer settings → Options → Style: Dropdown.",
+      "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
+
+    ("RM", "Matrix", "RM Inventory by Plant — Rs Cr. · Days",
      [("Rows", ["dimPlant[Plant]"]),
-      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
-      ("Values", ["Unit Value"]),
+      ("Columns", ["dimMeasure[Measure]", "Period[Period]"]),
+      ("Values", ["Unit Value by Period"]),
       ("Filters", ["dimCategory[Category]  →  is RM",
-                   "dimMeasure[Measure]  →  untick MW"])],
-     (16, 168, 1248, 176),
-     "RM by plant in crore rupees and days, the months you tick under each. MW is "
-     "unticked here because an RM megawatt figure is a derived number, not a measured one.",
-     ["dimMeasure[Measure] in Columns first, then dimDate[MonthName].",
-      "In the Filters pane, drag dimMeasure[Measure] in and untick MW.",
-      "Format pane → Row headers → Stepped layout: Off."]),
+                   "dimMeasure[Measure]  →  untick MW",
+                   "In Summary Window  →  is 1"])],
+     (16, 88, 1248, 140),
+     "The top block of the old RM sheet, rebuilt: one row per plant, with Rs Cr. and Days as "
+     "master columns and the periods under each. MW is unticked because an RM megawatt "
+     "figure is derived from a BOM, not measured, so it does not belong beside the other two.",
+     ["dimMeasure[Measure] goes in Columns FIRST, then Period[Period] — that order is what "
+      "makes Rs Cr. and Days the master columns.",
+      "Filters pane → dimCategory[Category] → tick RM only; then drag dimMeasure[Measure] in "
+      "and untick MW so only Rs Cr. and Days remain; then drag In Summary Window in and set "
+      "'is 1' for the four-periods-by-default behaviour.",
+      "Values takes Unit Value by Period — the plain Unit Value would add three month-ends "
+      "together in quarter mode.",
+      "Format pane → Row headers → Stepped layout: Off.",
+      "Format pane → Subtotals → Row subtotals: On (that is the Grand Total row the Excel "
+      "sheet had), Column subtotals: Off.",
+      "Format pane → General → Title → Font: Arial, Font size: 12, Colour: #14532D.",
+      "Clicking a plant row filters the material matrix and both charts below it."]),
 
-    ("RM", "Matrix", "RM by group nature and nature",
+    ("RM", "Matrix", "RM Inventory by Group Nature and Nature — Rs Cr. · Days",
      [("Rows", ["factInventory[GroupNature]", "dimNature[Nature]"]),
-      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
-      ("Values", ["Unit Value"]),
+      ("Columns", ["dimMeasure[Measure]", "Period[Period]"]),
+      ("Values", ["Unit Value by Period"]),
       ("Filters", ["dimCategory[Category]  →  is RM",
-                   "dimMeasure[Measure]  →  untick MW"])],
-     (16, 356, 620, 356),
-     "Then the same numbers down the material hierarchy: group nature, and nature inside it. "
-     "The +/- arrow on each group row is the drill-in.",
-     ["Format pane → Row headers → Stepped layout: Off, +/- icons: On."]),
+                   "dimMeasure[Measure]  →  untick MW",
+                   "In Summary Window  →  is 1"])],
+     (16, 236, 1248, 252),
+     "The second block of the old sheet: Module and Cell, each opening into its materials — "
+     "cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — in the same "
+     "two units and the same periods, with a subtotal on each group and a grand total under "
+     "them.",
+     ["Fastest way: click the matrix above, Ctrl+C, Ctrl+V, then drop "
+      "factInventory[GroupNature] and dimNature[Nature] into Rows and remove "
+      "dimPlant[Plant]. The three filters come with the copy.",
+      "Then set its position and size from the numbers below, and retype the title.",
+      "Format pane → Row headers → Stepped layout: Off, +/- icons: On. Group Nature and "
+      "Nature then sit in two columns with an expander on each group row.",
+      "Format pane → Subtotals → Row subtotals: On, and switch 'Per row level' On so both "
+      "the Total Module and Total Cell lines appear, not only the grand total.",
+      "Right-click a material row → Drill through → Detail for the material-by-material "
+      "list behind it."]),
 
-    ("RM", "Clustered column chart", "RM ₹ Cr by group nature — click a bar",
-     [("X-axis", ["factInventory[GroupNature]"]),
-      ("Y-axis", ["Value ₹ Cr"]),
-      ("Filters", ["dimCategory[Category]  →  is RM"])],
-     (644, 356, 620, 176),
-     "One click sets the whole page to a group nature; right-click drills through to the "
-     "materials.", []),
+    ("RM", "Clustered column chart", "RM Inventory (Rs Cr.) by Plant",
+     [("X-axis", ["dimPlant[Plant]"]),
+      ("Legend", ["Period[Period]"]),
+      ("Y-axis", ["Inventory Rs Cr"]),
+      ("Filters", ["dimCategory[Category]  →  is RM",
+                   "In Summary Window  →  is 1"])],
+     (16, 496, 616, 208),
+     "The first of the two charts you wanted: raw material held at each plant in crore "
+     "rupees, one bar per period beside each plant, so four months sit side by side and a "
+     "build-up at one plant is obvious. It follows the pickers above, so it is four periods "
+     "by default and up to twelve if you tick them.",
+     ["Period[Period] goes in Legend, not in the X-axis — that is what puts the four periods "
+      "side by side within each plant instead of splitting the chart in two.",
+      "Y-axis takes Inventory Rs Cr, the period-aware one, so quarter mode averages the "
+      "month-ends instead of adding them.",
+      "Format pane → Data labels: On, Font: Arial, Font size: 8, Colour: #1F2A24, Display "
+      "units: None, Value decimal places: 0, Position: Inside end.",
+      "Format pane → Y-axis: Off — every bar carries its own number.",
+      "Format pane → X-axis → Values → Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane → Legend → Position: Top center, Font: Arial, Font size: 8. Keep it on: "
+      "it is the only thing naming the periods.",
+      "Format pane → General → Title → Font: Arial, Font size: 11, Colour: #14532D.",
+      "Clicking one plant's bar filters both matrices to that plant."]),
 
-    ("RM", "Decomposition tree", "RM — click through any way you like",
-     [("Analyze", ["Value ₹ Cr"]),
-      ("Explain by", ["dimPlant[Plant]", "factInventory[GroupNature]", "dimNature[Nature]",
-                      "factInventory[Material]"]),
-      ("Filters", ["dimCategory[Category]  →  is RM"])],
-     (644, 544, 620, 168),
-     "The interactive one: click a box and it opens the next level, in whatever order you "
-     "click. This is what replaces filtering the RM sheet by hand.",
-     ["Click the + on a node to choose which field to split by next."]),
+    ("RM", "Clustered column chart", "RM Inventory (Days) by Plant",
+     [("X-axis", ["dimPlant[Plant]"]),
+      ("Legend", ["Period[Period]"]),
+      ("Y-axis", ["Days by Period"]),
+      ("Filters", ["dimCategory[Category]  →  is RM",
+                   "In Summary Window  →  is 1"])],
+     (648, 496, 616, 208),
+     "The same chart in days rather than rupees — how long each plant's raw material would "
+     "last at its own capacity. Read together with the one beside it, this is what tells you "
+     "whether a bigger rupee figure is actually more stock or just a dearer month.",
+     ["Build it by copying the chart beside it (Ctrl+C, Ctrl+V) and swapping the Y-axis "
+      "measure from Inventory Rs Cr to Days by Period. Everything else stays.",
+      "Format pane → Data labels → Value decimal places: 0, and Display units: None. Days "
+      "read as whole numbers, exactly as the old sheet printed them.",
+      "Format pane → Y-axis: Off, Legend → Position: Top center.",
+      "Format pane → General → Title → Font: Arial, Font size: 11, Colour: #14532D.",
+      "A plant with no capacity figure comes out blank rather than zero — that is correct, "
+      "not a fault. Days is MW ÷ capacity MW, and dividing by nothing has no answer."]),
 
     ("Detail", "Card", "Value ₹ Cr of what you clicked",
      [("Fields", ["Value ₹ Cr"])],

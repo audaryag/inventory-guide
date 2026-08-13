@@ -502,11 +502,11 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
   <p class="sub">Report view → <strong>Home → New measure</strong>, paste, Enter. One per box.
   They are also in the Measures tab at the bottom, so do not paste them twice.</p>
   {cards(new_measures, 'nm')}
-  <h2>3 &mdash; then rebuild the Overview, Summary and FG pages</h2>
+  <h2>3 &mdash; then rebuild the Overview, Summary, FG and RM pages</h2>
   <p class="sub">Go to <strong>Build it</strong> and work through the Overview steps, then
-  Summary, then FG. On each of those three pages, delete what is there first — select
+  Summary, then FG, then RM. On each of those four pages, delete what is there first — select
   everything on the page with <strong>Ctrl+A</strong> and press <strong>Delete</strong> —
-  because all three are laid out differently now.</p>
+  because all four are laid out differently now.</p>
   <p class="sub"><strong>Overview:</strong> green panel down the left, chart above table, two
   donuts on the right, twelve-month strip along the bottom.</p>
   <p class="sub"><strong>Summary:</strong> no header band of cards any more. It has its own five
@@ -520,9 +520,14 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
   master columns — the first by plant, the second by technology — then three visuals across the
   bottom: MW by technology, the Days trend, and a donut of the share by plant. It needs
   <code>Unit Value by Period</code> and <code>In Latest Month</code> from section 2.</p>
-  <p class="sub">RM and Detail are untouched — but the header band of six cards and four
-  dropdowns now lives on <strong>RM</strong> only, since Overview, Summary and FG all carry
-  their own controls. There is nothing left to copy it to, and nothing to sync.</p>
+  <p class="sub"><strong>RM:</strong> rebuilt from the old Excel sheet — its own five controls
+  (toggle, Months, Quarters, Plant, Group Nature), a matrix of plants with <em>Rs Cr.</em> and
+  <em>Days</em> as master columns, a second matrix opening Module and Cell into their materials,
+  then the two charts: RM inventory in Rs Cr. by plant and in days by plant, four periods side by
+  side in each. It needs <code>Days by Period</code> as well as the two FG measures.</p>
+  <p class="sub">The old header band of six cards and four dropdowns is gone from every page —
+  all five now carry their own controls, so there is nothing to copy and nothing to sync. If you
+  built it before, select those ten visuals on each page and delete them.</p>
 </div>
 
 <div class="panel" id="tab-b">
