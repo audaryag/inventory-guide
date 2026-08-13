@@ -464,7 +464,7 @@ VISUALS = [
       ("Columns", ["dimMetric[Metric]", "Period[Period]"]),
       ("Values", ["Summary Value Rs Cr"]),
       ("Filters", ["In Summary Window  →  is 1"])],
-     (16, 88, 1248, 300),
+     (16, 88, 1248, 212),
      "The whole reconciliation in one grid: three master columns \u2014 Inventory (TB), "
      "Inventory (MB5B), Difference \u2014 with the periods under each, one row per plant "
      "(Jaipur Module, Dholera Module, Dholera Cell) opening into RM, FG and Consumables, "
@@ -502,7 +502,7 @@ VISUALS = [
       ("Columns", ["dimMetric[Metric]", "Period[Period]"]),
       ("Values", ["Summary Value Rs Cr"]),
       ("Filters", ["In Summary Window  →  is 1"])],
-     (16, 396, 1248, 156),
+     (16, 308, 1248, 112),
      "The bottom block: the same three master columns, but every plant added together \u2014 one "
      "row for RM, one for FG, one for Consumables, so you can read total RM across all "
      "plants at a glance, and a Total row under them which is the total inventory.",
@@ -521,7 +521,7 @@ VISUALS = [
      [("X-axis", ["Period[Period]"]),
       ("Y-axis", ["TB Inventory Rs Cr", "Inventory Rs Cr"]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (16, 560, 616, 144),
+     (16, 428, 616, 112),
      "The books against the stock report, two bars per period: the same figures as the "
      "matrix above, but you can see a gap opening without reading a single number. Same "
      "periods as the matrices, because it carries the same filter.",
@@ -544,7 +544,7 @@ VISUALS = [
       ("Column y-axis", ["Difference Inventory Rs Cr"]),
       ("Line y-axis", ["Difference Inventory %"]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (648, 560, 616, 144),
+     (648, 428, 616, 112),
      "The question the reconciliation is really asking: is the gap widening or closing. The "
      "bar is the difference in crore rupees, the line above it the same difference as a "
      "percentage of the trial balance, so a small gap on a big month reads as small.",
@@ -817,22 +817,69 @@ VISUALS = [
       "Right-click a material row → Drill through → Detail for the material-by-material "
       "list behind it."]),
 
-    ("RM", "Line chart", "Days of Inventory by Month, Last 12 Months \u2014 RM, FG and Total",
+    ("RM", "Clustered column chart", "RM Inventory (Rs Cr.) by Plant",
+     [("X-axis", ["Period[Period]"]),
+      ("Legend", ["dimPlant[Plant]"]),
+      ("Y-axis", ["Inventory Rs Cr"]),
+      ("Filters", ["dimCategory[Category]  \u2192  is RM",
+                   "In Summary Window  \u2192  is 1"])],
+     (16, 496, 616, 208),
+     "Raw material held in crore rupees: one group per period along the bottom and the three "
+     "plants side by side inside each group, so you read the months left to right and compare "
+     "the plants within a month. It follows the pickers above, so it is four periods by "
+     "default and up to twelve if you tick them.",
+     ["Period[Period] goes in the X-axis and dimPlant[Plant] in Legend \u2014 that order is what "
+      "gives three bars per month rather than four bars per plant.",
+      "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, "
+      "Display units: None, Value decimal places: 0, Position: Inside end.",
+      "Format pane \u2192 Legend \u2192 Position: Top center, Font: Arial, Font size: 8. Keep it on: "
+      "it is the only thing naming the plants.",
+      "Format pane \u2192 Y-axis: Off \u2014 every bar is labelled, so the scale would only eat "
+      "width.",
+      "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24, "
+      "Concatenate labels: Off.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D.",
+      "Clicking one plant's bar filters both matrices to that plant and that period."]),
+
+    ("RM", "Clustered column chart", "RM Inventory (Days) by Plant",
+     [("X-axis", ["Period[Period]"]),
+      ("Legend", ["dimPlant[Plant]"]),
+      ("Y-axis", ["Days by Period"]),
+      ("Filters", ["dimCategory[Category]  \u2192  is RM",
+                   "In Summary Window  \u2192  is 1"])],
+     (648, 496, 616, 208),
+     "The same chart in days rather than rupees \u2014 how long each plant's raw material would "
+     "last at its own capacity, again three plant bars per month. Read together with the one "
+     "beside it, this is what tells you whether a bigger rupee figure is actually more stock "
+     "or just a dearer month.",
+     ["Use Days by Period, not Days. Days is a ratio, so quarter mode has to average the three "
+      "month-ends rather than add them, and that is the only difference between the two "
+      "measures.",
+      "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, "
+      "Display units: None, Value decimal places: 0, Position: Inside end.",
+      "Format pane \u2192 Legend \u2192 Position: Top center, Font: Arial, Font size: 8.",
+      "Format pane \u2192 Y-axis: Off. Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font "
+      "size: 8, Colour: #1F2A24, Concatenate labels: Off.",
+      "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D.",
+      "A plant with no capacity row in the Variables workbook shows blank here, not zero \u2014 "
+      "that is deliberate, a missing denominator is not the same as no stock."]),
+
+    ("Summary", "Line chart", "Days of Inventory by Month, Last 12 Months \u2014 RM, FG and Total",
      [("X-axis", ["dimDate[MonthName]"]),
       ("Y-axis", ["RM Days", "FG Days", "Total Days (RM + FG)"]),
       ("Filters", ["In Last 12  \u2192  is 1"])],
-     (16, 496, 1248, 208),
-     "One chart in place of the two plant charts: three lines across the last twelve months "
+     (16, 548, 1248, 156),
+     "The long view under the reconciliation: three lines across the last twelve months "
      "that have data, or fewer if that is all there is \u2014 raw material days, finished goods "
      "days, and the two added together, which is what the Overview card calls Days of "
      "inventory (RM + FG). Every month is its own closing figure divided by capacity, so "
      "nothing is added across months. Read it for shape: RM climbing while FG is flat means "
      "material is arriving faster than it is being consumed.",
-     ["This chart must ignore the five controls at the top, or it would drop back to four "
+     ["This chart must ignore the five controls at the top of Summary, or it would drop back to four "
       "periods. Click the 'By Month / By Quarter' slicer, then ribbon Format \u2192 Edit "
       "interactions, and on this chart click the circle-with-a-line (None). Repeat for the "
-      "Months and Quarters slicers. Leave Plant and Group Nature filtering, so those two "
-      "still work on it \u2014 picking a plant re-bases all three lines on that plant's capacity.",
+      "Months and Quarters slicers. Leave Plant and Type filtering, so those two still work "
+      "on it \u2014 picking a plant re-bases all three lines on that plant's capacity.",
       "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #14532D, "
       "Display units: None, Value decimal places: 0, Position: Above. Twelve months \u00d7 three "
       "lines is a lot of numbers: if they collide, set Data labels \u2192 Apply settings to \u2192 "
