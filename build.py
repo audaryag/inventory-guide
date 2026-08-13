@@ -477,6 +477,14 @@ there.</li>
 until you restart.</li>
 </ol>
 
+<blockquote><strong>Fixed 13 Aug:</strong> the first build of Route A failed with
+<em>&ldquo;ReportDefinition: Required artifact is missing&rdquo;</em>. The cause was in my files, not
+your Power BI &mdash; the report was written against the 2023 file-format versions, and one property
+in <code>report.json</code> is no longer allowed. It is now generated at the current versions and
+checked with Microsoft's own <code>powerbi-report-author</code> validator, which reports
+<strong>0 errors and 0 warnings</strong> across all five pages and 55 visuals. Re-download the zip
+before trying again.</blockquote>
+
 <h3>Route A &mdash; the full report (try this first)</h3>
 <ol>
 <li>Open the <code>1 - full report</code> folder and double-click
@@ -603,6 +611,9 @@ send me the version line.</li>
 <li>There is no way to paste all the queries at once. Power Query has no import-many box, and no
 external tool can write M into a .pbix. Routes A and B get around it by shipping the queries
 already inside the file, which is as close as Power BI allows.</li>
+<li>The report files are now validated with Microsoft's own PBIR validator, which is the closest
+thing to Desktop that runs on Linux: it checks visual types, roles, formatting property names,
+theme wiring and slicer sizing. It caught 48 real problems the first time round.</li>
 <li>If anything goes red, send me the exact text. Every failure so far has been one line to
 fix.</li>
 </ul>

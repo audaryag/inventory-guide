@@ -188,7 +188,6 @@
             "labelDisplayUnits": 1,
             "labelPrecision": 1,
             "labelPosition": "InsideCenter",
-            "labelOrientation": "horizontal",
             "color": {
               "solid": {
                 "color": "#FFFFFF"
@@ -196,7 +195,7 @@
             }
           }
         ],
-        "labelsTotal": [
+        "totals": [
           {
             "show": true,
             "fontFamily": "Arial Bold",
@@ -220,7 +219,6 @@
             "labelDisplayUnits": 1,
             "labelPrecision": 1,
             "labelPosition": "OutsideEnd",
-            "labelOrientation": "horizontal",
             "color": {
               "solid": {
                 "color": "#14532D"
@@ -369,7 +367,6 @@
         "items": [
           {
             "fontFamily": "Arial",
-            "fontSize": 10,
             "fontColor": {
               "solid": {
                 "color": "#1F2A24"
@@ -379,19 +376,20 @@
               "solid": {
                 "color": "#FFFFFF"
               }
-            }
+            },
+            "textSize": 10
           }
         ],
         "header": [
           {
             "show": true,
             "fontFamily": "Arial Bold",
-            "fontSize": 10,
             "fontColor": {
               "solid": {
                 "color": "#14532D"
               }
-            }
+            },
+            "textSize": 10
           }
         ],
         "border": [
@@ -456,7 +454,7 @@
               }
             },
             "wordWrap": true,
-            "steppedLayout": false
+            "stepped": false
           }
         ],
         "subTotals": [
@@ -491,8 +489,7 @@
               "solid": {
                 "color": "#E8F2E8"
               }
-            },
-            "totals": true
+            }
           }
         ],
         "stylePreset": [
@@ -567,8 +564,7 @@
               "solid": {
                 "color": "#E8F2E8"
               }
-            },
-            "totals": true
+            }
           }
         ],
         "columnHeaders": [

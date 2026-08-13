@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "vbc1555cb8bcbe5ba",
   "position": {
     "x": 200,
@@ -190,7 +190,7 @@
       "rowHeaders": [
         {
           "properties": {
-            "steppedLayout": {
+            "stepped": {
               "expr": {
                 "Literal": {
                   "Value": "false"
@@ -302,7 +302,7 @@
                 }
               }
             },
-            "banded": {
+            "bandedRowHeaders": {
               "expr": {
                 "Literal": {
                   "Value": "true"
@@ -389,19 +389,6 @@
               "expr": {
                 "Literal": {
                   "Value": "9D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "columnWidth": [
-        {
-          "properties": {
-            "autoSizeColumnWidth": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
                 }
               }
             }

@@ -241,7 +241,7 @@ VISUALS = [
     # ---- Overview controls ---------------------------------------------------------------
     ("Overview", "Slicer", "By month / By quarter",
      [("Field", ["Period[Period]"])],
-     (200, 20, 216, 52),
+     (200, 8, 216, 76),
      "The toggle. Period is the field parameter you made in the New tab; picking By quarter "
      "swaps the chart and the table from months to quarters and averages the month-ends.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Tile, so it reads as two buttons "
@@ -253,7 +253,7 @@ VISUALS = [
 
     ("Overview", "Slicer", "Months (leave empty for March plus the last 4)",
      [("Field", ["dimDate[MonthName]"])],
-     (424, 20, 268, 52),
+     (424, 8, 268, 76),
      "Tick nothing and you get March — the year-end close — followed by the last four "
      "months that have data, five columns in all, or fewer early in the year: in April just "
      "March and April. Tick your own months and they replace that, up to the 5 most recent of "
@@ -266,7 +266,7 @@ VISUALS = [
 
     ("Overview", "Slicer", "Plant",
      [("Field", ["dimPlant[Plant]"])],
-     (700, 20, 262, 52),
+     (700, 8, 262, 76),
      "Filters the history and the donuts. The panel on the left ignores it on purpose.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
@@ -274,7 +274,7 @@ VISUALS = [
 
     ("Overview", "Slicer", "Type",
      [("Field", ["dimCategory[Category]"])],
-     (970, 20, 294, 52),
+     (970, 8, 294, 76),
      "RM, FG or consumables.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
@@ -408,7 +408,7 @@ VISUALS = [
     # each master column are months or quarters, and the pickers decide which ones.
     ("Summary", "Slicer", "By month / By quarter",
      [("Field", ["Period[Period]"])],
-     (16, 20, 216, 52),
+     (16, 8, 216, 76),
      "The same toggle as Overview, on this page too. By quarter turns every period column "
      "into a quarter and each figure into the average of that quarter's month-ends.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Tile, so it reads as two buttons "
@@ -421,7 +421,7 @@ VISUALS = [
 
     ("Summary", "Slicer", "Months (leave empty for the last 4)",
      [("Field", ["dimDate[MonthName]"])],
-     (248, 20, 300, 52),
+     (248, 8, 300, 76),
      "Tick nothing and the matrix shows the last 4 months under each master column. Tick "
      "the months you want and it shows those, up to twelve \u2014 tick more than twelve and it "
      "keeps the twelve most recent of your ticks, because 3 master columns \u00d7 12 months is "
@@ -434,7 +434,7 @@ VISUALS = [
 
     ("Summary", "Slicer", "Quarters (leave empty for the last 4)",
      [("Field", ["dimDate[Quarter]"])],
-     (564, 20, 240, 52),
+     (564, 8, 240, 76),
      "The picker for quarter mode, and it behaves the same way: empty means the last 4, or "
      "tick the quarters you want. In month mode leave it empty.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
@@ -444,7 +444,7 @@ VISUALS = [
 
     ("Summary", "Slicer", "Plant",
      [("Field", ["dimPlant[Plant]"])],
-     (820, 20, 220, 52),
+     (820, 8, 220, 76),
      "Narrows both matrices to one plant when you want to read it on its own.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
@@ -452,7 +452,7 @@ VISUALS = [
 
     ("Summary", "Slicer", "Type",
      [("Field", ["dimCategory[Category]"])],
-     (1056, 20, 208, 52),
+     (1056, 8, 208, 76),
      "RM, FG or consumables, when you want the reconciliation for one of them only.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
@@ -567,7 +567,7 @@ VISUALS = [
     # ---- FG: its own controls, then MW | Rs Cr. | Days as master columns ---------------
     ("FG", "Slicer", "By Month / By Quarter",
      [("Field", ["Period[Period]"])],
-     (16, 20, 216, 52),
+     (16, 8, 216, 76),
      "The same two-button toggle as Overview and Summary. By Month puts the months you pick "
      "under each master column; By Quarter puts fiscal quarters there instead, each one the "
      "average of its three month-ends, because stock cannot be added up across months.",
@@ -581,7 +581,7 @@ VISUALS = [
 
     ("FG", "Slicer", "Months (leave empty for the last 4)",
      [("Field", ["dimDate[MonthName]"])],
-     (248, 20, 300, 52),
+     (248, 8, 300, 76),
      "Which months appear under each master column. Tick nothing and it shows the last four "
      "with data; tick your own and it shows those, up to twelve.",
      ["Format pane → Slicer settings → Options → Style: Dropdown.",
@@ -592,7 +592,7 @@ VISUALS = [
 
     ("FG", "Slicer", "Quarters (leave empty for the last 4)",
      [("Field", ["dimDate[Quarter]"])],
-     (564, 20, 240, 52),
+     (564, 8, 240, 76),
      "The same idea in quarter mode: empty means the last four fiscal quarters, or tick the "
      "ones you want, up to twelve.",
      ["Format pane → Slicer settings → Options → Style: Dropdown.",
@@ -602,7 +602,7 @@ VISUALS = [
 
     ("FG", "Slicer", "Plant",
      [("Field", ["dimPlant[Plant]"])],
-     (820, 20, 220, 52),
+     (820, 8, 220, 76),
      "One plant, or all of them. It filters the technology matrix and all three charts, so "
      "picking Dholera Cell turns the page into a Dholera Cell page.",
      ["Format pane → Slicer settings → Options → Style: Dropdown.",
@@ -610,7 +610,7 @@ VISUALS = [
 
     ("FG", "Slicer", "Technology",
      [("Field", ["dimNature[Nature]"])],
-     (1056, 20, 208, 52),
+     (1056, 8, 208, 76),
      "One module technology, when you want the page to be about that technology only.",
      ["Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
@@ -729,7 +729,7 @@ VISUALS = [
     # ---- RM: its own controls, Rs Cr. | Days master columns, then two plant charts -----
     ("RM", "Slicer", "By Month / By Quarter",
      [("Field", ["Period[Period]"])],
-     (16, 20, 216, 52),
+     (16, 8, 216, 76),
      "The same toggle as the other pages. It decides whether the columns under Rs Cr. and "
      "Days are months or fiscal quarters, a quarter being the average of its three "
      "month-ends.",
@@ -740,7 +740,7 @@ VISUALS = [
 
     ("RM", "Slicer", "Months (leave empty for the last 4)",
      [("Field", ["dimDate[MonthName]"])],
-     (248, 20, 300, 52),
+     (248, 8, 300, 76),
      "Which months appear under each master column, and on both charts along the bottom. "
      "Nothing ticked means the last four with data; tick your own for up to twelve.",
      ["Format pane → Slicer settings → Options → Style: Dropdown.",
@@ -749,7 +749,7 @@ VISUALS = [
 
     ("RM", "Slicer", "Quarters (leave empty for the last 4)",
      [("Field", ["dimDate[Quarter]"])],
-     (564, 20, 240, 52),
+     (564, 8, 240, 76),
      "The quarter-mode equivalent: empty means the last four fiscal quarters.",
      ["Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Slicer settings → Selection → 'Multi-select with CTRL': Off.",
@@ -757,14 +757,14 @@ VISUALS = [
 
     ("RM", "Slicer", "Plant",
      [("Field", ["dimPlant[Plant]"])],
-     (820, 20, 220, 52),
+     (820, 8, 220, 76),
      "One plant, or all three.",
      ["Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
 
     ("RM", "Slicer", "Group Nature",
      [("Field", ["factInventory[GroupNature]"])],
-     (1056, 20, 208, 52),
+     (1056, 8, 208, 76),
      "Module or Cell, when you want the page to be about one of the two only — the same "
      "split the Excel sheet had as its Module and Cell blocks.",
      ["Format pane → Slicer settings → Options → Style: Dropdown.",

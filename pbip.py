@@ -219,10 +219,10 @@ def model_bim():
 
 # ------------------------------------------------------------------------- report ----------
 SCH = "https://developer.microsoft.com/json-schemas/fabric/item/report/definition"
-VC = f"{SCH}/visualContainer/1.0.0/schema.json"
-PG = f"{SCH}/page/1.0.0/schema.json"
+VC = f"{SCH}/visualContainer/2.9.0/schema.json"
+PG = f"{SCH}/page/2.1.0/schema.json"
 PGS = f"{SCH}/pagesMetadata/1.0.0/schema.json"
-RPT = f"{SCH}/report/1.0.0/schema.json"
+RPT = f"{SCH}/report/3.3.0/schema.json"
 VER = f"{SCH}/versionMetadata/1.0.0/schema.json"
 
 VISUAL_TYPE = {
@@ -302,7 +302,7 @@ def title_objects(text):
 def matrix_objects(rows_levels, expand, subtotals=True):
     o = {
         "rowHeaders": [{"properties": {
-            "steppedLayout": literal("false"),
+            "stepped": literal("false"),
             "showExpandCollapseButtons": literal("true" if expand else "false"),
             "fontFamily": txt("Arial"), "bold": literal("true")}}],
         "columnHeaders": [{"properties": {
@@ -313,7 +313,7 @@ def matrix_objects(rows_levels, expand, subtotals=True):
         "values": [{"properties": {"fontFamily": txt("Arial"),
                                    "backColorPrimary": {"solid": {"color": txt("#FFFFFF")}},
                                    "backColorSecondary": {"solid": {"color": txt("#F7FAF7")}},
-                                   "banded": literal("true")}}],
+                                   "bandedRowHeaders": literal("true")}}],
         "subTotals": [{"properties": {
             "rowSubtotals": literal("true" if subtotals else "false"),
             "columnSubtotals": literal("false"),
@@ -324,13 +324,9 @@ def matrix_objects(rows_levels, expand, subtotals=True):
                                  "gridHorizontalColor": {"solid": {"color": txt("#E6EDE6")}},
                                  "rowPadding": literal("2D"),
                                  "textSize": literal("9D")}}],
-        "columnWidth": [{"properties": {"autoSizeColumnWidth": literal("true")}}],
         "total": [{"properties": {"fontFamily": txt("Arial"), "bold": literal("true"),
                                   "backColor": {"solid": {"color": txt("#EEF3EF")}}}}],
     }
-    if rows_levels > 1:
-        # keep the column headings on screen while the rows scroll inside the visual
-        o["columnHeaders"][0]["properties"]["keepColumnHeadersVisible"] = literal("true")
     return o
 
 
@@ -506,19 +502,23 @@ def pname(page):
 def write_report(root):
     d = root / "definition"
     (d / "pages").mkdir(parents=True, exist_ok=True)
-    (d / "version.json").write_text(json.dumps({"$schema": VER, "version": "1.0.0"}, indent=2))
+    (d / "version.json").write_text(json.dumps({"$schema": VER, "version": "2.0.0"}, indent=2))
     theme = json.loads((HERE / "inventory-theme.json").read_text())
     res = root / "StaticResources" / "RegisteredResources"
     res.mkdir(parents=True, exist_ok=True)
-    (res / "inventory-theme.json").write_text(json.dumps(theme, indent=2, ensure_ascii=False))
+    # the registered resource, the resourcePackages entry and customTheme.name must all be
+    # the same string, extension included, or the service silently drops the theme
+    tfile = theme["name"] + ".json"
+    theme["name"] = tfile          # the theme's own name must equal the file it is loaded from
+    (res / tfile).write_text(json.dumps(theme, indent=2, ensure_ascii=False))
     (d / "report.json").write_text(json.dumps({
-        "$schema": RPT, "layoutOptimization": "None",
-        "themeCollection": {"customTheme": {"name": theme["name"],
-                                            "reportVersionAtImport": "5.55",
-                                            "type": "RegisteredResources"}},
+        "$schema": RPT,
+        "themeCollection": {"customTheme": {
+            "name": tfile,
+            "reportVersionAtImport": {"visual": "2.6.0", "report": "3.1.0", "page": "2.3.0"},
+            "type": "RegisteredResources"}},
         "resourcePackages": [{"name": "RegisteredResources", "type": "RegisteredResources",
-                              "items": [{"name": "inventory-theme.json",
-                                         "path": "inventory-theme.json",
+                              "items": [{"name": tfile, "path": tfile,
                                          "type": "CustomTheme"}]}],
         "settings": {"useStylableVisualContainerHeader": True,
                      "defaultFilterActionIsDataFilter": True,
