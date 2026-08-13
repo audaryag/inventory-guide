@@ -50,26 +50,35 @@ SLICERS = [
 # ---- Overview furniture: a shape, a logo box and three pieces of wording ------------------
 # (page, kind, text, x, y, w, h, note)
 DECOR = [
-    ("Overview", "Rectangle", "", 0, 0, 236, 720,
-     "The ticker panel. Fill %s, no border, no rounded corners. Right-click it and choose "
-     "Send to back so everything else sits on top of it." % PANEL),
-    ("Overview", "Image", "", 20, 16, 56, 56,
-     "Empty box for the company logo. Insert → Image, pick any small file for now, then "
-     "swap it later by clicking the image and choosing Browse."),
-    ("Overview", "Text box", "Inventory Overview", 88, 20, 140, 30,
-     "Arial 15, bold, colour %s." % PANEL_INK),
-    ("Overview", "Text box", "By Type", 20, 84, 196, 18,
+    ("Overview", "Rectangle", "", 0, 0, 184, 720,
+     "The ticker panel, 184 wide rather than 236 \u2014 narrow enough that the history and the "
+     "donuts get the room, wide enough for a four-figure number. Fill %s, no border, no "
+     "rounded corners. Right-click it and choose Send to back so everything else sits on "
+     "top of it." % PANEL),
+    ("Overview", "Image", "", 12, 10, 160, 34,
+     "Empty box for the company logo, a wide strip across the top of the panel rather than "
+     "a square, because a wordmark logo is wider than it is tall. Insert \u2192 Image, pick any "
+     "small file for now, then swap it later by clicking the image and choosing Browse. "
+     "Format pane \u2192 Image \u2192 Image fit: Fit, so a wider or narrower logo still sits inside "
+     "the strip without being stretched."),
+    ("Overview", "Text box", "Inventory", 12, 50, 160, 22,
+     "First line of the heading, directly under the logo strip. Arial 15, bold, colour %s, "
+     "left aligned." % PANEL_INK),
+    ("Overview", "Text box", "Overview", 12, 72, 160, 20,
+     "Second line of the heading, on its own line under 'Inventory' so neither word has to "
+     "shrink to fit the narrower panel. Arial 13, colour %s, left aligned." % PANEL_SUB),
+    ("Overview", "Text box", "By Type", 12, 100, 160, 16,
      "Arial 10, bold, colour %s. Section heading above the first white box." % PANEL_SUB),
-    ("Overview", "Rectangle", "", 12, 104, 212, 200,
+    ("Overview", "Rectangle", "", 8, 118, 168, 186,
      "White box number 1, the one the RM, FG and Consumables cards sit inside. Fill %s, "
      "rounded corners 8, no border. Right-click it and choose Send backward once so it "
      "covers the green panel but stays under the cards." % BOX),
-    ("Overview", "Text box", "By Plant", 20, 312, 196, 18,
+    ("Overview", "Text box", "By Plant", 12, 310, 160, 16,
      "Arial 10, bold, colour %s. Section heading above the second white box." % PANEL_SUB),
-    ("Overview", "Rectangle", "", 12, 332, 212, 200,
+    ("Overview", "Rectangle", "", 8, 328, 168, 186,
      "White box number 2, for the three plant cards. Fill %s, rounded corners 8, no border, "
      "then Send backward once." % BOX),
-    ("Overview", "Rectangle", "", 12, 540, 212, 168,
+    ("Overview", "Rectangle", "", 8, 522, 168, 186,
      "White box number 3, for Total, Change since Last Month and the As on line. Fill %s, "
      "rounded corners 8, no border, then Send backward once." % BOX),
 ]
@@ -80,7 +89,7 @@ VISUALS = [
     # ---- Overview: the ticker panel, three white boxes, fixed to the latest month -------
     ("Overview", "Card", "RM",
      [("Fields", ["Ticker RM Rs Cr"])],
-     (20, 110, 196, 60),
+     (14, 122, 156, 58),
      "Panel figure, sitting inside the white box. It reads the latest month that has data "
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
@@ -93,12 +102,12 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
       "comes from the box shape underneath, so the card itself stays see-through.",
       "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
-      "Vertical (Y) to 20 and 110 exactly, or the card will not sit square inside its box."],
+      "Vertical (Y) to 14 and 122 exactly, or the card will not sit square inside its box."],
      ),
 
     ("Overview", "Card", "FG",
      [("Fields", ["Ticker FG Rs Cr"])],
-     (20, 174, 196, 60),
+     (14, 182, 156, 58),
      "Panel figure, sitting inside the white box. It reads the latest month that has data "
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
@@ -111,12 +120,12 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
       "comes from the box shape underneath, so the card itself stays see-through.",
       "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
-      "Vertical (Y) to 20 and 174 exactly, or the card will not sit square inside its box."],
+      "Vertical (Y) to 14 and 182 exactly, or the card will not sit square inside its box."],
      ),
 
     ("Overview", "Card", "Consumables",
      [("Fields", ["Ticker Consumables Rs Cr"])],
-     (20, 238, 196, 60),
+     (14, 242, 156, 58),
      "Panel figure, sitting inside the white box. It reads the latest month that has data "
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
@@ -129,12 +138,12 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
       "comes from the box shape underneath, so the card itself stays see-through.",
       "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
-      "Vertical (Y) to 20 and 238 exactly, or the card will not sit square inside its box."],
+      "Vertical (Y) to 14 and 242 exactly, or the card will not sit square inside its box."],
      ),
 
     ("Overview", "Card", "1900 Jaipur Module",
      [("Fields", ["Ticker 1900 Rs Cr"])],
-     (20, 338, 196, 60),
+     (14, 332, 156, 58),
      "Panel figure, sitting inside the white box. It reads the latest month that has data "
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
@@ -147,12 +156,12 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
       "comes from the box shape underneath, so the card itself stays see-through.",
       "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
-      "Vertical (Y) to 20 and 338 exactly, or the card will not sit square inside its box."],
+      "Vertical (Y) to 14 and 332 exactly, or the card will not sit square inside its box."],
      ),
 
     ("Overview", "Card", "1902 Dholera Module",
      [("Fields", ["Ticker 1902 Rs Cr"])],
-     (20, 402, 196, 60),
+     (14, 392, 156, 58),
      "Panel figure, sitting inside the white box. It reads the latest month that has data "
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
@@ -165,12 +174,12 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
       "comes from the box shape underneath, so the card itself stays see-through.",
       "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
-      "Vertical (Y) to 20 and 402 exactly, or the card will not sit square inside its box."],
+      "Vertical (Y) to 14 and 392 exactly, or the card will not sit square inside its box."],
      ),
 
     ("Overview", "Card", "1905 Dholera Cell",
      [("Fields", ["Ticker 1905 Rs Cr"])],
-     (20, 466, 196, 60),
+     (14, 452, 156, 58),
      "Panel figure, sitting inside the white box. It reads the latest month that has data "
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
@@ -183,12 +192,12 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
       "comes from the box shape underneath, so the card itself stays see-through.",
       "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
-      "Vertical (Y) to 20 and 466 exactly, or the card will not sit square inside its box."],
+      "Vertical (Y) to 14 and 452 exactly, or the card will not sit square inside its box."],
      ),
 
     ("Overview", "Card", "Total",
      [("Fields", ["Ticker Rs Cr"])],
-     (20, 546, 196, 62),
+     (14, 528, 156, 62),
      "Panel figure, sitting inside the white box. It reads the latest month that has data "
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
@@ -201,18 +210,19 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, and Border: Off. The white "
       "comes from the box shape underneath, so the card itself stays see-through.",
       "Format pane \u2192 General \u2192 Properties \u2192 Position: set Horizontal (X) and "
-      "Vertical (Y) to 20 and 546 exactly, or the card will not sit square inside its box."],
+      "Vertical (Y) to 14 and 528 exactly, or the card will not sit square inside its box."],
      ),
 
     ("Overview", "Card", "Change since Last Month",
      [("Fields", ["Ticker Change Text"])],
-     (20, 612, 196, 58),
+     (14, 592, 156, 58),
      "One line reading, for example, +12.4 Rs Cr. (+2.1%) \u2014 the amount and the percentage "
      "together, each labelled, so nobody has to ask which is which. Same white box as Total, "
      "directly under it.",
-     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 15, Bold: On, "
-      "Colour: #1F2A24. Green and red would fight with the white box, so the sign carries "
-      "the meaning instead.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 12, Bold: On, "
+      "Colour: #1F2A24. Twelve rather than fifteen, because this line carries the amount and "
+      "the percentage together and the panel is narrower now. Green and red would fight with "
+      "the white box, so the sign carries the meaning instead.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
       "Text: Change since Last Month.",
       "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, Border: Off.",
@@ -221,7 +231,7 @@ VISUALS = [
 
     ("Overview", "Card", "As on",
      [("Fields", ["As On Text"])],
-     (20, 674, 196, 28),
+     (14, 652, 156, 28),
      "Says which month the whole panel is showing, so a reader never has to guess.",
      ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 10, Colour: #4B5563.",
       "Format pane \u2192 General \u2192 Title: Off \u2014 the sentence says it all.",
@@ -231,7 +241,7 @@ VISUALS = [
     # ---- Overview controls ---------------------------------------------------------------
     ("Overview", "Slicer", "By month / By quarter",
      [("Field", ["Period[Period]"])],
-     (252, 20, 236, 52),
+     (200, 20, 216, 52),
      "The toggle. Period is the field parameter you made in the New tab; picking By quarter "
      "swaps the chart and the table from months to quarters and averages the month-ends.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Tile, so it reads as two buttons "
@@ -243,7 +253,7 @@ VISUALS = [
 
     ("Overview", "Slicer", "Months (leave empty for the last 5)",
      [("Field", ["dimDate[MonthName]"])],
-     (500, 20, 300, 52),
+     (424, 20, 268, 52),
      "Tick nothing and the chart shows the last 5 months by itself. Tick more than 5 and it "
      "shows the 5 most recent of your ticks. In quarter mode this is the quarter picker.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
@@ -254,7 +264,7 @@ VISUALS = [
 
     ("Overview", "Slicer", "Plant",
      [("Field", ["dimPlant[Plant]"])],
-     (812, 20, 220, 52),
+     (700, 20, 262, 52),
      "Filters the history and the donuts. The panel on the left ignores it on purpose.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
@@ -262,7 +272,7 @@ VISUALS = [
 
     ("Overview", "Slicer", "Type",
      [("Field", ["dimCategory[Category]"])],
-     (1044, 20, 220, 52),
+     (970, 20, 294, 52),
      "RM, FG or consumables.",
      ["Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
@@ -274,7 +284,7 @@ VISUALS = [
       ("Y-axis", ["Inventory Rs Cr"]),
       ("Legend", ["dimCategory[Category]"]),
       ("Filters", ["In Window  \u2192  is 1"])],
-     (252, 88, 664, 336),
+     (200, 88, 700, 336),
      "Five months side by side, or four quarters if the toggle is set to By quarter, in "
      "which case each bar is the average of that quarter's month-ends. The In Window filter "
      "is what keeps it to five (or four) without you having to prune the slicer.",
@@ -297,7 +307,7 @@ VISUALS = [
       ("Columns", ["Period[Period]"]),
       ("Values", ["Inventory Rs Cr"]),
       ("Filters", ["In Window  \u2192  is 1"])],
-     (252, 432, 664, 136),
+     (200, 432, 700, 136),
      "The same five columns as the chart directly above it, for readers who want the "
      "figures rather than the shape. Only as tall as its four rows, so no white gap is left "
      "under it.",
@@ -313,7 +323,7 @@ VISUALS = [
       ("Column y-axis", ["Value \u20b9 Cr"]),
       ("Line y-axis", ["Value \u20b9 Cr % vs LM"]),
       ("Filters", ["In Last 12  \u2192  is 1"])],
-     (252, 576, 664, 130),
+     (200, 576, 700, 130),
      "The long view, under the table: one bar per month for the last twelve months that have "
      "data, or fewer if that is all there is. Two numbers on every month \u2014 the bar prints the "
      "crore figure, the line above it prints the change on the month before as a percentage. "
@@ -349,7 +359,7 @@ VISUALS = [
     ("Overview", "Donut chart", "Share by Type (%)",
      [("Legend", ["dimCategory[Category]"]),
       ("Values", ["Inventory Rs Cr"])],
-     (932, 88, 332, 306),
+     (916, 88, 348, 306),
      "RM against FG against consumables, as a percentage of the selected months.",
      ["Format pane \u2192 Detail labels \u2192 Label contents: Percent of total, Font: Arial, Font "
       "size: 10, Colour: #1F2A24, Value decimal places: 1.",
@@ -361,7 +371,7 @@ VISUALS = [
     ("Overview", "Donut chart", "Share by Plant (%)",
      [("Legend", ["dimPlant[Plant]"]),
       ("Values", ["Inventory Rs Cr"])],
-     (932, 402, 332, 304),
+     (916, 402, 348, 304),
      "The same money split by plant instead of by type.",
      ["Format pane \u2192 Detail labels \u2192 Label contents: Percent of total, Font: Arial, Font "
       "size: 10, Colour: #1F2A24, Value decimal places: 1.",

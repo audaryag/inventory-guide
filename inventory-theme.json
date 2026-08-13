@@ -1,5 +1,5 @@
 {
-  "name": "Inventory Green 2",
+  "name": "Inventory Green 3",
   "dataColors": [
     "#14532D",
     "#2E7D46",
@@ -269,8 +269,26 @@
           }
         ],
         "subTotals": [
-          { "fontFamily": "Arial Bold", "rowSubtotals": true, "columnSubtotals": false }
+          {
+            "fontFamily": "Arial Bold",
+            "fontSize": 9,
+            "fontColor": { "solid": { "color": "#14532D" } },
+            "backColor": { "solid": { "color": "#E8F2E8" } },
+            "rowSubtotals": true,
+            "columnSubtotals": false,
+            "applyToHeaders": true
+          }
         ],
+        "total": [
+          {
+            "fontFamily": "Arial Bold",
+            "fontSize": 9,
+            "fontColor": { "solid": { "color": "#14532D" } },
+            "backColor": { "solid": { "color": "#E8F2E8" } },
+            "totals": true
+          }
+        ],
+        "stylePreset": [ { "name": "None" } ],
         "values": [
           {
             "fontFamily": "Arial",
@@ -278,6 +296,7 @@
             "fontColorPrimary": { "solid": { "color": "#1F2A24" } },
             "backColorPrimary": { "solid": { "color": "#FFFFFF" } },
             "backColorSecondary": { "solid": { "color": "#F7FAF7" } },
+            "fontColorSecondary": { "solid": { "color": "#1F2A24" } },
             "wordWrap": true
           }
         ]
@@ -285,7 +304,26 @@
     },
     "tableEx": {
       "*": {
-        "grid": [ { "rowPadding": 2, "textSize": 9 } ],
+        "stylePreset": [ { "name": "None" } ],
+        "grid": [
+          {
+            "gridVertical": true,
+            "gridVerticalColor": { "solid": { "color": "#EEF3EE" } },
+            "gridHorizontal": true,
+            "gridHorizontalColor": { "solid": { "color": "#EEF3EE" } },
+            "rowPadding": 2,
+            "textSize": 9
+          }
+        ],
+        "total": [
+          {
+            "fontFamily": "Arial Bold",
+            "fontSize": 9,
+            "fontColor": { "solid": { "color": "#14532D" } },
+            "backColor": { "solid": { "color": "#E8F2E8" } },
+            "totals": true
+          }
+        ],
         "columnHeaders": [
           {
             "fontFamily": "Arial Bold",
@@ -299,7 +337,11 @@
           {
             "fontFamily": "Arial",
             "fontSize": 9,
-            "backColorSecondary": { "solid": { "color": "#F7FAF7" } }
+            "fontColorPrimary": { "solid": { "color": "#1F2A24" } },
+            "backColorPrimary": { "solid": { "color": "#FFFFFF" } },
+            "fontColorSecondary": { "solid": { "color": "#1F2A24" } },
+            "backColorSecondary": { "solid": { "color": "#F7FAF7" } },
+            "wordWrap": true
           }
         ]
       }

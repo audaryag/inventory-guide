@@ -183,6 +183,18 @@ def _stuck(vtype, wells=()):
 
 
 
+# Which white box is which, keyed on its Vertical (Y), and how each piece of panel wording
+# is styled, keyed on the words themselves — both read straight off DECOR in spec.py.
+_WHICH_BOX = {118: ("1", "RM, FG and Consumables"),
+              328: ("2", "the three plants"),
+              522: ("3", "Total, Change since Last Month and the As on line")}
+
+_PANEL_TEXT = {"Inventory": (15, True, PANEL_INK),
+               "Overview": (13, False, PANEL_SUB),
+               "By Type": (10, True, PANEL_SUB),
+               "By Plant": (10, True, PANEL_SUB)}
+
+
 def _decor_steps():
     """The green panel, the logo box and the wording on Overview: no data, pure furniture."""
     out = []
@@ -214,9 +226,7 @@ def _decor_steps():
                       "Send to back again. If the green is the wrong shade, reopen Fill \u2192 "
                       "Custom colour and retype %s." % PANEL))
         elif kind == "Rectangle":
-            which = {104: ("1", "RM, FG and Consumables"),
-                     332: ("2", "the three plants"),
-                     540: ("3", "Total, Change since Last Month and the As on line")}[y]
+            which = _WHICH_BOX[y]
             do = ["At the bottom of the window click the tab named Overview.",
                   "Click once on an empty part of the page so nothing is selected.",
                   "At the top of the window click the Insert tab, then click Shapes, then "
@@ -259,18 +269,18 @@ def _decor_steps():
                   "Click General, then Effects, and switch Background Off and Border Off."]
             do += _place(x, y, w, h, in_format=True)
             out.append(dict(
-                title="Overview — the logo box, top left",
+                title="Overview — the logo strip across the top of the panel",
                 page="Overview", do=do,
                 fields=[("Insert", "Image"), ("Fit", "Fit")] + _pos_rows(x, y, w, h),
                 note="Left empty for now on purpose. When you have the real logo, click this "
                      "box, choose Browse and pick the file — nothing else moves.",
-                check="A small square sits in the top-left corner of the green panel, with "
-                      "the words 'Inventory Overview' to its right once the next step is "
-                      "done.",
+                check="A wide empty strip sits across the top of the green panel, with the "
+                      "words 'Inventory' and 'Overview' appearing underneath it on two lines "
+                      "once the next two steps are done.",
                 stuck="If the picture is stretched, set Fit to 'Fit' rather than 'Fill'. If "
                       "the box has a white surround, its Background is still on."))
         else:
-            size, colour = (15, PANEL_INK) if h >= 28 else (10, PANEL_SUB)
+            size, bold, colour = _PANEL_TEXT[text]
             do = ["At the bottom of the window click the tab named Overview.",
                   "Click once on an empty part of the page so nothing is selected.",
                   "At the top of the window click the Insert tab, then click Text box. A "
@@ -278,9 +288,11 @@ def _decor_steps():
                   "Type exactly: %s" % text,
                   "Select the words you just typed by dragging across them with the mouse.",
                   "A small toolbar sits above the text box. In it: set the font to %s, set "
-                  "the size to %d, click the B button to make it bold, then click the "
-                  "letter-A colour button, choose 'Custom colour' and type %s into the Hex "
-                  "box." % (FONT, size, colour),
+                  "the size to %d, %sthen click the letter-A colour button, choose 'Custom "
+                  "colour' and type %s into the Hex box."
+                  % (FONT, size,
+                     "click the B button to make it bold, " if bold
+                     else "leave the B button alone — this line is not bold, ", colour),
                   "Click once outside the text box to finish typing, then click the box "
                   "itself once so it has a border round it.",
                   "In the Format pane click General, then Effects, and switch Background "
@@ -290,7 +302,8 @@ def _decor_steps():
                 title="Overview — the wording '%s'" % text,
                 page="Overview", do=do,
                 fields=[("Text", text), ("Font", FONT), ("Font size", str(size)),
-                        ("Bold", "Yes"), ("Colour (Hex)", colour)] + _pos_rows(x, y, w, h),
+                        ("Bold", "Yes" if bold else "No"),
+                        ("Colour (Hex)", colour)] + _pos_rows(x, y, w, h),
                 note=note,
                 check="The words '%s' show in %s on the green panel, at the position "
                       "below." % (text, "white" if colour == PANEL_INK else "pale green"),
@@ -676,14 +689,13 @@ def part4_markdown():
          "| What | Insert it with | Text / fill | Horizontal (X) | Vertical (Y) | Width | "
          "Height |", "|---|---|---|---|---|---|---|"] + \
         ["| %s | Insert \u2192 %s | %s | %d | %d | %d | %d |"
-         % (("the green panel" if h > 400 else "white box for %s" %
-             {104: "RM, FG, Consumables", 332: "the three plants",
-              540: "Total, Change since Last Month, As on"}[y]) if k == "Rectangle" else
-            ("the logo box" if k == "Image" else "text '%s'" % t),
+         % (("the green panel" if h > 400 else "white box %s, for %s" % _WHICH_BOX[y])
+            if k == "Rectangle" else
+            ("the logo strip" if k == "Image" else "text '%s'" % t),
             "Shapes \u2192 Rectangle" if k == "Rectangle" else k,
             (PANEL if h > 400 else "%s, rounded corners 8" % BOX) if k == "Rectangle"
             else ("any picture for now" if k == "Image"
-                  else "%s, %s" % (FONT, PANEL_INK if h >= 28 else PANEL_SUB)),
+                  else "%s %d, %s" % (FONT, _PANEL_TEXT[t][0], _PANEL_TEXT[t][2])),
             x, y, w, h)
          for (pg, k, t, x, y, w, h, note) in DECOR if pg == "Overview"] + \
         ["",

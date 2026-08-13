@@ -328,14 +328,15 @@ asks you to colour anything.
 
 | What | Insert it with | Text / fill | Horizontal (X) | Vertical (Y) | Width | Height |
 |---|---|---|---|---|---|---|
-| the green panel | Insert → Shapes → Rectangle | #14532D | 0 | 0 | 236 | 720 |
-| the logo box | Insert → Image | any picture for now | 20 | 16 | 56 | 56 |
-| text 'Inventory Overview' | Insert → Text box | Arial, #FFFFFF | 88 | 20 | 140 | 30 |
-| text 'By Type' | Insert → Text box | Arial, #BFE3C6 | 20 | 84 | 196 | 18 |
-| white box for RM, FG, Consumables | Insert → Shapes → Rectangle | #FFFFFF, rounded corners 8 | 12 | 104 | 212 | 200 |
-| text 'By Plant' | Insert → Text box | Arial, #BFE3C6 | 20 | 312 | 196 | 18 |
-| white box for the three plants | Insert → Shapes → Rectangle | #FFFFFF, rounded corners 8 | 12 | 332 | 212 | 200 |
-| white box for Total, Change since Last Month, As on | Insert → Shapes → Rectangle | #FFFFFF, rounded corners 8 | 12 | 540 | 212 | 168 |
+| the green panel | Insert → Shapes → Rectangle | #14532D | 0 | 0 | 184 | 720 |
+| the logo strip | Insert → Image | any picture for now | 12 | 10 | 160 | 34 |
+| text 'Inventory' | Insert → Text box | Arial 15, #FFFFFF | 12 | 50 | 160 | 22 |
+| text 'Overview' | Insert → Text box | Arial 13, #BFE3C6 | 12 | 72 | 160 | 20 |
+| text 'By Type' | Insert → Text box | Arial 10, #BFE3C6 | 12 | 100 | 160 | 16 |
+| white box 1, for RM, FG and Consumables | Insert → Shapes → Rectangle | #FFFFFF, rounded corners 8 | 8 | 118 | 168 | 186 |
+| text 'By Plant' | Insert → Text box | Arial 10, #BFE3C6 | 12 | 310 | 160 | 16 |
+| white box 2, for the three plants | Insert → Shapes → Rectangle | #FFFFFF, rounded corners 8 | 8 | 328 | 168 | 186 |
+| white box 3, for Total, Change since Last Month and the As on line | Insert → Shapes → Rectangle | #FFFFFF, rounded corners 8 | 8 | 522 | 168 | 186 |
 
 Build the green panel first and **right-click → Send to back**. Then the three
 white boxes, each **right-click → Send backward** once, so they cover the green but
@@ -392,7 +393,7 @@ pages can disagree about the same month.
 
 Title: `RM`
 
-Position: Horizontal 20, Vertical 110, Width 196, Height 60.
+Position: Horizontal 14, Vertical 122, Width 156, Height 58.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -400,7 +401,7 @@ Position: Horizontal 20, Vertical 110, Width 196, Height 60.
 - In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 20 and 110 exactly, or the card will not sit square inside its box.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 122 exactly, or the card will not sit square inside its box.
 
 **4.6** **Card** — Panel figure, sitting inside the white box. It reads the latest month that has data and ignores every slicer on the page, because stock is a level, not something you add up across months.
 
@@ -410,7 +411,7 @@ Position: Horizontal 20, Vertical 110, Width 196, Height 60.
 
 Title: `FG`
 
-Position: Horizontal 20, Vertical 174, Width 196, Height 60.
+Position: Horizontal 14, Vertical 182, Width 156, Height 58.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -418,7 +419,7 @@ Position: Horizontal 20, Vertical 174, Width 196, Height 60.
 - In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 20 and 174 exactly, or the card will not sit square inside its box.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 182 exactly, or the card will not sit square inside its box.
 
 **4.7** **Card** — Panel figure, sitting inside the white box. It reads the latest month that has data and ignores every slicer on the page, because stock is a level, not something you add up across months.
 
@@ -428,7 +429,7 @@ Position: Horizontal 20, Vertical 174, Width 196, Height 60.
 
 Title: `Consumables`
 
-Position: Horizontal 20, Vertical 238, Width 196, Height 60.
+Position: Horizontal 14, Vertical 242, Width 156, Height 58.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -436,7 +437,7 @@ Position: Horizontal 20, Vertical 238, Width 196, Height 60.
 - In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 20 and 238 exactly, or the card will not sit square inside its box.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 242 exactly, or the card will not sit square inside its box.
 
 **4.8** **Card** — Panel figure, sitting inside the white box. It reads the latest month that has data and ignores every slicer on the page, because stock is a level, not something you add up across months.
 
@@ -446,7 +447,7 @@ Position: Horizontal 20, Vertical 238, Width 196, Height 60.
 
 Title: `1900 Jaipur Module`
 
-Position: Horizontal 20, Vertical 338, Width 196, Height 60.
+Position: Horizontal 14, Vertical 332, Width 156, Height 58.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -454,7 +455,7 @@ Position: Horizontal 20, Vertical 338, Width 196, Height 60.
 - In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 20 and 338 exactly, or the card will not sit square inside its box.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 332 exactly, or the card will not sit square inside its box.
 
 **4.9** **Card** — Panel figure, sitting inside the white box. It reads the latest month that has data and ignores every slicer on the page, because stock is a level, not something you add up across months.
 
@@ -464,7 +465,7 @@ Position: Horizontal 20, Vertical 338, Width 196, Height 60.
 
 Title: `1902 Dholera Module`
 
-Position: Horizontal 20, Vertical 402, Width 196, Height 60.
+Position: Horizontal 14, Vertical 392, Width 156, Height 58.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -472,7 +473,7 @@ Position: Horizontal 20, Vertical 402, Width 196, Height 60.
 - In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 20 and 402 exactly, or the card will not sit square inside its box.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 392 exactly, or the card will not sit square inside its box.
 
 **4.10** **Card** — Panel figure, sitting inside the white box. It reads the latest month that has data and ignores every slicer on the page, because stock is a level, not something you add up across months.
 
@@ -482,7 +483,7 @@ Position: Horizontal 20, Vertical 402, Width 196, Height 60.
 
 Title: `1905 Dholera Cell`
 
-Position: Horizontal 20, Vertical 466, Width 196, Height 60.
+Position: Horizontal 14, Vertical 452, Width 156, Height 58.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -490,7 +491,7 @@ Position: Horizontal 20, Vertical 466, Width 196, Height 60.
 - In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 20, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 20 and 466 exactly, or the card will not sit square inside its box.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 452 exactly, or the card will not sit square inside its box.
 
 **4.11** **Card** — Panel figure, sitting inside the white box. It reads the latest month that has data and ignores every slicer on the page, because stock is a level, not something you add up across months.
 
@@ -500,7 +501,7 @@ Position: Horizontal 20, Vertical 466, Width 196, Height 60.
 
 Title: `Total`
 
-Position: Horizontal 20, Vertical 546, Width 196, Height 62.
+Position: Horizontal 14, Vertical 528, Width 156, Height 62.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -508,7 +509,7 @@ Position: Horizontal 20, Vertical 546, Width 196, Height 62.
 - In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Display units' and set it to None, Value decimal places: 1, Font: Arial, Font size: 22, Bold: On, Colour: #1F2A24 (near-black, because the box behind it is white now). Display units None is what stops Power BI writing 2.5K instead of 2,539.4.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: the title above.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, and Border: Off. The white comes from the box shape underneath, so the card itself stays see-through.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 20 and 546 exactly, or the card will not sit square inside its box.
+- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Properties', then 'Position' and set it to set Horizontal (X) and Vertical (Y) to 14 and 528 exactly, or the card will not sit square inside its box.
 
 **4.12** **Card** — One line reading, for example, +12.4 Rs Cr. (+2.1%) — the amount and the percentage together, each labelled, so nobody has to ask which is which. Same white box as Total, directly under it.
 
@@ -518,12 +519,12 @@ Position: Horizontal 20, Vertical 546, Width 196, Height 62.
 
 Title: `Change since Last Month`
 
-Position: Horizontal 20, Vertical 612, Width 196, Height 58.
+Position: Horizontal 14, Vertical 592, Width 156, Height 58.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
 - If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 15, Bold: On, Colour: #1F2A24. Green and red would fight with the white box, so the sign carries the meaning instead.
+- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 12, Bold: On, Colour: #1F2A24. Twelve rather than fifteen, because this line carries the amount and the percentage together and the panel is narrower now. Green and red would fight with the white box, so the sign carries the meaning instead.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 10, Colour: #14532D, Text: Change since Last Month.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, Border: Off.
 - The measure writes its own + or − sign and both units, so leave Display units alone.
@@ -536,7 +537,7 @@ Position: Horizontal 20, Vertical 612, Width 196, Height 58.
 
 Title: `As on`
 
-Position: Horizontal 20, Vertical 674, Width 196, Height 28.
+Position: Horizontal 14, Vertical 652, Width 156, Height 28.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -553,7 +554,7 @@ Position: Horizontal 20, Vertical 674, Width 196, Height 28.
 
 Title: `By Month / By Quarter`
 
-Position: Horizontal 252, Vertical 20, Width 236, Height 52.
+Position: Horizontal 200, Vertical 20, Width 216, Height 52.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -573,7 +574,7 @@ Position: Horizontal 252, Vertical 20, Width 236, Height 52.
 
 Title: `Months (Leave Empty for the Last 5)`
 
-Position: Horizontal 500, Vertical 20, Width 300, Height 52.
+Position: Horizontal 424, Vertical 20, Width 268, Height 52.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -593,7 +594,7 @@ Position: Horizontal 500, Vertical 20, Width 300, Height 52.
 
 Title: `Plant`
 
-Position: Horizontal 812, Vertical 20, Width 220, Height 52.
+Position: Horizontal 700, Vertical 20, Width 262, Height 52.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -612,7 +613,7 @@ Position: Horizontal 812, Vertical 20, Width 220, Height 52.
 
 Title: `Type`
 
-Position: Horizontal 1044, Vertical 20, Width 220, Height 52.
+Position: Horizontal 970, Vertical 20, Width 294, Height 52.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -634,7 +635,7 @@ Position: Horizontal 1044, Vertical 20, Width 220, Height 52.
 
 Title: `Inventory by Month (Rs Cr.)`
 
-Position: Horizontal 252, Vertical 88, Width 664, Height 336.
+Position: Horizontal 200, Vertical 88, Width 700, Height 336.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -658,7 +659,7 @@ Position: Horizontal 252, Vertical 88, Width 664, Height 336.
 
 Title: `Inventory by Month (Rs Cr.)`
 
-Position: Horizontal 252, Vertical 432, Width 664, Height 136.
+Position: Horizontal 200, Vertical 432, Width 700, Height 136.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -681,7 +682,7 @@ Position: Horizontal 252, Vertical 432, Width 664, Height 136.
 
 Title: `Total Inventory by Month, Last 12 Months (Rs Cr. and % vs Last Month)`
 
-Position: Horizontal 252, Vertical 576, Width 664, Height 130.
+Position: Horizontal 200, Vertical 576, Width 700, Height 130.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -707,7 +708,7 @@ Position: Horizontal 252, Vertical 576, Width 664, Height 130.
 
 Title: `Share by Type (%)`
 
-Position: Horizontal 932, Vertical 88, Width 332, Height 306.
+Position: Horizontal 916, Vertical 88, Width 348, Height 306.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
@@ -726,7 +727,7 @@ Position: Horizontal 932, Vertical 88, Width 332, Height 306.
 
 Title: `Share by Plant (%)`
 
-Position: Horizontal 932, Vertical 402, Width 332, Height 304.
+Position: Horizontal 916, Vertical 402, Width 348, Height 304.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
