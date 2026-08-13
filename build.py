@@ -478,7 +478,25 @@ inventory-theme.json    the theme, if you ever need to re-import it</pre>
 there.</li>
 <li><strong>OK</strong>, then close Power BI Desktop completely and reopen it. The ticks do nothing
 until you restart.</li>
+<li>One more, after the project is open: <strong>File &rarr; Options and settings &rarr; Options
+&rarr; CURRENT FILE &rarr; Privacy</strong> &rarr; tick <strong>Always ignore Privacy Level
+settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse to combine your own
+folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
+
+<blockquote><strong>Build 8 &mdash; 14 Aug:</strong> build 7 refused to refresh with
+<em>&ldquo;14 queries are blocked &hellip; Query 'factTB_Staged' references other queries or steps,
+so it may not directly access a data source&rdquo;</em>. That is Power Query's firewall, and it was
+my mistake in build 7: I made <code>dimPlant</code> collect the plant codes out of the data, and
+<code>factTB_Staged</code> read <code>dimPlant</code> back &mdash; but a query that opens a folder
+itself is not allowed to read another query's table. The lookup has moved: the three plant codes are
+written inside <code>factTB_Staged</code>, and <code>dimPlant</code> collects the unnamed codes from
+both facts while opening nothing. The checker now tests this rule on every query, so no future build
+can break the refresh this way.
+<br><br>Also do this once, it prevents the whole family of firewall errors:
+<strong>File &rarr; Options and settings &rarr; Options &rarr; CURRENT FILE &rarr; Privacy</strong>
+&rarr; tick <strong>Always ignore Privacy Level settings</strong> &rarr; OK. All your files are the
+same folder on your own machine, so there is nothing to protect from itself.</blockquote>
 
 <blockquote><strong>Build 7 &mdash; 14 Aug:</strong> the month axis is now a real month
 column. Build 5 and 6 put the <code>Period</code> field parameter on every axis and asked Power BI

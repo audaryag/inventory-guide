@@ -68,7 +68,7 @@ Everything in Part 1 happens in this window.
 | 5 | `stgFG` |  |
 | 6 | `stgConble` |  |
 | 7 | `fnVarSheet` | helper — must exist before the next four |
-| 8 | `dimPlant` | hardcoded, reads no sheet |
+| 8 | `dimPlant` | the three plants are named in it; other codes come from the facts |
 | 9 | `dimMaterialAttr` |  |
 | 10 | `dimFGAttr` |  |
 | 11 | `varConstants` | needs a `RM_MW_FACTOR` = 580 row |
@@ -2195,33 +2195,6 @@ in
     Renamed
 ```
 
-## dimPlant
-
-> The three plants are named here - no sheet, no header to mismatch, add a plant by adding a line. Every other code the stock files carry is then added automatically, so no fact row can fall into an unnamed blank member of a slicer.
-
-```
-let
-    Named    = #table(
-        type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type],
-        {
-            {"1900", "Jaipur Module",  1},
-            {"1902", "Dholera Module", 2},
-            {"1905", "Dholera Cell",   3},
-            // factTB_Staged parks a profit centre it cannot place here
-            {"Unallocated", "Unallocated", 98}
-        }),
-    // codes present in the stock files but not named above
-    Seen     = List.Distinct(List.RemoveNulls(factInventory[ValuationArea])),
-    Extra    = List.Difference(Seen, Named[ValuationArea]),
-    ExtraT   = Table.FromRows(
-                   List.Transform(Extra, (c) => {c, "Plant " & Text.From(c), 99}),
-                   type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type]),
-    All      = Table.Combine({Named, ExtraT}),
-    Dedup    = Table.Distinct(All, {"ValuationArea"})
-in
-    Dedup
-```
-
 ## varMWCapacity
 
 > Handles either MW sheet layout and picks automatically: the long one (`Effective From | Tech | Valuation Area | MW`, one row per combination) or the original wide one (a `Tech` column with 1900/1902/1905 across the top). Headers are matched ignoring case, spaces and punctuation. A missing `Effective From` defaults to 1900-01-01, `-` becomes 0, and plant codes are forced to text so they join to `dimPlant`.
@@ -2463,7 +2436,10 @@ let
     // plant = characters 3-6 of the profit centre  (0-based start = 2)
     PlantRaw = Table.AddColumn(Keys, "PlantCode",
                    each try Text.Middle([ProfitCentre], 2, 4) otherwise null, type text),
-    Known    = List.Buffer(dimPlant[ValuationArea]),
+    // the three named plant codes, written out here rather than read from dimPlant: a query
+    // that opens a folder itself may not also reference another query, or the refresh stops
+    // with 'references other queries or steps, so it may not directly access a data source'
+    Known    = {"1900", "1902", "1905"},
     PlantCol = Table.AddColumn(PlantRaw, "ValuationArea",
                    each if List.Contains(Known, [PlantCode]) then [PlantCode] else "Unallocated",
                    type text),
@@ -2472,6 +2448,35 @@ in
     Typed
 ```
 
+
+## dimPlant
+
+> The three plants are named here - no sheet, no header to mismatch, add a plant by adding a line. Every other code the stock files carry is then added automatically, so no fact row can fall into an unnamed blank member of a slicer.
+
+```
+let
+    Named    = #table(
+        type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type],
+        {
+            {"1900", "Jaipur Module",  1},
+            {"1902", "Dholera Module", 2},
+            {"1905", "Dholera Cell",   3},
+            // factTB_Staged parks a profit centre it cannot place here
+            {"Unallocated", "Unallocated", 98}
+        }),
+    // codes present in the stock files or the trial balance but not named above. Only other
+    // queries are read here and no folder is opened, which is what keeps the firewall quiet.
+    Seen     = List.Distinct(List.RemoveNulls(
+                   List.Combine({factInventory[ValuationArea], factTB_Staged[PlantCode]}))),
+    Extra    = List.Difference(Seen, Named[ValuationArea]),
+    ExtraT   = Table.FromRows(
+                   List.Transform(Extra, (c) => {c, "Plant " & Text.From(c), 99}),
+                   type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type]),
+    All      = Table.Combine({Named, ExtraT}),
+    Dedup    = Table.Distinct(All, {"ValuationArea"})
+in
+    Dedup
+```
 
 ## factTB
 

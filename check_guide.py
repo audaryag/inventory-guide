@@ -294,6 +294,23 @@ for name in qorder:
                  f"(#{qorder.index(ref)+1}), which comes later — swap them")
     seen.append(name)
 
+# ---- 7b. the Power Query firewall --------------------------------------------------------
+# A query that opens a data source itself (a folder, a workbook, i.e. anything reached through
+# pRoot or pVarsFile) may not also read another query's table, or the refresh stops with
+# "references other queries or steps, so it may not directly access a data source". Functions
+# and the two path parameters do not count: they carry no data of their own.
+SOURCE = re.compile(r"\bFolder\.Files\b|\bExcel\.Workbook\b|\bCsv\.Document\b")
+for name in qorder:
+    body = QUOTED.sub('""', re.sub(r"//[^\n]*", "", qcode[name]))
+    if not SOURCE.search(body):
+        continue
+    for ref in set(REF.findall(body)):
+        if ref in (name, "pRoot", "pVarsFile") or ref.startswith("fn"):
+            continue
+        if ref in qorder:
+            note(f"firewall: {name} opens a data source and also reads {ref} — "
+                 f"move that lookup into a query that opens nothing")
+
 # ---- 8. the Enable-load list -------------------------------------------------------------
 OLD_NAMES = ["Closing Value", "Inv RM", "Inv FG", "Inv Consumables", "TB Value",
              "Prev Month"]
