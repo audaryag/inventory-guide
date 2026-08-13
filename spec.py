@@ -288,14 +288,15 @@ VISUALS = [
      "Five months side by side, or four quarters if the toggle is set to By quarter, in "
      "which case each bar is the average of that quarter's month-ends. The In Window filter "
      "is what keeps it to five (or four) without you having to prune the slicer.",
-     ["Format pane \u2192 Data labels: On, Font: Arial, Font size: 9, Bold: On, Colour: "
-      "#FFFFFF, Display units: None, Value decimal places: 1. Every bar segment then prints "
-      "its own number, in white because it is printed on top of the colour.",
-      "Format pane \u2192 Data labels \u2192 Options \u2192 Position: Inside center, Orientation: "
-      "Horizontal.",
+     ["Format pane \u2192 Data labels: Off. The segment figures are deliberately not printed: "
+      "the consumables slice is too thin to hold one, so some months showed a number and "
+      "others did not. Hover a segment for RM, FG or consumables in that month, and click it "
+      "to filter the rest of the page to it.",
       "Format pane \u2192 Total labels: On, Font: Arial, Font size: 9, Bold: On, Colour: "
-      "#14532D \u2014 that prints the whole month's figure above each bar, on the white card, so "
-      "this one is dark green rather than white.",
+      "#14532D, Display units: None, Value decimal places: 1 \u2014 the month total above each "
+      "bar is the only printed number, dark green because it sits on the white card.",
+      "Drag Share of Total % into the visual's Tooltips well, so hovering gives the share as "
+      "well as the figure.",
       "Format pane \u2192 General \u2192 Title \u2192 use the measure instead of typed words: click the "
       "fx button beside Text, choose 'Field value', and pick the measure Period Title. The "
       "heading then reads 'Inventory by Month (Rs Cr.)' or 'Inventory by Quarter (Rs Cr., "

@@ -604,9 +604,9 @@ Position: Horizontal 200, Vertical 88, Width 700, Height 336.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
-- In the Visualizations pane click the paintbrush icon, then click 'Data labels' and set it to On, Font: Arial, Font size: 9, Bold: On, Colour: #FFFFFF, Display units: None, Value decimal places: 1. Every bar segment then prints its own number, in white because it is printed on top of the colour.
-- In the Visualizations pane click the paintbrush icon, then click 'Data labels', then 'Options', then 'Position' and set it to Inside center, Orientation: Horizontal.
-- In the Visualizations pane click the paintbrush icon, then click 'Total labels' and set it to On, Font: Arial, Font size: 9, Bold: On, Colour: #14532D — that prints the whole month's figure above each bar, on the white card, so this one is dark green rather than white.
+- In the Visualizations pane click the paintbrush icon, then click 'Data labels' and set it to Off. The segment figures are deliberately not printed: the consumables slice is too thin to hold one, so some months showed a number and others did not. Hover a segment for RM, FG or consumables in that month, and click it to filter the rest of the page to it.
+- In the Visualizations pane click the paintbrush icon, then click 'Total labels' and set it to On, Font: Arial, Font size: 9, Bold: On, Colour: #14532D, Display units: None, Value decimal places: 1 — the month total above each bar is the only printed number, dark green because it sits on the white card.
+- Drag Share of Total % into the visual's Tooltips well, so hovering gives the share as well as the figure.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'use the measure instead of typed words' and set it to click the fx button beside Text, choose 'Field value', and pick the measure Period Title. The heading then reads 'Inventory by Month (Rs Cr.)' or 'Inventory by Quarter (Rs Cr., Average of Month-Ends)' to match the toggle.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
 
