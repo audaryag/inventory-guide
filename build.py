@@ -484,6 +484,17 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 19 &mdash; 14 Aug:</strong> the refresh error is the privacy firewall.
+<em>"Query 'factTB' (step 'Typed') references other queries or steps, so it may not directly access a data
+source"</em> is Power Query refusing to let a folder source and the workbook meet &mdash; which is the whole
+point of the report, since the figures come from the folders and the names from Variables and Calculations.
+It surfaced only now because TB Master finally has rows, so the join actually runs. Fix it once:
+<strong>File &rarr; Options &rarr; GLOBAL &rarr; Privacy &rarr; "Always ignore Privacy Level settings"</strong>,
+then the same under <strong>CURRENT FILE</strong>, then Refresh. Also in this build: the trial balance no
+longer needs that pairing at all &mdash; <code>factTB_Staged</code> reads the TB folder and the TB Master
+whitelist in one query, and <code>factTB</code> / <code>factTB_Unmapped</code> read nothing but its
+<code>Whitelisted</code> flag.</blockquote>
+
 <blockquote><strong>Build 18 &mdash; 14 Aug:</strong> repeated data, now that the master sheets are
 filled in. <strong>A stock line that arrives twice is counted once</strong> &mdash; two rows are the same
 line when the plant, material, month, special stock, unit and every figure agree, and the file they came
