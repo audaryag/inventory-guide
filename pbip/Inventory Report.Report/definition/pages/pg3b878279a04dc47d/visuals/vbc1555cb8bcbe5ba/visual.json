@@ -3,54 +3,36 @@
   "name": "vbc1555cb8bcbe5ba",
   "position": {
     "x": 200,
-    "y": 432,
+    "y": 576,
     "z": 15,
     "width": 700,
-    "height": 136,
+    "height": 130,
     "tabOrder": 1500
   },
   "visual": {
-    "visualType": "pivotTable",
+    "visualType": "lineClusteredColumnComboChart",
     "query": {
       "queryState": {
-        "Rows": {
+        "Category": {
           "projections": [
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dimCategory"
+                      "Entity": "dimDate"
                     }
                   },
-                  "Property": "Category"
+                  "Property": "MonthName"
                 }
               },
-              "queryRef": "dimCategory.Category",
-              "nativeQueryRef": "Category"
-            }
-          ]
-        },
-        "Columns": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Period"
-                    }
-                  },
-                  "Property": "Period"
-                }
-              },
-              "queryRef": "Period.Period",
-              "nativeQueryRef": "Period"
+              "queryRef": "dimDate.MonthName",
+              "nativeQueryRef": "MonthName"
             }
           ],
-          "showAll": false
+          "showAll": true
         },
-        "Values": {
+        "Y": {
           "projections": [
             {
               "field": {
@@ -60,11 +42,29 @@
                       "Entity": "factInventory"
                     }
                   },
-                  "Property": "Inventory Rs Cr"
+                  "Property": "MW"
                 }
               },
-              "queryRef": "factInventory.Inventory Rs Cr",
-              "nativeQueryRef": "Inventory Rs Cr"
+              "queryRef": "factInventory.MW",
+              "nativeQueryRef": "MW"
+            }
+          ]
+        },
+        "Y2": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "factInventory"
+                    }
+                  },
+                  "Property": "MW % vs LM"
+                }
+              },
+              "queryRef": "factInventory.MW % vs LM",
+              "nativeQueryRef": "MW % vs LM"
             }
           ]
         }
@@ -84,7 +84,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Inventory by Month (Rs Cr.)'"
+                  "Value": "'Total Inventory by Month, Last 12 Months (MW and % vs Last Month)'"
                 }
               }
             },
@@ -187,20 +187,20 @@
       ]
     },
     "objects": {
-      "rowHeaders": [
+      "legend": [
         {
           "properties": {
-            "stepped": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },
-            "showExpandCollapseButtons": {
+            "position": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Top'"
                 }
               }
             },
@@ -210,18 +210,11 @@
                   "Value": "'Arial'"
                 }
               }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
             }
           }
         }
       ],
-      "columnHeaders": [
+      "categoryAxis": [
         {
           "properties": {
             "fontFamily": {
@@ -231,46 +224,28 @@
                 }
               }
             },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "autoSizeColumnWidth": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "backColor": {
+            "labelColor": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#EEF3EF'"
+                      "Value": "'#3A4A3F'"
                     }
                   }
                 }
               }
             },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1E6B3A'"
-                    }
-                  }
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
-      "values": [
+      "valueAxis": [
         {
           "properties": {
             "fontFamily": {
@@ -280,76 +255,25 @@
                 }
               }
             },
-            "backColorPrimary": {
+            "labelColor": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#3A4A3F'"
                     }
                   }
                 }
               }
             },
-            "backColorSecondary": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#F7FAF7'"
-                    }
-                  }
-                }
-              }
-            },
-            "bandedRowHeaders": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "subTotals": [
-        {
-          "properties": {
-            "rowSubtotals": {
+            "showAxisTitle": {
               "expr": {
                 "Literal": {
                   "Value": "false"
                 }
               }
             },
-            "columnSubtotals": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "perRowLevel": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "grid": [
-        {
-          "properties": {
-            "gridVertical": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "gridVerticalColor": {
+            "gridlineColor": {
               "solid": {
                 "color": {
                   "expr": {
@@ -359,45 +283,20 @@
                   }
                 }
               }
-            },
-            "gridHorizontal": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "gridHorizontalColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#E6EDE6'"
-                    }
-                  }
-                }
-              }
-            },
-            "rowPadding": {
-              "expr": {
-                "Literal": {
-                  "Value": "2D"
-                }
-              }
-            },
-            "textSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
             }
           }
         }
       ],
-      "total": [
+      "labels": [
         {
           "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
             "fontFamily": {
               "expr": {
                 "Literal": {
@@ -405,21 +304,10 @@
                 }
               }
             },
-            "bold": {
+            "labelPrecision": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "backColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EEF3EF'"
-                    }
-                  }
+                  "Value": "1D"
                 }
               }
             }
@@ -440,7 +328,7 @@
                 "Entity": "factInventory"
               }
             },
-            "Property": "In Window"
+            "Property": "In Last 12"
           }
         },
         "filter": {
@@ -464,7 +352,7 @@
                           "Source": "f"
                         }
                       },
-                      "Property": "In Window"
+                      "Property": "In Last 12"
                     }
                   },
                   "Right": {

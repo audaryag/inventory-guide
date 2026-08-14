@@ -1,38 +1,19 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
-  "name": "vddb0f128c5daaa78",
+  "name": "v82e843eb755a7be3",
   "position": {
-    "x": 888,
-    "y": 496,
-    "z": 10,
-    "width": 376,
-    "height": 208,
-    "tabOrder": 1000
+    "x": 264,
+    "y": 56,
+    "z": 2,
+    "width": 240,
+    "height": 88,
+    "tabOrder": 200
   },
   "visual": {
-    "visualType": "donutChart",
+    "visualType": "card",
     "query": {
       "queryState": {
-        "Category": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dimPlant"
-                    }
-                  },
-                  "Property": "Plant"
-                }
-              },
-              "queryRef": "dimPlant.Plant",
-              "nativeQueryRef": "Plant"
-            }
-          ],
-          "showAll": true
-        },
-        "Y": {
+        "Values": {
           "projections": [
             {
               "field": {
@@ -42,11 +23,11 @@
                       "Entity": "factInventory"
                     }
                   },
-                  "Property": "FG ₹ Cr"
+                  "Property": "Check TB Rows"
                 }
               },
-              "queryRef": "factInventory.FG ₹ Cr",
-              "nativeQueryRef": "FG ₹ Cr"
+              "queryRef": "factInventory.Check TB Rows",
+              "nativeQueryRef": "Check TB Rows"
             }
           ]
         }
@@ -66,7 +47,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'FG Share by Plant (%), Latest Month'"
+                  "Value": "'Trial Balance Rows Loaded'"
                 }
               }
             },
@@ -169,34 +150,52 @@
       ]
     },
     "objects": {
-      "legend": [
+      "labels": [
         {
           "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Top'"
-                }
-              }
-            },
             "fontFamily": {
               "expr": {
                 "Literal": {
                   "Value": "'Arial'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "14D"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1E6B3A'"
+                    }
+                  }
                 }
               }
             }
           }
         }
       ],
-      "labels": [
+      "categoryLabels": [
         {
           "properties": {
             "show": {
@@ -206,17 +205,41 @@
                 }
               }
             },
-            "labelStyle": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Both'"
-                }
-              }
-            },
             "fontFamily": {
               "expr": {
                 "Literal": {
                   "Value": "'Arial'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5A6B5F'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "wordWrap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
@@ -224,58 +247,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "fltpg2a5271c118492b7b_10_0",
-        "type": "Advanced",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "factInventory"
-              }
-            },
-            "Property": "In Latest Month"
-          }
-        },
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "f",
-              "Entity": "factInventory",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "Comparison": {
-                  "ComparisonKind": 0,
-                  "Left": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Source": "f"
-                        }
-                      },
-                      "Property": "In Latest Month"
-                    }
-                  },
-                  "Right": {
-                    "Literal": {
-                      "Value": "1L"
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
-      }
-    ]
   }
 }

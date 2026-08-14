@@ -725,13 +725,19 @@
           },
           {
             "name": "Inventory Rs Cr",
-            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Value ₹ Cr]),\n    [Value ₹ Cr]\n)",
+            "expression": "IF(\n    ISINSCOPE(dimDate[MonthName]),\n    [Value ₹ Cr],\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Value ₹ Cr])\n)",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
           {
             "name": "In Window",
-            "expression": "VAR Mode = SELECTEDVALUE('Period'[Period Order], 0)\nVAR Picked = IF(Mode = 1, ISFILTERED(dimDate[Quarter]), ISFILTERED(dimDate[MonthName]))\nVAR Keep = IF(Mode = 1, 4, IF(Picked, 5, 4))\nVAR Place =\n    IF(\n        Mode = 1,\n        RANKX(ALLSELECTED(dimDate[QuarterSort]), CALCULATE(MAX(dimDate[QuarterSort])), , DESC),\n        RANKX(ALLSELECTED(dimDate[MonthIndex]), CALCULATE(MAX(dimDate[MonthIndex])), , DESC)\n    )\nVAR LastIdx = [Latest Month Index]\nVAR MarchIdx =\n    CALCULATE(\n        MAX(dimDate[MonthIndex]),\n        REMOVEFILTERS(dimDate),\n        FILTER(ALL(dimDate),\n            dimDate[FYMonthNo] = 12 && dimDate[MonthIndex] <= LastIdx)\n    )\nVAR IsMarch =\n    IF(Mode <> 1 && NOT Picked && MAX(dimDate[MonthIndex]) = MarchIdx, 1, 0)\nRETURN IF(Place <= Keep || IsMarch = 1, 1, 0)",
+            "expression": "VAR Picked = ISFILTERED(dimDate[MonthName])\nVAR Me = MAX(dimDate[MonthIndex])\nVAR Live =\n    CALCULATETABLE(VALUES(dimDate[MonthIndex]), REMOVEFILTERS(), factInventory)\nVAR LastIdx = MAXX(Live, dimDate[MonthIndex])\nVAR MarchIdx =\n    MAXX(\n        FILTER(\n            ALL(dimDate),\n            dimDate[FYMonthNo] = 12\n                && dimDate[MonthIndex] <= LastIdx\n                && CALCULATE(COUNTROWS(factInventory)) > 0),\n        dimDate[MonthIndex])\nVAR Alive = COUNTROWS(FILTER(Live, dimDate[MonthIndex] = Me))\nVAR Place = COUNTROWS(FILTER(Live, dimDate[MonthIndex] > Me)) + 1\nRETURN\nIF(\n    Picked,\n    1,\n    IF(\n        Alive > 0\n            && Me >= MarchIdx\n            && (Place <= 4 || Me = MarchIdx),\n        1,\n        0)\n)",
+            "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "In Summary Window",
+            "expression": "VAR Picked = ISFILTERED(dimDate[MonthName])\nVAR Me = MAX(dimDate[MonthIndex])\nVAR Live =\n    CALCULATETABLE(VALUES(dimDate[MonthIndex]), REMOVEFILTERS(), factInventory)\nVAR Alive = COUNTROWS(FILTER(Live, dimDate[MonthIndex] = Me))\nVAR Place = COUNTROWS(FILTER(Live, dimDate[MonthIndex] > Me)) + 1\nRETURN\nIF(\n    Picked,\n    IF(Place <= 12, 1, 0),\n    IF(Alive > 0 && Place <= 4, 1, 0)\n)",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
@@ -767,7 +773,7 @@
           },
           {
             "name": "RM Days All Plants by Period",
-            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [RM Days All Plants]),\n    [RM Days All Plants]\n)",
+            "expression": "IF(\n    ISINSCOPE(dimDate[MonthName]),\n    [RM Days All Plants],\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [RM Days All Plants])\n)",
             "formatString": "#,##0.0",
             "displayFolder": "Report measures"
           },
@@ -778,26 +784,14 @@
             "displayFolder": "Report measures"
           },
           {
-            "name": "Period Title",
-            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    \"Inventory by Quarter (Rs Cr., Average of Month-Ends)\",\n    \"Inventory by Month (Rs Cr.)\"\n)",
-            "formatString": "#,##0.00",
-            "displayFolder": "Report measures"
-          },
-          {
             "name": "Summary Value Rs Cr",
-            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Summary Value ₹ Cr]),\n    [Summary Value ₹ Cr]\n)",
-            "formatString": "#,##0.00",
-            "displayFolder": "Report measures"
-          },
-          {
-            "name": "In Summary Window",
-            "expression": "VAR Mode = SELECTEDVALUE('Period'[Period Order], 0)\nVAR Picked =\n    IF(\n        Mode = 1,\n        COUNTROWS(ALLSELECTED(dimDate[QuarterSort])),\n        COUNTROWS(ALLSELECTED(dimDate[MonthIndex]))\n    )\nVAR Chosen = IF(Mode = 1, ISFILTERED(dimDate[Quarter]), ISFILTERED(dimDate[MonthName]))\nVAR Keep = IF(Chosen, MIN(Picked, 12), 4)\nVAR Place =\n    IF(\n        Mode = 1,\n        RANKX(ALLSELECTED(dimDate[QuarterSort]), CALCULATE(MAX(dimDate[QuarterSort])), , DESC),\n        RANKX(ALLSELECTED(dimDate[MonthIndex]), CALCULATE(MAX(dimDate[MonthIndex])), , DESC)\n    )\nRETURN IF(Place <= Keep, 1, 0)",
+            "expression": "IF(\n    ISINSCOPE(dimDate[MonthName]),\n    [Summary Value ₹ Cr],\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Summary Value ₹ Cr])\n)",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
           {
             "name": "TB Inventory Rs Cr",
-            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [TB ₹ Cr]),\n    [TB ₹ Cr]\n)",
+            "expression": "IF(\n    ISINSCOPE(dimDate[MonthName]),\n    [TB ₹ Cr],\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [TB ₹ Cr])\n)",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
@@ -815,7 +809,7 @@
           },
           {
             "name": "Unit Value by Period",
-            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Unit Value]),\n    [Unit Value]\n)",
+            "expression": "IF(\n    ISINSCOPE(dimDate[MonthName]),\n    [Unit Value],\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Unit Value])\n)",
             "formatString": "#,##0.00",
             "displayFolder": "Report measures"
           },
@@ -827,14 +821,38 @@
           },
           {
             "name": "Days by Period",
-            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Days]),\n    [Days]\n)",
+            "expression": "IF(\n    ISINSCOPE(dimDate[MonthName]),\n    [Days],\n    AVERAGEX(VALUES(dimDate[MonthIndex]), [Days])\n)",
             "formatString": "#,##0.0",
             "displayFolder": "Report measures"
           },
           {
-            "name": "Summary Title",
-            "expression": "IF(\n    SELECTEDVALUE('Period'[Period Order]) = 1,\n    \"Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr., Average of Month-Ends)\",\n    \"Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr.)\"\n)",
+            "name": "Check MB5B Rows",
+            "expression": "COUNTROWS(factInventory)",
+            "formatString": "#,##0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Check TB Rows",
+            "expression": "COUNTROWS(factTB)",
+            "formatString": "#,##0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Check Months of Data",
+            "expression": "DISTINCTCOUNT(factInventory[Month])",
+            "formatString": "#,##0",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Check Plant Codes",
+            "expression": "DISTINCTCOUNT(factInventory[ValuationArea])",
             "formatString": "#,##0.00",
+            "displayFolder": "Report measures"
+          },
+          {
+            "name": "Check Unassigned %",
+            "expression": "DIVIDE(\n    COUNTROWS(FILTER(factInventory, factInventory[Nature] = \"Unassigned\")),\n    COUNTROWS(factInventory)\n)",
+            "formatString": "0.0%",
             "displayFolder": "Report measures"
           }
         ]
@@ -1007,7 +1025,7 @@
             "mode": "import",
             "source": {
               "type": "m",
-              "expression": "let\n    Mapped  = Table.NestedJoin(factTB_Staged, {\"GLAccount\"}, dimTBMaster, {\"GLAccount\"},\n                  \"tpl\", JoinKind.Inner),\n    Expand  = Table.ExpandTableColumn(Mapped, \"tpl\", {\"Nature\",\"TBPlant\",\"TBSort\"}),\n    // RM / FG / Consumables from whatever the Nature (or GL description) says\n    Bucket  = (n as any, d as any) as text =>\n                  let T = Text.Upper(Text.From(n ?? \"\") & \" \" & Text.From(d ?? \"\")) in\n                  if Text.Contains(T, \"FINISH\") or Text.Contains(T, \"FG\")\n                      then \"FG\"\n                  else if Text.Contains(T, \"CONSUM\") or Text.Contains(T, \"STORE\")\n                      or Text.Contains(T, \"SPARE\") or Text.Contains(T, \"PACK\")\n                      then \"Consumables\"\n                  else if Text.Contains(T, \"RAW\") or Text.Contains(T, \"RM\")\n                      or Text.Contains(T, \"WIP\") or Text.Contains(T, \"SEMI\")\n                      then \"RM\"\n                  else \"RM\",\n    Cat     = Table.AddColumn(Expand, \"Category\",\n                  each Bucket([Nature], [GLDesc]), type text),\n    // exact column list and types, so the table is the same shape every refresh\n    Wanted  = {\"SourceFile\",\"Month\",\"GLAccount\",\"GLDesc\",\"ProfitCentre\",\"ProfitCentreDesc\",\n               \"Amount\",\"PlantCode\",\"ValuationArea\",\"Nature\",\"TBPlant\",\"TBSort\",\"Category\"},\n    Padded  = List.Accumulate(List.Difference(Wanted, Table.ColumnNames(Cat)), Cat,\n                  (t, c) => Table.AddColumn(t, c, each null)),\n    Kept    = Table.SelectColumns(Padded, Wanted),\n    Typed   = Table.TransformColumnTypes(Kept, {\n                  {\"SourceFile\", type text}, {\"Month\", type date},\n                  {\"GLAccount\", type text}, {\"GLDesc\", type text},\n                  {\"ProfitCentre\", type text}, {\"ProfitCentreDesc\", type text},\n                  {\"Amount\", type number}, {\"PlantCode\", type text},\n                  {\"ValuationArea\", type text}, {\"Nature\", type text},\n                  {\"TBPlant\", type text}, {\"TBSort\", Int64.Type},\n                  {\"Category\", type text}})\nin\n    Typed"
+              "expression": "let\n    Mapped  = Table.NestedJoin(factTB_Staged, {\"GLAccount\"}, dimTBMaster, {\"GLAccount\"},\n                  \"tpl\", JoinKind.Inner),\n    Joined  = Table.ExpandTableColumn(Mapped, \"tpl\", {\"Nature\",\"TBPlant\",\"TBSort\"}),\n    // If the whitelist matched nothing - no TB Master sheet, a sheet under another name, or\n    // GL numbers written differently there than in the TB export - the inner join returns\n    // nothing and Inventory (TB) reads as empty while Difference reads as minus MB5B. Keep\n    // every staged row in that case: an unfiltered trial balance is wrong by whatever\n    // non-inventory GLs it carries, but it is visible, and factTB_Unmapped names them.\n    Raw     = List.Accumulate({\"Nature\",\"TBPlant\",\"TBSort\"}, factTB_Staged,\n                  (t, c) => Table.AddColumn(t, c, each null)),\n    Expand  = if Table.IsEmpty(Joined) then Raw else Joined,\n    // RM / FG / Consumables from whatever the Nature (or GL description) says\n    Bucket  = (n as any, d as any) as text =>\n                  let T = Text.Upper(Text.From(n ?? \"\") & \" \" & Text.From(d ?? \"\")) in\n                  if Text.Contains(T, \"FINISH\") or Text.Contains(T, \"FG\")\n                      then \"FG\"\n                  else if Text.Contains(T, \"CONSUM\") or Text.Contains(T, \"STORE\")\n                      or Text.Contains(T, \"SPARE\") or Text.Contains(T, \"PACK\")\n                      then \"Consumables\"\n                  else if Text.Contains(T, \"RAW\") or Text.Contains(T, \"RM\")\n                      or Text.Contains(T, \"WIP\") or Text.Contains(T, \"SEMI\")\n                      then \"RM\"\n                  else \"RM\",\n    Cat     = Table.AddColumn(Expand, \"Category\",\n                  each Bucket([Nature], [GLDesc]), type text),\n    // exact column list and types, so the table is the same shape every refresh\n    Wanted  = {\"SourceFile\",\"Month\",\"GLAccount\",\"GLDesc\",\"ProfitCentre\",\"ProfitCentreDesc\",\n               \"Amount\",\"PlantCode\",\"ValuationArea\",\"Nature\",\"TBPlant\",\"TBSort\",\"Category\"},\n    Padded  = List.Accumulate(List.Difference(Wanted, Table.ColumnNames(Cat)), Cat,\n                  (t, c) => Table.AddColumn(t, c, each null)),\n    Kept    = Table.SelectColumns(Padded, Wanted),\n    Typed   = Table.TransformColumnTypes(Kept, {\n                  {\"SourceFile\", type text}, {\"Month\", type date},\n                  {\"GLAccount\", type text}, {\"GLDesc\", type text},\n                  {\"ProfitCentre\", type text}, {\"ProfitCentreDesc\", type text},\n                  {\"Amount\", type number}, {\"PlantCode\", type text},\n                  {\"ValuationArea\", type text}, {\"Nature\", type text},\n                  {\"TBPlant\", type text}, {\"TBSort\", Int64.Type},\n                  {\"Category\", type text}})\nin\n    Typed"
             }
           }
         ],
@@ -1136,7 +1154,7 @@
             "mode": "import",
             "source": {
               "type": "m",
-              "expression": "let\n    Src = #table(\n        type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type],\n        {\n            {\"1900\", \"Jaipur Module\",  1},\n            {\"1902\", \"Dholera Module\", 2},\n            {\"1905\", \"Dholera Cell\",   3}\n        })\nin\n    Src"
+              "expression": "let\n    Named    = #table(\n        type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type],\n        {\n            {\"1900\", \"Jaipur Module\",  1},\n            {\"1902\", \"Dholera Module\", 2},\n            {\"1905\", \"Dholera Cell\",   3},\n            // factTB_Staged parks a profit centre it cannot place here\n            {\"Unallocated\", \"Unallocated\", 98}\n        }),\n    // codes present in the stock files or the trial balance but not named above. Only other\n    // queries are read here and no folder is opened, which is what keeps the firewall quiet.\n    Seen     = List.Distinct(List.RemoveNulls(\n                   List.Combine({factInventory[ValuationArea], factTB_Staged[PlantCode]}))),\n    Extra    = List.Difference(Seen, Named[ValuationArea]),\n    ExtraT   = Table.FromRows(\n                   List.Transform(Extra, (c) => {c, \"Plant \" & Text.From(c), 99}),\n                   type table [ValuationArea = text, Plant = text, PlantSort = Int64.Type]),\n    All      = Table.Combine({Named, ExtraT}),\n    Dedup    = Table.Distinct(All, {\"ValuationArea\"})\nin\n    Dedup"
             }
           }
         ],
@@ -1273,7 +1291,7 @@
             "mode": "import",
             "source": {
               "type": "m",
-              "expression": "let\n    MinD   = Date.StartOfMonth(List.Min(factInventory[Month])),\n    MaxD   = Date.StartOfMonth(List.Max(factInventory[Month])),\n    Start  = #date(Date.Year(MinD) - (if Date.Month(MinD) < 4 then 1 else 0), 4, 1),\n    Count  = (Date.Year(MaxD) * 12 + Date.Month(MaxD))\n             - (Date.Year(Start) * 12 + Date.Month(Start)) + 1,\n    Months = List.Transform({0..Count - 1}, (i) => Date.AddMonths(Start, i)),\n    T      = Table.TransformColumnTypes(\n                 Table.FromList(Months, Splitter.SplitByNothing(), {\"Month\"}),\n                 {{\"Month\", type date}}),\n    MN     = Table.AddColumn(T, \"MonthName\", each Date.ToText([Month], \"MMM''yy\"), type text),\n    MS     = Table.AddColumn(MN, \"MonthSort\",\n                 each Date.Year([Month]) * 100 + Date.Month([Month]), Int64.Type),\n    MI     = Table.AddColumn(MS, \"MonthIndex\",\n                 each Date.Year([Month]) * 12 + Date.Month([Month]), Int64.Type),\n    FY     = Table.AddColumn(MI, \"FY\", each\n                 let y = if Date.Month([Month]) >= 4 then Date.Year([Month]) else Date.Year([Month]) - 1\n                 in  \"FY \" & Text.From(y) & \"-\" & Text.End(Text.From(y + 1), 2), type text),\n    // the year starts on 1 April, so Apr-Jun is Q1 and Jan-Mar is Q4\n    FYMonth = Table.AddColumn(FY, \"FYMonthNo\",\n                 each Number.Mod(Date.Month([Month]) - 4, 12) + 1, Int64.Type),\n    Qtr    = Table.AddColumn(FYMonth, \"QuarterNo\",\n                 each Number.RoundUp([FYMonthNo] / 3), Int64.Type),\n    QName  = Table.AddColumn(Qtr, \"Quarter\",\n                 each \"Q\" & Text.From([QuarterNo]) & \" \" & [FY], type text),\n    QSort  = Table.AddColumn(QName, \"QuarterSort\", each\n                 let y = if Date.Month([Month]) >= 4 then Date.Year([Month]) else Date.Year([Month]) - 1\n                 in  y * 10 + [QuarterNo], Int64.Type),\n    Out    = Table.SelectColumns(QSort,\n                 {\"Month\",\"MonthName\",\"MonthSort\",\"MonthIndex\",\"FY\",\n                  \"FYMonthNo\",\"QuarterNo\",\"Quarter\",\"QuarterSort\"})\nin\n    Out"
+              "expression": "let\n    // the months that actually exist in the data: stock files and trial balance. Building the\n    // calendar from these, rather than filling in every month between the first and the last,\n    // is what keeps months you have not loaded yet out of the slicers.\n    // the trial balance is read inside a try, so a missing or empty TB folder leaves the\n    // calendar to the stock files instead of taking the whole calendar down with it\n    TBM    = try factTB_Staged[Month] otherwise {},\n    Seen   = List.RemoveNulls(List.Combine({factInventory[Month], TBM})),\n    Months = List.Sort(List.Distinct(List.Transform(Seen, Date.StartOfMonth))),\n    T      = Table.TransformColumnTypes(\n                 Table.FromList(Months, Splitter.SplitByNothing(), {\"Month\"}),\n                 {{\"Month\", type date}}),\n    MN     = Table.AddColumn(T, \"MonthName\", each Date.ToText([Month], \"MMM''yy\"), type text),\n    MS     = Table.AddColumn(MN, \"MonthSort\",\n                 each Date.Year([Month]) * 100 + Date.Month([Month]), Int64.Type),\n    MI     = Table.AddColumn(MS, \"MonthIndex\",\n                 each Date.Year([Month]) * 12 + Date.Month([Month]), Int64.Type),\n    FY     = Table.AddColumn(MI, \"FY\", each\n                 let y = if Date.Month([Month]) >= 4 then Date.Year([Month]) else Date.Year([Month]) - 1\n                 in  \"FY \" & Text.From(y) & \"-\" & Text.End(Text.From(y + 1), 2), type text),\n    // the year starts on 1 April, so Apr-Jun is Q1 and Jan-Mar is Q4\n    FYMonth = Table.AddColumn(FY, \"FYMonthNo\",\n                 each Number.Mod(Date.Month([Month]) - 4, 12) + 1, Int64.Type),\n    Qtr    = Table.AddColumn(FYMonth, \"QuarterNo\",\n                 each Number.RoundUp([FYMonthNo] / 3), Int64.Type),\n    QName  = Table.AddColumn(Qtr, \"Quarter\",\n                 each \"Q\" & Text.From([QuarterNo]) & \" \" & [FY], type text),\n    QSort  = Table.AddColumn(QName, \"QuarterSort\", each\n                 let y = if Date.Month([Month]) >= 4 then Date.Year([Month]) else Date.Year([Month]) - 1\n                 in  y * 10 + [QuarterNo], Int64.Type),\n    Out    = Table.SelectColumns(QSort,\n                 {\"Month\",\"MonthName\",\"MonthSort\",\"MonthIndex\",\"FY\",\n                  \"FYMonthNo\",\"QuarterNo\",\"Quarter\",\"QuarterSort\"})\nin\n    Out"
             }
           }
         ],
@@ -1306,7 +1324,7 @@
             "mode": "import",
             "source": {
               "type": "m",
-              "expression": "let\n    FromRM  = List.RemoveNulls(dimMaterialAttr[Nature]),\n    FromFG  = List.RemoveNulls(dimFGAttr[Nature]),\n    FromCap = List.RemoveNulls(varMWCapacity[Tech]),\n    All     = List.Distinct(List.Combine({FromRM, FromFG, FromCap})),\n    T       = Table.FromList(All, Splitter.SplitByNothing(), {\"Nature\"}),\n    Typed   = Table.TransformColumnTypes(T, {{\"Nature\", type text}})\nin\n    Typed"
+              "expression": "let\n    FromRM  = List.RemoveNulls(dimMaterialAttr[Nature]),\n    FromFG  = List.RemoveNulls(dimFGAttr[Nature]),\n    FromCap = List.RemoveNulls(varMWCapacity[Tech]),\n    All     = List.Distinct(List.Combine({FromRM, FromFG, FromCap, {\"Unassigned\"}})),\n    T       = Table.FromList(All, Splitter.SplitByNothing(), {\"Nature\"}),\n    Typed   = Table.TransformColumnTypes(T, {{\"Nature\", type text}})\nin\n    Typed"
             }
           }
         ],
@@ -1725,7 +1743,7 @@
             "mode": "import",
             "source": {
               "type": "m",
-              "expression": "let\n    Wb    = Excel.Workbook(File.Contents(pVarsFile), null, true),\n    Sh    = Table.SelectRows(Wb, each [Kind] = \"Sheet\"),\n    Slim  = Table.SelectColumns(Sh, {\"Item\",\"Data\"}),\n    Hdrs  = Table.AddColumn(Slim, \"Headers\", each\n                Text.Combine(List.Transform(\n                    Table.ColumnNames(Table.PromoteHeaders([Data], [PromoteAllScalars=true])),\n                    Text.From), \" | \"), type text),\n    Rows  = Table.AddColumn(Hdrs, \"DataRows\", each Table.RowCount([Data]) - 1, Int64.Type),\n    Out   = Table.RenameColumns(Table.SelectColumns(Rows, {\"Item\",\"Headers\",\"DataRows\"}),\n                {{\"Item\",\"SheetName\"}})\nin\n    Out"
+              "expression": "let\n    Wb    = Excel.Workbook(File.Contents(pVarsFile), null, true),\n    Sh    = Table.SelectRows(Wb, each [Kind] = \"Sheet\"),\n    Slim  = Table.SelectColumns(Sh, {\"Item\",\"Data\"}),\n    Hdrs  = Table.AddColumn(Slim, \"Headers\", each\n                Text.Combine(List.Transform(\n                    Table.ColumnNames(Table.PromoteHeaders([Data], [PromoteAllScalars=true])),\n                    Text.From), \" | \"), type text),\n    Rows  = Table.AddColumn(Hdrs, \"DataRows\", each Table.RowCount([Data]) - 1, Int64.Type),\n    Slim2 = Table.SelectColumns(Rows, {\"Item\",\"Headers\",\"DataRows\"}),\n    Out   = Table.RenameColumns(Slim2, {{\"Item\",\"SheetName\"}})\nin\n    Out"
             }
           }
         ],
@@ -1770,90 +1788,6 @@
           }
         ],
         "isHidden": true
-      },
-      {
-        "name": "Period",
-        "columns": [
-          {
-            "name": "Period",
-            "dataType": "string",
-            "sourceColumn": "[Value1]",
-            "type": "calculatedTableColumn",
-            "isNameInferred": false,
-            "sortByColumn": "Period Order",
-            "summarizeBy": "none",
-            "relatedColumnDetails": {
-              "groupByColumns": [
-                {
-                  "groupingColumn": "Period Fields"
-                }
-              ]
-            },
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "Period Fields",
-            "dataType": "string",
-            "sourceColumn": "[Value2]",
-            "type": "calculatedTableColumn",
-            "isNameInferred": false,
-            "isHidden": true,
-            "sortByColumn": "Period Order",
-            "summarizeBy": "none",
-            "extendedProperties": [
-              {
-                "name": "ParameterMetadata",
-                "type": "json",
-                "value": {
-                  "version": 3,
-                  "kind": 2
-                }
-              }
-            ],
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          },
-          {
-            "name": "Period Order",
-            "dataType": "int64",
-            "sourceColumn": "[Value3]",
-            "type": "calculatedTableColumn",
-            "isNameInferred": false,
-            "isHidden": true,
-            "summarizeBy": "none",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ]
-          }
-        ],
-        "partitions": [
-          {
-            "name": "Period",
-            "mode": "import",
-            "source": {
-              "type": "calculated",
-              "expression": "{\n    (\"By Month\",   NAMEOF('dimDate'[MonthName]), 0),\n    (\"By Quarter\", NAMEOF('dimDate'[Quarter]),   1)\n}"
-            }
-          }
-        ],
-        "annotations": [
-          {
-            "name": "PBI_Id",
-            "value": "Period"
-          }
-        ]
       }
     ],
     "relationships": [
@@ -2107,7 +2041,7 @@
       {
         "name": "factRM",
         "kind": "m",
-        "expression": "let\n    Src      = stgRM,\n    Merged   = Table.NestedJoin(Src, {\"MatKey\"}, dimMaterialAttr, {\"MatKey\"},\n                   \"attr\", JoinKind.LeftOuter),\n    Expanded = Table.ExpandTableColumn(Merged, \"attr\",\n                   {\"Nature\",\"GroupNature\",\"BOMStdQty\",\"Item\"}),\n\n    // Second pass on the material alone. Plant and material together is the safer key, but\n    // it misses every row when the master sheet has no valuation area column, or records the\n    // plant differently from the MB5B export -- and then nothing has a nature at all.\n    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(dimMaterialAttr,\n                   {\"Material\",\"Nature\",\"GroupNature\",\"BOMStdQty\",\"Item\"}), {\"Material\"})),\n    Second   = Table.NestedJoin(Expanded, {\"Material\"}, ByMat, {\"Material\"},\n                   \"attr2\", JoinKind.LeftOuter),\n    Both     = Table.ExpandTableColumn(Second, \"attr2\",\n                   {\"Nature\",\"GroupNature\",\"BOMStdQty\",\"Item\"},\n                   {\"Nature2\",\"GroupNature2\",\"BOMStdQty2\",\"Item2\"}),\n    Coal     = Table.AddColumn(Both, \"NatureX\", each [Nature] ?? [Nature2], type text),\n    Coal2    = Table.AddColumn(Coal, \"GroupNatureX\",\n                   each [GroupNature] ?? [GroupNature2], type text),\n    Coal3    = Table.AddColumn(Coal2, \"BOMStdQtyX\",\n                   each [BOMStdQty] ?? [BOMStdQty2], type number),\n    Coal4    = Table.AddColumn(Coal3, \"ItemX\", each [Item] ?? [Item2], type text),\n    Dropped  = Table.RemoveColumns(Coal4, {\"Nature\",\"Nature2\",\"GroupNature\",\"GroupNature2\",\n                   \"BOMStdQty\",\"BOMStdQty2\",\"Item\",\"Item2\"}),\n    Attr     = Table.RenameColumns(Dropped, {{\"NatureX\",\"Nature\"},\n                   {\"GroupNatureX\",\"GroupNature\"}, {\"BOMStdQtyX\",\"BOMStdQty\"},\n                   {\"ItemX\",\"Item\"}}),\n\n    Flag     = Table.AddColumn(Attr, \"AttrMissing\",\n                   each [Nature] = null, type logical),\n    // RM MW = Closing Stock / BOM Std Qty * RM_MW_FACTOR / 10^6\n    // (the 580 you had hardcoded, now read from the Constants sheet)\n    MW       = Table.AddColumn(Flag, \"MW\", each\n                   let f = fnConstantAsOf(\"RM_MW_FACTOR\", [Month])\n                   in  try [CloseQty] / [BOMStdQty] * f / 1000000 otherwise null,\n                   type number)\nin\n    MW",
+        "expression": "let\n    Src      = stgRM,\n    Merged   = Table.NestedJoin(Src, {\"MatKey\"}, dimMaterialAttr, {\"MatKey\"},\n                   \"attr\", JoinKind.LeftOuter),\n    Expanded = Table.ExpandTableColumn(Merged, \"attr\",\n                   {\"Nature\",\"GroupNature\",\"BOMStdQty\",\"Item\"}),\n\n    // Second pass on the material alone. Plant and material together is the safer key, but\n    // it misses every row when the master sheet has no valuation area column, or records the\n    // plant differently from the MB5B export -- and then nothing has a nature at all.\n    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(dimMaterialAttr,\n                   {\"Material\",\"Nature\",\"GroupNature\",\"BOMStdQty\",\"Item\"}), {\"Material\"})),\n    Second   = Table.NestedJoin(Expanded, {\"Material\"}, ByMat, {\"Material\"},\n                   \"attr2\", JoinKind.LeftOuter),\n    Both     = Table.ExpandTableColumn(Second, \"attr2\",\n                   {\"Nature\",\"GroupNature\",\"BOMStdQty\",\"Item\"},\n                   {\"Nature2\",\"GroupNature2\",\"BOMStdQty2\",\"Item2\"}),\n    Coal     = Table.AddColumn(Both, \"NatureX\", each [Nature] ?? [Nature2], type text),\n    Coal2    = Table.AddColumn(Coal, \"GroupNatureX\",\n                   each [GroupNature] ?? [GroupNature2], type text),\n    Coal3    = Table.AddColumn(Coal2, \"BOMStdQtyX\",\n                   each [BOMStdQty] ?? [BOMStdQty2], type number),\n    Coal4    = Table.AddColumn(Coal3, \"ItemX\", each [Item] ?? [Item2], type text),\n    Dropped  = Table.RemoveColumns(Coal4, {\"Nature\",\"Nature2\",\"GroupNature\",\"GroupNature2\",\n                   \"BOMStdQty\",\"BOMStdQty2\",\"Item\",\"Item2\"}),\n    Attr     = Table.RenameColumns(Dropped, {{\"NatureX\",\"Nature\"},\n                   {\"GroupNatureX\",\"GroupNature\"}, {\"BOMStdQtyX\",\"BOMStdQty\"},\n                   {\"ItemX\",\"Item\"}}),\n\n    Flag     = Table.AddColumn(Attr, \"AttrMissing\",\n                   each [Nature] = null, type logical),\n    // a row the master sheet does not cover is named rather than left null: a donut slice\n    // reading Unassigned tells you there is work to do, one reading (Blank) tells you nothing\n    Named    = Table.TransformColumns(Flag, {\n                   {\"Nature\",      each if _ = null or _ = \"\" then \"Unassigned\" else _, type text},\n                   {\"GroupNature\", each if _ = null or _ = \"\" then \"Unassigned\" else _, type text}}),\n    // RM MW = Closing Stock / BOM Std Qty * RM_MW_FACTOR / 10^6\n    // (the 580 you had hardcoded, now read from the Constants sheet)\n    MW       = Table.AddColumn(Named, \"MW\", each\n                   let f = fnConstantAsOf(\"RM_MW_FACTOR\", [Month])\n                   in  try [CloseQty] / [BOMStdQty] * f / 1000000 otherwise null,\n                   type number)\nin\n    MW",
         "annotations": [
           {
             "name": "PBI_NavigationStepName",
@@ -2122,7 +2056,7 @@
       {
         "name": "factFG",
         "kind": "m",
-        "expression": "let\n    Src      = stgFG,\n    Merged   = Table.NestedJoin(Src, {\"MatKey\"}, dimFGAttr, {\"MatKey\"},\n                   \"attr\", JoinKind.LeftOuter),\n    Expanded = Table.ExpandTableColumn(Merged, \"attr\", {\"Nature\"}),\n\n    // Same second pass as factRM: the material on its own, for rows the plant-qualified\n    // key missed because the FG Master sheet has no valuation area or writes it differently.\n    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(dimFGAttr,\n                   {\"Material\",\"Nature\"}), {\"Material\"})),\n    Second   = Table.NestedJoin(Expanded, {\"Material\"}, ByMat, {\"Material\"},\n                   \"attr2\", JoinKind.LeftOuter),\n    Both     = Table.ExpandTableColumn(Second, \"attr2\", {\"Nature\"}, {\"Nature2\"}),\n    Coal     = Table.AddColumn(Both, \"NatureX\", each [Nature] ?? [Nature2], type text),\n    Dropped  = Table.RemoveColumns(Coal, {\"Nature\",\"Nature2\"}),\n    Attr     = Table.RenameColumns(Dropped, {{\"NatureX\",\"Nature\"}}),\n\n    Flag     = Table.AddColumn(Attr, \"AttrMissing\", each [Nature] = null, type logical),\n\n    // Rate = RIGHT(desc,3)\n    RateTxt  = Table.AddColumn(Flag, \"RateText\",\n                   each Text.End(Text.Trim([MaterialDesc] ?? \"\"), 3), type text),\n    Rate     = Table.AddColumn(RateTxt, \"Rate\",\n                   each try Number.From(Text.Select([RateText], {\"0\"..\"9\",\".\"})) otherwise null,\n                   type number),\n    RateBad  = Table.AddColumn(Rate, \"RateParseFailed\",\n                   each [Rate] = null, type logical),\n\n    // Mid = MID(desc,13,13)  -- M is 0-based, so start = 12\n    MidCol   = Table.AddColumn(RateBad, \"Mid\",\n                   each try Text.Middle(Text.Trim([MaterialDesc] ?? \"\"), 12, 13) otherwise null,\n                   type text),\n    // Base = LEFT(desc,6)\n    BaseCol  = Table.AddColumn(MidCol, \"Base\",\n                   each try Text.Start(Text.Trim([MaterialDesc] ?? \"\"), 6) otherwise null,\n                   type text),\n\n    // MW = Closing Stock * Rate / 10^6\n    MW       = Table.AddColumn(BaseCol, \"MW\",\n                   each try [CloseQty] * [Rate] / 1000000 otherwise null, type number),\n\n    // Inr Wp = Closing Value / (MW * 10^6)\n    INRwp    = Table.AddColumn(MW, \"INR_WP\",\n                   each try [CloseVal] / ([MW] * 1000000) otherwise null, type number),\n\n    Cleaned  = Table.RemoveColumns(INRwp, {\"RateText\"})\nin\n    Cleaned",
+        "expression": "let\n    Src      = stgFG,\n    Merged   = Table.NestedJoin(Src, {\"MatKey\"}, dimFGAttr, {\"MatKey\"},\n                   \"attr\", JoinKind.LeftOuter),\n    Expanded = Table.ExpandTableColumn(Merged, \"attr\", {\"Nature\"}),\n\n    // Same second pass as factRM: the material on its own, for rows the plant-qualified\n    // key missed because the FG Master sheet has no valuation area or writes it differently.\n    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(dimFGAttr,\n                   {\"Material\",\"Nature\"}), {\"Material\"})),\n    Second   = Table.NestedJoin(Expanded, {\"Material\"}, ByMat, {\"Material\"},\n                   \"attr2\", JoinKind.LeftOuter),\n    Both     = Table.ExpandTableColumn(Second, \"attr2\", {\"Nature\"}, {\"Nature2\"}),\n    Coal     = Table.AddColumn(Both, \"NatureX\", each [Nature] ?? [Nature2], type text),\n    Dropped  = Table.RemoveColumns(Coal, {\"Nature\",\"Nature2\"}),\n    Attr     = Table.RenameColumns(Dropped, {{\"NatureX\",\"Nature\"}}),\n\n    Flag     = Table.AddColumn(Attr, \"AttrMissing\", each [Nature] = null, type logical),\n    // same as factRM: an FG whose technology the FG Master does not carry is called\n    // Unassigned, so the technology matrix and the donut show it instead of a blank row\n    Named    = Table.TransformColumns(Flag, {\n                   {\"Nature\", each if _ = null or _ = \"\" then \"Unassigned\" else _, type text}}),\n\n    // Rate = RIGHT(desc,3)\n    RateTxt  = Table.AddColumn(Named, \"RateText\",\n                   each Text.End(Text.Trim([MaterialDesc] ?? \"\"), 3), type text),\n    Rate     = Table.AddColumn(RateTxt, \"Rate\",\n                   each try Number.From(Text.Select([RateText], {\"0\"..\"9\",\".\"})) otherwise null,\n                   type number),\n    RateBad  = Table.AddColumn(Rate, \"RateParseFailed\",\n                   each [Rate] = null, type logical),\n\n    // Mid = MID(desc,13,13)  -- M is 0-based, so start = 12\n    MidCol   = Table.AddColumn(RateBad, \"Mid\",\n                   each try Text.Middle(Text.Trim([MaterialDesc] ?? \"\"), 12, 13) otherwise null,\n                   type text),\n    // Base = LEFT(desc,6)\n    BaseCol  = Table.AddColumn(MidCol, \"Base\",\n                   each try Text.Start(Text.Trim([MaterialDesc] ?? \"\"), 6) otherwise null,\n                   type text),\n\n    // MW = Closing Stock * Rate / 10^6\n    MW       = Table.AddColumn(BaseCol, \"MW\",\n                   each try [CloseQty] * [Rate] / 1000000 otherwise null, type number),\n\n    // Inr Wp = Closing Value / (MW * 10^6)\n    INRwp    = Table.AddColumn(MW, \"INR_WP\",\n                   each try [CloseVal] / ([MW] * 1000000) otherwise null, type number),\n\n    Cleaned  = Table.RemoveColumns(INRwp, {\"RateText\"})\nin\n    Cleaned",
         "annotations": [
           {
             "name": "PBI_NavigationStepName",
@@ -2167,7 +2101,7 @@
       {
         "name": "factTB_Staged",
         "kind": "m",
-        "expression": "let\n    Norm     = (n as any) as text =>\n                   Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? \"\")), {\" \",\".\",\"_\",\"-\",\"/\",\"(\",\")\"})),\n    GLNames  = {\"GLACCOUNTNUMBER\",\"GLACCOUNT\",\"GLACCOUNTNO\",\"GLACCNO\",\"ACCOUNTNUMBER\",\"GLCODE\"},\n    Alias    = {\n                   {GLNames, \"GLAccount\"},\n                   {{\"GLACCOUNTDESCRIPTION\",\"GLACCOUNTDESC\",\"ACCOUNTDESCRIPTION\",\n                     \"GLDESCRIPTION\",\"GLDESC\",\"ACCOUNTNAME\"}, \"GLDesc\"},\n                   {{\"PROFITCENTRE\",\"PROFITCENTER\",\"PROFITCTR\",\"PRCTR\"}, \"ProfitCentre\"},\n                   {{\"PROFITCENTREDESCRIPTION\",\"PROFITCENTERDESCRIPTION\",\n                     \"PROFITCENTREDESC\",\"PROFITCENTERDESC\"}, \"ProfitCentreDesc\"},\n                   {{\"AMOUNT\",\"AMOUNTINLOCALCURRENCY\",\"AMOUNTINLC\",\"AMTINLOCCUR\",\n                     \"BALANCE\",\"CLOSINGBALANCE\"}, \"Amount\"}\n               },\n    Wanted   = {\"GLAccount\",\"GLDesc\",\"ProfitCentre\",\"ProfitCentreDesc\",\"Amount\"},\n\n    Clean    = (content as binary) as table =>\n                   let\n                       Wb       = Excel.Workbook(content, null, true),\n                       Sheets   = Table.SelectRows(Wb, each [Kind] = \"Sheet\"),\n                       Picked   = try Sheets{[Item = \"Sheet1\", Kind = \"Sheet\"]}[Data]\n                                  otherwise Sheets{0}[Data],\n                       // find the header row: the one holding a GL-account-ish cell\n                       RowsL    = Table.ToRows(Picked),\n                       HdrIdx   = List.PositionOf(\n                                      List.Transform(RowsL, (r) =>\n                                          List.AnyTrue(List.Transform(r,\n                                              (c) => List.Contains(GLNames, Norm(c))))), true),\n                       Skipped  = if HdrIdx <= 0 then Picked else Table.Skip(Picked, HdrIdx),\n                       Promoted = Table.PromoteHeaders(Skipped, [PromoteAllScalars = true]),\n\n                       Lookup   = (c as any) as nullable text =>\n                                      let Hits = List.Select(Alias, (a) => List.Contains(a{0}, Norm(c)))\n                                      in  if List.IsEmpty(Hits) then null else Hits{0}{1},\n                       Pairs    = List.RemoveNulls(\n                                      List.Transform(Table.ColumnNames(Promoted),\n                                          (c) => let t = Lookup(c) in if t = null then null else {c, t})),\n                       // if two source columns map to the same name, keep the first\n                       Renames  = List.Accumulate(Pairs, {}, (acc, pr) =>\n                                      if List.Contains(List.Transform(acc, (x) => x{1}), pr{1})\n                                      then acc else acc & {pr}),\n                       Renamed  = Table.RenameColumns(Promoted, Renames),\n                       Padded   = List.Accumulate(\n                                      List.Difference(Wanted, Table.ColumnNames(Renamed)), Renamed,\n                                      (tbl, col) => Table.AddColumn(tbl, col, each null)),\n                       Kept     = Table.SelectColumns(Padded, Wanted),\n                       NoJunk   = Table.SelectRows(Kept, each\n                                      [GLAccount] <> null\n                                      and Text.Trim(Text.From([GLAccount])) <> \"\"\n                                      and not Text.StartsWith(Text.From([GLAccount]), \"Total\",\n                                              Comparer.OrdinalIgnoreCase))\n                   in\n                       NoJunk,\n\n    Files    = Folder.Files(pRoot & \"\\TB\"),\n    OnlyXlsx = Table.SelectRows(Files, each\n                   Text.StartsWith(Text.Lower([Extension]), \".xls\")\n                   and not Text.StartsWith([Name], \"~$\")\n                   and not Text.StartsWith([Name], \".\")),\n    Loaded   = Table.AddColumn(OnlyXlsx, \"Data\", each Clean([Content])),\n\n    // month from the file name: TB_YYYYMM.xlsx\n    WithMonth = Table.AddColumn(Loaded, \"Month\", each\n                   let\n                       digits = Text.Select([Name], {\"0\"..\"9\"}),\n                       yyyymm = Text.Middle(digits, 0, 6)\n                   in\n                       try #date(Number.From(Text.Start(yyyymm, 4)),\n                                 Number.From(Text.Middle(yyyymm, 4, 2)), 1)\n                       otherwise null, type date),\n    Slim     = Table.SelectColumns(WithMonth, {\"Name\",\"Month\",\"Data\"}),\n    Expanded = Table.ExpandTableColumn(Slim, \"Data\", Wanted),\n    Renamed  = Table.RenameColumns(Expanded, {{\"Name\",\"SourceFile\"}}),\n    Keys     = Table.TransformColumns(Renamed, {\n                   {\"GLAccount\",    each Text.TrimStart(Text.Trim(Text.From(_ ?? \"\")), \"0\"), type text},\n                   {\"ProfitCentre\", each Text.Trim(Text.From(_ ?? \"\")), type text}}),\n    // plant = characters 3-6 of the profit centre  (0-based start = 2)\n    PlantRaw = Table.AddColumn(Keys, \"PlantCode\",\n                   each try Text.Middle([ProfitCentre], 2, 4) otherwise null, type text),\n    Known    = List.Buffer(dimPlant[ValuationArea]),\n    PlantCol = Table.AddColumn(PlantRaw, \"ValuationArea\",\n                   each if List.Contains(Known, [PlantCode]) then [PlantCode] else \"Unallocated\",\n                   type text),\n    Typed    = Table.TransformColumnTypes(PlantCol, {{\"Amount\", type number}})\nin\n    Typed",
+        "expression": "let\n    Norm     = (n as any) as text =>\n                   Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? \"\")), {\" \",\".\",\"_\",\"-\",\"/\",\"(\",\")\"})),\n    GLNames  = {\"GLACCOUNTNUMBER\",\"GLACCOUNT\",\"GLACCOUNTNO\",\"GLACCNO\",\"ACCOUNTNUMBER\",\"GLCODE\"},\n    Alias    = {\n                   {GLNames, \"GLAccount\"},\n                   {{\"GLACCOUNTDESCRIPTION\",\"GLACCOUNTDESC\",\"ACCOUNTDESCRIPTION\",\n                     \"GLDESCRIPTION\",\"GLDESC\",\"ACCOUNTNAME\"}, \"GLDesc\"},\n                   {{\"PROFITCENTRE\",\"PROFITCENTER\",\"PROFITCTR\",\"PRCTR\"}, \"ProfitCentre\"},\n                   {{\"PROFITCENTREDESCRIPTION\",\"PROFITCENTERDESCRIPTION\",\n                     \"PROFITCENTREDESC\",\"PROFITCENTERDESC\"}, \"ProfitCentreDesc\"},\n                   {{\"AMOUNT\",\"AMOUNTINLOCALCURRENCY\",\"AMOUNTINLC\",\"AMTINLOCCUR\",\n                     \"BALANCE\",\"CLOSINGBALANCE\"}, \"Amount\"}\n               },\n    Wanted   = {\"GLAccount\",\"GLDesc\",\"ProfitCentre\",\"ProfitCentreDesc\",\"Amount\"},\n\n    Clean    = (content as binary) as table =>\n                   let\n                       Wb       = Excel.Workbook(content, null, true),\n                       Sheets   = Table.SelectRows(Wb, each [Kind] = \"Sheet\"),\n                       Picked   = try Sheets{[Item = \"Sheet1\", Kind = \"Sheet\"]}[Data]\n                                  otherwise Sheets{0}[Data],\n                       // find the header row: the one holding a GL-account-ish cell\n                       RowsL    = Table.ToRows(Picked),\n                       HdrIdx   = List.PositionOf(\n                                      List.Transform(RowsL, (r) =>\n                                          List.AnyTrue(List.Transform(r,\n                                              (c) => List.Contains(GLNames, Norm(c))))), true),\n                       Skipped  = if HdrIdx <= 0 then Picked else Table.Skip(Picked, HdrIdx),\n                       Promoted = Table.PromoteHeaders(Skipped, [PromoteAllScalars = true]),\n\n                       Lookup   = (c as any) as nullable text =>\n                                      let Hits = List.Select(Alias, (a) => List.Contains(a{0}, Norm(c)))\n                                      in  if List.IsEmpty(Hits) then null else Hits{0}{1},\n                       Pairs    = List.RemoveNulls(\n                                      List.Transform(Table.ColumnNames(Promoted),\n                                          (c) => let t = Lookup(c) in if t = null then null else {c, t})),\n                       // if two source columns map to the same name, keep the first\n                       Renames  = List.Accumulate(Pairs, {}, (acc, pr) =>\n                                      if List.Contains(List.Transform(acc, (x) => x{1}), pr{1})\n                                      then acc else acc & {pr}),\n                       Renamed  = Table.RenameColumns(Promoted, Renames),\n                       Padded   = List.Accumulate(\n                                      List.Difference(Wanted, Table.ColumnNames(Renamed)), Renamed,\n                                      (tbl, col) => Table.AddColumn(tbl, col, each null)),\n                       Kept     = Table.SelectColumns(Padded, Wanted),\n                       NoJunk   = Table.SelectRows(Kept, each\n                                      [GLAccount] <> null\n                                      and Text.Trim(Text.From([GLAccount])) <> \"\"\n                                      and not Text.StartsWith(Text.From([GLAccount]), \"Total\",\n                                              Comparer.OrdinalIgnoreCase))\n                   in\n                       NoJunk,\n\n    Files    = Folder.Files(pRoot & \"\\TB\"),\n    OnlyXlsx = Table.SelectRows(Files, each\n                   Text.StartsWith(Text.Lower([Extension]), \".xls\")\n                   and not Text.StartsWith([Name], \"~$\")\n                   and not Text.StartsWith([Name], \".\")),\n    Loaded   = Table.AddColumn(OnlyXlsx, \"Data\", each Clean([Content])),\n\n    // month from the file name: TB_YYYYMM.xlsx\n    WithMonth = Table.AddColumn(Loaded, \"Month\", each\n                   let\n                       digits = Text.Select([Name], {\"0\"..\"9\"}),\n                       yyyymm = Text.Middle(digits, 0, 6)\n                   in\n                       try #date(Number.From(Text.Start(yyyymm, 4)),\n                                 Number.From(Text.Middle(yyyymm, 4, 2)), 1)\n                       otherwise null, type date),\n    Slim     = Table.SelectColumns(WithMonth, {\"Name\",\"Month\",\"Data\"}),\n    Expanded = Table.ExpandTableColumn(Slim, \"Data\", Wanted),\n    Renamed  = Table.RenameColumns(Expanded, {{\"Name\",\"SourceFile\"}}),\n    Keys     = Table.TransformColumns(Renamed, {\n                   {\"GLAccount\",    each Text.TrimStart(Text.Trim(Text.From(_ ?? \"\")), \"0\"), type text},\n                   {\"ProfitCentre\", each Text.Trim(Text.From(_ ?? \"\")), type text}}),\n    // plant = characters 3-6 of the profit centre  (0-based start = 2)\n    PlantRaw = Table.AddColumn(Keys, \"PlantCode\",\n                   each try Text.Middle([ProfitCentre], 2, 4) otherwise null, type text),\n    // the three named plant codes, written out here rather than read from dimPlant: a query\n    // that opens a folder itself may not also reference another query, or the refresh stops\n    // with 'references other queries or steps, so it may not directly access a data source'\n    Known    = {\"1900\", \"1902\", \"1905\"},\n    PlantCol = Table.AddColumn(PlantRaw, \"ValuationArea\",\n                   each if List.Contains(Known, [PlantCode]) then [PlantCode] else \"Unallocated\",\n                   type text),\n    Typed    = Table.TransformColumnTypes(PlantCol, {{\"Amount\", type number}})\nin\n    Typed",
         "annotations": [
           {
             "name": "PBI_NavigationStepName",

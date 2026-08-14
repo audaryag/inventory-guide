@@ -2,18 +2,55 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "v1656f2135bc32f0a",
   "position": {
-    "x": 970,
-    "y": 8,
+    "x": 200,
+    "y": 88,
     "z": 13,
-    "width": 294,
-    "height": 76,
+    "width": 700,
+    "height": 336,
     "tabOrder": 1300
   },
   "visual": {
-    "visualType": "slicer",
+    "visualType": "columnChart",
     "query": {
       "queryState": {
-        "Values": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dimDate"
+                    }
+                  },
+                  "Property": "MonthName"
+                }
+              },
+              "queryRef": "dimDate.MonthName",
+              "nativeQueryRef": "MonthName"
+            }
+          ],
+          "showAll": true
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "factInventory"
+                    }
+                  },
+                  "Property": "Inventory Rs Cr"
+                }
+              },
+              "queryRef": "factInventory.Inventory Rs Cr",
+              "nativeQueryRef": "Inventory Rs Cr"
+            }
+          ]
+        },
+        "Series": {
           "projections": [
             {
               "field": {
@@ -29,7 +66,8 @@
               "queryRef": "dimCategory.Category",
               "nativeQueryRef": "Category"
             }
-          ]
+          ],
+          "showAll": true
         }
       }
     },
@@ -47,7 +85,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Type'"
+                  "Value": "'Inventory by Month (Rs Cr.)'"
                 }
               }
             },
@@ -150,31 +188,7 @@
       ]
     },
     "objects": {
-      "general": [
-        {
-          "properties": {
-            "outlineColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#DCE5DC'"
-                    }
-                  }
-                }
-              }
-            },
-            "outlineWeight": {
-              "expr": {
-                "Literal": {
-                  "Value": "1D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "header": [
+      "legend": [
         {
           "properties": {
             "show": {
@@ -184,6 +198,26 @@
                 }
               }
             },
+            "position": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Top'"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
             "fontFamily": {
               "expr": {
                 "Literal": {
@@ -191,28 +225,28 @@
                 }
               }
             },
-            "fontColor": {
+            "labelColor": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#1E6B3A'"
+                      "Value": "'#3A4A3F'"
                     }
                   }
                 }
               }
             },
-            "textSize": {
+            "showAxisTitle": {
               "expr": {
                 "Literal": {
-                  "Value": "9D"
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
-      "items": [
+      "valueAxis": [
         {
           "properties": {
             "fontFamily": {
@@ -222,50 +256,59 @@
                 }
               }
             },
-            "textSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
+            "labelColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#3A4A3F'"
+                    }
+                  }
                 }
               }
-            }
-          }
-        }
-      ],
-      "selection": [
-        {
-          "properties": {
-            "singleSelect": {
+            },
+            "showAxisTitle": {
               "expr": {
                 "Literal": {
                   "Value": "false"
                 }
               }
             },
-            "strictSingleSelect": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "selectAllCheckboxEnabled": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
+            "gridlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E6EDE6'"
+                    }
+                  }
                 }
               }
             }
           }
         }
       ],
-      "data": [
+      "labels": [
         {
           "properties": {
-            "mode": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "'Dropdown'"
+                  "Value": "false"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
                 }
               }
             }
@@ -277,16 +320,16 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "nbv1656f2135bc32f0a",
+        "name": "fltpg3b878279a04dc47d_13_0",
         "type": "Advanced",
         "field": {
-          "Column": {
+          "Measure": {
             "Expression": {
               "SourceRef": {
-                "Entity": "dimCategory"
+                "Entity": "factInventory"
               }
             },
-            "Property": "Category"
+            "Property": "In Window"
           }
         },
         "filter": {
@@ -294,32 +337,28 @@
           "From": [
             {
               "Name": "f",
-              "Entity": "dimCategory",
+              "Entity": "factInventory",
               "Type": 0
             }
           ],
           "Where": [
             {
               "Condition": {
-                "Not": {
-                  "Expression": {
-                    "Comparison": {
-                      "ComparisonKind": 0,
-                      "Left": {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Source": "f"
-                            }
-                          },
-                          "Property": "Category"
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "f"
                         }
                       },
-                      "Right": {
-                        "Literal": {
-                          "Value": "null"
-                        }
-                      }
+                      "Property": "In Window"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
                     }
                   }
                 }

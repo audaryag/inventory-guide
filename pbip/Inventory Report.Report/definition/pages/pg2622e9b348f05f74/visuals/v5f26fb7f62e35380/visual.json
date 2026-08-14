@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "v5f26fb7f62e35380",
   "position": {
-    "x": 820,
+    "x": 824,
     "y": 8,
     "z": 4,
-    "width": 220,
+    "width": 208,
     "height": 76,
     "tabOrder": 400
   },
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dimPlant"
+                      "Entity": "factInventory"
                     }
                   },
-                  "Property": "Plant"
+                  "Property": "GroupNature"
                 }
               },
-              "queryRef": "dimPlant.Plant",
-              "nativeQueryRef": "Plant"
+              "queryRef": "factInventory.GroupNature",
+              "nativeQueryRef": "GroupNature"
             }
           ]
         }
@@ -47,7 +47,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Plant'"
+                  "Value": "'Group Nature'"
                 }
               }
             },
@@ -283,10 +283,10 @@
           "Column": {
             "Expression": {
               "SourceRef": {
-                "Entity": "dimPlant"
+                "Entity": "factInventory"
               }
             },
-            "Property": "Plant"
+            "Property": "GroupNature"
           }
         },
         "filter": {
@@ -294,7 +294,7 @@
           "From": [
             {
               "Name": "f",
-              "Entity": "dimPlant",
+              "Entity": "factInventory",
               "Type": 0
             }
           ],
@@ -312,7 +312,7 @@
                               "Source": "f"
                             }
                           },
-                          "Property": "Plant"
+                          "Property": "GroupNature"
                         }
                       },
                       "Right": {

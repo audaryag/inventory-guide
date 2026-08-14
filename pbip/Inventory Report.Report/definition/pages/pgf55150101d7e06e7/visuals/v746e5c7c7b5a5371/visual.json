@@ -1,80 +1,61 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
-  "name": "v358c5077bd9a26d3",
+  "name": "v746e5c7c7b5a5371",
   "position": {
     "x": 16,
-    "y": 548,
-    "z": 10,
-    "width": 1248,
-    "height": 156,
-    "tabOrder": 1000
+    "y": 160,
+    "z": 6,
+    "width": 620,
+    "height": 264,
+    "tabOrder": 600
   },
   "visual": {
-    "visualType": "lineChart",
+    "visualType": "tableEx",
     "query": {
       "queryState": {
-        "Category": {
+        "Values": {
           "projections": [
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dimDate"
+                      "Entity": "qcHeaders"
                     }
                   },
-                  "Property": "MonthName"
+                  "Property": "Folder"
                 }
               },
-              "queryRef": "dimDate.MonthName",
-              "nativeQueryRef": "MonthName"
-            }
-          ],
-          "showAll": true
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "factInventory"
-                    }
-                  },
-                  "Property": "RM Days"
-                }
-              },
-              "queryRef": "factInventory.RM Days",
-              "nativeQueryRef": "RM Days"
+              "queryRef": "qcHeaders.Folder",
+              "nativeQueryRef": "Folder"
             },
             {
               "field": {
-                "Measure": {
+                "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "factInventory"
+                      "Entity": "qcHeaders"
                     }
                   },
-                  "Property": "FG Days"
+                  "Property": "Name"
                 }
               },
-              "queryRef": "factInventory.FG Days",
-              "nativeQueryRef": "FG Days"
+              "queryRef": "qcHeaders.Name",
+              "nativeQueryRef": "Name"
             },
             {
               "field": {
-                "Measure": {
+                "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "factInventory"
+                      "Entity": "qcHeaders"
                     }
                   },
-                  "Property": "Total Days (RM + FG)"
+                  "Property": "SheetNames"
                 }
               },
-              "queryRef": "factInventory.Total Days (RM + FG)",
-              "nativeQueryRef": "Total Days (RM + FG)"
+              "queryRef": "qcHeaders.SheetNames",
+              "nativeQueryRef": "SheetNames"
             }
           ]
         }
@@ -94,7 +75,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Days of Inventory by Month, Last 12 Months — RM, FG and Total'"
+                  "Value": "'Every File the Four Folders Gave, with Its Sheets'"
                 }
               }
             },
@@ -197,34 +178,56 @@
       ]
     },
     "objects": {
-      "legend": [
+      "columnHeaders": [
         {
           "properties": {
-            "show": {
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            },
+            "bold": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Top'"
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1E6B3A'"
+                    }
+                  }
                 }
               }
             },
-            "fontFamily": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Arial'"
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EEF3EF'"
+                    }
+                  }
                 }
               }
             }
           }
         }
       ],
-      "categoryAxis": [
+      "values": [
         {
           "properties": {
             "fontFamily": {
@@ -234,56 +237,67 @@
                 }
               }
             },
-            "labelColor": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            },
+            "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#3A4A3F'"
+                      "Value": "'#1F2A24'"
                     }
                   }
                 }
               }
             },
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
                 }
               }
             }
           }
         }
       ],
-      "valueAxis": [
+      "grid": [
         {
           "properties": {
-            "fontFamily": {
+            "rowPadding": {
               "expr": {
                 "Literal": {
-                  "Value": "'Arial'"
+                  "Value": "2D"
                 }
               }
             },
-            "labelColor": {
+            "gridVertical": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridVerticalColor": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#3A4A3F'"
+                      "Value": "'#E6EDE6'"
                     }
                   }
                 }
               }
             },
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "gridlineColor": {
+            "gridHorizontalColor": {
               "solid": {
                 "color": {
                   "expr": {
@@ -296,87 +310,7 @@
             }
           }
         }
-      ],
-      "labels": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "fontFamily": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Arial'"
-                }
-              }
-            },
-            "labelPrecision": {
-              "expr": {
-                "Literal": {
-                  "Value": "1D"
-                }
-              }
-            }
-          }
-        }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "fltpg290612199861c31d_10_0",
-        "type": "Advanced",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "factInventory"
-              }
-            },
-            "Property": "In Last 12"
-          }
-        },
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "f",
-              "Entity": "factInventory",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "Comparison": {
-                  "ComparisonKind": 0,
-                  "Left": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Source": "f"
-                        }
-                      },
-                      "Property": "In Last 12"
-                    }
-                  },
-                  "Right": {
-                    "Literal": {
-                      "Value": "1L"
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
-      }
-    ]
   }
 }

@@ -3,36 +3,54 @@
   "name": "v9504a4f1849c3d54",
   "position": {
     "x": 200,
-    "y": 88,
+    "y": 432,
     "z": 14,
     "width": 700,
-    "height": 336,
+    "height": 136,
     "tabOrder": 1400
   },
   "visual": {
-    "visualType": "columnChart",
+    "visualType": "pivotTable",
     "query": {
       "queryState": {
-        "Category": {
+        "Rows": {
           "projections": [
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Period"
+                      "Entity": "dimCategory"
                     }
                   },
-                  "Property": "Period"
+                  "Property": "Category"
                 }
               },
-              "queryRef": "Period.Period",
-              "nativeQueryRef": "Period"
+              "queryRef": "dimCategory.Category",
+              "nativeQueryRef": "Category"
+            }
+          ]
+        },
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dimDate"
+                    }
+                  },
+                  "Property": "MonthName"
+                }
+              },
+              "queryRef": "dimDate.MonthName",
+              "nativeQueryRef": "MonthName"
             }
           ],
-          "showAll": true
+          "showAll": false
         },
-        "Y": {
+        "Values": {
           "projections": [
             {
               "field": {
@@ -49,25 +67,6 @@
               "nativeQueryRef": "Inventory Rs Cr"
             }
           ]
-        },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dimCategory"
-                    }
-                  },
-                  "Property": "Category"
-                }
-              },
-              "queryRef": "dimCategory.Category",
-              "nativeQueryRef": "Category"
-            }
-          ],
-          "showAll": true
         }
       }
     },
@@ -188,34 +187,90 @@
       ]
     },
     "objects": {
-      "legend": [
+      "rowHeaders": [
         {
           "properties": {
-            "show": {
+            "stepped": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "showExpandCollapseButtons": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
+            },
+            "bold": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "position": {
+            "autoSizeColumnWidth": {
               "expr": {
                 "Literal": {
-                  "Value": "'Top'"
+                  "Value": "true"
                 }
               }
             },
-            "fontFamily": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Arial'"
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EEF3EF'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1E6B3A'"
+                    }
+                  }
                 }
               }
             }
           }
         }
       ],
-      "categoryAxis": [
+      "values": [
         {
           "properties": {
             "fontFamily": {
@@ -225,18 +280,56 @@
                 }
               }
             },
-            "labelColor": {
+            "backColorPrimary": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#3A4A3F'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }
               }
             },
-            "showAxisTitle": {
+            "backColorSecondary": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#F7FAF7'"
+                    }
+                  }
+                }
+              }
+            },
+            "bandedRowHeaders": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTotals": [
+        {
+          "properties": {
+            "rowSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "columnSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "perRowLevel": {
               "expr": {
                 "Literal": {
                   "Value": "false"
@@ -246,35 +339,17 @@
           }
         }
       ],
-      "valueAxis": [
+      "grid": [
         {
           "properties": {
-            "fontFamily": {
+            "gridVertical": {
               "expr": {
                 "Literal": {
-                  "Value": "'Arial'"
+                  "Value": "true"
                 }
               }
             },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#3A4A3F'"
-                    }
-                  }
-                }
-              }
-            },
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "gridlineColor": {
+            "gridVerticalColor": {
               "solid": {
                 "color": {
                   "expr": {
@@ -284,20 +359,45 @@
                   }
                 }
               }
+            },
+            "gridHorizontal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridHorizontalColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E6EDE6'"
+                    }
+                  }
+                }
+              }
+            },
+            "rowPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            },
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
             }
           }
         }
       ],
-      "labels": [
+      "total": [
         {
           "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
             "fontFamily": {
               "expr": {
                 "Literal": {
@@ -305,10 +405,21 @@
                 }
               }
             },
-            "labelPrecision": {
+            "bold": {
               "expr": {
                 "Literal": {
-                  "Value": "1D"
+                  "Value": "true"
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EEF3EF'"
+                    }
+                  }
                 }
               }
             }

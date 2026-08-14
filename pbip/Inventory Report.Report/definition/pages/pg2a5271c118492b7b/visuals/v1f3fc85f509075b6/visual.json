@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "v1f3fc85f509075b6",
   "position": {
-    "x": 820,
+    "x": 824,
     "y": 8,
     "z": 4,
-    "width": 220,
+    "width": 208,
     "height": 76,
     "tabOrder": 400
   },
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dimPlant"
+                      "Entity": "dimNature"
                     }
                   },
-                  "Property": "Plant"
+                  "Property": "Nature"
                 }
               },
-              "queryRef": "dimPlant.Plant",
-              "nativeQueryRef": "Plant"
+              "queryRef": "dimNature.Nature",
+              "nativeQueryRef": "Nature"
             }
           ]
         }
@@ -47,7 +47,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Plant'"
+                  "Value": "'Technology'"
                 }
               }
             },
@@ -283,10 +283,10 @@
           "Column": {
             "Expression": {
               "SourceRef": {
-                "Entity": "dimPlant"
+                "Entity": "dimNature"
               }
             },
-            "Property": "Plant"
+            "Property": "Nature"
           }
         },
         "filter": {
@@ -294,7 +294,7 @@
           "From": [
             {
               "Name": "f",
-              "Entity": "dimPlant",
+              "Entity": "dimNature",
               "Type": 0
             }
           ],
@@ -312,7 +312,7 @@
                               "Source": "f"
                             }
                           },
-                          "Property": "Plant"
+                          "Property": "Nature"
                         }
                       },
                       "Right": {

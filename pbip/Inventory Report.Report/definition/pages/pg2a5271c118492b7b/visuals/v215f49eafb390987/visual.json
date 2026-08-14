@@ -3,10 +3,10 @@
   "name": "v215f49eafb390987",
   "position": {
     "x": 16,
-    "y": 88,
+    "y": 236,
     "z": 6,
     "width": 1248,
-    "height": 140,
+    "height": 252,
     "tabOrder": 600
   },
   "visual": {
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dimPlant"
+                      "Entity": "dimNature"
                     }
                   },
-                  "Property": "Plant"
+                  "Property": "Nature"
                 }
               },
-              "queryRef": "dimPlant.Plant",
-              "nativeQueryRef": "Plant"
+              "queryRef": "dimNature.Nature",
+              "nativeQueryRef": "Nature"
             }
           ]
         },
@@ -52,14 +52,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Period"
+                      "Entity": "dimDate"
                     }
                   },
-                  "Property": "Period"
+                  "Property": "MonthName"
                 }
               },
-              "queryRef": "Period.Period",
-              "nativeQueryRef": "Period"
+              "queryRef": "dimDate.MonthName",
+              "nativeQueryRef": "MonthName"
             }
           ],
           "showAll": false
@@ -98,7 +98,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'FG by Plant — MW · Rs Cr. · Days'"
+                  "Value": "'FG by Technology — MW · Rs Cr. · Days'"
                 }
               }
             },

@@ -3,10 +3,10 @@
   "name": "vf2280ccaf489e6a0",
   "position": {
     "x": 916,
-    "y": 88,
+    "y": 402,
     "z": 17,
     "width": 348,
-    "height": 306,
+    "height": 304,
     "tabOrder": 1700
   },
   "visual": {
@@ -66,7 +66,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'FG Components, Latest Month (Rs Cr. and % Share)'"
+                  "Value": "'RM Components, Latest Month (Rs Cr. and % Share)'"
                 }
               }
             },
@@ -269,7 +269,7 @@
                     [
                       {
                         "Literal": {
-                          "Value": "'FG'"
+                          "Value": "'RM'"
                         }
                       }
                     ]

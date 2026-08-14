@@ -2,15 +2,15 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "v635a697ba598bf53",
   "position": {
-    "x": 648,
-    "y": 428,
+    "x": 16,
+    "y": 548,
     "z": 9,
-    "width": 616,
-    "height": 112,
+    "width": 1248,
+    "height": 156,
     "tabOrder": 900
   },
   "visual": {
-    "visualType": "lineClusteredColumnComboChart",
+    "visualType": "lineChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Period"
+                      "Entity": "dimDate"
                     }
                   },
-                  "Property": "Period"
+                  "Property": "MonthName"
                 }
               },
-              "queryRef": "Period.Period",
-              "nativeQueryRef": "Period"
+              "queryRef": "dimDate.MonthName",
+              "nativeQueryRef": "MonthName"
             }
           ],
           "showAll": true
@@ -42,16 +42,12 @@
                       "Entity": "factInventory"
                     }
                   },
-                  "Property": "Difference Inventory Rs Cr"
+                  "Property": "RM Days"
                 }
               },
-              "queryRef": "factInventory.Difference Inventory Rs Cr",
-              "nativeQueryRef": "Difference Inventory Rs Cr"
-            }
-          ]
-        },
-        "Y2": {
-          "projections": [
+              "queryRef": "factInventory.RM Days",
+              "nativeQueryRef": "RM Days"
+            },
             {
               "field": {
                 "Measure": {
@@ -60,11 +56,25 @@
                       "Entity": "factInventory"
                     }
                   },
-                  "Property": "Difference Inventory %"
+                  "Property": "FG Days"
                 }
               },
-              "queryRef": "factInventory.Difference Inventory %",
-              "nativeQueryRef": "Difference Inventory %"
+              "queryRef": "factInventory.FG Days",
+              "nativeQueryRef": "FG Days"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "factInventory"
+                    }
+                  },
+                  "Property": "Total Days (RM + FG)"
+                }
+              },
+              "queryRef": "factInventory.Total Days (RM + FG)",
+              "nativeQueryRef": "Total Days (RM + FG)"
             }
           ]
         }
@@ -84,7 +94,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Difference by Month (Rs Cr. and % of TB)'"
+                  "Value": "'Days of Inventory by Month, Last 12 Months — RM, FG and Total'"
                 }
               }
             },
@@ -328,7 +338,7 @@
                 "Entity": "factInventory"
               }
             },
-            "Property": "In Summary Window"
+            "Property": "In Last 12"
           }
         },
         "filter": {
@@ -352,7 +362,7 @@
                           "Source": "f"
                         }
                       },
-                      "Property": "In Summary Window"
+                      "Property": "In Last 12"
                     }
                   },
                   "Right": {

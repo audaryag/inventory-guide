@@ -3,10 +3,10 @@
   "name": "va60845d2e2a28f56",
   "position": {
     "x": 16,
-    "y": 88,
+    "y": 236,
     "z": 6,
     "width": 1248,
-    "height": 140,
+    "height": 252,
     "tabOrder": 600
   },
   "visual": {
@@ -20,14 +20,28 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dimPlant"
+                      "Entity": "factInventory"
                     }
                   },
-                  "Property": "Plant"
+                  "Property": "GroupNature"
                 }
               },
-              "queryRef": "dimPlant.Plant",
-              "nativeQueryRef": "Plant"
+              "queryRef": "factInventory.GroupNature",
+              "nativeQueryRef": "GroupNature"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dimNature"
+                    }
+                  },
+                  "Property": "Nature"
+                }
+              },
+              "queryRef": "dimNature.Nature",
+              "nativeQueryRef": "Nature"
             }
           ]
         },
@@ -52,14 +66,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Period"
+                      "Entity": "dimDate"
                     }
                   },
-                  "Property": "Period"
+                  "Property": "MonthName"
                 }
               },
-              "queryRef": "Period.Period",
-              "nativeQueryRef": "Period"
+              "queryRef": "dimDate.MonthName",
+              "nativeQueryRef": "MonthName"
             }
           ],
           "showAll": false
@@ -98,7 +112,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'RM Inventory by Plant — Rs Cr. · Days'"
+                  "Value": "'RM Inventory by Group Nature and Nature — Rs Cr. · Days'"
                 }
               }
             },
@@ -214,7 +228,7 @@
             "showExpandCollapseButtons": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },
@@ -332,7 +346,7 @@
             "rowSubtotals": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },
@@ -346,7 +360,7 @@
             "perRowLevel": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             }
@@ -440,7 +454,28 @@
           }
         }
       ]
-    }
+    },
+    "expansionStates": [
+      {
+        "roles": [
+          "Rows"
+        ],
+        "levels": [
+          {
+            "queryRefs": [
+              "factInventory.GroupNature"
+            ],
+            "isCollapsed": false
+          },
+          {
+            "queryRefs": [
+              "dimNature.Nature"
+            ],
+            "isCollapsed": true
+          }
+        ]
+      }
+    ]
   },
   "filterConfig": {
     "filters": [

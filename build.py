@@ -484,6 +484,21 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 9 &mdash; 14 Aug:</strong> three changes, all things you asked for.
+<br><br><strong>The slicers list only the months you have loaded.</strong> <code>dimDate</code> was
+a continuous April-to-March calendar, so every month of the year appeared in the pickers whether or
+not a file existed for it. It is now built from the months actually present in the stock files and
+the trial balance: put July 2025's MB5B in the folder and Jul'25 becomes an option; until then it
+does not exist in the model, and the quarter picker lists only quarters that have data.
+<br><br><strong>The newest March is genuinely the first column.</strong> The default window was the
+newest March plus the four most recent months, but nothing stopped January and February of the same
+year slipping in ahead of it. It now ignores everything before that March, so in August you get Mar,
+May, Jun, Jul, Aug and in April just Mar and Apr, March first. Ticking months yourself still
+overrides it.
+<br><br><strong>The ticker figures are no longer clipped.</strong> The callout size is now worked
+out from the box the card has to fit in rather than fixed: 11pt in the 156-wide panel cards, 13pt on
+the Total, 14pt on the wide cards on Detail and Checks. Nothing is cut off mid-figure.</blockquote>
+
 <blockquote><strong>Build 8 &mdash; 14 Aug:</strong> build 7 refused to refresh with
 <em>&ldquo;14 queries are blocked &hellip; Query 'factTB_Staged' references other queries or steps,
 so it may not directly access a data source&rdquo;</em>. That is Power Query's firewall, and it was

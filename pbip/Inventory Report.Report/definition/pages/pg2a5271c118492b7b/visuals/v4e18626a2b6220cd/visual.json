@@ -2,15 +2,15 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "v4e18626a2b6220cd",
   "position": {
-    "x": 16,
+    "x": 444,
     "y": 496,
     "z": 8,
-    "width": 412,
+    "width": 428,
     "height": 208,
     "tabOrder": 800
   },
   "visual": {
-    "visualType": "clusteredColumnChart",
+    "visualType": "lineClusteredColumnComboChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dimNature"
+                      "Entity": "dimDate"
                     }
                   },
-                  "Property": "Nature"
+                  "Property": "MonthName"
                 }
               },
-              "queryRef": "dimNature.Nature",
-              "nativeQueryRef": "Nature"
+              "queryRef": "dimDate.MonthName",
+              "nativeQueryRef": "MonthName"
             }
           ],
           "showAll": true
@@ -42,11 +42,29 @@
                       "Entity": "factInventory"
                     }
                   },
-                  "Property": "MW"
+                  "Property": "Days"
                 }
               },
-              "queryRef": "factInventory.MW",
-              "nativeQueryRef": "MW"
+              "queryRef": "factInventory.Days",
+              "nativeQueryRef": "Days"
+            }
+          ]
+        },
+        "Y2": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "factInventory"
+                    }
+                  },
+                  "Property": "Days vs LM"
+                }
+              },
+              "queryRef": "factInventory.Days vs LM",
+              "nativeQueryRef": "Days vs LM"
             }
           ]
         }
@@ -66,7 +84,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'FG MW by Technology, Latest Month — Click a Bar'"
+                  "Value": "'FG Days of Inventory by Month, Last 12 Months (Days and % vs Last Month)'"
                 }
               }
             },
@@ -364,7 +382,7 @@
                 "Entity": "factInventory"
               }
             },
-            "Property": "In Latest Month"
+            "Property": "In Last 12"
           }
         },
         "filter": {
@@ -388,7 +406,7 @@
                           "Source": "f"
                         }
                       },
-                      "Property": "In Latest Month"
+                      "Property": "In Last 12"
                     }
                   },
                   "Right": {

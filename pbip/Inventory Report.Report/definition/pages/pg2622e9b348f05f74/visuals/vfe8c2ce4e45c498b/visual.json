@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "vfe8c2ce4e45c498b",
   "position": {
-    "x": 564,
+    "x": 588,
     "y": 8,
     "z": 3,
-    "width": 240,
+    "width": 220,
     "height": 76,
     "tabOrder": 300
   },
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dimDate"
+                      "Entity": "dimPlant"
                     }
                   },
-                  "Property": "Quarter"
+                  "Property": "Plant"
                 }
               },
-              "queryRef": "dimDate.Quarter",
-              "nativeQueryRef": "Quarter"
+              "queryRef": "dimPlant.Plant",
+              "nativeQueryRef": "Plant"
             }
           ]
         }
@@ -47,7 +47,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Quarters (Leave Empty for the Last 4)'"
+                  "Value": "'Plant'"
                 }
               }
             },
@@ -283,10 +283,10 @@
           "Column": {
             "Expression": {
               "SourceRef": {
-                "Entity": "dimDate"
+                "Entity": "dimPlant"
               }
             },
-            "Property": "Quarter"
+            "Property": "Plant"
           }
         },
         "filter": {
@@ -294,7 +294,7 @@
           "From": [
             {
               "Name": "f",
-              "Entity": "dimDate",
+              "Entity": "dimPlant",
               "Type": 0
             }
           ],
@@ -312,7 +312,7 @@
                               "Source": "f"
                             }
                           },
-                          "Property": "Quarter"
+                          "Property": "Plant"
                         }
                       },
                       "Right": {

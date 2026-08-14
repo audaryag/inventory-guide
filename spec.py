@@ -96,7 +96,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 11, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -114,7 +114,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 11, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -132,7 +132,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 11, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -150,7 +150,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 11, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -168,7 +168,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 11, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -186,7 +186,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 16, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 11, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -204,7 +204,7 @@ VISUALS = [
      "and ignores every slicer on the page, because stock is a level, not something you "
      "add up across months.",
      ["Format pane \u2192 Callout value \u2192 Display units: None, Value decimal places: 1, "
-      "Font: Arial, Font size: 22, Bold: On, Colour: #1F2A24 (near-black, because the box "
+      "Font: Arial, Font size: 13, Bold: On, Colour: #1F2A24 (near-black, because the box "
       "behind it is white now). Display units None is what stops Power BI writing 2.5K "
       "instead of 2,539.4.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
@@ -221,9 +221,9 @@ VISUALS = [
      "One line reading, for example, +12.4 Rs Cr. (+2.1%) \u2014 the amount and the percentage "
      "together, each labelled, so nobody has to ask which is which. Same white box as Total, "
      "directly under it.",
-     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 12, Bold: On, "
-      "Colour: #1F2A24. Twelve rather than fifteen, because this line carries the amount and "
-      "the percentage together and the panel is narrower now. Green and red would fight with "
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 11, Bold: On, "
+      "Colour: #1F2A24. Eleven, not sixteen: this line carries the amount and the percentage "
+      "together in a 156-wide box, and anything larger is cut off mid-figure. Green and red would fight with "
       "the white box, so the sign carries the meaning instead.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 10, Colour: #14532D, "
       "Text: Change since Last Month.",
@@ -247,8 +247,11 @@ VISUALS = [
      "Tick nothing and you get March — the year-end close — followed by the last four "
      "months that have data, five columns in all, or fewer early in the year: in April just "
      "March and April. Tick your own months and they replace that, up to the 5 most recent of "
-     "your ticks. Months are the only period on this page: the columns and the bars are "
-     "dimDate[MonthName] itself, not a switchable parameter.",
+     "your ticks. The list holds only the months you have actually loaded — add July'25's "
+     "MB5B and July'25 appears here, and until then it is not an option at all, because the "
+     "calendar is built from the files rather than from a fixed April-to-March range. Months "
+     "are the only period on this page: the columns and the bars are dimDate[MonthName] "
+     "itself, not a switchable parameter.",
      [
       "Filters pane \u2192 drag the same field into this visual's own Filters box \u2192 Filter type: Advanced filtering \u2192 'is not blank' \u2192 Apply. That takes the empty row out of the list; it only appears because some rows carry a code the master sheet does not have.",
      "Format pane \u2192 Slicer settings \u2192 Options \u2192 Style: Dropdown.",
@@ -973,7 +976,7 @@ VISUALS = [
      (16, 56, 240, 88),
      "How many rows came out of RM Raw, FG Raw and Consble Raw together. Zero means pRoot is "
      "wrong or the three folders are named differently.",
-     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 16, Colour: #14532D.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 14, Colour: #14532D.",
       "Format pane \u2192 General \u2192 Effects \u2192 Background: #FFFFFF."]),
 
     ("Checks", "Card", "Trial balance rows loaded",
@@ -981,7 +984,7 @@ VISUALS = [
      (264, 56, 240, 88),
      "Zero here is the reason Inventory (TB) reads as empty on Summary: either the TB folder "
      "has no TB_YYYYMM.xlsx files, or the GL numbers in them match nothing on TB Master.",
-     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 16, Colour: #14532D.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 14, Colour: #14532D.",
       "Format pane \u2192 General \u2192 Effects \u2192 Background: #FFFFFF."]),
 
     ("Checks", "Card", "Months of data",
@@ -989,7 +992,7 @@ VISUALS = [
      (512, 56, 240, 88),
      "How many month-ends the stock files cover. One month means only one file was read, and "
      "then every monthly chart has a single bar however it is built.",
-     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 16, Colour: #14532D.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 14, Colour: #14532D.",
       "Format pane \u2192 General \u2192 Effects \u2192 Background: #FFFFFF."]),
 
     ("Checks", "Card", "Plant codes in the data",
@@ -997,7 +1000,7 @@ VISUALS = [
      (760, 56, 240, 88),
      "More than three means the stock files carry a valuation area beyond the three plants; "
      "those now appear as 'Plant xxxx' rather than as a blank row.",
-     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 16, Colour: #14532D.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 14, Colour: #14532D.",
       "Format pane \u2192 General \u2192 Effects \u2192 Background: #FFFFFF."]),
 
     ("Checks", "Card", "Rows with no nature (%)",
@@ -1006,7 +1009,7 @@ VISUALS = [
      "The share of stock rows the master sheets do not cover. Anything above zero is what "
      "shows up as an Unassigned slice on the donuts and an Unassigned row in the technology "
      "matrix \u2014 the material numbers differ between the master sheet and the raw files.",
-     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 16, Colour: #B3261E.",
+     ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 14, Colour: #B3261E.",
       "Format pane \u2192 General \u2192 Effects \u2192 Background: #FFFFFF."]),
 
     ("Checks", "Table", "Every file the four folders gave, with its sheets",

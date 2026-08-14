@@ -3,68 +3,36 @@
   "name": "ve2bf56d0e103c687",
   "position": {
     "x": 16,
-    "y": 308,
+    "y": 428,
     "z": 7,
-    "width": 1248,
+    "width": 616,
     "height": 112,
     "tabOrder": 700
   },
   "visual": {
-    "visualType": "pivotTable",
+    "visualType": "clusteredColumnChart",
     "query": {
       "queryState": {
-        "Rows": {
+        "Category": {
           "projections": [
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dimCategory"
+                      "Entity": "dimDate"
                     }
                   },
-                  "Property": "Category"
+                  "Property": "MonthName"
                 }
               },
-              "queryRef": "dimCategory.Category",
-              "nativeQueryRef": "Category"
-            }
-          ]
-        },
-        "Columns": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dimMetric"
-                    }
-                  },
-                  "Property": "Metric"
-                }
-              },
-              "queryRef": "dimMetric.Metric",
-              "nativeQueryRef": "Metric"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Period"
-                    }
-                  },
-                  "Property": "Period"
-                }
-              },
-              "queryRef": "Period.Period",
-              "nativeQueryRef": "Period"
+              "queryRef": "dimDate.MonthName",
+              "nativeQueryRef": "MonthName"
             }
           ],
-          "showAll": false
+          "showAll": true
         },
-        "Values": {
+        "Y": {
           "projections": [
             {
               "field": {
@@ -74,11 +42,25 @@
                       "Entity": "factInventory"
                     }
                   },
-                  "Property": "Summary Value Rs Cr"
+                  "Property": "TB Inventory Rs Cr"
                 }
               },
-              "queryRef": "factInventory.Summary Value Rs Cr",
-              "nativeQueryRef": "Summary Value Rs Cr"
+              "queryRef": "factInventory.TB Inventory Rs Cr",
+              "nativeQueryRef": "TB Inventory Rs Cr"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "factInventory"
+                    }
+                  },
+                  "Property": "Inventory Rs Cr"
+                }
+              },
+              "queryRef": "factInventory.Inventory Rs Cr",
+              "nativeQueryRef": "Inventory Rs Cr"
             }
           ]
         }
@@ -98,7 +80,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Total Across All Plants by Type (Rs Cr.)'"
+                  "Value": "'Inventory (TB) vs Inventory (MB5B) by Month (Rs Cr.)'"
                 }
               }
             },
@@ -201,20 +183,20 @@
       ]
     },
     "objects": {
-      "rowHeaders": [
+      "legend": [
         {
           "properties": {
-            "stepped": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },
-            "showExpandCollapseButtons": {
+            "position": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Top'"
                 }
               }
             },
@@ -224,18 +206,11 @@
                   "Value": "'Arial'"
                 }
               }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
             }
           }
         }
       ],
-      "columnHeaders": [
+      "categoryAxis": [
         {
           "properties": {
             "fontFamily": {
@@ -245,46 +220,28 @@
                 }
               }
             },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "autoSizeColumnWidth": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "backColor": {
+            "labelColor": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#EEF3EF'"
+                      "Value": "'#3A4A3F'"
                     }
                   }
                 }
               }
             },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1E6B3A'"
-                    }
-                  }
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
-      "values": [
+      "valueAxis": [
         {
           "properties": {
             "fontFamily": {
@@ -294,76 +251,25 @@
                 }
               }
             },
-            "backColorPrimary": {
+            "labelColor": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#3A4A3F'"
                     }
                   }
                 }
               }
             },
-            "backColorSecondary": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#F7FAF7'"
-                    }
-                  }
-                }
-              }
-            },
-            "bandedRowHeaders": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "subTotals": [
-        {
-          "properties": {
-            "rowSubtotals": {
+            "showAxisTitle": {
               "expr": {
                 "Literal": {
                   "Value": "false"
                 }
               }
             },
-            "columnSubtotals": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "perRowLevel": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "grid": [
-        {
-          "properties": {
-            "gridVertical": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "gridVerticalColor": {
+            "gridlineColor": {
               "solid": {
                 "color": {
                   "expr": {
@@ -373,45 +279,20 @@
                   }
                 }
               }
-            },
-            "gridHorizontal": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "gridHorizontalColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#E6EDE6'"
-                    }
-                  }
-                }
-              }
-            },
-            "rowPadding": {
-              "expr": {
-                "Literal": {
-                  "Value": "2D"
-                }
-              }
-            },
-            "textSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
             }
           }
         }
       ],
-      "total": [
+      "labels": [
         {
           "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
             "fontFamily": {
               "expr": {
                 "Literal": {
@@ -419,21 +300,10 @@
                 }
               }
             },
-            "bold": {
+            "labelPrecision": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "backColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EEF3EF'"
-                    }
-                  }
+                  "Value": "1D"
                 }
               }
             }

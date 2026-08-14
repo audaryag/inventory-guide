@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "v9032bdc4fa4fe96f",
   "position": {
-    "x": 248,
+    "x": 332,
     "y": 8,
     "z": 2,
-    "width": 300,
+    "width": 240,
     "height": 76,
     "tabOrder": 200
   },
@@ -23,11 +23,11 @@
                       "Entity": "dimDate"
                     }
                   },
-                  "Property": "MonthName"
+                  "Property": "Quarter"
                 }
               },
-              "queryRef": "dimDate.MonthName",
-              "nativeQueryRef": "MonthName"
+              "queryRef": "dimDate.Quarter",
+              "nativeQueryRef": "Quarter"
             }
           ]
         }
@@ -47,7 +47,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Months (Leave Empty for the Last 4)'"
+                  "Value": "'Quarters (Leave Empty for the Last 4)'"
                 }
               }
             },
@@ -286,7 +286,7 @@
                 "Entity": "dimDate"
               }
             },
-            "Property": "MonthName"
+            "Property": "Quarter"
           }
         },
         "filter": {
@@ -312,7 +312,7 @@
                               "Source": "f"
                             }
                           },
-                          "Property": "MonthName"
+                          "Property": "Quarter"
                         }
                       },
                       "Right": {

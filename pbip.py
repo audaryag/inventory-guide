@@ -341,11 +341,15 @@ def chart_objects(kind, labels=False):
     return o
 
 
-def card_objects():
-    # 16pt, not 22: a 58-high card carrying a category label above the figure clips a 22pt
-    # number top and bottom, and a four-figure crore value is unreadable when clipped.
+def card_objects(width=200, height=60):
+    # the figure is sized from the box it has to fit in, not chosen once for every card: a
+    # 156-wide ticker card holding '1,234.5' plus a category label above it clips the number
+    # at 16pt, so the narrow ticker cards get 11pt and the wide cards on Detail and Checks 14pt.
+    size = 14 if width > 170 else (13 if height >= 60 else 11)
+    if height < 52:
+        size = min(size, 10)
     return {"labels": [{"properties": {"fontFamily": txt("Arial"),
-                                       "fontSize": literal("16D"),
+                                       "fontSize": literal(f"{size}D"),
                                        "labelDisplayUnits": literal("1D"),
                                        "labelPrecision": literal("1D"),
                                        "color": {"solid": {"color": txt(DARK)}}}}],
@@ -463,7 +467,7 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
         objects = matrix_objects(rows_levels, expand=rows_levels > 1,
                                  subtotals=rows_levels > 1)
     elif vt == "card":
-        objects = card_objects()
+        objects = card_objects(pos[2], pos[3])
     elif vt == "slicer":
         # every slicer multi-selects on a plain click: singleSelect off is what Power BI
         # calls 'Multi-select with CTRL', and leaving it on is why several months could

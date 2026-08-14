@@ -2,19 +2,33 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "v41f3abf1851b63f5",
   "position": {
-    "x": 1056,
-    "y": 8,
+    "x": 16,
+    "y": 88,
     "z": 5,
-    "width": 208,
-    "height": 76,
+    "width": 1248,
+    "height": 212,
     "tabOrder": 500
   },
   "visual": {
-    "visualType": "slicer",
+    "visualType": "pivotTable",
     "query": {
       "queryState": {
-        "Values": {
+        "Rows": {
           "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dimPlant"
+                    }
+                  },
+                  "Property": "Plant"
+                }
+              },
+              "queryRef": "dimPlant.Plant",
+              "nativeQueryRef": "Plant"
+            },
             {
               "field": {
                 "Column": {
@@ -28,6 +42,57 @@
               },
               "queryRef": "dimCategory.Category",
               "nativeQueryRef": "Category"
+            }
+          ]
+        },
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dimMetric"
+                    }
+                  },
+                  "Property": "Metric"
+                }
+              },
+              "queryRef": "dimMetric.Metric",
+              "nativeQueryRef": "Metric"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dimDate"
+                    }
+                  },
+                  "Property": "MonthName"
+                }
+              },
+              "queryRef": "dimDate.MonthName",
+              "nativeQueryRef": "MonthName"
+            }
+          ],
+          "showAll": false
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "factInventory"
+                    }
+                  },
+                  "Property": "Summary Value Rs Cr"
+                }
+              },
+              "queryRef": "factInventory.Summary Value Rs Cr",
+              "nativeQueryRef": "Summary Value Rs Cr"
             }
           ]
         }
@@ -47,7 +112,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Type'"
+                  "Value": "'Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr.)'"
                 }
               }
             },
@@ -150,34 +215,17 @@
       ]
     },
     "objects": {
-      "general": [
+      "rowHeaders": [
         {
           "properties": {
-            "outlineColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#DCE5DC'"
-                    }
-                  }
+            "stepped": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             },
-            "outlineWeight": {
-              "expr": {
-                "Literal": {
-                  "Value": "1D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "header": [
-        {
-          "properties": {
-            "show": {
+            "showExpandCollapseButtons": {
               "expr": {
                 "Literal": {
                   "Value": "true"
@@ -188,6 +236,51 @@
               "expr": {
                 "Literal": {
                   "Value": "'Arial'"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EEF3EF'"
+                    }
+                  }
                 }
               }
             },
@@ -201,18 +294,11 @@
                   }
                 }
               }
-            },
-            "textSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
             }
           }
         }
       ],
-      "items": [
+      "values": [
         {
           "properties": {
             "fontFamily": {
@@ -222,6 +308,111 @@
                 }
               }
             },
+            "backColorPrimary": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColorSecondary": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#F7FAF7'"
+                    }
+                  }
+                }
+              }
+            },
+            "bandedRowHeaders": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTotals": [
+        {
+          "properties": {
+            "rowSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "columnSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "perRowLevel": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "gridVertical": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridVerticalColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E6EDE6'"
+                    }
+                  }
+                }
+              }
+            },
+            "gridHorizontal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridHorizontalColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E6EDE6'"
+                    }
+                  }
+                }
+              }
+            },
+            "rowPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            },
             "textSize": {
               "expr": {
                 "Literal": {
@@ -232,61 +423,73 @@
           }
         }
       ],
-      "selection": [
+      "total": [
         {
           "properties": {
-            "singleSelect": {
+            "fontFamily": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Arial'"
                 }
               }
             },
-            "strictSingleSelect": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "selectAllCheckboxEnabled": {
+            "bold": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
-            }
-          }
-        }
-      ],
-      "data": [
-        {
-          "properties": {
-            "mode": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Dropdown'"
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EEF3EF'"
+                    }
+                  }
                 }
               }
             }
           }
         }
       ]
-    }
+    },
+    "expansionStates": [
+      {
+        "roles": [
+          "Rows"
+        ],
+        "levels": [
+          {
+            "queryRefs": [
+              "dimPlant.Plant"
+            ],
+            "isCollapsed": false
+          },
+          {
+            "queryRefs": [
+              "dimCategory.Category"
+            ],
+            "isCollapsed": true
+          }
+        ]
+      }
+    ]
   },
   "filterConfig": {
     "filters": [
       {
-        "name": "nbv41f3abf1851b63f5",
+        "name": "fltpg290612199861c31d_5_0",
         "type": "Advanced",
         "field": {
-          "Column": {
+          "Measure": {
             "Expression": {
               "SourceRef": {
-                "Entity": "dimCategory"
+                "Entity": "factInventory"
               }
             },
-            "Property": "Category"
+            "Property": "In Summary Window"
           }
         },
         "filter": {
@@ -294,32 +497,28 @@
           "From": [
             {
               "Name": "f",
-              "Entity": "dimCategory",
+              "Entity": "factInventory",
               "Type": 0
             }
           ],
           "Where": [
             {
               "Condition": {
-                "Not": {
-                  "Expression": {
-                    "Comparison": {
-                      "ComparisonKind": 0,
-                      "Left": {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Source": "f"
-                            }
-                          },
-                          "Property": "Category"
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "f"
                         }
                       },
-                      "Right": {
-                        "Literal": {
-                          "Value": "null"
-                        }
-                      }
+                      "Property": "In Summary Window"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
                     }
                   }
                 }
