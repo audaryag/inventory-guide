@@ -233,8 +233,9 @@ VISUALS = [
 
     ("Overview", "Card", "As on",
      [("Fields", ["As On Text"])],
-     (14, 652, 156, 28),
-     "Says which month the whole panel is showing, so a reader never has to guess.",
+     (14, 652, 156, 44),
+     "Says which month the whole panel is showing, so a reader never has to guess. 44 tall, "
+     "not 28: the sentence sits under the words 'As on' and 28 cuts the sentence in half.",
      ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 10, Colour: #4B5563.",
       "Format pane \u2192 General \u2192 Title: Off \u2014 the sentence says it all.",
       "Format pane \u2192 General \u2192 Effects \u2192 Background: Off, Border: Off."],
@@ -1086,6 +1087,50 @@ def title_case(text):
         opening = False
     return " ".join(out)
 
+
+# ---- the panel is the report's furniture, so it belongs on every page --------------------
+# The green panel and the nine figures on it were built for Overview only, and the other five
+# pages were laid out across the full width, which left them nothing to sit beside. The panel
+# is now repeated in the same place on all six pages and those five pages are squeezed into
+# the space to its right, so a reader always has the same block of figures in the same corner
+# whichever page they are on. Only the second line of the heading changes, to the page's name.
+PANEL_W = 184                      # the green strip's width, the same on every page
+LEFT = PANEL_W + 8                 # 192: the first pixel a page's own visuals may use
+RIGHT = CANVAS[0] - 16             # 1264: the last one
+_OLD_L, _OLD_R = 16, 1264          # what the five full-width pages were drawn against
+_SCALE = (RIGHT - LEFT) / (_OLD_R - _OLD_L)
+PANEL_PAGES = [p for p in PAGES if p != PAGES[0]]
+
+
+def squeeze(x, w):
+    """Moves a full-width visual to the right of the panel and narrows it by the same ratio,
+    so the gaps between visuals stay in proportion instead of everything shifting off-canvas."""
+    return int(round(LEFT + (x - _OLD_L) * _SCALE)), int(round(w * _SCALE))
+
+
+VISUALS = [v if v[0] == PAGES[0] else
+           (v[0], v[1], v[2], v[3],
+            (squeeze(v[4][0], v[4][2])[0], v[4][1], squeeze(v[4][0], v[4][2])[1], v[4][3]),
+            v[5], v[6])
+           for v in VISUALS]
+
+# the nine panel figures: every Overview visual that sits inside the panel's width
+_PANEL_CARDS = [v for v in VISUALS if v[0] == PAGES[0] and v[4][0] < PANEL_W]
+VISUALS = VISUALS + [(pg, k, t, wells, pos, why, extra)
+                     for pg in PANEL_PAGES
+                     for (_, k, t, wells, pos, why, extra) in _PANEL_CARDS]
+
+# the copies, so the written guide can say 'copy the panel across' once instead of repeating
+# nine identical card builds on five pages. The generated project still writes all of them.
+PANEL_CLONES = {(pg, title_case(t)) for pg in PANEL_PAGES
+                for (_, _k, t, *_r) in _PANEL_CARDS}
+PANEL_TITLES = [title_case(t) for (_, _k, t, *_r) in _PANEL_CARDS]
+
+# the same green strip, logo space, headings and three white boxes; the word 'Overview' on
+# the second line becomes the page's own name so the panel doubles as a page label
+DECOR = DECOR + [(pg, k, (pg if t == PAGES[0] else t), x, y, w, h, n)
+                 for pg in PANEL_PAGES
+                 for (_, k, t, x, y, w, h, n) in DECOR if _ == PAGES[0]]
 
 CARDS = [(m, x, y, w, h, title_case(t)) for m, x, y, w, h, t in CARDS]
 SLICERS = [(f, x, y, w, h, title_case(t)) for f, x, y, w, h, t in SLICERS]

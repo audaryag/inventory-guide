@@ -289,6 +289,40 @@ def r_tree(v):
     return f"<div class='tree'>{''.join(boxes)}</div>"
 
 
+def prop(v, obj, name):
+    """one formatting property off a generated visual, or None"""
+    try:
+        val = v["visual"]["objects"][obj][0]["properties"][name]
+    except Exception:
+        return None
+    if isinstance(val, dict) and "solid" in val:
+        val = val["solid"]["color"]
+    if isinstance(val, dict) and "expr" in val:
+        v = val["expr"]["Literal"]["Value"].strip("'")
+        # '8D' is the number eight; '#14532D' is a colour that happens to end in D
+        return v[:-1] if v.endswith("D") and not v.startswith("#") else v
+    return val
+
+
+def shape_div(v):
+    """The green panel, the white boxes and the panel wording, drawn from the shape visual's
+    own fill and text properties, so the preview shows what the project file actually says."""
+    p = v["position"]
+    fill = prop(v, "fill", "fillColor") if prop(v, "fill", "show") == "true" else None
+    radius = prop(v, "shape", "rectangleRoundedCurve") or "0"
+    text = prop(v, "text", "text") or ""
+    colour = prop(v, "text", "fontColor") or "#FFFFFF"
+    size = prop(v, "text", "fontSize") or "10"
+    bold = "bold" if prop(v, "text", "bold") == "true" else "normal"
+    border = ("border:1px dashed rgba(191,227,198,.6);"
+              if prop(v, "outline", "show") == "true" else "")
+    return (f"<div style='position:absolute;left:{p['x']}px;top:{p['y']}px;"
+            f"width:{p['width']}px;height:{p['height']}px;border-radius:{radius}px;"
+            f"background:{fill or 'transparent'};{border}display:flex;align-items:center;"
+            f"padding:0 6px;font-size:{size}px;font-weight:{bold};color:{colour}'>"
+            f"{esc(text)}</div>")
+
+
 RENDER = {
     "card": r_card, "slicer": r_slicer, "pivotTable": r_matrix, "tableEx": r_matrix,
     "columnChart": lambda v: bars(v, stacked=True),
@@ -361,6 +395,9 @@ def render_page(pdir, pages_order, names):
     for v in vis:
         p = v["position"]
         vt = v["visual"]["visualType"]
+        if vt == "shape":                       # furniture: paint it, no card chrome
+            body.append(shape_div(v))
+            continue
         inner = RENDER[vt](v) if vt in RENDER else f"<i>{esc(vt)}</i>"
         t = title_of(v)
         pad = "" if vt == "slicer" else f"<div class='vt'>{esc(t)}</div>"

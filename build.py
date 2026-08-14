@@ -484,6 +484,20 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 10 &mdash; 14 Aug:</strong> the green panel is now on every page,
+in the same place. It was only ever built on <code>Overview</code>, and the generated project drew no
+panel at all &mdash; the nine figures floated on the page background, which is why the ticker looked
+nothing like the design. The green rectangle, the logo strip, the two heading lines, the two section
+labels and the three white boxes are now generated as real Shape visuals at Horizontal 0, Vertical 0,
+184 &times; 720 on all six pages, with the nine figures on top of them, identical coordinates
+throughout; only the second heading line changes, to the page's own name, so the panel doubles as a
+page label. Everything else on <code>Summary</code>, <code>FG</code>, <code>RM</code>,
+<code>Detail</code> and <code>Checks</code> has moved to the right of it &mdash; Horizontal 192
+rather than 16, narrower in the same proportion &mdash; so nothing sits under the green. The As-on
+line is 44 tall instead of 28, which stops the sentence being cut in half. If you are building by
+hand, build the panel once and copy it: select the strip on <code>Overview</code>, <strong>Ctrl+C</strong>,
+<strong>Ctrl+V</strong> on each of the other five pages.</blockquote>
+
 <blockquote><strong>Build 9 &mdash; 14 Aug:</strong> three changes, all things you asked for.
 <br><br><strong>The slicers list only the months you have loaded.</strong> <code>dimDate</code> was
 a continuous April-to-March calendar, so every month of the year appeared in the pickers whether or

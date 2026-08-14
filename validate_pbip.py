@@ -3,15 +3,19 @@
 import json, pathlib, sys
 from jsonschema import Draft7Validator, RefResolver
 
-SCHEMAS = pathlib.Path("/tmp/jsch")
+SCHEMAS = pathlib.Path("/home/ubuntu/jsch")
 OUT = pathlib.Path("/home/ubuntu/pbip")
 
+# every schema file on disk is registered under both its own $id and the URL it would be
+# fetched from, so a relative $ref between two Microsoft schemas resolves offline
+BASE = "https://developer.microsoft.com/json-schemas/"
 store = {}
-for p in SCHEMAS.rglob("schema.json"):
+for p in sorted(SCHEMAS.rglob("*.json")):
     try:
         s = json.loads(p.read_text())
     except Exception:
         continue
+    store[BASE + str(p.relative_to(SCHEMAS))] = s
     if "$id" in s:
         store[s["$id"]] = s
         store[str(p)] = s

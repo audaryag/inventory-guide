@@ -326,7 +326,9 @@ Only two colours are ever used for a printed number, and never grey: **#FFFFFF**
 
 ---
 
-## The furniture on `Overview` (no data in any of it)
+## The furniture: the green panel (no data in any of it)
+
+Build it once on `Overview` and copy it to the other five pages — the panel is the one thing that never moves, so a reader always finds the same figures in the same corner. Every page's own visuals then start at Horizontal 192, clear of it.
 
 | What | Insert it with | Text / fill | Horizontal (X) | Vertical (Y) | Width | Height |
 |---|---|---|---|---|---|---|
@@ -493,7 +495,7 @@ Position: Horizontal 14, Vertical 592, Width 156, Height 58.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to Off, Border: Off.
 - The measure writes its own + or − sign and both units, so leave Display units alone.
 
-**4.13** **Card** — Says which month the whole panel is showing, so a reader never has to guess.
+**4.13** **Card** — Says which month the whole panel is showing, so a reader never has to guess. 44 tall, not 28: the sentence sits under the words 'As on' and 28 cuts the sentence in half.
 
 | Well | Field |
 |---|---|
@@ -501,7 +503,7 @@ Position: Horizontal 14, Vertical 592, Width 156, Height 58.
 
 Title: `As on`
 
-Position: Horizontal 14, Vertical 652, Width 156, Height 28.
+Position: Horizontal 14, Vertical 652, Width 156, Height 44.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -692,6 +694,12 @@ Position: Horizontal 916, Vertical 402, Width 348, Height 304.
 
 ## Page — Summary
 
+**The panel first.** Go to `Overview`, click the green panel, then hold **Ctrl** and click the logo box, the two heading lines, the two section labels, the three white boxes and all 9 figures on the panel — or draw a selection box around the whole left strip. **Ctrl+C**, come back to `Summary`, **Ctrl+V**. Everything arrives at the same coordinates, so the panel is identical on every page.
+
+Then click the second heading line and change its text from `Overview` to `Summary`, so the panel doubles as the page's name. Nothing else on the panel changes: the nine figures ignore every slicer on every page by design, because they are the latest month's position and they must read the same wherever you are.
+
+The visuals below are what goes to the **right** of the panel, which is why every Horizontal starts at 192 rather than 16.
+
 **4.22** **Slicer** — Tick nothing and the matrix shows the last 4 months under each master column. Tick the months you want and it shows those, up to twelve — tick more than twelve and it keeps the twelve most recent of your ticks, because 3 master columns × 12 months is already 36 columns of figures.
 
 | Well | Field |
@@ -700,7 +708,7 @@ Position: Horizontal 916, Vertical 402, Width 348, Height 304.
 
 Title: `Months (Leave Empty for the Last 4)`
 
-Position: Horizontal 16, Vertical 8, Width 300, Height 76.
+Position: Horizontal 192, Vertical 8, Width 258, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -721,7 +729,7 @@ Position: Horizontal 16, Vertical 8, Width 300, Height 76.
 
 Title: `Quarters (Leave Empty for the Last 4)`
 
-Position: Horizontal 332, Vertical 8, Width 240, Height 76.
+Position: Horizontal 463, Vertical 8, Width 206, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -742,7 +750,7 @@ Position: Horizontal 332, Vertical 8, Width 240, Height 76.
 
 Title: `Plant`
 
-Position: Horizontal 588, Vertical 8, Width 220, Height 76.
+Position: Horizontal 683, Vertical 8, Width 189, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -762,7 +770,7 @@ Position: Horizontal 588, Vertical 8, Width 220, Height 76.
 
 Title: `Type`
 
-Position: Horizontal 824, Vertical 8, Width 208, Height 76.
+Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -785,7 +793,7 @@ Position: Horizontal 824, Vertical 8, Width 208, Height 76.
 
 Title: `Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr.)`
 
-Position: Horizontal 16, Vertical 88, Width 1248, Height 212.
+Position: Horizontal 192, Vertical 88, Width 1072, Height 212.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -813,7 +821,7 @@ Position: Horizontal 16, Vertical 88, Width 1248, Height 212.
 
 Title: `Total Across All Plants by Type (Rs Cr.)`
 
-Position: Horizontal 16, Vertical 308, Width 1248, Height 112.
+Position: Horizontal 192, Vertical 308, Width 1072, Height 112.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -836,7 +844,7 @@ Position: Horizontal 16, Vertical 308, Width 1248, Height 112.
 
 Title: `Inventory (TB) vs Inventory (MB5B) by Month (Rs Cr.)`
 
-Position: Horizontal 16, Vertical 428, Width 616, Height 112.
+Position: Horizontal 192, Vertical 428, Width 529, Height 112.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -862,7 +870,7 @@ Position: Horizontal 16, Vertical 428, Width 616, Height 112.
 
 Title: `Difference by Month (Rs Cr. and % of TB)`
 
-Position: Horizontal 648, Vertical 428, Width 616, Height 112.
+Position: Horizontal 735, Vertical 428, Width 529, Height 112.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -888,7 +896,7 @@ Position: Horizontal 648, Vertical 428, Width 616, Height 112.
 
 Title: `Days of Inventory by Month, Last 12 Months — RM, FG and Total`
 
-Position: Horizontal 16, Vertical 548, Width 1248, Height 156.
+Position: Horizontal 192, Vertical 548, Width 1072, Height 156.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -909,6 +917,12 @@ Position: Horizontal 16, Vertical 548, Width 1248, Height 156.
 
 ## Page — FG
 
+**The panel first.** Go to `Overview`, click the green panel, then hold **Ctrl** and click the logo box, the two heading lines, the two section labels, the three white boxes and all 9 figures on the panel — or draw a selection box around the whole left strip. **Ctrl+C**, come back to `FG`, **Ctrl+V**. Everything arrives at the same coordinates, so the panel is identical on every page.
+
+Then click the second heading line and change its text from `Overview` to `FG`, so the panel doubles as the page's name. Nothing else on the panel changes: the nine figures ignore every slicer on every page by design, because they are the latest month's position and they must read the same wherever you are.
+
+The visuals below are what goes to the **right** of the panel, which is why every Horizontal starts at 192 rather than 16.
+
 **4.31** **Slicer** — Which months appear under each master column. Tick nothing and it shows the last four with data; tick your own and it shows those, up to twelve.
 
 | Well | Field |
@@ -917,7 +931,7 @@ Position: Horizontal 16, Vertical 548, Width 1248, Height 156.
 
 Title: `Months (Leave Empty for the Last 4)`
 
-Position: Horizontal 16, Vertical 8, Width 300, Height 76.
+Position: Horizontal 192, Vertical 8, Width 258, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -938,7 +952,7 @@ Position: Horizontal 16, Vertical 8, Width 300, Height 76.
 
 Title: `Quarters (Leave Empty for the Last 4)`
 
-Position: Horizontal 332, Vertical 8, Width 240, Height 76.
+Position: Horizontal 463, Vertical 8, Width 206, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -959,7 +973,7 @@ Position: Horizontal 332, Vertical 8, Width 240, Height 76.
 
 Title: `Plant`
 
-Position: Horizontal 588, Vertical 8, Width 220, Height 76.
+Position: Horizontal 683, Vertical 8, Width 189, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -978,7 +992,7 @@ Position: Horizontal 588, Vertical 8, Width 220, Height 76.
 
 Title: `Technology`
 
-Position: Horizontal 824, Vertical 8, Width 208, Height 76.
+Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1000,7 +1014,7 @@ Position: Horizontal 824, Vertical 8, Width 208, Height 76.
 
 Title: `FG by Plant — MW · Rs Cr. · Days`
 
-Position: Horizontal 16, Vertical 88, Width 1248, Height 140.
+Position: Horizontal 192, Vertical 88, Width 1072, Height 140.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1028,7 +1042,7 @@ Position: Horizontal 16, Vertical 88, Width 1248, Height 140.
 
 Title: `FG by Technology — MW · Rs Cr. · Days`
 
-Position: Horizontal 16, Vertical 236, Width 1248, Height 252.
+Position: Horizontal 192, Vertical 236, Width 1072, Height 252.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1052,7 +1066,7 @@ Position: Horizontal 16, Vertical 236, Width 1248, Height 252.
 
 Title: `FG MW by Technology, Latest Month — Click a Bar`
 
-Position: Horizontal 16, Vertical 496, Width 412, Height 208.
+Position: Horizontal 192, Vertical 496, Width 354, Height 208.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1078,7 +1092,7 @@ Position: Horizontal 16, Vertical 496, Width 412, Height 208.
 
 Title: `FG Days of Inventory by Month, Last 12 Months (Days and % vs Last Month)`
 
-Position: Horizontal 444, Vertical 496, Width 428, Height 208.
+Position: Horizontal 560, Vertical 496, Width 368, Height 208.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1105,7 +1119,7 @@ Position: Horizontal 444, Vertical 496, Width 428, Height 208.
 
 Title: `FG Share by Plant (%), Latest Month`
 
-Position: Horizontal 888, Vertical 496, Width 376, Height 208.
+Position: Horizontal 941, Vertical 496, Width 323, Height 208.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
@@ -1120,6 +1134,12 @@ Position: Horizontal 888, Vertical 496, Width 376, Height 208.
 
 ## Page — RM
 
+**The panel first.** Go to `Overview`, click the green panel, then hold **Ctrl** and click the logo box, the two heading lines, the two section labels, the three white boxes and all 9 figures on the panel — or draw a selection box around the whole left strip. **Ctrl+C**, come back to `RM`, **Ctrl+V**. Everything arrives at the same coordinates, so the panel is identical on every page.
+
+Then click the second heading line and change its text from `Overview` to `RM`, so the panel doubles as the page's name. Nothing else on the panel changes: the nine figures ignore every slicer on every page by design, because they are the latest month's position and they must read the same wherever you are.
+
+The visuals below are what goes to the **right** of the panel, which is why every Horizontal starts at 192 rather than 16.
+
 **4.40** **Slicer** — Which months appear under each master column, and on both charts along the bottom. Nothing ticked means the last four with data; tick your own for up to twelve.
 
 | Well | Field |
@@ -1128,7 +1148,7 @@ Position: Horizontal 888, Vertical 496, Width 376, Height 208.
 
 Title: `Months (Leave Empty for the Last 4)`
 
-Position: Horizontal 16, Vertical 8, Width 300, Height 76.
+Position: Horizontal 192, Vertical 8, Width 258, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1148,7 +1168,7 @@ Position: Horizontal 16, Vertical 8, Width 300, Height 76.
 
 Title: `Quarters (Leave Empty for the Last 4)`
 
-Position: Horizontal 332, Vertical 8, Width 240, Height 76.
+Position: Horizontal 463, Vertical 8, Width 206, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1168,7 +1188,7 @@ Position: Horizontal 332, Vertical 8, Width 240, Height 76.
 
 Title: `Plant`
 
-Position: Horizontal 588, Vertical 8, Width 220, Height 76.
+Position: Horizontal 683, Vertical 8, Width 189, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1187,7 +1207,7 @@ Position: Horizontal 588, Vertical 8, Width 220, Height 76.
 
 Title: `Group Nature`
 
-Position: Horizontal 824, Vertical 8, Width 208, Height 76.
+Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1209,7 +1229,7 @@ Position: Horizontal 824, Vertical 8, Width 208, Height 76.
 
 Title: `RM Inventory by Plant — Rs Cr. · Days`
 
-Position: Horizontal 16, Vertical 88, Width 1248, Height 140.
+Position: Horizontal 192, Vertical 88, Width 1072, Height 140.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1235,7 +1255,7 @@ Position: Horizontal 16, Vertical 88, Width 1248, Height 140.
 
 Title: `RM Inventory by Group Nature and Nature — Rs Cr. · Days`
 
-Position: Horizontal 16, Vertical 236, Width 1248, Height 252.
+Position: Horizontal 192, Vertical 236, Width 1072, Height 252.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1259,7 +1279,7 @@ Position: Horizontal 16, Vertical 236, Width 1248, Height 252.
 
 Title: `RM Inventory (Rs Cr.) by Plant`
 
-Position: Horizontal 16, Vertical 496, Width 616, Height 208.
+Position: Horizontal 192, Vertical 496, Width 529, Height 208.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1286,7 +1306,7 @@ Position: Horizontal 16, Vertical 496, Width 616, Height 208.
 
 Title: `RM Inventory (Days) by Plant, with Total Days Across All Plants`
 
-Position: Horizontal 648, Vertical 496, Width 616, Height 208.
+Position: Horizontal 735, Vertical 496, Width 529, Height 208.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1308,6 +1328,12 @@ Position: Horizontal 648, Vertical 496, Width 616, Height 208.
 
 ## Page — Detail
 
+**The panel first.** Go to `Overview`, click the green panel, then hold **Ctrl** and click the logo box, the two heading lines, the two section labels, the three white boxes and all 9 figures on the panel — or draw a selection box around the whole left strip. **Ctrl+C**, come back to `Detail`, **Ctrl+V**. Everything arrives at the same coordinates, so the panel is identical on every page.
+
+Then click the second heading line and change its text from `Overview` to `Detail`, so the panel doubles as the page's name. Nothing else on the panel changes: the nine figures ignore every slicer on every page by design, because they are the latest month's position and they must read the same wherever you are.
+
+The visuals below are what goes to the **right** of the panel, which is why every Horizontal starts at 192 rather than 16.
+
 **4.48** **Card** — The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.
 
 | Well | Field |
@@ -1316,7 +1342,7 @@ Position: Horizontal 648, Vertical 496, Width 616, Height 208.
 
 Title: `Value ₹ Cr of What You Clicked`
 
-Position: Horizontal 16, Vertical 16, Width 296, Height 96.
+Position: Horizontal 192, Vertical 16, Width 254, Height 96.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -1330,7 +1356,7 @@ Position: Horizontal 16, Vertical 16, Width 296, Height 96.
 
 Title: `MW`
 
-Position: Horizontal 320, Vertical 16, Width 296, Height 96.
+Position: Horizontal 453, Vertical 16, Width 254, Height 96.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -1344,7 +1370,7 @@ Position: Horizontal 320, Vertical 16, Width 296, Height 96.
 
 Title: `Days of Inventory (RM + FG)`
 
-Position: Horizontal 624, Vertical 16, Width 296, Height 96.
+Position: Horizontal 714, Vertical 16, Width 254, Height 96.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -1358,7 +1384,7 @@ Position: Horizontal 624, Vertical 16, Width 296, Height 96.
 
 Title: `Share of the Total`
 
-Position: Horizontal 928, Vertical 16, Width 336, Height 96.
+Position: Horizontal 975, Vertical 16, Width 289, Height 96.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -1373,7 +1399,7 @@ Position: Horizontal 928, Vertical 16, Width 336, Height 96.
 
 Title: `Split by Category`
 
-Position: Horizontal 16, Vertical 120, Width 404, Height 232.
+Position: Horizontal 192, Vertical 120, Width 347, Height 232.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
@@ -1389,7 +1415,7 @@ Position: Horizontal 16, Vertical 120, Width 404, Height 232.
 
 Title: `Split by Technology / Nature`
 
-Position: Horizontal 428, Vertical 120, Width 404, Height 232.
+Position: Horizontal 546, Vertical 120, Width 347, Height 232.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
@@ -1405,7 +1431,7 @@ Position: Horizontal 428, Vertical 120, Width 404, Height 232.
 
 Title: `Split by Plant`
 
-Position: Horizontal 840, Vertical 120, Width 424, Height 232.
+Position: Horizontal 900, Vertical 120, Width 364, Height 232.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
@@ -1421,7 +1447,7 @@ Position: Horizontal 840, Vertical 120, Width 424, Height 232.
 
 Title: `Materials Behind This Number — Click + to Open a Nature`
 
-Position: Horizontal 16, Vertical 364, Width 1248, Height 348.
+Position: Horizontal 192, Vertical 364, Width 1072, Height 348.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1441,6 +1467,12 @@ Position: Horizontal 16, Vertical 364, Width 1248, Height 348.
 
 ## Page — Checks
 
+**The panel first.** Go to `Overview`, click the green panel, then hold **Ctrl** and click the logo box, the two heading lines, the two section labels, the three white boxes and all 9 figures on the panel — or draw a selection box around the whole left strip. **Ctrl+C**, come back to `Checks`, **Ctrl+V**. Everything arrives at the same coordinates, so the panel is identical on every page.
+
+Then click the second heading line and change its text from `Overview` to `Checks`, so the panel doubles as the page's name. Nothing else on the panel changes: the nine figures ignore every slicer on every page by design, because they are the latest month's position and they must read the same wherever you are.
+
+The visuals below are what goes to the **right** of the panel, which is why every Horizontal starts at 192 rather than 16.
+
 **4.56** **Card** — How many rows came out of RM Raw, FG Raw and Consble Raw together. Zero means pRoot is wrong or the three folders are named differently.
 
 | Well | Field |
@@ -1449,7 +1481,7 @@ Position: Horizontal 16, Vertical 364, Width 1248, Height 348.
 
 Title: `Stock Rows Loaded`
 
-Position: Horizontal 16, Vertical 56, Width 240, Height 88.
+Position: Horizontal 192, Vertical 56, Width 206, Height 88.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -1465,7 +1497,7 @@ Position: Horizontal 16, Vertical 56, Width 240, Height 88.
 
 Title: `Trial Balance Rows Loaded`
 
-Position: Horizontal 264, Vertical 56, Width 240, Height 88.
+Position: Horizontal 405, Vertical 56, Width 206, Height 88.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -1481,7 +1513,7 @@ Position: Horizontal 264, Vertical 56, Width 240, Height 88.
 
 Title: `Months of Data`
 
-Position: Horizontal 512, Vertical 56, Width 240, Height 88.
+Position: Horizontal 618, Vertical 56, Width 206, Height 88.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -1497,7 +1529,7 @@ Position: Horizontal 512, Vertical 56, Width 240, Height 88.
 
 Title: `Plant Codes in the Data`
 
-Position: Horizontal 760, Vertical 56, Width 240, Height 88.
+Position: Horizontal 831, Vertical 56, Width 206, Height 88.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -1513,7 +1545,7 @@ Position: Horizontal 760, Vertical 56, Width 240, Height 88.
 
 Title: `Rows with No Nature (%)`
 
-Position: Horizontal 1008, Vertical 56, Width 256, Height 88.
+Position: Horizontal 1044, Vertical 56, Width 220, Height 88.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Callout value' (that is the big number) and set Font size to 24.
@@ -1529,7 +1561,7 @@ Position: Horizontal 1008, Vertical 56, Width 256, Height 88.
 
 Title: `Every File the Four Folders Gave, with Its Sheets`
 
-Position: Horizontal 16, Vertical 160, Width 620, Height 264.
+Position: Horizontal 192, Vertical 160, Width 533, Height 264.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1547,7 +1579,7 @@ Position: Horizontal 16, Vertical 160, Width 620, Height 264.
 
 Title: `Sheets Found in Variables and Calculations`
 
-Position: Horizontal 644, Vertical 160, Width 620, Height 264.
+Position: Horizontal 731, Vertical 160, Width 533, Height 264.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1565,7 +1597,7 @@ Position: Horizontal 644, Vertical 160, Width 620, Height 264.
 
 Title: `GL Accounts in the TB Files That TB Master Does Not List`
 
-Position: Horizontal 16, Vertical 432, Width 620, Height 264.
+Position: Horizontal 192, Vertical 432, Width 533, Height 264.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1583,7 +1615,7 @@ Position: Horizontal 16, Vertical 432, Width 620, Height 264.
 
 Title: `FG Technologies with No Capacity on the MW Sheet`
 
-Position: Horizontal 644, Vertical 432, Width 620, Height 264.
+Position: Horizontal 731, Vertical 432, Width 533, Height 264.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -3216,6 +3248,24 @@ editing again.
 `Days by Period` is `Days` with the quarter rule, and the RM page's days chart uses it. Days is
 a ratio of two stock figures, so at a quarter grain it has to be the average of the quarter's three
 month-end ratios; adding them would give a nonsense number three times too big.
+
+### Changed in build 10
+
+The green panel is furniture, and furniture belongs on every page.
+
+**The panel is repeated on all six pages** at the same coordinates: the green rectangle at
+Horizontal 0, Vertical 0, 184 × 720, the logo strip, the two heading lines, the two section
+labels, the three white boxes and the nine figures, unchanged. Build it once on `Overview`,
+select the whole strip, **Ctrl+C**, then **Ctrl+V** on `Summary`, `FG`, `RM`, `Detail` and
+`Checks` — pasted visuals keep their positions, so the panel cannot drift page to page. On each
+page change the second heading line from `Overview` to that page's name; nothing else changes.
+
+**Every other visual moves right of the panel.** The five pages that were drawn across the full
+width now start at Horizontal **192** instead of 16 and are narrower in the same proportion, so
+nothing sits underneath the green. The positions in Part 4 are already the new ones.
+
+**The As-on card is 44 tall, not 28**, because the sentence sits under the words 'As on' and 28
+cut it in half.
 
 ### Changed in build 9
 

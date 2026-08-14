@@ -1,6 +1,7 @@
 """Turns spec.py into (a) guided one-at-a-time steps and (b) the PART 4 markdown."""
 from spec import (CANVAS, PAGES, CARDS, SLICERS, VISUALS, DRILL_PAGE, DRILL_FIELDS,
-                  BAND_PAGES, DECOR, title_case, FONT, PANEL, PANEL_INK, PANEL_SUB, BOX, HEAD, INK)
+                  BAND_PAGES, DECOR, title_case, FONT, PANEL, PANEL_INK, PANEL_SUB, BOX, HEAD, INK,
+                  PANEL_CLONES, PANEL_TITLES, PANEL_PAGES)
 
 W, H = CANVAS
 
@@ -508,9 +509,12 @@ def steps():
                 stuck="If picking a month here also changes Overview, Summary or FG, untick that "
                       "page's row in the Sync slicers pane."))
 
-    # one step per visual
+    # one step per visual — the panel's nine figures are built once on Overview and copied,
+    # so their copies on the other five pages are not walked through again
     by_page = {}
     for v in VISUALS:
+        if (v[0], v[2]) in PANEL_CLONES:
+            continue
         by_page.setdefault(v[0], []).append(v)
 
     for page in PAGES:
@@ -708,7 +712,12 @@ def part4_markdown():
          "",
          "**Create the %d pages** with the **+** at the bottom, named: " % len(PAGES) +
          " · ".join("`%s`" % p for p in PAGES) + ".", "",
-         "---", "", "## The furniture on `Overview` (no data in any of it)", "",
+         "---", "",
+         "## The furniture: the green panel (no data in any of it)", "",
+         "Build it once on `%s` and copy it to the other five pages \u2014 the panel is the one "
+         "thing that never moves, so a reader always finds the same figures in the same corner. "
+         "Every page's own visuals then start at Horizontal %d, clear of it." % (PAGES[0], 192),
+         "",
          "| What | Insert it with | Text / fill | Horizontal (X) | Vertical (Y) | Width | "
          "Height |", "|---|---|---|---|---|---|---|"] + \
         ["| %s | Insert \u2192 %s | %s | %d | %d | %d | %d |"
@@ -759,10 +768,26 @@ def part4_markdown():
 
     by_page = {}
     for v in VISUALS:
+        if (v[0], v[2]) in PANEL_CLONES:
+            continue                     # built once on Overview, then copied across
         by_page.setdefault(v[0], []).append(v)
     n = 4
     for page in PAGES:
         L += ["---", "", "## Page — %s" % page, ""]
+        if page in PANEL_PAGES:
+            L += ["**The panel first.** Go to `%s`, click the green panel, then hold **Ctrl** "
+                  "and click the logo box, the two heading lines, the two section labels, the "
+                  "three white boxes and all %d figures on the panel \u2014 or draw a selection "
+                  "box around the whole left strip. **Ctrl+C**, come back to `%s`, **Ctrl+V**. "
+                  "Everything arrives at the same coordinates, so the panel is identical on "
+                  "every page." % (PAGES[0], len(PANEL_TITLES), page), "",
+                  "Then click the second heading line and change its text from `%s` to `%s`, so "
+                  "the panel doubles as the page's name. Nothing else on the panel changes: the "
+                  "nine figures ignore every slicer on every page by design, because they are "
+                  "the latest month's position and they must read the same wherever you are."
+                  % (PAGES[0], page), "",
+                  "The visuals below are what goes to the **right** of the panel, which is why "
+                  "every Horizontal starts at %d rather than 16." % 192, ""]
         for (_, vtype, title, wells, pos, why, extra) in by_page.get(page, []):
             n += 1
             L += ["**4.%d** **%s** — %s" % (n, vtype, why), "",

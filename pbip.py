@@ -341,6 +341,48 @@ def chart_objects(kind, labels=False):
     return o
 
 
+def shape_visual(page, idx, kind, text, pos):
+    """The furniture: the green panel, the white boxes, the logo space and the panel wording.
+    All of it is the built-in Shape visual, whose own Text section carries the wording, so
+    there is no textbox paragraph structure to get wrong and nothing to bind to the model.
+    Property names come from Power BI's published capabilities for visualType 'shape'."""
+    x, y, w, h = pos
+    filled = kind == "Rectangle"
+    green = filled and h > 400                       # the panel itself, not a white box
+    logo = kind == "Image"
+    o = {"shape": [{"properties": {
+             "tileShape": txt("rectangle"),
+             "rectangleRoundedCurve": literal("0D" if green else "8D")}}],
+         "fill": [{"properties": {
+             "show": literal("true" if filled else "false"),
+             "fillColor": {"solid": {"color": txt(spec.PANEL if green else spec.BOX)}},
+             "transparency": literal("0D")}}],
+         "outline": [{"properties": {
+             "show": literal("true" if logo else "false"),
+             "lineColor": {"solid": {"color": txt(spec.PANEL_SUB)}},
+             "transparency": literal("60D"),
+             "weight": literal("1D")}}]}
+    if text or logo:
+        # the two heading lines are the larger type; the section labels above the white
+        # boxes are the small bold ones, and the logo box carries only a reminder
+        big = text in ("Inventory",) or text in spec.PAGES
+        o["text"] = [{"properties": {
+            "show": literal("true"),
+            "text": txt(text or "Logo"),
+            "fontFamily": txt("Arial"),
+            "fontSize": literal("15D" if text == "Inventory"
+                                else "13D" if big else "10D"),
+            "bold": literal("true" if text == "Inventory" or not big else "false"),
+            "fontColor": {"solid": {"color": txt(
+                spec.PANEL_INK if text == "Inventory" else spec.PANEL_SUB)}},
+            "horizontalAlignment": txt("left"),
+            "verticalAlignment": txt("middle")}}]
+    return {"$schema": VC, "name": vname(page, idx),
+            "position": {"x": x, "y": y, "z": idx, "width": w, "height": h,
+                         "tabOrder": idx * 100},
+            "visual": {"visualType": "shape", "objects": o}}
+
+
 def card_objects(width=200, height=60):
     # the figure is sized from the box it has to fit in, not chosen once for every card: a
     # 156-wide ticker card holding '1,234.5' plus a category label above it clips the number
@@ -571,6 +613,14 @@ def write_report(root):
         idx = 0
         if EMPTY:                      # model-only variant: pages exist, visuals do not
             continue
+
+        # the furniture first, so its z-order sits under every figure that lands on it
+        for pg, kind, text, x, y, w, h, _note in spec.DECOR:
+            if pg != page:
+                continue
+            idx += 1
+            write_visual(pdir, shape_visual(page, idx, kind, text, (x, y, w, h)))
+
         if page in spec.BAND_PAGES:
             for mname, x, y, w, h, cap in spec.CARDS:
                 idx += 1
