@@ -1,16 +1,16 @@
 {
   "name": "Inventory Green 3",
   "dataColors": [
-    "#14532D",
     "#2E7D46",
-    "#4F9A5B",
     "#7FBB84",
-    "#B2D8B2",
     "#146E6B",
+    "#B2D8B2",
+    "#4F9A5B",
     "#4C8C74",
+    "#14532D",
     "#9AA79F",
-    "#B3261E",
-    "#3F6B4E"
+    "#3F6B4E",
+    "#B3261E"
   ],
   "background": "#FFFFFF",
   "foreground": "#1F2A24",

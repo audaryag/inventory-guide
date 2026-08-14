@@ -62,6 +62,10 @@ TABLES = {
     "qcHeaders": [("Folder", S), ("Name", S), ("SheetNames", S), ("Headers", S)],
     "qcVarHeaders": [("SheetName", S), ("Headers", S), ("DataRows", I)],
     "qcNatureNoCapacity": [("Nature", S)],
+    "qcAttrMatch": [("Source", S), ("DistinctMaterials", I),
+                    ("MatchedToStockFiles", I), ("FirstEight", S)],
+    "qcTBByGL": [("GLAccount", S), ("GLDesc", S), ("Nature", S), ("Category", S),
+                 ("AmountRsCr", D), ("Rows", I)],
 }
 
 # every other query stays a shared expression: helpers, staging, and the diagnostic whose
@@ -96,7 +100,8 @@ HIDDEN = {("factInventory", "MatKey"), ("factTB", "PlantCode"), ("dimDate", "Mon
           ("dimMeasure", "MeasureSort")}
 
 # tables kept out of the report field list (helpers/diagnostics still refresh)
-HIDDEN_TABLES = {"factTB_Unmapped", "qcHeaders", "qcVarHeaders", "qcNatureNoCapacity"}
+HIDDEN_TABLES = {"factTB_Unmapped", "qcHeaders", "qcVarHeaders", "qcNatureNoCapacity",
+                 "qcAttrMatch", "qcTBByGL"}
 
 
 def measure_format(name):
@@ -304,10 +309,14 @@ def matrix_objects(rows_levels, expand, subtotals=True):
                                    "backColorPrimary": {"solid": {"color": txt("#FFFFFF")}},
                                    "backColorSecondary": {"solid": {"color": txt("#F7FAF7")}},
                                    "bandedRowHeaders": literal("true")}}],
+        # both grand totals on: the bottom row totals the rows, the right-hand column totals
+        # across the columns. Written here rather than left to the default, because a matrix
+        # generated with these off has no Total anywhere on it.
         "subTotals": [{"properties": {
-            "rowSubtotals": literal("true" if subtotals else "false"),
-            "columnSubtotals": literal("false"),
-            "perRowLevel": literal("true" if subtotals else "false")}}],
+            "rowSubtotals": literal("true"),
+            "columnSubtotals": literal("true"),
+            "perRowLevel": literal("true" if subtotals else "false"),
+            "perColumnLevel": literal("false")}}],
         "grid": [{"properties": {"gridVertical": literal("true"),
                                  "gridVerticalColor": {"solid": {"color": txt("#E6EDE6")}},
                                  "gridHorizontal": literal("true"),
@@ -326,18 +335,47 @@ def chart_objects(kind, labels=False):
          "categoryAxis": [{"properties": {"fontFamily": txt("Arial"),
                                           "labelColor": {"solid": {"color": txt("#3A4A3F")}},
                                           "showAxisTitle": literal("false")}}],
-         "valueAxis": [{"properties": {"fontFamily": txt("Arial"),
+         # the value axis is off on every chart: each one prints its own figures, and the
+         # 0 / 500 / 1,000 / 2,000 scale down the side was only repeating them
+         "valueAxis": [{"properties": {"show": literal("false"),
+                                       "fontFamily": txt("Arial"),
                                        "labelColor": {"solid": {"color": txt("#3A4A3F")}},
                                        "showAxisTitle": literal("false"),
                                        "gridlineColor": {"solid": {"color": txt("#E6EDE6")}}}}],
-         "labels": [{"properties": {"show": literal("true" if labels else "false"),
+         # so every bar, column and point carries its number instead
+         "labels": [{"properties": {"show": literal("true"),
                                     "fontFamily": txt("Arial"),
+                                    "fontSize": literal("8D"),
+                                    "color": {"solid": {"color": txt("#1F2A24")}},
+                                    "labelDisplayUnits": literal("1D"),
                                     "labelPrecision": literal("1D")}}]}
+    if kind == "columnChart":
+        # stacked: the consumables segment is too thin to hold a figure, so the segments are
+        # left unlabelled and the month's total is printed above the column instead
+        o["labels"] = [{"properties": {"show": literal("false")}}]
+        o["totals"] = [{"properties": {"show": literal("true"),
+                                       "fontFamily": txt("Arial"),
+                                       "fontSize": literal("9D"),
+                                       "bold": literal("true"),
+                                       "labelDisplayUnits": literal("1D"),
+                                       "labelPrecision": literal("1D"),
+                                       "color": {"solid": {"color": txt(DARK)}}}}]
     if kind in ("pieChart", "donutChart"):
-        o.pop("categoryAxis"), o.pop("valueAxis")
+        for k in ("categoryAxis", "valueAxis", "totals"):
+            o.pop(k, None)
+        # the slice labels name the category and its share, so the legend would say it twice
+        # and it was the legend that pushed the labels into each other
+        o["legend"] = [{"properties": {"show": literal("false")}}]
         o["labels"] = [{"properties": {"show": literal("true"),
-                                       "labelStyle": txt("Both"),
+                                       "labelStyle": txt("Category, percent of total"),
+                                       "position": txt("outside"),
+                                       "overflow": literal("true"),
+                                       "fontSize": literal("9D"),
+                                       "percentageLabelPrecision": literal("1D"),
+                                       "labelPrecision": literal("1D"),
+                                       "color": {"solid": {"color": txt("#1F2A24")}},
                                        "fontFamily": txt("Arial")}}]
+    o["legend"][0]["properties"].setdefault("fontSize", literal("8D"))
     return o
 
 
@@ -350,18 +388,26 @@ def shape_visual(page, idx, kind, text, pos):
     filled = kind == "Rectangle"
     green = filled and h > 400                       # the panel itself, not a white box
     logo = kind == "Image"
+    colour = spec.PANEL if green else spec.BOX
+    # shape.fill, shape.outline and shape.shape are all declared with a 'default' selector in
+    # Power BI's own capability catalogue; written without one, Desktop ignored the fill and
+    # drew the panel and its boxes in the default light grey - which is why no green appeared.
+    dflt = {"id": "default"}
     o = {"shape": [{"properties": {
              "tileShape": txt("rectangle"),
-             "rectangleRoundedCurve": literal("0D" if green else "8D")}}],
+             "roundEdge": literal("0D" if green else "8D")},
+             "selector": dflt}],
          "fill": [{"properties": {
              "show": literal("true" if filled else "false"),
-             "fillColor": {"solid": {"color": txt(spec.PANEL if green else spec.BOX)}},
-             "transparency": literal("0D")}}],
+             "fillColor": {"solid": {"color": txt(colour)}},
+             "transparency": literal("0D")},
+             "selector": dflt}],
          "outline": [{"properties": {
              "show": literal("true" if logo else "false"),
              "lineColor": {"solid": {"color": txt(spec.PANEL_SUB)}},
              "transparency": literal("60D"),
-             "weight": literal("1D")}}]}
+             "weight": literal("1D")},
+             "selector": dflt}]}
     if text or logo:
         # the two heading lines are the larger type; the section labels above the white
         # boxes are the small bold ones, and the logo box carries only a reminder
@@ -377,10 +423,20 @@ def shape_visual(page, idx, kind, text, pos):
                 spec.PANEL_INK if text == "Inventory" else spec.PANEL_SUB)}},
             "horizontalAlignment": txt("left"),
             "verticalAlignment": txt("middle")}}]
+    # the same colour is also painted as the container's own background. It is the generic
+    # visual background every visual type supports, so the panel is green even if a future
+    # Desktop reads the shape's fill differently again.
+    vco = {"background": [{"properties": {
+               "show": literal("true" if filled else "false"),
+               "color": {"solid": {"color": txt(colour)}},
+               "transparency": literal("0D")}}],
+           "border": [{"properties": {"show": literal("false")}}],
+           "visualHeader": [{"properties": {"show": literal("false")}}]}
     return {"$schema": VC, "name": vname(page, idx),
             "position": {"x": x, "y": y, "z": idx, "width": w, "height": h,
                          "tabOrder": idx * 100},
-            "visual": {"visualType": "shape", "objects": o}}
+            "visual": {"visualType": "shape", "objects": o,
+                       "visualContainerObjects": vco}}
 
 
 def card_objects(width=200, height=60):
@@ -395,19 +451,19 @@ def card_objects(width=200, height=60):
                                        "labelDisplayUnits": literal("1D"),
                                        "labelPrecision": literal("1D"),
                                        "color": {"solid": {"color": txt(DARK)}}}}],
-            "categoryLabels": [{"properties": {"show": literal("true"),
-                                               "fontFamily": txt("Arial"),
-                                               "fontSize": literal("9D"),
-                                               "color": {"solid": {"color": txt("#5A6B5F")}}}}],
+            # the card's category label is the measure's name, which the card's own title
+            # already says in plain English; printing both is what put a clipped third line
+            # of type inside every ticker box
+            "categoryLabels": [{"properties": {"show": literal("false")}}],
             "wordWrap": [{"properties": {"show": literal("true")}}]}
 
 
 def slicer_objects():
-    return {"general": [{"properties": {"outlineColor": {"solid": {"color": txt("#DCE5DC")}},
-                                        "outlineWeight": literal("1D")}}],
-            "header": [{"properties": {"show": literal("true"), "fontFamily": txt("Arial"),
-                                       "fontColor": {"solid": {"color": txt(DARK)}},
-                                       "textSize": literal("9D")}}],
+    # the slicer's outline is the container's border, set with the title; a slicer has no
+    # outline of its own, and writing one into general did nothing at all
+    return {# the slicer header repeats the field's own name (MonthName, Category, Nature)
+            # under a title that already names it in words, so it is off
+            "header": [{"properties": {"show": literal("false")}}],
             "items": [{"properties": {"fontFamily": txt("Arial"),
                                       "textSize": literal("9D")}}],
             # singleSelect off means a plain click adds to the selection, so several
@@ -526,11 +582,16 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
               "visualContainerObjects": title_objects(title)}
     if objects:
         visual["objects"] = objects
-    if vt == "pivotTable" and rows_levels > 1:
-        visual["expansionStates"] = [{
-            "roles": ["Rows"],
-            "levels": [{"queryRefs": [p["queryRef"]], "isCollapsed": i > 0}
-                       for i, p in enumerate(qstate["Rows"]["projections"])]}]
+    if vt == "pivotTable":
+        # every level of both hierarchies is written as expanded. Without this the second row
+        # level and - the visible symptom - the month columns arrive collapsed, so a matrix
+        # built with months across the top opened showing nothing but its total.
+        visual["expansionStates"] = [
+            {"roles": [role],
+             "levels": [{"queryRefs": [p["queryRef"]], "isCollapsed": False}
+                        for p in qstate[role]["projections"]]}
+            for role in ("Rows", "Columns")
+            if len(qstate.get(role, {}).get("projections", [])) > 1]
 
     x, y, w, h = pos
     out = {"$schema": VC, "name": vname(page, idx),

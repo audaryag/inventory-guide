@@ -9,8 +9,10 @@ import hashlib, html, json, math, pathlib
 
 PBIP = pathlib.Path("/home/ubuntu/pbip/Inventory Report.Report/definition")
 OUT = pathlib.Path("/home/ubuntu/pbip_preview")
-GREEN, DARK, LIGHT, RED = "#4FA45F", "#1E6B3A", "#8CC63F", "#C0504D"
-SERIES = ["#1E6B3A", "#4FA45F", "#8CC63F", "#2E7D6B", "#155E38", "#A7CE7A"]
+GREEN, DARK, LIGHT, RED = "#2E7D46", "#14532D", "#7FBB84", "#B3261E"
+# the report theme's own palette, in its own order, so the mock cannot show one
+# set of colours while Power BI draws another
+SERIES = ["#2E7D46", "#7FBB84", "#146E6B", "#B2D8B2", "#4F9A5B", "#4C8C74"]
 MONTHS = ["Apr'26", "May'26", "Jun'26", "Jul'26"]
 PLANTS = ["1900 Jaipur Module", "1902 Dholera Module", "1905 Dholera Cell"]
 CATS = ["RM", "FG", "Consumables"]
@@ -358,7 +360,7 @@ def shape_div(v):
     own fill and text properties, so the preview shows what the project file actually says."""
     p = v["position"]
     fill = prop(v, "fill", "fillColor") if prop(v, "fill", "show") == "true" else None
-    radius = prop(v, "shape", "rectangleRoundedCurve") or "0"
+    radius = prop(v, "shape", "roundEdge") or "0"
     text = prop(v, "text", "text") or ""
     colour = prop(v, "text", "fontColor") or "#FFFFFF"
     size = prop(v, "text", "fontSize") or "10"

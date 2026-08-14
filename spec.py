@@ -317,8 +317,9 @@ VISUALS = [
      "and your ticks replace that entirely. That behaviour lives in the In Window filter, so "
      "the chart above obeys it too.",
      ["Format pane \u2192 Row headers \u2192 Stepped layout: Off.",
-      "Format pane \u2192 Subtotals \u2192 Row subtotals: On, Column subtotals: Off. Here the total "
-      "row earns its place, because the three types add up to the month.",
+      "Format pane \u2192 Subtotals \u2192 Row subtotals: On and Column subtotals: On. The bottom "
+      "row is the month's whole inventory, and the right-hand Total column is the average of "
+      "the month-ends shown, which is what a stock level averages to \u2014 it is never their sum.",
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 10, Colour: #14532D."]),
 
@@ -365,9 +366,8 @@ VISUALS = [
     # ---- Overview donuts: what the latest month is actually made of --------------------
     ("Overview", "Donut chart", "FG Components, Latest Month (Rs Cr. and % Share)",
      [("Legend", ["dimNature[Nature]"]),
-      ("Values", ["Value \u20b9 Cr"]),
-      ("Filters", ["dimCategory[Category]  \u2192  is FG",
-                   "In Latest Month  \u2192  is 1"])],
+      ("Values", ["Latest Month Value \u20b9 Cr"]),
+      ("Filters", ["dimCategory[Category]  \u2192  is FG"])],
      (916, 88, 348, 306),
      "What the finished goods are made of in the latest month that has data \u2014 the module "
      "technologies, largest slice first. It is pinned to the latest month by the In Latest "
@@ -384,9 +384,8 @@ VISUALS = [
 
     ("Overview", "Donut chart", "RM Components, Latest Month (Rs Cr. and % Share)",
      [("Legend", ["dimNature[Nature]"]),
-      ("Values", ["Value \u20b9 Cr"]),
-      ("Filters", ["dimCategory[Category]  \u2192  is RM",
-                   "In Latest Month  \u2192  is 1"])],
+      ("Values", ["Latest Month Value \u20b9 Cr"]),
+      ("Filters", ["dimCategory[Category]  \u2192  is RM"])],
      (916, 402, 348, 304),
      "The same for raw materials in the latest month \u2014 cell, glass, frame, POE, packing and "
      "the rest \u2014 so the two donuts read as a pair: what the finished stock is, and what the "
@@ -470,7 +469,7 @@ VISUALS = [
       "Format pane \u2192 Row headers \u2192 +/- icons: On \u2014 that is the click-to-expand control on "
       "each plant.",
       "Format pane \u2192 Subtotals \u2192 Row subtotals: On, and switch ON 'Per row level' so each "
-      "plant shows its own total. Column subtotals: Off.",
+      "plant shows its own total. Column subtotals: On, for the Total column on the right.",
       "Format pane \u2192 Subtotals \u2192 Grand total: Off on this matrix. The total of the totals, "
       "split by RM / FG / Consumables, is the second matrix underneath \u2014 a matrix can only "
       "give one flat grand total row, so the split has to be its own visual.",
@@ -501,7 +500,7 @@ VISUALS = [
       "for column.",
       "Format pane \u2192 Row headers \u2192 Stepped layout: Off.",
       "Format pane \u2192 Subtotals \u2192 Row subtotals: On \u2014 that bottom row is the total of the "
-      "totals, the whole inventory. Column subtotals: Off.",
+      "totals, the whole inventory. Column subtotals: On, for the Total column on the right.",
       "Format pane \u2192 Row headers \u2192 Font: Arial, Font size: 9, Bold: On, so this block reads "
       "as the summary of the one above rather than as more detail.",
       "This matrix has no Plant field on purpose. Leave the Plant slicer on 'All' when you "
@@ -621,7 +620,7 @@ VISUALS = [
       "In Summary Window in and set 'is 1' — that is what limits it to four periods, or to "
       "the ones you tick, up to twelve.",
       "Format pane → Row headers → Stepped layout: Off, +/- icons: On.",
-      "Format pane → Subtotals → Row subtotals: On, Column subtotals: Off.",
+      "Format pane → Subtotals → Row subtotals: On, Column subtotals: On.",
       "Format pane → Values → Font: Arial, Font size: 9, Colour: #1F2A24. Everything else "
       "comes from the theme.",
       "Format pane → General → Title → Font: Arial, Font size: 12, Colour: #14532D.",
@@ -645,20 +644,19 @@ VISUALS = [
       "Check the filters came across: the Filters pane should still show Category is FG and "
       "In Summary Window is 1.",
       "Format pane → Row headers → Stepped layout: Off.",
-      "Format pane → Subtotals → Row subtotals: On, Column subtotals: Off.",
+      "Format pane → Subtotals → Row subtotals: On, Column subtotals: On.",
       "With the Plant slicer on one plant, this becomes that plant's technology split."]),
 
     ("FG", "Clustered column chart", "FG MW by Technology, Latest Month — Click a Bar",
      [("X-axis", ["dimNature[Nature]"]),
-      ("Y-axis", ["MW"]),
-      ("Filters", ["dimCategory[Category]  →  is FG",
-                   "In Latest Month  →  is 1"])],
+      ("Y-axis", ["Latest Month MW"]),
+      ("Filters", ["dimCategory[Category]  →  is FG"])],
      (16, 412, 412, 292),
      "Which technology is holding the megawatts right now. It is deliberately pinned to the "
      "latest month with data: there is no period on the axis here, so without that pin it "
      "would add four months of stock together and read four times too high.",
-     ["Filters pane → drag In Latest Month in → is 1. Do not skip it, and do not put a "
-      "period field on this chart.",
+     ["Nothing to add in the Filters pane: the measure is Latest Month MW, which sets the "
+      "month itself. Do not put a period field on this chart.",
       "Format pane → Data labels: On, Font: Arial, Font size: 9, Colour: #1F2A24, Display "
       "units: None, Value decimal places: 1.",
       "Format pane → Y-axis: Off — the label on each bar is the number.",
@@ -696,13 +694,12 @@ VISUALS = [
 
     ("FG", "Donut chart", "FG Share by Plant (%), Latest Month",
      [("Legend", ["dimPlant[Plant]"]),
-      ("Values", ["FG ₹ Cr"]),
-      ("Filters", ["In Latest Month  →  is 1"])],
+      ("Values", ["Latest Month FG ₹ Cr"])],
      (888, 412, 376, 292),
      "Where the finished goods are sitting, as a share of the whole. Pinned to the latest "
      "month for the same reason as the bar chart: a share of four added-up months would "
      "mean nothing.",
-     ["Filters pane → drag In Latest Month in → is 1.",
+     ["Nothing to add in the Filters pane: Latest Month FG ₹ Cr pins the month itself.",
       "Format pane → Detail labels → Label contents: Category, percent of total. Font: "
       "Arial, Font size: 9, Colour: #1F2A24, Percentage decimal places: 1 — so the "
       "percentage is printed on each slice and nobody has to hover.",
@@ -772,7 +769,7 @@ VISUALS = [
       "add the month-ends together instead of averaging them.",
       "Format pane → Row headers → Stepped layout: Off.",
       "Format pane → Subtotals → Row subtotals: On (that is the Grand Total row the Excel "
-      "sheet had), Column subtotals: Off.",
+      "sheet had), Column subtotals: On.",
       "Format pane → General → Title → Font: Arial, Font size: 12, Colour: #14532D.",
       "Clicking a plant row filters the material matrix and both charts below it."]),
 
@@ -1015,7 +1012,7 @@ VISUALS = [
 
     ("Checks", "Table", "Every file the four folders gave, with its sheets",
      [("Columns", ["qcHeaders[Folder]", "qcHeaders[Name]", "qcHeaders[SheetNames]"])],
-     (16, 160, 620, 264),
+     (16, 160, 620, 180),
      "One row per file actually read. If a month is missing from the report, it is missing "
      "from this list first \u2014 check the file is in the folder and is a real .xlsx.",
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
@@ -1023,7 +1020,7 @@ VISUALS = [
 
     ("Checks", "Table", "Sheets found in Variables and Calculations",
      [("Columns", ["qcVarHeaders[SheetName]", "qcVarHeaders[DataRows]"])],
-     (644, 160, 620, 264),
+     (644, 160, 620, 180),
      "The workbook that carries RM Nature, FG Master, TB Master, Constants and MW. A sheet "
      "missing from this list, or showing 0 rows, is why the natures or the trial balance are "
      "empty.",
@@ -1033,7 +1030,7 @@ VISUALS = [
     ("Checks", "Table", "GL accounts in the TB files that TB Master does not list",
      [("Columns", ["factTB_Unmapped[GLAccount]", "factTB_Unmapped[GLDesc]",
                    "factTB_Unmapped[Amount]"])],
-     (16, 432, 620, 264),
+     (644, 348, 620, 168),
      "Empty is good. A long list here with 0 trial-balance rows above means TB Master is not "
      "matching your GL numbers at all, and the report is showing the whole trial balance "
      "rather than the inventory accounts.",
@@ -1042,9 +1039,30 @@ VISUALS = [
 
     ("Checks", "Table", "FG technologies with no capacity on the MW sheet",
      [("Columns", ["qcNatureNoCapacity[Nature]"])],
-     (644, 432, 620, 264),
+     (644, 524, 620, 172),
      "Each of these gets blank Days, because days of inventory divides by capacity. Add the "
      "technology to the MW sheet and it fills in by itself.",
+     ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
+
+    ("Checks", "Table", "Do the material numbers match between the sheets and the files",
+     [("Columns", ["qcAttrMatch[Source]", "qcAttrMatch[DistinctMaterials]",
+                   "qcAttrMatch[MatchedToStockFiles]", "qcAttrMatch[FirstEight]"])],
+     (16, 348, 620, 168),
+     "The one table that explains an Unassigned donut. If RM Nature and FG Master hold "
+     "thousands of materials but Matched is near zero, the two sides are keyed differently \u2014 "
+     "compare the first eight numbers on each row and the difference is usually visible at a "
+     "glance (a prefix, a suffix, a plant code stuck to the front).",
+     ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
+
+    ("Checks", "Table", "Trial balance by GL account, signed",
+     [("Columns", ["qcTBByGL[GLAccount]", "qcTBByGL[GLDesc]", "qcTBByGL[Category]",
+                   "qcTBByGL[AmountRsCr]"])],
+     (16, 524, 620, 172),
+     "Sorted with the most negative first. An inventory account sitting there as a credit is "
+     "why a plant's Inventory (TB) nets to nearly zero on Summary while the by-type block "
+     "shows a large minus figure \u2014 the sign, not the mapping, is what is wrong.",
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
 
