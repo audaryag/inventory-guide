@@ -484,6 +484,31 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 12 &mdash; 14 Aug:</strong> everything you photographed, fixed at its cause.
+<strong>Why every nature, technology and group came out <em>Unassigned</em>:</strong> the RM Nature and
+FG Master sheets give the material with its leading zeros gone, the MB5B files keep them, so
+<code>000000001010203</code> never met <code>1010203</code>. Both sides are now stripped the same way
+before the key is built &mdash; which also brings RM's MW and In&nbsp;Days back, because those come from
+the BOM quantity on the sheet that never matched. Consumables are labelled
+<em>Consumables</em> instead of blank, and anything still unmatched says <em>Unassigned</em> out loud.
+<strong>The missing Total:</strong> Inventory by Month had its subtotal switch written Off &mdash; every
+matrix now carries a Total row and a Total column, and both hierarchies are written out expanded so the
+month columns are open when the page loads. <strong>Figures three and four times too high</strong> on the
+two Overview donuts, the FG technology bars and the FG plant donut: a filter that reads a measure is
+evaluated once for the whole visual, so all four months still landed in it; those four visuals now use
+<code>Latest Month&nbsp;&hellip;</code> measures that set the month themselves. <strong>INR per Wp</strong>
+is a measure with <code>DIVIDE</code>, so it is blank rather than <code>NaN</code> where there are no
+megawatts. <strong>The Plant slicer</strong> lists each plant once, drops a named plant with nothing behind
+it, and shows an unnamed code as <em>Plant 1904</em>. <strong>The panel is green:</strong> Power BI's shape
+fill takes a <code>default</code> selector and without one Desktop ignored the colour and drew grey boxes,
+which is also why the headings looked invisible. <strong>Cosmetic:</strong> the clipped third line in each
+ticker card is gone (it was the measure's name), slicers no longer print <code>MonthName</code> under your
+own heading, the axis scales are off with the figures on the visuals instead, stacked columns show the
+month's total above the column, the donut legend is off so its labels stop colliding, and the palette
+starts at mid green so a stack reads as separate bands. <strong>Two new self-checks</strong> on
+<code>Checks</code>: how many materials in each sheet meet the stock files, and the trial balance by GL
+account with its sign &mdash; that second one is what will settle the TB question.</blockquote>
+
 <blockquote><strong>Build 11 &mdash; 14 Aug:</strong> the layout scrutinised page by page, and
 one thing that was genuinely broken in my own preview: the twelve-month days chart at the foot of
 Summary is a plain line chart, and my renderer had no code for that type, so it printed the words
