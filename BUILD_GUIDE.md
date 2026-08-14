@@ -883,7 +883,7 @@ Position: Horizontal 735, Vertical 464, Width 529, Height 120.
 - In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off, Secondary y-axis: Off. Both numbers are printed on the chart already.
 - In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'Lines', then 'Colour' and set it to #9AA79F, Stroke width: 1, Markers: On, Marker size: 3.
-- In the Visualizations pane click the paintbrush icon, then click 'Legend' and set it to Off — the title says which is which, and 144 pixels of height has none to spare.
+- In the Visualizations pane click the paintbrush icon, then click 'Legend' and set it to Off — the title says which is which, and 120 pixels of height has none to spare.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 
 **4.30** **Line chart** — The long view under the reconciliation: three lines across the last twelve months that have data, or fewer if that is all there is — raw material days, finished goods days, and the two added together, which is what the Overview card calls Days of inventory (RM + FG). Every month is its own closing figure divided by capacity, so nothing is added across months. Read it for shape: RM climbing while FG is flat means material is arriving faster than it is being consumed.

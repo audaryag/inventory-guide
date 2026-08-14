@@ -551,7 +551,7 @@ VISUALS = [
       "chart already.",
       "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24.",
       "Format pane \u2192 Lines \u2192 Colour: #9AA79F, Stroke width: 1, Markers: On, Marker size: 3.",
-      "Format pane \u2192 Legend: Off \u2014 the title says which is which, and 144 pixels of height "
+      "Format pane \u2192 Legend: Off \u2014 the title says which is which, and 120 pixels of height "
       "has none to spare.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 11, Colour: #14532D."]),
 
