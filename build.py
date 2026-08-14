@@ -484,6 +484,17 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 14 &mdash; 14 Aug:</strong> one thing only &mdash; the workbook is the master and
+the MB5B export has to meet it. <strong>The material key now keeps only letters and digits</strong> and
+discards everything else, which covers the non-breaking spaces, tabs, commas and brackets Excel and SAP put
+in a cell without showing them; leading zeros are still stripped, and a material that genuinely is
+<code>0</code> stays <code>0</code> instead of becoming empty. <strong>A third match, on the material
+description</strong>, for the case where the master sheet keys its rows by description rather than by number
+&mdash; it only fills a row the first two passes left empty, so it can never overwrite a proper match.
+<strong>And <code>qcAttrMatch</code> on the Checks page now asks the same question about descriptions</strong>,
+so it tells you whether the two sides meet on the number, on the description, or on neither. That single
+line is what decides the rest.</blockquote>
+
 <blockquote><strong>Build 13 &mdash; 14 Aug:</strong> five of these are build 12's own damage and I
 would rather say so plainly. <strong>The four matrices that went missing are back</strong> &mdash; Summary's
 <code>Total Across All Plants</code>, both FG tables and <code>RM Inventory by Plant</code>: build 12 wrote
