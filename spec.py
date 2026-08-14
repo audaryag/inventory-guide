@@ -995,7 +995,7 @@ VISUALS = [
      ["Format pane \u2192 Callout value \u2192 Font: Arial, Font size: 14, Colour: #14532D.",
       "Format pane \u2192 General \u2192 Effects \u2192 Background: #FFFFFF."]),
 
-    ("Checks", "Card", "Rows with no nature (%)",
+    ("Checks", "Card", "Value with no nature (%)",
      [("Fields", ["Check Unassigned %"])],
      (1008, 56, 256, 88),
      "The share of stock rows the master sheets do not cover. Anything above zero is what "

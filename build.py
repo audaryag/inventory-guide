@@ -484,6 +484,20 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 17 &mdash; 14 Aug:</strong> read straight off your Checks page.
+<strong>The month columns now open under TB / MB5B / Difference</strong> &mdash; a matrix opens on the
+outer level of its column hierarchy, so each master column was showing one figure for the whole window,
+which is what looked like months being added; both hierarchies are now written out expanded with the
+<code>root</code> that build 12 left out. Summary is three plants as rows, each opening into RM / FG /
+Consumables, TB / MB5B / Difference as the master columns, and the newest March plus the three months
+after it under each. <strong>The plants come from your Plant Master sheet</strong> through
+<code>dimPlantMaster</code>, so the plant list is master data like everything else.
+<strong>The trial balance stops counting fixed assets as inventory</strong>: TB Master matched none of
+your GL accounts and the old fallback kept every row, so Buildings (&#8377;1,977.80 Cr) and Plant &amp;
+Machinery were being read as raw material &mdash; Inventory (TB) is now empty until TB Master lists your
+inventory GLs, and qcTBByGL names every account that fell out. <strong>Value with No Nature (%)</strong>
+is weighted by value rather than rows, because 2.6% of rows was 96% of the money.</blockquote>
+
 <blockquote><strong>Build 16 &mdash; 14 Aug:</strong> <strong>There is no Unallocated plant</strong> &mdash;
 not in <code>dimPlant</code>, not in the facts, nowhere. A stock row whose valuation area is blank, or is a
 code that is not 1900 / 1902 / 1905, is left out rather than parked on a plant that does not exist, and a

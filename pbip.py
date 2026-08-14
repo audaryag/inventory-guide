@@ -72,7 +72,7 @@ TABLES = {
 # every other query stays a shared expression: helpers, staging, and the diagnostic whose
 # shape depends on the sheet (qcMWSheet), which a fixed column list could not describe.
 EXPRESSION_ORDER = ["pRoot", "pVarsFile", "fnCleanMB5B", "fnVarSheet", "fnVarSheetSafe", "stgRM", "stgFG",
-                    "stgConble", "dimMaterialAttr", "dimFGAttr", "varConstants",
+                    "stgConble", "dimPlantMaster", "varPlantCodes", "dimMaterialAttr", "dimFGAttr", "varConstants",
                     "fnConstantAsOf", "factRM", "factFG", "factConble", "varMWCapacity",
                     "factTB_Staged", "qcMWSheet"]
 
@@ -592,15 +592,20 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
               "visualContainerObjects": title_objects(title)}
     if objects:
         visual["objects"] = objects
-    if vt == "pivotTable" and rows_levels > 1:
-        # only the row hierarchy is written out expanded. An expansion state on the column
-        # hierarchy made Desktop draw the two FG matrices as empty white cards, and a matrix
-        # of three measures times twelve months would be unreadable anyway: the measure level
-        # shows, and the reader opens a month with the + on the header.
-        visual["expansionStates"] = [{
-            "roles": ["Rows"],
-            "levels": [{"queryRefs": [p["queryRef"]], "isCollapsed": False}
-                       for p in qstate["Rows"]["projections"]]}]
+    if vt == "pivotTable":
+        # Both hierarchies are written out expanded, with the root toggled. Build 12 wrote the
+        # same levels without a root and Desktop answered by drawing four matrices as empty
+        # cards: without it the state reads as 'these fields participate, no instance is
+        # expanded'. root.isToggled = true is the schema's way of saying every instance is,
+        # which is what makes the month columns sit under TB / MB5B / Difference on load.
+        states = [{"roles": [role],
+                   "levels": [{"queryRefs": [p["queryRef"]], "isCollapsed": False}
+                              for p in qstate[role]["projections"]],
+                   "root": {"isToggled": True}}
+                  for role in ("Rows", "Columns")
+                  if len(qstate.get(role, {}).get("projections", [])) > 1]
+        if states:
+            visual["expansionStates"] = states
 
     x, y, w, h = pos
     out = {"$schema": VC, "name": vname(page, idx),
