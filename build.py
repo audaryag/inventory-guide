@@ -484,6 +484,24 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 13 &mdash; 14 Aug:</strong> five of these are build 12's own damage and I
+would rather say so plainly. <strong>The four matrices that went missing are back</strong> &mdash; Summary's
+<code>Total Across All Plants</code>, both FG tables and <code>RM Inventory by Plant</code>: build 12 wrote
+an expansion state on to the column hierarchy, and on a matrix whose rows are a single level Desktop
+answered by drawing an empty white card. <strong>The Total column now appears only where the columns are
+months</strong>: on Summary it was adding Inventory (TB) + Inventory (MB5B) + Difference into one number,
+which means nothing; Overview keeps its Total. <strong>There are three plants</strong> &mdash; 1903, 1904 and
+1908 come out of the exports and are not plants, so those rows sit on <em>Unallocated</em> with their value
+intact, and each plant is labelled with its code (<code>1900 Jaipur Module</code>) so slicer, legend and
+ticker read alike. <strong><code>dimNature</code> now carries <em>Consumables</em> and <em>Unassigned</em></strong>,
+which is where Detail's <code>(Blank)</code> slice came from. <strong>The megawatt figures sit above their
+bars</strong>, not on them, and the <em>% vs last month</em> line you never asked for is off that chart.
+<strong>Detail averages instead of adding</strong>: its cards, pies and matrix read
+<code>Inventory Rs Cr</code> and <code>Inventory MW</code>, so the page no longer reads 5,393 on a 1,433
+report. <strong>And the trial balance stops printing 3.8E-13</strong>: TB is rounded to the paisa and the
+difference percentage is blank while the books side is zero &mdash; which it is until TB Master matches your
+GL accounts, and that is still the one thing the Checks page has to tell us.</blockquote>
+
 <blockquote><strong>Build 12 &mdash; 14 Aug:</strong> everything you photographed, fixed at its cause.
 <strong>Why every nature, technology and group came out <em>Unassigned</em>:</strong> the RM Nature and
 FG Master sheets give the material with its leading zeros gone, the MB5B files keep them, so
