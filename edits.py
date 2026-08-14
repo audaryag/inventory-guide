@@ -10,6 +10,43 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="0", build="21", query="",
+         title="Blank matrices, and no months under TB / MB5B / Difference \u2014 six visuals to "
+               "correct by hand",
+         why="Two faults with one cause: a matrix with <em>two</em> fields in Columns. Power BI "
+             "opens such a matrix on the outer level only \u2014 one figure per metric, no months "
+             "\u2014 and where the file tries to pre-open it, Desktop draws the visual as an empty "
+             "card instead, which is why Summary's lower block and the FG and RM tables were "
+             "missing altogether. The cure is to stop nesting: <strong>one</strong> field in "
+             "Columns (the month) and the metrics as measures side by side underneath, which is "
+             "the same grid read the other way and needs no expanding. On each of the six "
+             "matrices below: click it, and in the Visualizations pane drag "
+             "<code>dimMetric[Metric]</code> (or <code>dimMeasure[Measure]</code>) out of the "
+             "Columns box, leaving <code>dimDate[MonthName]</code> alone in there. Then remove "
+             "the single measure from Values and drag these in instead, in order \u2014 and "
+             "double-click each one in the Values box to type the short name over it, because "
+             "that is what the column heading reads.",
+         steps=[
+             "<strong>Summary</strong>, both matrices \u2014 Values: <code>TB Inventory Rs Cr</code> "
+             "renamed <strong>TB</strong>, <code>Inventory Rs Cr</code> renamed "
+             "<strong>MB5B</strong>, <code>Difference Inventory Rs Cr</code> renamed "
+             "<strong>Difference</strong>. Drop <code>Summary Value Rs Cr</code>.",
+             "<strong>FG</strong>, both matrices \u2014 Values: <code>Inventory MW</code> renamed "
+             "<strong>MW</strong>, <code>Inventory Rs Cr</code> renamed <strong>Rs Cr.</strong>, "
+             "<code>Days</code> renamed <strong>Days</strong>. Drop "
+             "<code>Unit Value by Period</code>.",
+             "<strong>RM</strong>, both matrices \u2014 Values: <code>Inventory Rs Cr</code> renamed "
+             "<strong>Rs Cr.</strong>, <code>Days</code> renamed <strong>Days</strong>. Drop "
+             "<code>Unit Value by Period</code>, and remove the <code>dimMeasure[Measure]</code> "
+             "entry from the Filters pane as well \u2014 it has nothing left to filter.",
+             "Then click each of the six, and in the Filters pane leave "
+             "<code>In Summary Window is 1</code> exactly as it is: that is what holds the "
+             "columns to the newest March plus the three months after it until you tick months "
+             "yourself.",
+             "Everything else on those pages stays put. If you would rather not do it by hand, "
+             "the download on the <strong>Auto</strong> tab is already built this way.",
+         ],
+         find="", repl=""),
     dict(n="1", build="20", query="dimTBMaster",
          title="Errors in dimTBMaster \u2014 the TB whitelist erroring on every one of its rows",
          why="A forced type cast. <code>Int64.Type</code> on the sort column, and "
@@ -79,6 +116,8 @@ def edit_cards(qcode):
     out = []
     for e in EDITS:
         name, body = e["query"], ""
+        if e.get("steps"):
+            body = "<ul class='elist'>" + "".join("<li>%s</li>" % x for x in e["steps"]) + "</ul>"
         if name:
             code = qcode.get(name)
             if code is None:

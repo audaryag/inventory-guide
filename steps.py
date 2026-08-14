@@ -1,4 +1,5 @@
 """Turns spec.py into (a) guided one-at-a-time steps and (b) the PART 4 markdown."""
+import spec
 from spec import (CANVAS, PAGES, CARDS, SLICERS, VISUALS, DRILL_PAGE, DRILL_FIELDS,
                   BAND_PAGES, DECOR, title_case, FONT, PANEL, PANEL_INK, PANEL_SUB, BOX, HEAD, INK,
                   PANEL_CLONES, PANEL_TITLES, PANEL_PAGES)
@@ -555,9 +556,18 @@ def steps():
             do += _fit(vtype, title)
             do += _place(*pos, in_format=True)
             do += [_plain(e) for e in extra]
+            # a renamed field: put the measure in the well, then rename it in the well, which
+            # is what the column header reads
+            for wl, fl in wells:
+                for f in fl:
+                    if spec.label(f):
+                        do.append("In the %s box, double-click %s and type %s over it. That "
+                                  "renames it for this visual only, and it is what the column "
+                                  "header shows." % (wl, spec.base(f), spec.label(f)))
             fields = [("Visual", vtype), ("Title", title)]
             for wl, fl in wells:
-                fields += [(wl, f) for f in fl]
+                fields += [(wl, spec.base(f) + (" \u2192 rename to " + spec.label(f)
+                                               if spec.label(f) else "")) for f in fl]
             fields += _pos_rows(*pos)
             S.append(dict(
                 title="%s %d of %d — %s" % (page, i, len(vs), title),
@@ -793,7 +803,10 @@ def part4_markdown():
             L += ["**4.%d** **%s** — %s" % (n, vtype, why), "",
                   "| Well | Field |", "|---|---|"]
             for wl, fl in wells:
-                L.append("| %s | %s |" % (wl, ", ".join("`%s`" % f for f in fl)))
+                L.append("| %s | %s |" % (wl, ", ".join(
+                    "`%s`%s" % (spec.base(f),
+                                " \u2192 rename it to **%s**" % spec.label(f)
+                                if spec.label(f) else "") for f in fl)))
             L += ["", "Title: `%s`" % title,
                   "", "Position: Horizontal %d, Vertical %d, Width %d, Height %d." % pos,
                   ""]

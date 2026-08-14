@@ -33,6 +33,24 @@ BAND_PAGES = []
 # ---- header band for RM -------------------------------------------------------------
 # 96 high, not 88: a card has to hold a 12pt title strip above a 24pt number, and 88
 # clips the lower one of the two.
+
+# A field may be written "Measure AS Label": the measure goes in the well, and the visual
+# renames it to Label, which is what the column header then reads. Long measure names make a
+# twelve-column matrix scroll sideways for no reason - "TB" says the same as
+# "TB Inventory Rs Cr" in a fifth of the width.
+AS = "  AS  "
+
+
+def base(field):
+    """The real field or measure name, without any per-visual label."""
+    return field.split(AS)[0].strip()
+
+
+def label(field):
+    """The per-visual label, or None when the field keeps its own name."""
+    return field.split(AS)[1].strip() if AS in field else None
+
+
 CARDS = [
     ("Value ₹ Cr",         16, 10, 200, 96, "Total value ₹ Cr"),
     ("RM ₹ Cr",           224, 10, 200, 96, "Raw materials ₹ Cr"),
@@ -446,18 +464,25 @@ VISUALS = [
     ("Summary", "Matrix",
      "Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr.)",
      [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
-      ("Columns", ["dimMetric[Metric]", "dimDate[MonthName]"]),
-      ("Values", ["Summary Value Rs Cr"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["TB Inventory Rs Cr" + AS + "TB",
+                  "Inventory Rs Cr" + AS + "MB5B",
+                  "Difference Inventory Rs Cr" + AS + "Difference"]),
       ("Filters", ["In Summary Window  →  is 1"])],
      (16, 88, 1248, 232),
-     "The whole reconciliation in one grid: three master columns \u2014 Inventory (TB), "
-     "Inventory (MB5B), Difference \u2014 with the periods under each, one row per plant "
-     "(Jaipur Module, Dholera Module, Dholera Cell) opening into RM, FG and Consumables, "
-     "and a total for each plant. Everything in crore rupees.",
-     ["Order of the two Columns fields matters: dimMetric[Metric] FIRST, then "
-      "dimDate[MonthName]. That is what makes TB / MB5B / Difference the master columns "
-      "with the months nested inside; the other way round gives you months with three "
-      "metrics inside each.",
+     "The whole reconciliation in one grid: each period a master column with Inventory (TB), "
+     "Inventory (MB5B) and Difference under it, one row per plant (Jaipur Module, Dholera "
+     "Module, Dholera Cell) opening into RM, FG and Consumables, and a total for each plant. "
+     "Everything in crore rupees.",
+     ["The three figures are three measures in the Values box, in this order: TB Inventory Rs "
+      "Cr, Inventory Rs Cr, Difference Inventory Rs Cr. Columns holds dimDate[MonthName] and "
+      "nothing else.",
+      "Why this way round: a matrix nests its measures underneath whatever is in Columns, so "
+      "with real month names on show the months have to be the outer level and TB / MB5B / "
+      "Difference the inner one. The other arrangement \u2014 a Metric field above a Month field "
+      "\u2014 is a two-level column hierarchy, and one of those opens collapsed on a single "
+      "figure per metric until you expand it by hand. Same twelve cells, read the other way, "
+      "and it needs no clicking.",
       "Format pane \u2192 Row headers \u2192 Stepped layout: Off, so Plant and Type get a column "
       "each instead of being indented into one.",
       "Format pane \u2192 Row headers \u2192 +/- icons: On \u2014 that is the click-to-expand control on "
@@ -468,7 +493,7 @@ VISUALS = [
       "split by RM / FG / Consumables, is the second matrix underneath \u2014 a matrix can only "
       "give one flat grand total row, so the split has to be its own visual.",
       "Colour the differences: in the Values box click the small down-arrow next to "
-      "Summary Value Rs Cr, click 'Conditional formatting', then 'Background color'. Set "
+      "Difference Inventory Rs Cr, click 'Conditional formatting', then 'Background color'. Set "
       "Format style to Diverging, tick 'Add a middle colour', set the middle number to 0, "
       "and make both the Minimum and Maximum colours red. A difference either direction is "
       "equally wrong, so both ends are red.",
@@ -482,16 +507,18 @@ VISUALS = [
 
     ("Summary", "Matrix", "Total across All Plants by Type (Rs Cr.)",
      [("Rows", ["dimCategory[Category]"]),
-      ("Columns", ["dimMetric[Metric]", "dimDate[MonthName]"]),
-      ("Values", ["Summary Value Rs Cr"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["TB Inventory Rs Cr" + AS + "TB",
+                  "Inventory Rs Cr" + AS + "MB5B",
+                  "Difference Inventory Rs Cr" + AS + "Difference"]),
       ("Filters", ["In Summary Window  →  is 1"])],
      (16, 328, 1248, 128),
-     "The bottom block: the same three master columns, but every plant added together \u2014 one "
-     "row for RM, one for FG, one for Consumables, so you can read total RM across all "
-     "plants at a glance, and a Total row under them which is the total inventory.",
-     ["Same column order as the matrix above: dimMetric[Metric] first, then "
-      "dimDate[MonthName]. Keep the same months ticked, so the two matrices line up column "
-      "for column.",
+     "The bottom block: the same periods and the same three figures under each, but every "
+     "plant added together \u2014 one row for RM, one for FG, one for Consumables, so you can "
+     "read total RM across all plants at a glance, and a Total row under them which is the "
+     "total inventory.",
+     ["Same columns and the same three measures in the same order as the matrix above, so the "
+      "two line up column for column. Keep the same months ticked.",
       "Format pane \u2192 Row headers \u2192 Stepped layout: Off.",
       "Format pane \u2192 Subtotals \u2192 Row subtotals: On \u2014 that bottom row is the total of the "
       "totals, the whole inventory. Column subtotals: On, for the Total column on the right.",
@@ -595,21 +622,21 @@ VISUALS = [
 
     ("FG", "Matrix", "FG by Plant — MW · Rs Cr. · Days",
      [("Rows", ["dimPlant[Plant]"]),
-      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
-      ("Values", ["Unit Value by Period"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Inventory MW" + AS + "MW",
+                  "Inventory Rs Cr" + AS + "Rs Cr.",
+                  "Days" + AS + "Days"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Summary Window  →  is 1"])],
      (16, 88, 1248, 132),
      "Finished goods per plant in all three units at once — megawatts, crore rupees and "
-     "days — with four periods under each of the three master columns by default. Days is "
-     "MW ÷ capacity MW, so a plant with no capacity figure is blank on purpose.",
-     ["dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName]. That order is what "
-      "makes MW, Rs Cr. and Days the master columns with the periods nested inside them; "
-      "the other way round gives you periods with three units inside each, which is not "
-      "what you want.",
-      "Values takes Unit Value by Period, not Unit Value. They are the same figure in a "
-      "month column; the difference is the Total column, where the by-Period one averages "
-      "the month-ends instead of adding them, because stock is a level.",
+     "days — under each of four periods by default. Days is MW ÷ capacity MW, so a plant "
+     "with no capacity figure is blank on purpose.",
+     ["Three measures in the Values box, in this order: Inventory MW, Inventory Rs Cr, Days. "
+      "Columns holds dimDate[MonthName] and nothing else, so each period is a master column "
+      "with the three units under it and no expanding to do.",
+      "All three average the month-ends in the Total column instead of adding them, because "
+      "stock is a level, not a flow.",
       "Filters pane → drag dimCategory[Category] in → tick FG only. Then drag the measure "
       "In Summary Window in and set 'is 1' — that is what limits it to four periods, or to "
       "the ones you tick, up to twelve.",
@@ -624,12 +651,14 @@ VISUALS = [
 
     ("FG", "Matrix", "FG by Technology — MW · Rs Cr. · Days",
      [("Rows", ["dimNature[Nature]"]),
-      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
-      ("Values", ["Unit Value by Period"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Inventory MW" + AS + "MW",
+                  "Inventory Rs Cr" + AS + "Rs Cr.",
+                  "Days" + AS + "Days"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Summary Window  →  is 1"])],
      (16, 228, 1248, 176),
-     "Exactly the same three master columns and the same periods, but by module technology "
+     "Exactly the same periods and the same three units under each, but by module technology "
      "rather than by plant — which is where a build-up in one technology shows up.",
      ["Build it the fastest way: click the matrix above, Ctrl+C, Ctrl+V, then in the Rows "
       "box remove dimPlant[Plant] and drag dimNature[Nature] in. Everything else, filters "
@@ -641,21 +670,28 @@ VISUALS = [
       "Format pane → Subtotals → Row subtotals: On, Column subtotals: On.",
       "With the Plant slicer on one plant, this becomes that plant's technology split."]),
 
-    ("FG", "Clustered column chart", "FG MW by Technology, Latest Month — Click a Bar",
+    ("FG", "Line and clustered column chart",
+     "FG by Technology, Latest Month — Rs Cr. as Bars, MW as the Line",
      [("X-axis", ["dimNature[Nature]"]),
-      ("Y-axis", ["Latest Month MW"]),
+      ("Column y-axis", ["Latest Month Value ₹ Cr"]),
+      ("Line y-axis", ["Latest Month MW"]),
       ("Filters", ["dimCategory[Category]  →  is FG"])],
      (16, 412, 412, 292),
-     "Which technology is holding the megawatts right now. It is deliberately pinned to the "
-     "latest month with data: there is no period on the axis here, so without that pin it "
-     "would add four months of stock together and read four times too high.",
-     ["Nothing to add in the Filters pane: the measure is Latest Month MW, which sets the "
-      "month itself. Do not put a period field on this chart.",
+     "Which technology is holding the finished goods right now, in money as bars and in "
+     "megawatts as the line over them. Money is on the bars because every technology has a "
+     "value, while a megawatt figure only exists for the ones your MW Capacity sheet covers — "
+     "as bars, that left the chart looking empty. It is deliberately pinned to the latest "
+     "month with data: there is no period on the axis here, so without that pin it would add "
+     "four months of stock together and read four times too high.",
+     ["Nothing to add in the Filters pane: both measures set the month themselves. Do not put "
+      "a period field on this chart.",
+      "A technology with bars but no line has no row on the MW Capacity sheet — qcFGNoCapacity "
+      "on Checks names them.",
       "Format pane → Data labels: On, Font: Arial, Font size: 9, Colour: #1F2A24, Display "
       "units: None, Value decimal places: 1.",
       "Format pane → Y-axis: Off — the label on each bar is the number.",
       "Format pane → X-axis → Values → Font: Arial, Font size: 9, Colour: #1F2A24.",
-      "Format pane → Legend: Off. One measure, one colour.",
+      "Format pane → Legend: On, at the top — two measures now, so the line needs naming.",
       "Format pane → General → Title → Font: Arial, Font size: 11, Colour: #14532D.",
       "Clicking a bar filters both matrices to that technology; right-click → Drill "
       "through → Detail for the materials behind it."]),
@@ -745,22 +781,19 @@ VISUALS = [
 
     ("RM", "Matrix", "RM Inventory by Plant — Rs Cr. · Days",
      [("Rows", ["dimPlant[Plant]"]),
-      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
-      ("Values", ["Unit Value by Period"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr.", "Days" + AS + "Days"]),
       ("Filters", ["dimCategory[Category]  →  is RM",
-                   "dimMeasure[Measure]  →  untick MW",
                    "In Summary Window  →  is 1"])],
      (16, 88, 1248, 132),
-     "The top block of the old RM sheet, rebuilt: one row per plant, with Rs Cr. and Days as "
-     "master columns and the periods under each. MW is unticked because an RM megawatt "
-     "figure is derived from a BOM, not measured, so it does not belong beside the other two.",
-     ["dimMeasure[Measure] goes in Columns FIRST, then dimDate[MonthName] — that order is what "
-      "makes Rs Cr. and Days the master columns.",
-      "Filters pane → dimCategory[Category] → tick RM only; then drag dimMeasure[Measure] in "
-      "and untick MW so only Rs Cr. and Days remain; then drag In Summary Window in and set "
-      "'is 1' for the four-periods-by-default behaviour.",
-      "Values takes Unit Value by Period — in the Total column the plain Unit Value would "
-      "add the month-ends together instead of averaging them.",
+     "The top block of the old RM sheet, rebuilt: one row per plant, each period a master "
+     "column with Rs Cr. and Days under it. MW is left out because an RM megawatt figure is "
+     "derived from a BOM, not measured, so it does not belong beside the other two.",
+     ["Two measures in the Values box: Inventory Rs Cr, then Days. Columns holds "
+      "dimDate[MonthName] and nothing else.",
+      "Filters pane → dimCategory[Category] → tick RM only; then drag In Summary Window in "
+      "and set 'is 1' for the four-periods-by-default behaviour.",
+      "Both measures average the month-ends in the Total column rather than adding them.",
       "Format pane → Row headers → Stepped layout: Off.",
       "Format pane → Subtotals → Row subtotals: On (that is the Grand Total row the Excel "
       "sheet had), Column subtotals: On.",
@@ -769,10 +802,9 @@ VISUALS = [
 
     ("RM", "Matrix", "RM Inventory by Group Nature and Nature — Rs Cr. · Days",
      [("Rows", ["factInventory[GroupNature]", "dimNature[Nature]"]),
-      ("Columns", ["dimMeasure[Measure]", "dimDate[MonthName]"]),
-      ("Values", ["Unit Value by Period"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr.", "Days" + AS + "Days"]),
       ("Filters", ["dimCategory[Category]  →  is RM",
-                   "dimMeasure[Measure]  →  untick MW",
                    "In Summary Window  →  is 1"])],
      (16, 228, 1248, 268),
      "The second block of the old sheet: Module and Cell, each opening into its materials — "

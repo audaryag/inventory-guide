@@ -258,6 +258,7 @@ for page, vtype, title, wells, pos, why, fmt in spec.VISUALS:
 fields += spec.DRILL_FIELDS
 
 for f in fields:
+    f = spec.base(f)
     f = re.split(r"→|=|is ", f)[0].strip()
     if "[" in f:
         tbl, col = f.split("[")[0], f.split("[")[1].rstrip("]")

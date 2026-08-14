@@ -178,6 +178,8 @@ button.copy,button.done{border:1px solid var(--line);background:#232936;color:va
   padding:6px 12px;font-size:13px;cursor:pointer;white-space:nowrap}
 button.copy:hover,button.done:hover{border-color:var(--acc)}
 button.copy.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.card ul.elist{margin:10px 14px 4px 30px;font-size:13px;color:var(--dim)}
+.card ul.elist li{margin:5px 0}
 .card h4{margin:14px 14px 6px;font-size:13px;color:var(--acc);letter-spacing:.02em}
 .note{margin:10px 14px 0;color:var(--dim);font-size:13px;border-left:2px solid var(--acc);padding-left:10px}
 pre{margin:12px 14px 14px;padding:12px;background:#0c0e13;border:1px solid var(--line);border-radius:7px;
@@ -487,6 +489,16 @@ until you restart.</li>
 settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse to combine your own
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
+
+<blockquote><strong>Build 21 &mdash; 14 Aug:</strong> no matrix has a two-level column hierarchy any
+more. A metric field above a month field opens on the metric level &mdash; one figure per metric, no months
+&mdash; and pre-opening it in the file made Desktop draw the visual as an empty card, which is what took
+Summary's lower block and the FG and RM tables off the page. The month is now the only column field, with the
+metrics as measures underneath named <code>TB</code>, <code>MB5B</code>, <code>Difference</code> and
+<code>MW</code>, <code>Rs Cr.</code>, <code>Days</code>: the same grid read the other way, with nothing to
+expand. FG by technology now shows money as bars with megawatts as a line, because a technology only has a
+megawatt figure where the MW Capacity sheet covers it and as bars that left the chart looking
+empty.</blockquote>
 
 <blockquote><strong>Build 20 &mdash; 14 Aug:</strong> <em>Errors in dimTBMaster</em> on all eight rows
 was a forced type cast &mdash; <code>Int64.Type</code> on the sort column errors the whole row when a cell

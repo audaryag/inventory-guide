@@ -557,8 +557,12 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
         role = roles[well]
         projections = []
         for f in fields:
-            fe, qref, native = field_expr(f)
-            projections.append({"field": fe, "queryRef": qref, "nativeQueryRef": native})
+            fe, qref, native = field_expr(spec.base(f))
+            proj = {"field": fe, "queryRef": qref, "nativeQueryRef": native}
+            # a per-visual rename: the header reads TB, not TB Inventory Rs Cr
+            if spec.label(f):
+                proj["displayName"] = spec.label(f)
+            projections.append(proj)
             if vt in ("columnChart", "clusteredColumnChart",
                       "lineClusteredColumnComboChart") and role == "Y" and not sort_field:
                 sort_field = fe
@@ -575,7 +579,7 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
 
     query = {"queryState": qstate}
     if vt == "pivotTable":
-        cols = [f for w, fs in wells if w == "Columns" for f in fs]
+        cols = [spec.base(f) for w, fs in wells if w == "Columns" for f in fs]
         objects = matrix_objects(rows_levels, expand=rows_levels > 1,
                                  subtotals=rows_levels > 1,
                                  column_total=cols == ["dimDate[MonthName]"])
@@ -598,17 +602,17 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
     if objects:
         visual["objects"] = objects
     if vt == "pivotTable":
-        # Both hierarchies are written out expanded, with the root toggled. Build 12 wrote the
-        # same levels without a root and Desktop answered by drawing four matrices as empty
-        # cards: without it the state reads as 'these fields participate, no instance is
-        # expanded'. root.isToggled = true is the schema's way of saying every instance is,
-        # which is what makes the month columns sit under TB / MB5B / Difference on load.
-        states = [{"roles": [role],
+        # Rows only, never Columns. A matrix carrying a Columns expansion state came back from
+        # Desktop as an empty card - build 12 did it to four matrices, build 17 to four more -
+        # and even where it drew, the state was ignored and the second column level stayed
+        # collapsed. So no matrix has a two-level column hierarchy any more: the months are the
+        # only column field and the metrics are measures beside each other underneath, which
+        # needs no expanding at all.
+        states = [{"roles": ["Rows"],
                    "levels": [{"queryRefs": [p["queryRef"]], "isCollapsed": False}
-                              for p in qstate[role]["projections"]],
-                   "root": {"isToggled": True}}
-                  for role in ("Rows", "Columns")
-                  if len(qstate.get(role, {}).get("projections", [])) > 1]
+                              for p in qstate["Rows"]["projections"]],
+                   "root": {"isToggled": True}}] \
+            if len(qstate.get("Rows", {}).get("projections", [])) > 1 else []
         if states:
             visual["expansionStates"] = states
 

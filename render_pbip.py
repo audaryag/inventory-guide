@@ -56,8 +56,9 @@ def fields(v, role):
     for p in q["projections"]:
         f = p["field"]
         kind = "Column" if "Column" in f else "Measure"
+        # displayName is the visual's own rename, and it is what the header reads
         out.append((f[kind]["Expression"]["SourceRef"]["Entity"],
-                    f[kind]["Property"], kind))
+                    p.get("displayName") or f[kind]["Property"], kind))
     return out
 
 
@@ -162,15 +163,20 @@ def r_matrix(v):
     lvl1 = kept(v, rows[0][1]) if rows else ["Total"]
     lvl2 = kept(v, rows[1][1]) if len(rows) > 1 else []
     lvl3 = kept(v, rows[2][1]) if len(rows) > 2 else []
+    # with several measures and one column field, Power BI puts the measures underneath each
+    # column value - so the header is two rows deep even though only one field is in Columns
     if colf:
         outer = kept(v, colf[0][1])
-        inner = kept(v, colf[1][1]) if len(colf) > 1 else [""]
+        if len(colf) > 1:
+            inner = kept(v, colf[1][1])
+        else:
+            inner = [m[1] for m in vals] if len(vals) > 1 else [""]
     else:
         outer, inner = [m[1] for m in vals] or [""], [""]
     if len(outer) * len(inner) > 12:
-        inner = inner[:4]
+        outer = outer[:max(1, 12 // max(1, len(inner)))]
     h = ["<table class='mx'><thead>"]
-    if colf and len(colf) > 1:
+    if len(inner) > 1 or (colf and len(colf) > 1):
         h.append("<tr><th class='rh' rowspan='2'>" +
                  " / ".join(esc(r[1]) for r in rows) + "</th>")
         for o in outer:
@@ -191,10 +197,11 @@ def r_matrix(v):
         out = []
         for o in outer:
             for i in inner:
-                mname = o if not colf else (vals[0][1] if vals else "")
+                mname = (i if len(inner) > 1 and colf and len(colf) == 1
+                         else o if not colf else (vals[0][1] if vals else ""))
                 x = num(rk, o, i, mname)
                 cls = ""
-                if o == "Difference":
+                if "Difference" in (o, i) or o == "Difference":
                     x = num(rk, o, i, lo=-9, hi=9)
                     cls = " neg" if abs(x) > 1 else ""
                 out.append(f"<td class='n{cls}'>{esc(fmt(mname, x))}</td>")
