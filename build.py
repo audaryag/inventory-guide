@@ -484,6 +484,17 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 16 &mdash; 14 Aug:</strong> <strong>There is no Unallocated plant</strong> &mdash;
+not in <code>dimPlant</code>, not in the facts, nowhere. A stock row whose valuation area is blank, or is a
+code that is not 1900 / 1902 / 1905, is left out rather than parked on a plant that does not exist, and a
+trial-balance row whose profit centre does not resolve to one of the three goes the same way.
+<strong>Nothing is dropped silently</strong>: the new <code>qcPlantCodes</code> table on Checks lists every
+valuation area the stock files contained, its rows, its value in &#8377; Cr, and whether the report kept it
+&mdash; so if a code outside the three is carrying real money, that line says so. <strong>And the by-plant
+tables open on March plus the last three months</strong>: <code>In Summary Window</code> pins the newest
+March that has data and adds the three most recent months, the rule Overview already used, so Summary, FG
+and RM all open on four columns beginning with the year-end close.</blockquote>
+
 <blockquote><strong>Build 15 &mdash; 14 Aug:</strong> built against the real workbook. Its sheets are
 <code>RM Nature</code> and <code>TB Master</code>, and <strong>every header in them is now recognised</strong>
 &mdash; including <code>NaturePlant</code>, which the guide had been looking for as two separate columns, so

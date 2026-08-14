@@ -1006,7 +1006,7 @@ VISUALS = [
 
     ("Checks", "Table", "Every file the four folders gave, with its sheets",
      [("Columns", ["qcHeaders[Folder]", "qcHeaders[Name]", "qcHeaders[SheetNames]"])],
-     (16, 160, 620, 180),
+     (16, 160, 620, 148),
      "One row per file actually read. If a month is missing from the report, it is missing "
      "from this list first \u2014 check the file is in the folder and is a real .xlsx.",
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
@@ -1014,7 +1014,7 @@ VISUALS = [
 
     ("Checks", "Table", "Sheets found in Variables and Calculations",
      [("Columns", ["qcVarHeaders[SheetName]", "qcVarHeaders[DataRows]"])],
-     (644, 160, 620, 180),
+     (644, 160, 620, 148),
      "The workbook that carries RM Nature, FG Master, TB Master, Constants and MW. A sheet "
      "missing from this list, or showing 0 rows, is why the natures or the trial balance are "
      "empty.",
@@ -1024,7 +1024,7 @@ VISUALS = [
     ("Checks", "Table", "GL accounts in the TB files that TB Master does not list",
      [("Columns", ["factTB_Unmapped[GLAccount]", "factTB_Unmapped[GLDesc]",
                    "factTB_Unmapped[Amount]"])],
-     (644, 348, 620, 168),
+     (644, 316, 620, 124),
      "Empty is good. A long list here with 0 trial-balance rows above means TB Master is not "
      "matching your GL numbers at all, and the report is showing the whole trial balance "
      "rather than the inventory accounts.",
@@ -1033,7 +1033,7 @@ VISUALS = [
 
     ("Checks", "Table", "FG technologies with no capacity on the MW sheet",
      [("Columns", ["qcNatureNoCapacity[Nature]"])],
-     (644, 524, 620, 172),
+     (644, 448, 620, 120),
      "Each of these gets blank Days, because days of inventory divides by capacity. Add the "
      "technology to the MW sheet and it fills in by itself.",
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
@@ -1042,7 +1042,7 @@ VISUALS = [
     ("Checks", "Table", "Do the material numbers match between the sheets and the files",
      [("Columns", ["qcAttrMatch[Source]", "qcAttrMatch[DistinctMaterials]",
                    "qcAttrMatch[MatchedToStockFiles]", "qcAttrMatch[FirstEight]"])],
-     (16, 348, 620, 168),
+     (16, 316, 620, 124),
      "The one table that explains an Unassigned donut. If RM Nature and FG Master hold "
      "thousands of materials but Matched is near zero, the two sides are keyed differently \u2014 "
      "compare the first eight numbers on each row and the difference is usually visible at a "
@@ -1053,10 +1053,23 @@ VISUALS = [
     ("Checks", "Table", "Trial balance by GL account, signed",
      [("Columns", ["qcTBByGL[GLAccount]", "qcTBByGL[GLDesc]", "qcTBByGL[Category]",
                    "qcTBByGL[AmountRsCr]"])],
-     (16, 524, 620, 172),
+     (16, 448, 620, 120),
      "Sorted with the most negative first. An inventory account sitting there as a credit is "
      "why a plant's Inventory (TB) nets to nearly zero on Summary while the by-type block "
      "shows a large minus figure \u2014 the sign, not the mapping, is what is wrong.",
+     ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
+
+
+    ("Checks", "Table", "Every plant code the stock files contain, and what it is worth",
+     [("Columns", ["qcPlantCodes[Code]", "qcPlantCodes[Rows]",
+                   "qcPlantCodes[ValueRsCr]", "qcPlantCodes[InReport]"])],
+     (16, 576, 1248, 120),
+     "There are three plants. Any other code here \u2014 1903, 1904, 1908, or a blank valuation "
+     "area \u2014 is a row the report leaves out rather than parking it on an Unallocated plant "
+     "that does not exist, and the value beside it is exactly what leaving it out costs. If that "
+     "figure is large, the code belongs to one of the three and the export is writing it "
+     "differently; tell me which and it joins its plant.",
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
 

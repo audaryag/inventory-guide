@@ -66,6 +66,7 @@ TABLES = {
                     ("MatchedToStockFiles", I), ("FirstEight", S)],
     "qcTBByGL": [("GLAccount", S), ("GLDesc", S), ("Nature", S), ("Category", S),
                  ("AmountRsCr", D), ("Rows", I)],
+    "qcPlantCodes": [("Code", S), ("Rows", I), ("ValueRsCr", D), ("InReport", B)],
 }
 
 # every other query stays a shared expression: helpers, staging, and the diagnostic whose
@@ -101,7 +102,7 @@ HIDDEN = {("factInventory", "MatKey"), ("factTB", "PlantCode"), ("dimDate", "Mon
 
 # tables kept out of the report field list (helpers/diagnostics still refresh)
 HIDDEN_TABLES = {"factTB_Unmapped", "qcHeaders", "qcVarHeaders", "qcNatureNoCapacity",
-                 "qcAttrMatch", "qcTBByGL"}
+                 "qcAttrMatch", "qcTBByGL", "qcPlantCodes"}
 
 
 def measure_format(name):
