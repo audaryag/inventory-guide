@@ -484,6 +484,17 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 18 &mdash; 14 Aug:</strong> repeated data, now that the master sheets are
+filled in. <strong>A stock line that arrives twice is counted once</strong> &mdash; two rows are the same
+line when the plant, material, month, special stock, unit and every figure agree, and the file they came
+from is deliberately ignored, which catches the same month exported twice into one folder; two genuinely
+different lines for a material in a month differ in at least one figure and are both kept.
+<strong>One master row per material on FG as well as RM</strong>, so a material written twice on the sheet
+cannot multiply its stock. <strong>Two new checks</strong>: <code>qcMasterDupes</code> lists any material
+carrying two different natures on a master sheet (only the first can be used, so the sheet decides by
+accident which one wins), and <code>qcMonthFiles</code> says whether a month arrived from more than one
+file.</blockquote>
+
 <blockquote><strong>Build 17 &mdash; 14 Aug:</strong> read straight off your Checks page.
 <strong>The month columns now open under TB / MB5B / Difference</strong> &mdash; a matrix opens on the
 outer level of its column hierarchy, so each master column was showing one figure for the whole window,

@@ -1006,7 +1006,7 @@ VISUALS = [
 
     ("Checks", "Table", "Every file the four folders gave, with its sheets",
      [("Columns", ["qcHeaders[Folder]", "qcHeaders[Name]", "qcHeaders[SheetNames]"])],
-     (16, 160, 620, 148),
+     (16, 160, 620, 100),
      "One row per file actually read. If a month is missing from the report, it is missing "
      "from this list first \u2014 check the file is in the folder and is a real .xlsx.",
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
@@ -1014,7 +1014,7 @@ VISUALS = [
 
     ("Checks", "Table", "Sheets found in Variables and Calculations",
      [("Columns", ["qcVarHeaders[SheetName]", "qcVarHeaders[DataRows]"])],
-     (644, 160, 620, 148),
+     (644, 160, 620, 100),
      "The workbook that carries RM Nature, FG Master, TB Master, Constants and MW. A sheet "
      "missing from this list, or showing 0 rows, is why the natures or the trial balance are "
      "empty.",
@@ -1024,7 +1024,7 @@ VISUALS = [
     ("Checks", "Table", "GL accounts in the TB files that TB Master does not list",
      [("Columns", ["factTB_Unmapped[GLAccount]", "factTB_Unmapped[GLDesc]",
                    "factTB_Unmapped[Amount]"])],
-     (644, 316, 620, 124),
+     (644, 268, 620, 100),
      "Empty is good. A long list here with 0 trial-balance rows above means TB Master is not "
      "matching your GL numbers at all, and the report is showing the whole trial balance "
      "rather than the inventory accounts.",
@@ -1033,7 +1033,7 @@ VISUALS = [
 
     ("Checks", "Table", "FG technologies with no capacity on the MW sheet",
      [("Columns", ["qcNatureNoCapacity[Nature]"])],
-     (644, 448, 620, 120),
+     (644, 376, 620, 100),
      "Each of these gets blank Days, because days of inventory divides by capacity. Add the "
      "technology to the MW sheet and it fills in by itself.",
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
@@ -1042,7 +1042,7 @@ VISUALS = [
     ("Checks", "Table", "Do the material numbers match between the sheets and the files",
      [("Columns", ["qcAttrMatch[Source]", "qcAttrMatch[DistinctMaterials]",
                    "qcAttrMatch[MatchedToStockFiles]", "qcAttrMatch[FirstEight]"])],
-     (16, 316, 620, 124),
+     (16, 268, 620, 100),
      "The one table that explains an Unassigned donut. If RM Nature and FG Master hold "
      "thousands of materials but Matched is near zero, the two sides are keyed differently \u2014 "
      "compare the first eight numbers on each row and the difference is usually visible at a "
@@ -1053,7 +1053,7 @@ VISUALS = [
     ("Checks", "Table", "Trial balance by GL account, signed",
      [("Columns", ["qcTBByGL[GLAccount]", "qcTBByGL[GLDesc]", "qcTBByGL[Category]",
                    "qcTBByGL[AmountRsCr]"])],
-     (16, 448, 620, 120),
+     (16, 592, 1248, 100),
      "Sorted with the most negative first. An inventory account sitting there as a credit is "
      "why a plant's Inventory (TB) nets to nearly zero on Summary while the by-type block "
      "shows a large minus figure \u2014 the sign, not the mapping, is what is wrong.",
@@ -1064,7 +1064,7 @@ VISUALS = [
     ("Checks", "Table", "Every plant code the stock files contain, and what it is worth",
      [("Columns", ["qcPlantCodes[Code]", "qcPlantCodes[Rows]",
                    "qcPlantCodes[ValueRsCr]", "qcPlantCodes[InReport]"])],
-     (16, 576, 1248, 120),
+     (16, 484, 620, 100),
      "There are three plants. Any other code here \u2014 1903, 1904, 1908, or a blank valuation "
      "area \u2014 is a row the report leaves out rather than parking it on an Unallocated plant "
      "that does not exist, and the value beside it is exactly what leaving it out costs. If that "
@@ -1073,6 +1073,27 @@ VISUALS = [
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
 
+
+    ("Checks", "Table", "Did any month arrive from two files",
+     [("Columns", ["qcMonthFiles[Category]", "qcMonthFiles[Month]",
+                   "qcMonthFiles[Files]", "qcMonthFiles[ValueRsCr]"])],
+     (644, 484, 620, 100),
+     "Files of 1 on every row is what you want. A 2 means the same month came in twice \u2014 one "
+     "export saved under two names, or a folder holding a partial file and a full one. Identical "
+     "lines are removed before anything is counted, so the figures are right either way, but the "
+     "file that should not be there is still worth deleting.",
+     ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
+
+    ("Checks", "Table", "One material with two natures on a master sheet",
+     [("Columns", ["qcMasterDupes[Sheet]", "qcMasterDupes[MatKey]",
+                   "qcMasterDupes[TheyAre]", "qcMasterDupes[Rows]"])],
+     (16, 376, 620, 100),
+     "Empty is what you want. A row here is a material written twice on RM Nature or FG Master "
+     "with a different nature each time; only the first of them can be used, so which nature the "
+     "material gets depends on the order of the sheet. Delete the wrong row and refresh.",
+     ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
 ]
 
 
