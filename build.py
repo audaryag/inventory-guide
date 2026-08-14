@@ -128,7 +128,7 @@ new_tables = parse_queries(appC)
 STEPS = steps()
 
 
-from edits import EDITS, edit_cards
+from edits import EDITS, HOWTO, edit_cards
 
 
 def cards(items, kind):
@@ -903,11 +903,8 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
 <div class="panel" id="tab-a">{AUTO}</div>
 
 <div class="panel" id="tab-e">
-  <p class="sub">Fixes for a report that is already built, newest first. Each one is a
-  find-and-replace inside a single query, so nothing has to be rebuilt and nothing has to be
-  typed out of a message. They are all already in the download on the <strong>Auto</strong> tab,
-  so a fresh copy needs none of them.</p>
-  {edit_cards()}
+  <p class="sub">{HOWTO}</p>
+  {edit_cards({q["name"]: q["code"] for q in queries})}
 </div>
 
 <div class="panel" id="tab-q">
