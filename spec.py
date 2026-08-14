@@ -323,34 +323,28 @@ VISUALS = [
       "Format pane \u2192 Values \u2192 Font: Arial, Font size: 10, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 10, Colour: #14532D."]),
 
-    ("Overview", "Line and clustered column chart",
-     "Total Inventory by Month, Last 12 Months (MW and % vs Last Month)",
+    ("Overview", "Clustered column chart",
+     "Total Inventory by Month, Last 12 Months (MW)",
      [("X-axis", ["dimDate[MonthName]"]),
-      ("Column y-axis", ["MW"]),
-      ("Line y-axis", ["MW % vs LM"]),
+      ("Y-axis", ["MW"]),
       ("Filters", ["In Last 12  \u2192  is 1"])],
      (200, 576, 700, 130),
      "The long view, under the table: one bar per month for the last twelve months that have "
-     "data, or fewer if that is all there is. Two numbers on every month \u2014 the bar prints the "
-     "megawatts held, the line above it prints the change on the month before as a percentage. "
-     "It is in MW rather than rupees on purpose: this strip is about how much product is "
-     "sitting there, which prices cannot flatter. "
+     "data, or fewer if that is all there is. The figure above each bar is the megawatts held "
+     "that month. It is in MW rather than rupees on purpose: this strip is about how much "
+     "product is sitting there, which prices cannot flatter. "
      "Each bar is that month's closing stock on its own, so nothing here is ever added across "
      "months.",
      ["This one must ignore the two controls at the top, or it would shrink back to five "
       "months. Click the 'Months' slicer once, then ribbon Format \u2192 Edit interactions; "
       "small icons appear on every other visual. On this chart click the circle-with-a-line "
       "(None). Leave Plant and Type set to filter, so those two still work on it.",
-      "Format pane \u2192 Data labels: On. Then open 'Apply settings to' \u2192 Series and pick "
-      "MW: Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, Display units: "
-      "None, Value decimal places: 1, Position: Inside end \u2014 white, because this number is "
-      "printed on the green bar.",
-      "Still under Data labels, switch 'Apply settings to' \u2192 Series to "
-      "'MW % vs LM': Font: Arial, Font size: 8, Colour: #14532D, Value decimal "
-      "places: 0, Position: Above. That is the second number you asked for \u2014 the percentage "
-      "sits over the bar, the crore figure sits inside it, so the two never collide.",
-      "Format pane \u2192 Y-axis: Off, and Secondary y-axis: Off. Both numbers are printed on "
-      "the chart, so two scales up the sides would only eat the height.",
+      "Format pane \u2192 Data labels: On, Font: Arial, Font size: 9, Bold: On, Colour: "
+      "#1F2A24, Display units: None, Value decimal places: 1, Position: Outside end. Outside, "
+      "not inside: a dark figure on a dark green bar cannot be read, which is exactly what was "
+      "wrong before.",
+      "Format pane \u2192 Y-axis: Off. The number is printed above every bar, so a scale up the "
+      "side would only eat the height.",
       "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24, "
       "Concatenate labels: Off, and Maximum height: 20%.",
       "Format pane \u2192 X-axis \u2192 Inner padding: 30%, and Format pane \u2192 General \u2192 "
@@ -896,13 +890,13 @@ VISUALS = [
       "Right-click a point \u2192 Drill through \u2192 Detail for the materials behind that month."]),
 
     ("Detail", "Card", "Value ₹ Cr of what you clicked",
-     [("Fields", ["Value ₹ Cr"])],
+     [("Fields", ["Inventory Rs Cr"])],
      (16, 16, 296, 96),
      "The drill-through page opens already filtered to the bar or row you came from, so "
      "this card is that one number.", []),
 
-    ("Detail", "Card", "MW",
-     [("Fields", ["MW"])],
+    ("Detail", "Card", "MW held",
+     [("Fields", ["Inventory MW"])],
      (320, 16, 296, 96),
      "Same slice in megawatts.", []),
 
@@ -921,21 +915,21 @@ VISUALS = [
 
     ("Detail", "Pie chart", "Split by category",
      [("Legend", ["dimCategory[Category]"]),
-      ("Values", ["Value ₹ Cr"])],
+      ("Values", ["Inventory Rs Cr"])],
      (16, 120, 404, 232),
      "RM / FG / consumables for exactly what you clicked.",
      ["Format pane → Detail labels → Label contents: Category, percent of total."]),
 
     ("Detail", "Donut chart", "Split by technology / nature",
      [("Legend", ["dimNature[Nature]"]),
-      ("Values", ["Value ₹ Cr"])],
+      ("Values", ["Inventory Rs Cr"])],
      (428, 120, 404, 232),
      "Which technology or material nature the slice is made of.",
      ["Format pane → Detail labels → Label contents: Category, percent of total."]),
 
     ("Detail", "Pie chart", "Split by plant",
      [("Legend", ["dimPlant[Plant]"]),
-      ("Values", ["Value ₹ Cr"])],
+      ("Values", ["Inventory Rs Cr"])],
      (840, 120, 424, 232),
      "Where the slice sits. A single-colour pie means it is one plant already.",
      ["Format pane → Detail labels → Label contents: Category, percent of total."]),
@@ -943,7 +937,7 @@ VISUALS = [
     ("Detail", "Matrix", "Materials behind this number — click + to open a nature",
      [("Rows", ["dimNature[Nature]", "factInventory[Material]",
                 "factInventory[MaterialDesc]"]),
-      ("Values", ["Value ₹ Cr", "MW", "Days", "INR per Wp", "Share of Total %"])],
+      ("Values", ["Inventory Rs Cr", "Inventory MW", "Days", "INR per Wp", "Share of Total %"])],
      (16, 364, 1248, 348),
      "The line-item detail. A Matrix rather than a Table, so it opens nature → material "
      "instead of being one long flat list — that is the difference between clicking and "

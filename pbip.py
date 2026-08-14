@@ -294,7 +294,7 @@ def table_objects():
     }
 
 
-def matrix_objects(rows_levels, expand, subtotals=True):
+def matrix_objects(rows_levels, expand, subtotals=True, column_total=False):
     o = {
         "rowHeaders": [{"properties": {
             "stepped": literal("false"),
@@ -309,12 +309,13 @@ def matrix_objects(rows_levels, expand, subtotals=True):
                                    "backColorPrimary": {"solid": {"color": txt("#FFFFFF")}},
                                    "backColorSecondary": {"solid": {"color": txt("#F7FAF7")}},
                                    "bandedRowHeaders": literal("true")}}],
-        # both grand totals on: the bottom row totals the rows, the right-hand column totals
-        # across the columns. Written here rather than left to the default, because a matrix
-        # generated with these off has no Total anywhere on it.
+        # The bottom Total row is always on. The right-hand Total column is on only where the
+        # columns are months, which is the one place a total across columns means anything:
+        # across MW / In Rs Cr / In Days, or across TB / MB5B / Difference, it would add three
+        # unlike things together and print a number that means nothing.
         "subTotals": [{"properties": {
             "rowSubtotals": literal("true"),
-            "columnSubtotals": literal("true"),
+            "columnSubtotals": literal("true" if column_total else "false"),
             "perRowLevel": literal("true" if subtotals else "false"),
             "perColumnLevel": literal("false")}}],
         "grid": [{"properties": {"gridVertical": literal("true"),
@@ -349,6 +350,12 @@ def chart_objects(kind, labels=False):
                                     "color": {"solid": {"color": txt("#1F2A24")}},
                                     "labelDisplayUnits": literal("1D"),
                                     "labelPrecision": literal("1D")}}]}
+    if kind in ("clusteredColumnChart", "barChart", "clusteredBarChart",
+                "lineClusteredColumnComboChart"):
+        # above the bar, never on it. Inside end put a dark figure on a dark green column and
+        # the number could not be read at all.
+        o["labels"][0]["properties"]["labelPosition"] = txt("OutsideEnd")
+        o["labels"][0]["properties"]["fontSize"] = literal("9D")
     if kind == "columnChart":
         # stacked: the consumables segment is too thin to hold a figure, so the segments are
         # left unlabelled and the month's total is printed above the column instead
@@ -562,8 +569,10 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
 
     query = {"queryState": qstate}
     if vt == "pivotTable":
+        cols = [f for w, fs in wells if w == "Columns" for f in fs]
         objects = matrix_objects(rows_levels, expand=rows_levels > 1,
-                                 subtotals=rows_levels > 1)
+                                 subtotals=rows_levels > 1,
+                                 column_total=cols == ["dimDate[MonthName]"])
     elif vt == "card":
         objects = card_objects(pos[2], pos[3])
     elif vt == "slicer":
@@ -582,16 +591,15 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
               "visualContainerObjects": title_objects(title)}
     if objects:
         visual["objects"] = objects
-    if vt == "pivotTable":
-        # every level of both hierarchies is written as expanded. Without this the second row
-        # level and - the visible symptom - the month columns arrive collapsed, so a matrix
-        # built with months across the top opened showing nothing but its total.
-        visual["expansionStates"] = [
-            {"roles": [role],
-             "levels": [{"queryRefs": [p["queryRef"]], "isCollapsed": False}
-                        for p in qstate[role]["projections"]]}
-            for role in ("Rows", "Columns")
-            if len(qstate.get(role, {}).get("projections", [])) > 1]
+    if vt == "pivotTable" and rows_levels > 1:
+        # only the row hierarchy is written out expanded. An expansion state on the column
+        # hierarchy made Desktop draw the two FG matrices as empty white cards, and a matrix
+        # of three measures times twelve months would be unreadable anyway: the measure level
+        # shows, and the reader opens a month with the + on the header.
+        visual["expansionStates"] = [{
+            "roles": ["Rows"],
+            "levels": [{"queryRefs": [p["queryRef"]], "isCollapsed": False}
+                       for p in qstate["Rows"]["projections"]]}]
 
     x, y, w, h = pos
     out = {"$schema": VC, "name": vname(page, idx),
