@@ -484,6 +484,17 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 15 &mdash; 14 Aug:</strong> built against the real workbook. Its sheets are
+<code>RM Nature</code> and <code>TB Master</code>, and <strong>every header in them is now recognised</strong>
+&mdash; including <code>NaturePlant</code>, which the guide had been looking for as two separate columns, so
+the trial balance's nature was read as missing. <strong>A missing master sheet now loads empty instead of
+failing the refresh</strong> (the new <code>fnVarSheetSafe</code> helper): the workbook has no
+<code>FG Master</code> sheet at all, and the old code would have stopped dead on it. <strong>And
+<code>qcVarHeaders</code> on the Checks page is the line that settles the Unassigned question</strong>: it
+prints every sheet, its exact headers and its <strong>DataRows</strong>. The copy sent to me has a header row
+and nothing under it &mdash; if your own <code>RM Nature</code> reads DataRows 0, no report can name a
+material, because there is nothing to name it from.</blockquote>
+
 <blockquote><strong>Build 14 &mdash; 14 Aug:</strong> one thing only &mdash; the workbook is the master and
 the MB5B export has to meet it. <strong>The material key now keeps only letters and digits</strong> and
 discards everything else, which covers the non-breaking spaces, tabs, commas and brackets Excel and SAP put

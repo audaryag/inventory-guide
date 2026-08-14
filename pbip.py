@@ -70,7 +70,7 @@ TABLES = {
 
 # every other query stays a shared expression: helpers, staging, and the diagnostic whose
 # shape depends on the sheet (qcMWSheet), which a fixed column list could not describe.
-EXPRESSION_ORDER = ["pRoot", "pVarsFile", "fnCleanMB5B", "fnVarSheet", "stgRM", "stgFG",
+EXPRESSION_ORDER = ["pRoot", "pVarsFile", "fnCleanMB5B", "fnVarSheet", "fnVarSheetSafe", "stgRM", "stgFG",
                     "stgConble", "dimMaterialAttr", "dimFGAttr", "varConstants",
                     "fnConstantAsOf", "factRM", "factFG", "factConble", "varMWCapacity",
                     "factTB_Staged", "qcMWSheet"]
