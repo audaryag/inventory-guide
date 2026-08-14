@@ -793,7 +793,7 @@ Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 
 Title: `Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr.)`
 
-Position: Horizontal 192, Vertical 88, Width 1072, Height 212.
+Position: Horizontal 192, Vertical 88, Width 1072, Height 232.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -821,7 +821,7 @@ Position: Horizontal 192, Vertical 88, Width 1072, Height 212.
 
 Title: `Total Across All Plants by Type (Rs Cr.)`
 
-Position: Horizontal 192, Vertical 308, Width 1072, Height 112.
+Position: Horizontal 192, Vertical 328, Width 1072, Height 128.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -844,7 +844,7 @@ Position: Horizontal 192, Vertical 308, Width 1072, Height 112.
 
 Title: `Inventory (TB) vs Inventory (MB5B) by Month (Rs Cr.)`
 
-Position: Horizontal 192, Vertical 428, Width 529, Height 112.
+Position: Horizontal 192, Vertical 464, Width 529, Height 120.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -870,7 +870,7 @@ Position: Horizontal 192, Vertical 428, Width 529, Height 112.
 
 Title: `Difference by Month (Rs Cr. and % of TB)`
 
-Position: Horizontal 735, Vertical 428, Width 529, Height 112.
+Position: Horizontal 735, Vertical 464, Width 529, Height 120.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -896,7 +896,7 @@ Position: Horizontal 735, Vertical 428, Width 529, Height 112.
 
 Title: `Days of Inventory by Month, Last 12 Months — RM, FG and Total`
 
-Position: Horizontal 192, Vertical 548, Width 1072, Height 156.
+Position: Horizontal 192, Vertical 592, Width 1072, Height 120.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1014,7 +1014,7 @@ Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 
 Title: `FG by Plant — MW · Rs Cr. · Days`
 
-Position: Horizontal 192, Vertical 88, Width 1072, Height 140.
+Position: Horizontal 192, Vertical 88, Width 1072, Height 132.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1042,7 +1042,7 @@ Position: Horizontal 192, Vertical 88, Width 1072, Height 140.
 
 Title: `FG by Technology — MW · Rs Cr. · Days`
 
-Position: Horizontal 192, Vertical 236, Width 1072, Height 252.
+Position: Horizontal 192, Vertical 228, Width 1072, Height 176.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1066,7 +1066,7 @@ Position: Horizontal 192, Vertical 236, Width 1072, Height 252.
 
 Title: `FG MW by Technology, Latest Month — Click a Bar`
 
-Position: Horizontal 192, Vertical 496, Width 354, Height 208.
+Position: Horizontal 192, Vertical 412, Width 354, Height 292.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1090,9 +1090,9 @@ Position: Horizontal 192, Vertical 496, Width 354, Height 208.
 | Line y-axis | `Days vs LM` |
 | Filters | `dimCategory[Category]  →  is FG`, `In Last 12  →  is 1` |
 
-Title: `FG Days of Inventory by Month, Last 12 Months (Days and % vs Last Month)`
+Title: `FG Days by Month, Last 12 Months (Days and % vs LM)`
 
-Position: Horizontal 560, Vertical 496, Width 368, Height 208.
+Position: Horizontal 560, Vertical 412, Width 368, Height 292.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1119,7 +1119,7 @@ Position: Horizontal 560, Vertical 496, Width 368, Height 208.
 
 Title: `FG Share by Plant (%), Latest Month`
 
-Position: Horizontal 941, Vertical 496, Width 323, Height 208.
+Position: Horizontal 941, Vertical 412, Width 323, Height 292.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
@@ -1229,7 +1229,7 @@ Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 
 Title: `RM Inventory by Plant — Rs Cr. · Days`
 
-Position: Horizontal 192, Vertical 88, Width 1072, Height 140.
+Position: Horizontal 192, Vertical 88, Width 1072, Height 132.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1255,7 +1255,7 @@ Position: Horizontal 192, Vertical 88, Width 1072, Height 140.
 
 Title: `RM Inventory by Group Nature and Nature — Rs Cr. · Days`
 
-Position: Horizontal 192, Vertical 236, Width 1072, Height 252.
+Position: Horizontal 192, Vertical 228, Width 1072, Height 268.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1279,7 +1279,7 @@ Position: Horizontal 192, Vertical 236, Width 1072, Height 252.
 
 Title: `RM Inventory (Rs Cr.) by Plant`
 
-Position: Horizontal 192, Vertical 496, Width 529, Height 208.
+Position: Horizontal 192, Vertical 504, Width 529, Height 200.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1306,7 +1306,7 @@ Position: Horizontal 192, Vertical 496, Width 529, Height 208.
 
 Title: `RM Inventory (Days) by Plant, with Total Days Across All Plants`
 
-Position: Horizontal 735, Vertical 496, Width 529, Height 208.
+Position: Horizontal 735, Vertical 504, Width 529, Height 200.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.

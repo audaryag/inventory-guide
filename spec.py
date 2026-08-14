@@ -456,7 +456,7 @@ VISUALS = [
       ("Columns", ["dimMetric[Metric]", "dimDate[MonthName]"]),
       ("Values", ["Summary Value Rs Cr"]),
       ("Filters", ["In Summary Window  →  is 1"])],
-     (16, 88, 1248, 212),
+     (16, 88, 1248, 232),
      "The whole reconciliation in one grid: three master columns \u2014 Inventory (TB), "
      "Inventory (MB5B), Difference \u2014 with the periods under each, one row per plant "
      "(Jaipur Module, Dholera Module, Dholera Cell) opening into RM, FG and Consumables, "
@@ -492,7 +492,7 @@ VISUALS = [
       ("Columns", ["dimMetric[Metric]", "dimDate[MonthName]"]),
       ("Values", ["Summary Value Rs Cr"]),
       ("Filters", ["In Summary Window  →  is 1"])],
-     (16, 308, 1248, 112),
+     (16, 328, 1248, 128),
      "The bottom block: the same three master columns, but every plant added together \u2014 one "
      "row for RM, one for FG, one for Consumables, so you can read total RM across all "
      "plants at a glance, and a Total row under them which is the total inventory.",
@@ -512,7 +512,7 @@ VISUALS = [
      [("X-axis", ["dimDate[MonthName]"]),
       ("Y-axis", ["TB Inventory Rs Cr", "Inventory Rs Cr"]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (16, 428, 616, 112),
+     (16, 464, 616, 120),
      "The books against the stock report, two bars per period: the same figures as the "
      "matrix above, but you can see a gap opening without reading a single number. Same "
      "periods as the matrices, because it carries the same filter.",
@@ -535,7 +535,7 @@ VISUALS = [
       ("Column y-axis", ["Difference Inventory Rs Cr"]),
       ("Line y-axis", ["Difference Inventory %"]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (648, 428, 616, 112),
+     (648, 464, 616, 120),
      "The question the reconciliation is really asking: is the gap widening or closing. The "
      "bar is the difference in crore rupees, the line above it the same difference as a "
      "percentage of the trial balance, so a small gap on a big month reads as small.",
@@ -606,7 +606,7 @@ VISUALS = [
       ("Values", ["Unit Value by Period"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Summary Window  →  is 1"])],
-     (16, 88, 1248, 140),
+     (16, 88, 1248, 132),
      "Finished goods per plant in all three units at once — megawatts, crore rupees and "
      "days — with four periods under each of the three master columns by default. Days is "
      "MW ÷ capacity MW, so a plant with no capacity figure is blank on purpose.",
@@ -635,7 +635,7 @@ VISUALS = [
       ("Values", ["Unit Value by Period"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Summary Window  →  is 1"])],
-     (16, 236, 1248, 252),
+     (16, 228, 1248, 176),
      "Exactly the same three master columns and the same periods, but by module technology "
      "rather than by plant — which is where a build-up in one technology shows up.",
      ["Build it the fastest way: click the matrix above, Ctrl+C, Ctrl+V, then in the Rows "
@@ -653,7 +653,7 @@ VISUALS = [
       ("Y-axis", ["MW"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Latest Month  →  is 1"])],
-     (16, 496, 412, 208),
+     (16, 412, 412, 292),
      "Which technology is holding the megawatts right now. It is deliberately pinned to the "
      "latest month with data: there is no period on the axis here, so without that pin it "
      "would add four months of stock together and read four times too high.",
@@ -669,13 +669,13 @@ VISUALS = [
       "through → Detail for the materials behind it."]),
 
     ("FG", "Line and clustered column chart",
-     "FG Days of Inventory by Month, Last 12 Months (Days and % vs Last Month)",
+     "FG Days by Month, Last 12 Months (Days and % vs LM)",
      [("X-axis", ["dimDate[MonthName]"]),
       ("Column y-axis", ["Days"]),
       ("Line y-axis", ["Days vs LM"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Last 12  →  is 1"])],
-     (444, 496, 428, 208),
+     (444, 412, 428, 292),
      "How long the finished goods on hand would last, month by month, with the change on "
      "last month printed above each bar — so a slow build-up is visible before it becomes a "
      "number anyone argues about.",
@@ -698,7 +698,7 @@ VISUALS = [
      [("Legend", ["dimPlant[Plant]"]),
       ("Values", ["FG ₹ Cr"]),
       ("Filters", ["In Latest Month  →  is 1"])],
-     (888, 496, 376, 208),
+     (888, 412, 376, 292),
      "Where the finished goods are sitting, as a share of the whole. Pinned to the latest "
      "month for the same reason as the bar chart: a share of four added-up months would "
      "mean nothing.",
@@ -759,7 +759,7 @@ VISUALS = [
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "dimMeasure[Measure]  →  untick MW",
                    "In Summary Window  →  is 1"])],
-     (16, 88, 1248, 140),
+     (16, 88, 1248, 132),
      "The top block of the old RM sheet, rebuilt: one row per plant, with Rs Cr. and Days as "
      "master columns and the periods under each. MW is unticked because an RM megawatt "
      "figure is derived from a BOM, not measured, so it does not belong beside the other two.",
@@ -783,7 +783,7 @@ VISUALS = [
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "dimMeasure[Measure]  →  untick MW",
                    "In Summary Window  →  is 1"])],
-     (16, 236, 1248, 252),
+     (16, 228, 1248, 268),
      "The second block of the old sheet: Module and Cell, each opening into its materials — "
      "cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — in the same "
      "two units and the same periods, with a subtotal on each group and a grand total under "
@@ -805,7 +805,7 @@ VISUALS = [
       ("Y-axis", ["Inventory Rs Cr"]),
       ("Filters", ["dimCategory[Category]  \u2192  is RM",
                    "In Summary Window  \u2192  is 1"])],
-     (16, 496, 616, 208),
+     (16, 504, 616, 200),
      "Raw material held in crore rupees: one group per period along the bottom and the three "
      "plants side by side inside each group, so you read the months left to right and compare "
      "the plants within a month. It follows the pickers above, so it is four periods by "
@@ -831,7 +831,7 @@ VISUALS = [
       ("Line y-axis", ["RM Days All Plants by Period"]),
       ("Filters", ["dimCategory[Category]  \u2192  is RM",
                    "In Summary Window  \u2192  is 1"])],
-     (648, 496, 616, 208),
+     (648, 504, 616, 200),
      "The same chart in days rather than rupees \u2014 how long each plant's raw material would "
      "last at its own capacity, three plant bars per month, and over them a line for the "
      "whole business: every plant's RM megawatts added together over every plant's capacity "
@@ -867,7 +867,7 @@ VISUALS = [
      [("X-axis", ["dimDate[MonthName]"]),
       ("Y-axis", ["RM Days", "FG Days", "Total Days (RM + FG)"]),
       ("Filters", ["In Last 12  \u2192  is 1"])],
-     (16, 548, 1248, 156),
+     (16, 592, 1248, 120),
      "The long view under the reconciliation: three lines across the last twelve months "
      "that have data, or fewer if that is all there is \u2014 raw material days, finished goods "
      "days, and the two added together, which is what the Overview card calls Days of "

@@ -15,6 +15,10 @@ MONTHS = ["Apr'26", "May'26", "Jun'26", "Jul'26"]
 PLANTS = ["1900 Jaipur Module", "1902 Dholera Module", "1905 Dholera Cell"]
 CATS = ["RM", "FG", "Consumables"]
 NATURES = ["M10 Mono PERC", "G12R TOPCon", "M10 TOPCon", "Cell M10", "Encapsulant"]
+# nature means module technology on the FG side and material family on the RM side, so a
+# visual filtered to one category must not show the other's members
+FG_NATURES = ["M10 Mono PERC", "G12R TOPCon", "M10 TOPCon", "M10 Bifacial", "G12 Mono PERC"]
+RM_NATURES = ["Cell", "Glass", "Frame", "POE", "Wafer"]
 METRICS = ["Inventory (TB)", "Inventory (MB5B)", "Difference"]
 UNITS = ["MW", "In ₹ Cr", "In Days"]
 
@@ -70,9 +74,21 @@ def excluded(v, prop):
     return out
 
 
+def category_of(v):
+    """'FG', 'RM' or None: the single category this visual is pinned to by its own filters"""
+    for f in v.get("filterConfig", {}).get("filters", []):
+        fld = f.get("field", {})
+        if (fld.get("Column") or {}).get("Property") != "Category":
+            continue
+        node = f.get("filter", {}).get("Where", [{}])[0].get("Condition", {}).get("In")
+        if node and len(node["Values"]) == 1:
+            return node["Values"][0][0]["Literal"]["Value"].strip("'")
+    return None
+
+
 def kept(v, prop):
     drop = excluded(v, prop)
-    keep = [x for x in values_for(prop) if x not in drop]
+    keep = [x for x in values_for(prop, category_of(v)) if x not in drop]
     inc = []
     for f in v.get("filterConfig", {}).get("filters", []):
         fld = f.get("field", {})
@@ -83,9 +99,10 @@ def kept(v, prop):
     return [x for x in keep if x in inc] if inc else keep
 
 
-def values_for(prop):
-    """what a member list looks like for a given column"""
-    return {"MonthName": MONTHS, "Plant": PLANTS, "Category": CATS, "Nature": NATURES,
+def values_for(prop, cat=None):
+    """what a member list looks like for a given column, in the category the visual is pinned to"""
+    natures = FG_NATURES if cat == "FG" else RM_NATURES if cat == "RM" else NATURES
+    return {"MonthName": MONTHS, "Plant": PLANTS, "Category": CATS, "Nature": natures,
             "Metric": METRICS, "Measure": UNITS, "Quarter": ["Q1 FY 2026-27"],
             "GroupNature": ["Cells", "Glass", "Encapsulant", "Frames"],
             "Material": ["1010203", "1010311", "1010422"],
@@ -120,7 +137,7 @@ def r_card(v):
 def r_slicer(v):
     f = fields(v, "Values")
     lbl = f[0][1] if f else ""
-    vals = values_for(lbl)
+    vals = kept(v, lbl)
     return (f"<div class='slicer'><span class='sl'>{esc(lbl)}</span>"
             f"<span class='sv'>{esc(vals[0])}{'  +' + str(len(vals)-1) if len(vals)>1 else ''}"
             f" <b>▾</b></span></div>")
@@ -141,8 +158,8 @@ def r_matrix(v):
     vals = fields(v, "Values")
     mname = vals[0][1] if vals else ""
     lvl1 = kept(v, rows[0][1]) if rows else ["Total"]
-    lvl2 = values_for(rows[1][1]) if len(rows) > 1 else []
-    lvl3 = values_for(rows[2][1]) if len(rows) > 2 else []
+    lvl2 = kept(v, rows[1][1]) if len(rows) > 1 else []
+    lvl3 = kept(v, rows[2][1]) if len(rows) > 2 else []
     if colf:
         outer = kept(v, colf[0][1])
         inner = kept(v, colf[1][1]) if len(colf) > 1 else [""]
@@ -200,10 +217,10 @@ def bars(v, stacked=False, combo=False):
     ys = fields(v, "Y")
     y2 = fields(v, "Y2")
     ser = fields(v, "Series")
-    cats = values_for(cat[0][1]) if cat else ["-"]
+    cats = kept(v, cat[0][1]) if cat else ["-"]
     if len(cats) > 6:
         cats = cats[:6]
-    groups = [s[1] for s in ser] and values_for(ser[0][1]) if ser else [y[1] for y in ys]
+    groups = [s[1] for s in ser] and kept(v, ser[0][1]) if ser else [y[1] for y in ys]
     W, H = 100, 100
     out, legend = [], []
     maxv = max(num(c, g, "bar", lo=20, hi=380) for c in cats for g in groups) * 1.15
@@ -251,7 +268,7 @@ def bars(v, stacked=False, combo=False):
 def r_pie(v, donut):
     cat = fields(v, "Category")
     ys = fields(v, "Y")
-    cats = values_for(cat[0][1])[:5] if cat else ["-"]
+    cats = kept(v, cat[0][1])[:5] if cat else ["-"]
     mname = ys[0][1] if ys else ""
     vals = [num(c, mname, "pie", lo=10, hi=200) for c in cats]
     tot = sum(vals)
@@ -280,13 +297,45 @@ def r_tree(v):
     lvls = [("Total", fmt(mname, num("tree", mname, lo=300, hi=900)))]
     boxes = [f"<div class='tn root'><b>{esc(mname)}</b><span>{lvls[0][1]}</span></div>"]
     for e in ex[:3]:
-        vals = values_for(e[1])[:3]
+        vals = kept(v, e[1])[:3]
         inner = "".join(
             f"<div class='tn'><b>{esc(x[:16])}</b>"
             f"<span>{esc(fmt(mname, num('tree', e[1], x, lo=20, hi=400)))}</span></div>"
             for x in vals)
         boxes.append(f"<div class='tcol'><div class='tl'>{esc(e[1])}</div>{inner}</div>")
     return f"<div class='tree'>{''.join(boxes)}</div>"
+
+
+def r_line(v):
+    """A plain line chart: one polyline per Y series across the category axis, with the same
+    axis labels and legend the column charts use."""
+    cat = fields(v, "Category")
+    ys = fields(v, "Y")
+    cats = kept(v, cat[0][1]) if cat else ["-"]
+    if len(cats) > 12:
+        cats = cats[:12]
+    names = [y[1] for y in ys] or ["value"]
+    W, H = 100, 100
+    series = {g: [num(c, g, "line", lo=20, hi=380) for c in cats] for g in names}
+    maxv = max(max(vals) for vals in series.values()) * 1.15
+    gw = W / max(len(cats), 1)
+    out = []
+    for gi, g in enumerate(names):
+        col = SERIES[gi % len(SERIES)]
+        pts = [f"{ci * gw + gw / 2:.2f},{H - 12 - series[g][ci] / maxv * (H - 14):.2f}"
+               for ci in range(len(cats))]
+        out.append(f"<polyline points='{' '.join(pts)}' fill='none' stroke='{col}' "
+                   f"stroke-width='1.2'/>")
+        for pt in pts:
+            x, y = pt.split(",")
+            out.append(f"<circle cx='{x}' cy='{y}' r='1.1' fill='{col}'/>")
+    legend = "".join(f"<span class='lg'><i style='background:{SERIES[i % len(SERIES)]}'></i>"
+                     f"{esc(g)}</span>" for i, g in enumerate(names))
+    axis = "".join(f"<span style='width:{100 / len(cats):.3f}%'>{esc(c)}</span>" for c in cats)
+    return (f"<div class='legend'>{legend}</div>"
+            f"<svg viewBox='0 0 {W} {H - 12}' preserveAspectRatio='none' class='chart'>"
+            f"<g transform='translate(0,12)'>{''.join(out)}</g></svg>"
+            f"<div class='axis'>{axis}</div>")
 
 
 def prop(v, obj, name):
@@ -325,7 +374,7 @@ def shape_div(v):
 
 RENDER = {
     "card": r_card, "slicer": r_slicer, "pivotTable": r_matrix, "tableEx": r_matrix,
-    "columnChart": lambda v: bars(v, stacked=True),
+    "columnChart": lambda v: bars(v, stacked=True), "lineChart": r_line,
     "clusteredColumnChart": lambda v: bars(v),
     "lineClusteredColumnComboChart": lambda v: bars(v, combo=True),
     "pieChart": lambda v: r_pie(v, False), "donutChart": lambda v: r_pie(v, True),

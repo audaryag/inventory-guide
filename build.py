@@ -484,6 +484,18 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 11 &mdash; 14 Aug:</strong> the layout scrutinised page by page, and
+one thing that was genuinely broken in my own preview: the twelve-month days chart at the foot of
+Summary is a plain line chart, and my renderer had no code for that type, so it printed the words
+&ldquo;line chart&rdquo; instead of drawing it. It draws now &mdash; three lines, RM, FG and the two added
+together &mdash; and the pictures below are the redrawn ones. The report file always had the real
+visual; it was the picture that was wrong. While I was in there: the Summary reconciliation matrix is
+20 pixels taller so twelve expanded rows fit without scrolling, the plant matrices on FG and RM are
+tighter (they only ever hold three rows) and the charts underneath took the space &mdash; 292 tall on
+FG, 200 on RM &mdash; because you asked for this to be mostly visual; the RM nature matrix is deeper,
+which is where the rows actually are; and the FG days chart's title is shortened so it stops being cut
+off in a 428-wide card.</blockquote>
+
 <blockquote><strong>Build 10 &mdash; 14 Aug:</strong> the green panel is now on every page,
 in the same place. It was only ever built on <code>Overview</code>, and the generated project drew no
 panel at all &mdash; the nine figures floated on the page background, which is why the ticker looked
