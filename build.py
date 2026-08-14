@@ -128,6 +128,9 @@ new_tables = parse_queries(appC)
 STEPS = steps()
 
 
+from edits import EDITS, edit_cards
+
+
 def cards(items, kind):
     h = []
     for n, it in enumerate(items, 1):
@@ -175,6 +178,7 @@ button.copy,button.done{border:1px solid var(--line);background:#232936;color:va
   padding:6px 12px;font-size:13px;cursor:pointer;white-space:nowrap}
 button.copy:hover,button.done:hover{border-color:var(--acc)}
 button.copy.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.card h4{margin:14px 14px 6px;font-size:13px;color:var(--acc);letter-spacing:.02em}
 .note{margin:10px 14px 0;color:var(--dim);font-size:13px;border-left:2px solid var(--acc);padding-left:10px}
 pre{margin:12px 14px 14px;padding:12px;background:#0c0e13;border:1px solid var(--line);border-radius:7px;
   overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;white-space:pre}
@@ -483,6 +487,15 @@ until you restart.</li>
 settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse to combine your own
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
+
+<blockquote><strong>Build 20 &mdash; 14 Aug:</strong> <em>Errors in dimTBMaster</em> on all eight rows
+was a forced type cast &mdash; <code>Int64.Type</code> on the sort column errors the whole row when a cell
+holds a blank, a dash, 1.5 or a number stored as text, and what is lost is the whitelist of inventory GL
+accounts, so Inventory (TB) reads empty. Every master column in <code>dimTBMaster</code>,
+<code>dimMaterialAttr</code>, <code>varConstants</code> and the trial balance's amount is now converted cell
+by cell with a fallback, so an untidy cell becomes a blank instead of an error. There is also a new
+<strong>Edits</strong> tab: every fix as find-this / replace-with-this inside one named query, with copy
+buttons, so a report you have already built can be corrected in place without downloading anything.</blockquote>
 
 <blockquote><strong>Build 19 &mdash; 14 Aug:</strong> the refresh error is the privacy firewall.
 <em>"Query 'factTB' (step 'Typed') references other queries or steps, so it may not directly access a data
@@ -873,6 +886,7 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
 <nav class="tabs">
   <button data-tab="f" class="on">Start here</button>
   <button data-tab="a">Auto</button>
+  <button data-tab="e">Edits ({len(EDITS)})</button>
   <button data-tab="q">Queries ({len(queries)})</button>
   <button data-tab="m">Measures ({len(measures)})</button>
   <button data-tab="n">New ({len(new_tables) + len(new_measures)})</button>
@@ -887,6 +901,14 @@ Building the pages? Use <strong>Build it</strong> — one instruction per screen
 <div class="panel on" id="tab-f">{FAST}</div>
 
 <div class="panel" id="tab-a">{AUTO}</div>
+
+<div class="panel" id="tab-e">
+  <p class="sub">Fixes for a report that is already built, newest first. Each one is a
+  find-and-replace inside a single query, so nothing has to be rebuilt and nothing has to be
+  typed out of a message. They are all already in the download on the <strong>Auto</strong> tab,
+  so a fresh copy needs none of them.</p>
+  {edit_cards()}
+</div>
 
 <div class="panel" id="tab-q">
   <p class="sub">One query per box, in this order. For each: <strong>Home → New Source → Blank Query</strong>,
