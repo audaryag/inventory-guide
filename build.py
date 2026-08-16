@@ -490,6 +490,16 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 27 &mdash; nothing can add two month-ends together any more:</strong> seven measures
+used to ask the visual whether a month was on show (<em>ISINSCOPE</em>) and only then return a closing level. A
+matrix whose column hierarchy is sitting collapsed does not always answer that truthfully, and the figure came
+back as the plain sum over every month in the window &mdash; which is exactly the adding-up you saw when you
+ticked four months. They no longer ask: each works out the last month that has rows in the current filter and
+returns that month's level unconditionally. A month column is unchanged; a collapsed heading, a quarter, a Total
+row or a four-month window all show the newest month's stock. Summary's layout is unchanged from build 26 &mdash;
+<strong>Inventory (TB)</strong>, <strong>Inventory (MB5B)</strong> and <strong>Difference</strong> are the master
+columns with the months underneath each of them.</blockquote>
+
 <blockquote><strong>Build 26 &mdash; Summary the way you specified it, and two more reasons the TB read high:</strong>
 one table, with <strong>Inventory (TB)</strong>, <strong>Inventory (MB5B)</strong> and <strong>Difference</strong> as
 the three <em>master</em> columns and the months underneath each of them &mdash; not the other way round, which was

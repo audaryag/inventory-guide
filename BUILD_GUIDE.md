@@ -3787,9 +3787,10 @@ IF(
 )
 
 Inventory Rs Cr =
-VAR LastM = MAX(dimDate[MonthIndex])
-VAR Closing = CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastM)
-RETURN IF(ISINSCOPE(dimDate[MonthName]), [Value ₹ Cr], Closing)
+VAR LastM =
+    MAXX(FILTER(VALUES(dimDate[MonthIndex]), CALCULATE(COUNTROWS(factInventory)) > 0),
+         dimDate[MonthIndex])
+RETURN CALCULATE([Value ₹ Cr], dimDate[MonthIndex] = LastM)
 
 In Window =
 VAR Picked = ISFILTERED(dimDate[MonthName])
@@ -3856,14 +3857,16 @@ VAR Cap = CALCULATE([Capacity MW (plant)], REMOVEFILTERS(dimPlant))
 RETURN DIVIDE(M, Cap)
 
 RM Days All Plants by Period =
-VAR LastM = MAX(dimDate[MonthIndex])
-VAR Closing = CALCULATE([RM Days All Plants], dimDate[MonthIndex] = LastM)
-RETURN IF(ISINSCOPE(dimDate[MonthName]), [RM Days All Plants], Closing)
+VAR LastM =
+    MAXX(FILTER(VALUES(dimDate[MonthIndex]), CALCULATE(COUNTROWS(factInventory)) > 0),
+         dimDate[MonthIndex])
+RETURN CALCULATE([RM Days All Plants], dimDate[MonthIndex] = LastM)
 
 Inventory MW =
-VAR LastM = MAX(dimDate[MonthIndex])
-VAR Closing = CALCULATE([MW], dimDate[MonthIndex] = LastM)
-RETURN IF(ISINSCOPE(dimDate[MonthName]), [MW], Closing)
+VAR LastM =
+    MAXX(FILTER(VALUES(dimDate[MonthIndex]), CALCULATE(COUNTROWS(factInventory)) > 0),
+         dimDate[MonthIndex])
+RETURN CALCULATE([MW], dimDate[MonthIndex] = LastM)
 
 In Last 12 =
 VAR LastM = [Latest Month Index]
@@ -3871,14 +3874,16 @@ VAR ThisM = MAX(dimDate[MonthIndex])
 RETURN IF(ThisM > LastM - 12 && ThisM <= LastM, 1, 0)
 
 Summary Value Rs Cr =
-VAR LastM = MAX(dimDate[MonthIndex])
-VAR Closing = CALCULATE([Summary Value ₹ Cr], dimDate[MonthIndex] = LastM)
-RETURN IF(ISINSCOPE(dimDate[MonthName]), [Summary Value ₹ Cr], Closing)
+VAR LastM =
+    MAXX(FILTER(VALUES(dimDate[MonthIndex]), CALCULATE(COUNTROWS(factInventory)) > 0),
+         dimDate[MonthIndex])
+RETURN CALCULATE([Summary Value ₹ Cr], dimDate[MonthIndex] = LastM)
 
 TB Inventory Rs Cr =
-VAR LastM = MAX(dimDate[MonthIndex])
-VAR Closing = CALCULATE([TB ₹ Cr], dimDate[MonthIndex] = LastM)
-RETURN IF(ISINSCOPE(dimDate[MonthName]), [TB ₹ Cr], Closing)
+VAR LastM =
+    MAXX(FILTER(VALUES(dimDate[MonthIndex]), CALCULATE(COUNTROWS(factTB)) > 0),
+         dimDate[MonthIndex])
+RETURN CALCULATE([TB ₹ Cr], dimDate[MonthIndex] = LastM)
 
 Difference Inventory Rs Cr = [TB Inventory Rs Cr] - [Inventory Rs Cr]
 
@@ -3887,17 +3892,19 @@ VAR Books = [TB Inventory Rs Cr]
 RETURN IF(ABS(Books) < 0.05, BLANK(), DIVIDE([Difference Inventory Rs Cr], Books))
 
 Unit Value by Period =
-VAR LastM = MAX(dimDate[MonthIndex])
-VAR Closing = CALCULATE([Unit Value], dimDate[MonthIndex] = LastM)
-RETURN IF(ISINSCOPE(dimDate[MonthName]), [Unit Value], Closing)
+VAR LastM =
+    MAXX(FILTER(VALUES(dimDate[MonthIndex]), CALCULATE(COUNTROWS(factInventory)) > 0),
+         dimDate[MonthIndex])
+RETURN CALCULATE([Unit Value], dimDate[MonthIndex] = LastM)
 
 In Latest Month =
 IF(MAX(dimDate[MonthIndex]) = [Latest Month Index], 1, 0)
 
 Days by Period =
-VAR LastM = MAX(dimDate[MonthIndex])
-VAR Closing = CALCULATE([Days], dimDate[MonthIndex] = LastM)
-RETURN IF(ISINSCOPE(dimDate[MonthName]), [Days], Closing)
+VAR LastM =
+    MAXX(FILTER(VALUES(dimDate[MonthIndex]), CALCULATE(COUNTROWS(factInventory)) > 0),
+         dimDate[MonthIndex])
+RETURN CALCULATE([Days], dimDate[MonthIndex] = LastM)
 
 Check MB5B Rows = COUNTROWS(factInventory)
 
@@ -3919,8 +3926,10 @@ DIVIDE(Unnamed, SUM(factInventory[CloseVal]))
 ```
 
 `Summary Value Rs Cr` is the Summary page's only figure. It is `Summary Value ₹ Cr` with the
-quarter rule added: at month grain it hands back the month-end, at any total or quarter grain it averages
-that quarter's three month-ends, so switching the toggle never turns a stock level into a sum.
+closing rule added, and it no longer asks what grain it is being read at: it always returns the level at
+the **last month that has data in the current filter**. In a month column that is that month; on a collapsed
+heading, a quarter or a four-month window it is the newest of those months. There is no path through it that
+can add two month-ends together, whatever the visual reports about its own scope.
 
 `In Summary Window` is the Summary twin of `In Window`, and the only difference is the count:
 nothing ticked means the **last 4** periods, and ticking your own means up to **twelve** of
@@ -3935,8 +3944,8 @@ Summary read these three, so the chart and the matrix above it can never disagre
 
 `Unit Value by Period` is `Unit Value` with the quarter rule, and it is what the FG matrices
 put in Values. `Unit Value` on its own is still correct for MW and Rs Cr. in a single month,
-but at a quarter or total grain it would add three month-ends together; the by-Period version averages
-them instead.
+but at a quarter or total grain it would add three month-ends together; the by-Period version returns the
+closing month's figure instead.
 
 The five `Check ...` measures are what the **Checks** page reads. `Check TB Rows` at 0 means
 the TB folder produced nothing or TB Master matched none of its GL accounts.
@@ -3958,12 +3967,12 @@ four visuals.
 `Inventory Rs Cr` and `Inventory MW` are the level-aware pair the **Detail** page reads. Detail
 is reached by drilling from a month, but it can also be opened on its own with four months in
 context, and `Value ₹ Cr` would then add four month-ends together - which is where the 5,393 on a
-1,433 report came from. Both hand back the month-end at month grain and the average of the
-month-ends at any wider grain.
+1,433 report came from. Both return the closing month's level: the month itself in a month column, the
+newest month in view at any wider grain.
 
 `Days by Period` is `Days` with the quarter rule, and the RM page's days chart uses it. Days is
-a ratio of two stock figures, so at a quarter grain it has to be the average of the quarter's three
-month-end ratios; adding them would give a nonsense number three times too big.
+a ratio of two stock figures, so at a quarter grain it has to be the closing month's ratio; adding three of
+them would give a nonsense number three times too big.
 
 ### Changed in build 22
 
@@ -4174,7 +4183,7 @@ be read, which is what the Overview MW strip looked like. The `% vs last month` 
 taken off that chart - it was never asked for and it was the second thing crowding it.
 
 **Detail is level-aware.** Its cards, its three pies and its matrix read `Inventory Rs Cr` and
-`Inventory MW`, so opening the page with four months in context averages the month-ends instead
+`Inventory MW`, so opening the page with four months in context shows the closing month's level instead
 of adding them - the 5,393 against a 1,433 report.
 
 **The trial balance stops printing 3.8E-13.** `TB ₹ Cr` is rounded to the paisa, and
@@ -4267,3 +4276,29 @@ appear ahead of March, and March was no longer the first column.
 **The ticker cards** drop from 16pt to **11pt** (13pt on Total, 10pt on the As-on line). At 16pt a
 four-figure crore value in a 156-wide card is cut off. The wide cards on Detail and Checks stay
 readable at 14pt.
+
+### Changed in build 27
+
+**No measure asks about scope any more.** Seven measures used to read
+`IF(ISINSCOPE(dimDate[MonthName]), <the figure>, <the closing month>)`, which trusts the visual to say
+whether a month is on show. A matrix whose column hierarchy is sitting collapsed does not always say so,
+and the figure then came back as `<the figure>` over every month in the window — which is a sum of
+month-ends, the one thing inventory must never be. `Inventory Rs Cr`, `Inventory MW`, `TB Inventory Rs Cr`,
+`Summary Value Rs Cr`, `Days by Period`, `Unit Value by Period` and `RM Days All Plants by Period` now
+compute the last month that has data in the current filter and return that month's level unconditionally:
+
+each of them now takes `LastM` as the largest `dimDate[MonthIndex]` in the current filter that has rows in
+the fact table, and returns `CALCULATE(<the base figure>, dimDate[MonthIndex] = LastM)`. The full text of
+each is in Appendix B.
+
+In a month column `LastM` is that month, so the month's own figure is unchanged. On a collapsed heading,
+a quarter, a Total row or a four-month window it is the newest of those months. There is no branch left
+that can add two month-ends together. The `MonthIndex` filter is also clamped to months that actually
+carry rows, so a calendar running ahead of the data cannot blank the figure.
+
+**Summary is one matrix with the metrics as its master columns.** Columns holds `dimMetric[Metric]` first
+and `dimDate[MonthName]` second, so the three master columns are Inventory (TB), Inventory (MB5B) and
+Difference, and the months sit underneath each of them — the newest March plus the last three by default,
+and whatever the slicer says when it is used. Both column levels are written into the file open, and the
+expand/collapse buttons are switched on for the column headers so the second level can be opened by hand
+if a version of Desktop opens it collapsed.

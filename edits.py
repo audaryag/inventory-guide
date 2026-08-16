@@ -10,6 +10,30 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="0000", build="27", query="",
+         title="Ticking months adds them up \u2014 the seven measures that asked the visual what "
+               "grain they were being read at",
+         why="Those measures were written as <code>IF(ISINSCOPE(dimDate[MonthName]), the figure, "
+             "the closing month)</code>, which trusts the visual to say whether a month is on "
+             "show. A matrix whose column hierarchy is sitting collapsed does not always say so, "
+             "and the figure then comes back as the plain sum over every month in the window "
+             "\u2014 four month-ends added together, the one thing inventory must never be. "
+             "They no longer ask: each one works out the last month that has data in the current "
+             "filter and returns <em>that</em> month's level, full stop. In a month column that "
+             "is the month itself, so nothing you already read changes; on a collapsed heading, "
+             "a quarter, a Total row or a four-month window it is the newest of those months.",
+         steps=[
+             "The seven are <code>Inventory Rs Cr</code>, <code>Inventory MW</code>, "
+             "<code>TB Inventory Rs Cr</code>, <code>Summary Value Rs Cr</code>, "
+             "<code>Days by Period</code>, <code>Unit Value by Period</code> and "
+             "<code>RM Days All Plants by Period</code>.",
+             "Their new text is on the <strong>Measures</strong> tab of this site with a copy "
+             "button on each. In Power BI: click the measure in the Data pane, select "
+             "everything in the formula bar, paste, press Enter.",
+             "Or just take the <strong>Auto</strong> tab download, which has all seven and "
+             "every query fix on this page already in it.",
+         ],
+         find="", repl=""),
     dict(n="000", build="26", query="factTB",
          title="Trial balance reading high \u2014 SAP subtotal lines, and a doubled export",
          why="Two things that inflate a trial balance without any single figure being wrong. SAP "
