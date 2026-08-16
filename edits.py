@@ -10,6 +10,38 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00", build="24", query="",
+         title="Summary as one table instead of six \u2014 do this one on the visual, not in a query",
+         why="Six blocks side by side was my doing, not yours, and it read like six reports. It "
+             "is now a <strong>single</strong> matrix across the full width: a row per plant "
+             "opening into RM / FG / Consumables, a column per month, and under each month "
+             "<strong>TB</strong>, <strong>MB5B</strong> and <strong>Check</strong> beside each "
+             "other. The three Total Overall blocks go with it \u2014 the Grand Total row at the "
+             "foot of the one matrix is every plant added together, which is the same figure "
+             "they carried. The three metrics have to be <em>measures</em> in Values and not a "
+             "field in Columns: a field above the month is a two-level column hierarchy, and "
+             "Desktop opens one of those collapsed onto a single figure per metric, or draws "
+             "the visual as an empty card.",
+         steps=[
+             "Easiest is the <strong>Auto</strong> tab download \u2014 it is drawn this way "
+             "already, and every query fix on this page is inside it.",
+             "By hand: keep the first matrix (Inventory (TB) by Plant and Type), delete the "
+             "other five, then drag it out to the full width of the white area and about 352 "
+             "high.",
+             "In its <strong>Values</strong> box put three measures in this order: "
+             "<code>TB Inventory Rs Cr</code>, <code>Inventory Rs Cr</code>, "
+             "<code>Difference Inventory Rs Cr</code>. Double-click each one in the box and "
+             "rename them <strong>TB</strong>, <strong>MB5B</strong>, <strong>Check</strong>.",
+             "Rows stay <code>dimPlant[Plant]</code> then <code>dimCategory[Category]</code>; "
+             "Columns stays <code>dimDate[MonthName]</code> and nothing else.",
+             "Format pane \u2192 Subtotals \u2192 Row subtotals <strong>On</strong> with Per row "
+             "level On (that is the plant total and the Grand Total), Column subtotals "
+             "<strong>Off</strong> (a Total column would add March to July).",
+             "Format pane \u2192 Values / Row headers / Column headers \u2192 Font size 8, and "
+             "Word wrap On for the column headers: twelve figures across the width.",
+             "Overview, FG, RM and Detail are untouched.",
+         ],
+         find="", repl=""),
     dict(n="0a", build="23", query="factTB_Staged",
          title="Inventory (TB) missing plant 1905, and missing its Raw Material row",
          why="Two faults, both on the TB side only \u2014 MB5B was never involved. <strong>The "
