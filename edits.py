@@ -10,31 +10,44 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
-    dict(n="00", build="24", query="",
-         title="Summary as one table instead of six \u2014 do this one on the visual, not in a query",
-         why="Six blocks side by side was my doing, not yours, and it read like six reports. It "
-             "is now a <strong>single</strong> matrix across the full width: a row per plant "
-             "opening into RM / FG / Consumables, a column per month, and under each month "
-             "<strong>TB</strong>, <strong>MB5B</strong> and <strong>Check</strong> beside each "
-             "other. The three Total Overall blocks go with it \u2014 the Grand Total row at the "
-             "foot of the one matrix is every plant added together, which is the same figure "
-             "they carried. The three metrics have to be <em>measures</em> in Values and not a "
-             "field in Columns: a field above the month is a two-level column hierarchy, and "
-             "Desktop opens one of those collapsed onto a single figure per metric, or draws "
-             "the visual as an empty card.",
+    dict(n="000", build="26", query="factTB",
+         title="Trial balance reading high \u2014 SAP subtotal lines, and a doubled export",
+         why="Two things that inflate a trial balance without any single figure being wrong. SAP "
+             "writes <em>subtotal</em> and <em>Result</em> lines into the same column as the "
+             "account numbers, and each carries the sum of the lines above it \u2014 leave one in "
+             "and that money is counted twice. Those lines are dropped now. And a TB line "
+             "arriving twice is counted once, on the same rule your stock files already use: the "
+             "same month, account, profit centre and amount is the same line, whatever the file "
+             "was called, so a month exported twice into the TB folder cannot double the books. "
+             "Paste this with the factTB_Staged card below it \u2014 that one stops the TB Master's "
+             "plant rescuing a line with no profit centre at all, which is usually a subtotal."),
+    dict(n="00", build="26", query="",
+         title="Summary as one table \u2014 TB / MB5B / Check as the master columns, months under "
+               "them. Do this on the visual, not in a query",
+         why="Six blocks side by side was my doing, not yours, and build 24 then put the months "
+             "on top and the three metrics underneath, which is the wrong way round. It is now "
+             "a <strong>single</strong> matrix across the full width with "
+             "<strong>Inventory (TB)</strong>, <strong>Inventory (MB5B)</strong> and "
+             "<strong>Difference</strong> as the three master columns and the months underneath "
+             "each of them, exactly as the Excel sheet had it. Rows are the three plants, each "
+             "opening into RM / FG / Consumables; the Grand Total row at the foot is every plant "
+             "added together, so the Total Overall blocks are not needed.",
          steps=[
              "Easiest is the <strong>Auto</strong> tab download \u2014 it is drawn this way "
              "already, and every query fix on this page is inside it.",
-             "By hand: keep the first matrix (Inventory (TB) by Plant and Type), delete the "
-             "other five, then drag it out to the full width of the white area and about 248 "
-             "high \u2014 only as tall as its rows, so nothing sits blank under it \u2014 then pull "
-             "the three charts below up into the space and make each of them about 168 high.",
-             "In its <strong>Values</strong> box put three measures in this order: "
-             "<code>TB Inventory Rs Cr</code>, <code>Inventory Rs Cr</code>, "
-             "<code>Difference Inventory Rs Cr</code>. Double-click each one in the box and "
-             "rename them <strong>TB</strong>, <strong>MB5B</strong>, <strong>Check</strong>.",
-             "Rows stay <code>dimPlant[Plant]</code> then <code>dimCategory[Category]</code>; "
-             "Columns stays <code>dimDate[MonthName]</code> and nothing else.",
+             "By hand: keep one matrix, delete the other five, then drag it out to the full "
+             "width of the white area and about 248 high \u2014 only as tall as its rows, so "
+             "nothing sits blank under it \u2014 then pull the three charts below up into the "
+             "space and make each of them about 168 high.",
+             "Rows: <code>dimPlant[Plant]</code> then <code>dimCategory[Category]</code>. "
+             "Columns: <code>dimMetric[Metric]</code> <strong>first</strong>, then "
+             "<code>dimDate[MonthName]</code> \u2014 that order is what makes the metric the "
+             "master column. Values: the single measure <code>Summary Value Rs Cr</code>, which "
+             "reads which master column a cell is in and returns the books, the stock report or "
+             "the gap accordingly.",
+             "If it opens showing only the three metric headings and no months, click the "
+             "matrix and use the expand arrows at the top right of its header, or right-click "
+             "one of the headings \u2192 Expand \u2192 All. Save, and Power BI remembers it.",
              "Format pane \u2192 Subtotals \u2192 Row subtotals <strong>On</strong> with Per row "
              "level On (that is the plant total and the Grand Total), Column subtotals "
              "<strong>Off</strong> (a Total column would add March to July).",

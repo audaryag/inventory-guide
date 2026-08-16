@@ -490,7 +490,18 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
-<blockquote><strong>Build 25 &mdash; Summary is one table again:</strong> the six blocks are gone and in their place is a
+<blockquote><strong>Build 26 &mdash; Summary the way you specified it, and two more reasons the TB read high:</strong>
+one table, with <strong>Inventory (TB)</strong>, <strong>Inventory (MB5B)</strong> and <strong>Difference</strong> as
+the three <em>master</em> columns and the months underneath each of them &mdash; not the other way round, which was
+my mistake in build 24. Both column levels are written out open, and the expand arrows are on the column headers
+in case a version of Desktop still opens the metric level collapsed. On the figures: SAP writes subtotal and
+<em>Result</em> lines into the same column as the accounts, and each one carries the sum of the lines above it, so
+a single one left in counts that money twice &mdash; those lines are dropped now. And a TB line arriving twice is
+counted once, on the same rule the stock files use: same month, account, profit centre and amount is the same
+line, whatever the file was called. The master sheet's plant is also no longer used to rescue a line that has no
+profit centre at all, because that line is usually a subtotal.</blockquote>
+
+<blockquote><strong>Build 25 &mdash; Summary is one table:</strong> the six blocks are gone and in their place is a
 single matrix across the full width &mdash; a row per plant opening into RM / FG / Consumables, a column per month,
 and under each month the three figures side by side: <strong>TB</strong>, <strong>MB5B</strong>,
 <strong>Check</strong>. Those three are measures, not a field above the month, which is what keeps it a

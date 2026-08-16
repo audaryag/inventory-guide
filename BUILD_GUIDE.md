@@ -804,16 +804,16 @@ Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font size' and set it to 10, Colour: #14532D.
 
-**4.26** **Matrix** — One table, the whole reconciliation: a row per plant opening into RM, FG and Consumables, a column per month — the newest March plus the three after it by default — and under each month the three figures side by side: TB, MB5B and the Check between them. The Total row under each plant is that plant across its three types, and the Grand Total row at the foot is every plant added together, which is the Total Overall block of the Excel sheet — so this single matrix replaces the six that stood here.
+**4.26** **Matrix** — One table, laid out the way the Excel sheet was: three master columns — <b>Inventory (TB)</b>, <b>Inventory (MB5B)</b> and <b>Difference</b> — and under each of them the months, the newest March plus the three after it by default. Rows are the three plants, each opening into RM, FG and Consumables. The Total row under a plant is that plant across its three types and the Grand Total row at the foot is every plant added together, which is what the Total Overall block used to say.
 
 | Well | Field |
 |---|---|
 | Rows | `dimPlant[Plant]`, `dimCategory[Category]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `TB Inventory Rs Cr` → rename it to **TB**, `Inventory Rs Cr` → rename it to **MB5B**, `Difference Inventory Rs Cr` → rename it to **Check** |
+| Columns | `dimMetric[Metric]`, `dimDate[MonthName]` |
+| Values | `Summary Value Rs Cr` → rename it to **Rs Cr.** |
 | Filters | `In Summary Window  →  is 1` |
 
-Title: `Inventory — TB, MB5B and the Check, by Plant and Type (Rs Cr.)`
+Title: `Inventory by Plant and Type — TB, MB5B and the Check, Month by Month (Rs Cr.)`
 
 Position: Horizontal 192, Vertical 88, Width 1072, Height 248.
 
@@ -822,14 +822,14 @@ Position: Horizontal 192, Vertical 88, Width 1072, Height 248.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Columns holds dimDate[MonthName] and nothing else. The three measures in Values are what put TB, MB5B and Check under each month: a Metric field above the month would be a two-level column hierarchy, and Desktop opens one of those collapsed onto a single figure per metric — or draws the visual as an empty card. Measures under a single column field cannot do either.
-- Rename each measure in the Values box — double-click it and type TB, MB5B, Check — so the headings read the way the Excel sheet did rather than repeating "Rs Cr." three times across every month.
+- Columns takes two fields, in this order: dimMetric[Metric] first, then dimDate[MonthName]. That is what makes the metric the master column and the months the columns underneath it.
+- The file opens with both column levels already showing. If a version of Desktop opens it on the metric level only — three figures, no months — click the matrix and use the expand arrows at the top right of its header, or right-click any of the three headings → Expand → All, then save: Power BI remembers it.
+- Values holds one measure, Summary Value Rs Cr. It reads which master column a cell sits in and returns the trial balance, the MB5B figure or the gap between them accordingly, which is how one measure fills all three blocks.
 - Filters pane → drag the measure In Summary Window in → is 1. That is what gives you the newest March plus three months by default, and the months you tick in the slicer when you tick them.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On with 'Per row level' On. Those totals add plants inside one month, which is a real figure — one point in time, three stock locations — and they are what make the six separate tables unnecessary.
+- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On with 'Per row level' On — those add plants inside one month, which is a real figure: one point in time, three stock locations.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On, so Plant and Type sit in two columns with an expander on each plant.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font: Arial, Font size: 8, Colour: #1F2A24; Row headers', then 'Font size: 8; Column headers', then 'Font size' and set it to 8, Word wrap: On. Twelve figures across the width means every column has to earn its pixels.
-- Values box → the down-arrow next to Check → Conditional formatting → Background color → Format style: Diverging, tick 'Add a middle colour', middle number 0, and make both Minimum and Maximum red. A gap either side of zero is equally wrong.
 - Drag the line between two column headings if a figure shows three dots; column widths are remembered when you save.
 
 **4.27** **Clustered column chart** — The books against the stock report, two bars per period: the same figures as the matrix above, but you can see a gap opening without reading a single number. Same periods as the matrices, because it carries the same filter.
@@ -2961,8 +2961,13 @@ let
                    each not Table.IsEmpty([tpl]), type logical),
     Widened  = Table.ExpandTableColumn(Flagged, "tpl",
                    {"Nature","TBPlant","TBSort","MasterPlant"}),
+    // the master's plant is a last resort and only for a row that is a real posting: a line
+    // with no profit centre at all is usually SAP's subtotal for the account above it, and
+    // giving that a plant would count the same money twice
     Resolved = Table.AddColumn(Widened, "PlantResolved",
-                   each [ValuationArea] ?? [MasterPlant], type text),
+                   each if [ValuationArea] <> null then [ValuationArea]
+                        else if Text.Trim(Text.From([ProfitCentre] ?? "")) = "" then null
+                        else [MasterPlant], type text),
     Dropped  = Table.RemoveColumns(Resolved, {"ValuationArea"}),
     Renamed2 = Table.RenameColumns(Dropped, {{"PlantResolved", "ValuationArea"}}),
     // Rows that resolve to none of the three plants are kept HERE and left out in factTB, so
@@ -3018,8 +3023,23 @@ let
     // whitelisted by TB Master, and resolving to one of the three plants. No Unallocated:
     // a row whose profit centre names no plant is left out rather than parked on a plant that
     // does not exist, and qcTBPlants on Checks is where those rows are accounted for.
-    Kept    = Table.SelectRows(factTB_Staged,
+    Whole   = Table.SelectRows(factTB_Staged,
                   each [Whitelisted] = true and [ValuationArea] <> null),
+    // SAP writes subtotal and result lines into the same column as the accounts. They carry
+    // the sum of the lines above them, so leaving one in counts that money twice - which is
+    // the classic reason a trial balance figure reads high without any single row being wrong.
+    NoSums  = Table.SelectRows(Whole, each
+                  let G = Text.Upper(Text.Trim(Text.From([GLAccount] ?? ""))),
+                      D = Text.Upper(Text.From([GLDesc] ?? "")) in
+                  G <> "" and not Text.Contains(G, "*")
+                  and not Text.StartsWith(G, "TOTAL") and not Text.StartsWith(G, "RESULT")
+                  and not Text.Contains(D, "RESULT")
+                  and not Text.StartsWith(D, "TOTAL")),
+    // the same line arriving twice is counted once, on the same rule the stock files use: two
+    // rows are the same line when the month, the account, the profit centre and the amount all
+    // agree. SourceFile is deliberately left out of that test, so one month exported twice into
+    // the TB folder under two names cannot double the trial balance.
+    Kept    = Table.Distinct(NoSums, {"Month", "GLAccount", "ProfitCentre", "Amount"}),
     // RM / FG / Consumables from whatever the Nature (or GL description) says
     // Raw material is tested BEFORE consumables, and that order matters: an account called
     // "Raw Material & Packing" holds the word PACK, so with consumables tested first the whole

@@ -462,45 +462,41 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
 
     ("Summary", "Matrix",
-     'Inventory — TB, MB5B and the Check, by Plant and Type (Rs Cr.)',
+     'Inventory by Plant and Type \u2014 TB, MB5B and the Check, month by month (Rs Cr.)',
      [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
-      ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["TB Inventory Rs Cr" + AS + "TB",
-                  "Inventory Rs Cr" + AS + "MB5B",
-                  "Difference Inventory Rs Cr" + AS + "Check"]),
+      ("Columns", ["dimMetric[Metric]", "dimDate[MonthName]"]),
+      ("Values", ["Summary Value Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
      (16, 88, 1248, 248),
-     'One table, the whole reconciliation: a row per plant opening into RM, FG and Consumables, '
-     'a column per month \u2014 the newest March plus the three after it by default \u2014 and under '
-     'each month the three figures side by side: TB, MB5B and the Check between them. The '
-     'Total row under each plant is that plant across its three types, and the Grand Total row '
-     'at the foot is every plant added together, which is the Total Overall block of the Excel '
-     'sheet \u2014 so this single matrix replaces the six that stood here.',
-     ['Columns holds dimDate[MonthName] and nothing else. The three measures in Values are what '
-      'put TB, MB5B and Check under each month: a Metric field above the month would be a '
-      'two-level column hierarchy, and Desktop opens one of those collapsed onto a single '
-      'figure per metric \u2014 or draws the visual as an empty card. Measures under a single '
-      'column field cannot do either.',
-      'Rename each measure in the Values box \u2014 double-click it and type TB, MB5B, Check \u2014 '
-      'so the headings read the way the Excel sheet did rather than repeating "Rs Cr." three '
-      'times across every month.',
+     'One table, laid out the way the Excel sheet was: three master columns \u2014 '
+     '<b>Inventory (TB)</b>, <b>Inventory (MB5B)</b> and <b>Difference</b> \u2014 and under each '
+     'of them the months, the newest March plus the three after it by default. Rows are the '
+     'three plants, each opening into RM, FG and Consumables. The Total row under a plant is '
+     'that plant across its three types and the Grand Total row at the foot is every plant '
+     'added together, which is what the Total Overall block used to say.',
+     ['Columns takes two fields, in this order: dimMetric[Metric] first, then dimDate[MonthName]. '
+      'That is what makes the metric the master column and the months the columns underneath it.',
+      'The file opens with both column levels already showing. If a version of Desktop opens it '
+      'on the metric level only \u2014 three figures, no months \u2014 click the matrix and use '
+      'the expand arrows at the top right of its header, or right-click any of the three '
+      'headings \u2192 Expand \u2192 All, then save: Power BI remembers it.',
+      'Values holds one measure, Summary Value Rs Cr. It reads which master column a cell sits '
+      'in and returns the trial balance, the MB5B figure or the gap between them accordingly, '
+      'which is how one measure fills all three blocks.',
       'Filters pane \u2192 drag the measure In Summary Window in \u2192 is 1. That is what gives you '
       'the newest March plus three months by default, and the months you tick in the slicer '
       'when you tick them.',
       "Format pane \u2192 Subtotals \u2192 Column subtotals: Off. Stock is a level, not a flow: a "
       "Total column would add March's steel to July's steel, which is the same steel counted "
       "twice.",
-      "Format pane \u2192 Subtotals \u2192 Row subtotals: On with 'Per row level' On. Those totals add "
-      "plants inside one month, which is a real figure \u2014 one point in time, three stock "
-      "locations \u2014 and they are what make the six separate tables unnecessary.",
+      "Format pane \u2192 Subtotals \u2192 Row subtotals: On with 'Per row level' On \u2014 those add "
+      "plants inside one month, which is a real figure: one point in time, three stock "
+      "locations.",
       'Format pane \u2192 Row headers \u2192 Stepped layout: Off, +/- icons: On, so Plant and Type sit '
       'in two columns with an expander on each plant.',
       'Format pane \u2192 Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24; Row headers \u2192 '
       'Font size: 8; Column headers \u2192 Font size: 8, Word wrap: On. Twelve figures across the '
       'width means every column has to earn its pixels.',
-      "Values box \u2192 the down-arrow next to Check \u2192 Conditional formatting \u2192 Background "
-      "color \u2192 Format style: Diverging, tick 'Add a middle colour', middle number 0, and make "
-      "both Minimum and Maximum red. A gap either side of zero is equally wrong.",
       'Drag the line between two column headings if a figure shows three dots; column widths '
       'are remembered when you save.']),
 

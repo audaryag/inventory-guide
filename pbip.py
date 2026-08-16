@@ -302,7 +302,8 @@ def table_objects():
     }
 
 
-def matrix_objects(rows_levels, expand, subtotals=True, column_total=False):
+def matrix_objects(rows_levels, expand, subtotals=True, column_total=False,
+                   col_expand=False):
     o = {
         "rowHeaders": [{"properties": {
             "stepped": literal("false"),
@@ -311,6 +312,7 @@ def matrix_objects(rows_levels, expand, subtotals=True, column_total=False):
         "columnHeaders": [{"properties": {
             "fontFamily": txt("Arial"), "bold": literal("true"),
             "autoSizeColumnWidth": literal("true"),
+            "showExpandCollapseButtons": literal("true" if col_expand else "false"),
             "backColor": {"solid": {"color": txt("#EEF3EF")}},
             "fontColor": {"solid": {"color": txt(DARK)}}}}],
         "values": [{"properties": {"fontFamily": txt("Arial"),
@@ -583,9 +585,11 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
     query = {"queryState": qstate}
     if vt == "pivotTable":
         cols = [spec.base(f) for w, fs in wells if w == "Columns" for f in fs]
+        col_levels = len(qstate.get("Columns", {}).get("projections", []))
         objects = matrix_objects(rows_levels, expand=rows_levels > 1,
                                  subtotals=rows_levels > 1,
-                                 column_total=False)
+                                 column_total=False,
+                                 col_expand=col_levels > 1)
     elif vt == "card":
         objects = card_objects(pos[2], pos[3])
     elif vt == "slicer":
@@ -605,17 +609,22 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
     if objects:
         visual["objects"] = objects
     if vt == "pivotTable":
-        # Rows only, never Columns. A matrix carrying a Columns expansion state came back from
-        # Desktop as an empty card - build 12 did it to four matrices, build 17 to four more -
-        # and even where it drew, the state was ignored and the second column level stayed
-        # collapsed. So no matrix has a two-level column hierarchy any more: the months are the
-        # only column field and the metrics are measures beside each other underneath, which
-        # needs no expanding at all.
-        states = [{"roles": ["Rows"],
-                   "levels": [{"queryRefs": [p["queryRef"]], "isCollapsed": False}
-                              for p in qstate["Rows"]["projections"]],
-                   "root": {"isToggled": True}}] \
-            if len(qstate.get("Rows", {}).get("projections", [])) > 1 else []
+        # One expansion state per role that has more than one level, and 'root': isToggled only
+        # on Rows. Builds 12 and 17 wrote a Columns state carrying that root toggle and Desktop
+        # answered with an empty card; the level list on its own is what opens the second column
+        # level, and the expand/collapse buttons on the column headers are the way back if a
+        # version of Desktop ignores it.
+        states = []
+        for role in ("Rows", "Columns"):
+            projs = qstate.get(role, {}).get("projections", [])
+            if len(projs) < 2:
+                continue
+            st = {"roles": [role],
+                  "levels": [{"queryRefs": [p["queryRef"]], "isCollapsed": False}
+                             for p in projs]}
+            if role == "Rows":
+                st["root"] = {"isToggled": True}
+            states.append(st)
         if states:
             visual["expansionStates"] = states
 
