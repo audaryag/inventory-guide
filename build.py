@@ -490,14 +490,15 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
-<blockquote><strong>Build 24 &mdash; Summary is one table again:</strong> the six blocks are gone and in their place is a
+<blockquote><strong>Build 25 &mdash; Summary is one table again:</strong> the six blocks are gone and in their place is a
 single matrix across the full width &mdash; a row per plant opening into RM / FG / Consumables, a column per month,
 and under each month the three figures side by side: <strong>TB</strong>, <strong>MB5B</strong>,
 <strong>Check</strong>. Those three are measures, not a field above the month, which is what keeps it a
 one-level column hierarchy and out of the trouble that emptied the page before. The Total row under each plant is
 that plant across its three types and the Grand Total row at the foot is every plant added together &mdash; which
 is exactly what the three Total Overall blocks used to say, so they are no longer needed. Column subtotals stay
-off: there is no Total column adding March to July.</blockquote>
+off: there is no Total column adding March to July. The matrix is only as tall as its rows, and the space that
+used to sit blank under it has gone to the three charts, which are half again as tall as they were.</blockquote>
 
 <blockquote><strong>Build 23 &mdash; Summary, TB side only:</strong> plant <strong>1905</strong> is back and so is
 the <strong>Raw Material</strong> row, and both were mapping faults rather than arithmetic. A trial balance row

@@ -469,7 +469,7 @@ VISUALS = [
                   "Inventory Rs Cr" + AS + "MB5B",
                   "Difference Inventory Rs Cr" + AS + "Check"]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (16, 88, 1248, 352),
+     (16, 88, 1248, 248),
      'One table, the whole reconciliation: a row per plant opening into RM, FG and Consumables, '
      'a column per month \u2014 the newest March plus the three after it by default \u2014 and under '
      'each month the three figures side by side: TB, MB5B and the Check between them. The '
@@ -509,7 +509,7 @@ VISUALS = [
      [("X-axis", ["dimDate[MonthName]"]),
       ("Y-axis", ["TB Inventory Rs Cr", "Inventory Rs Cr"]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (16, 464, 616, 120),
+     (16, 352, 616, 168),
      "The books against the stock report, two bars per period: the same figures as the "
      "matrix above, but you can see a gap opening without reading a single number. Same "
      "periods as the matrices, because it carries the same filter.",
@@ -532,7 +532,7 @@ VISUALS = [
       ("Column y-axis", ["Difference Inventory Rs Cr"]),
       ("Line y-axis", ["Difference Inventory %"]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (648, 464, 616, 120),
+     (648, 352, 616, 168),
      "The question the reconciliation is really asking: is the gap widening or closing. The "
      "bar is the difference in crore rupees, the line above it the same difference as a "
      "percentage of the trial balance, so a small gap on a big month reads as small.",
@@ -921,7 +921,7 @@ VISUALS = [
      [("X-axis", ["dimDate[MonthName]"]),
       ("Y-axis", ["RM Days", "FG Days", "Total Days (RM + FG)"]),
       ("Filters", ["In Last 12  \u2192  is 1"])],
-     (16, 592, 1248, 120),
+     (16, 536, 1248, 168),
      "The long view under the reconciliation: three lines across the last twelve months "
      "that have data, or fewer if that is all there is \u2014 raw material days, finished goods "
      "days, and the two added together, which is what the Overview card calls Days of "

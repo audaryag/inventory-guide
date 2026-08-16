@@ -26,8 +26,9 @@ EDITS = [
              "Easiest is the <strong>Auto</strong> tab download \u2014 it is drawn this way "
              "already, and every query fix on this page is inside it.",
              "By hand: keep the first matrix (Inventory (TB) by Plant and Type), delete the "
-             "other five, then drag it out to the full width of the white area and about 352 "
-             "high.",
+             "other five, then drag it out to the full width of the white area and about 248 "
+             "high \u2014 only as tall as its rows, so nothing sits blank under it \u2014 then pull "
+             "the three charts below up into the space and make each of them about 168 high.",
              "In its <strong>Values</strong> box put three measures in this order: "
              "<code>TB Inventory Rs Cr</code>, <code>Inventory Rs Cr</code>, "
              "<code>Difference Inventory Rs Cr</code>. Double-click each one in the box and "
