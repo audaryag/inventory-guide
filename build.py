@@ -490,6 +490,19 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 23 &mdash; Summary, TB side only:</strong> plant <strong>1905</strong> is back and so is
+the <strong>Raw Material</strong> row, and both were mapping faults rather than arithmetic. A trial balance row
+carries a profit centre, not a plant, and the plant was read out of characters 3&ndash;6 of it and nowhere else
+&mdash; so a profit centre written to any other pattern resolved to no plant and the row was dropped, which is
+how a plant goes missing from Inventory (TB) while MB5B still has it. It is now read from those four characters,
+then from the first of 1900 / 1902 / 1905 appearing anywhere in the profit centre, then in its description, then
+from the Plant or Nature written against that GL on your <strong>TB Master</strong> sheet. Separately, the
+RM / FG / Consumables test asked about consumables before raw material, and an account called &ldquo;Raw Material
+&amp; Packing&rdquo; holds the word PACK &mdash; so all of RM was filed as Consumables: the RM row vanished and
+Consumables read far too high. Raw material is tested first now. Nothing is dropped quietly any more:
+<strong>qcTBPlants</strong> on Checks lists every profit centre, what it resolved to and what it is worth, so an
+unresolved one can be read off the screen. MB5B, Overview, Detail and the FG and RM layouts are untouched.</blockquote>
+
 <blockquote><strong>Build 21 &mdash; 14 Aug:</strong> no matrix has a two-level column hierarchy any
 more. A metric field above a month field opens on the metric level &mdash; one figure per metric, no months
 &mdash; and pre-opening it in the file made Desktop draw the visual as an empty card, which is what took

@@ -1163,10 +1163,23 @@ VISUALS = [
     ("Checks", "Table", "Trial balance by GL account, signed",
      [("Columns", ["qcTBByGL[GLAccount]", "qcTBByGL[GLDesc]", "qcTBByGL[Category]",
                    "qcTBByGL[AmountRsCr]"])],
-     (16, 592, 1248, 100),
+     (16, 592, 620, 100),
      "Sorted with the most negative first. An inventory account sitting there as a credit is "
      "why a plant's Inventory (TB) nets to nearly zero on Summary while the by-type block "
      "shows a large minus figure \u2014 the sign, not the mapping, is what is wrong.",
+     ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
+      "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
+
+    ("Checks", "Table", "Trial balance profit centres, and the plant each resolved to",
+     [("Columns", ["qcTBPlants[ProfitCentre]", "qcTBPlants[Description]",
+                   "qcTBPlants[PlantResolved]", "qcTBPlants[InventoryRows]",
+                   "qcTBPlants[AmountRsCr]"])],
+     (644, 592, 620, 100),
+     "The TB files carry a profit centre, not a plant, so every plant on the TB side of Summary "
+     "is resolved from it. A blank or (none) in PlantResolved is a row Inventory (TB) leaves "
+     "out \u2014 so if a plant shows on the MB5B side and not on the TB side, its profit centres "
+     "are the ones sitting here unresolved, and the amount beside them is what is missing. "
+     "Read me those profit centre codes and the rule that reads them becomes exact.",
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
 

@@ -67,6 +67,8 @@ TABLES = {
     "qcTBByGL": [("GLAccount", S), ("GLDesc", S), ("Nature", S), ("Category", S),
                  ("AmountRsCr", D), ("Rows", I)],
     "qcPlantCodes": [("Code", S), ("Rows", I), ("ValueRsCr", D), ("InReport", B)],
+    "qcTBPlants": [("ProfitCentre", S), ("Description", S), ("PlantResolved", S),
+                   ("Rows", I), ("InventoryRows", I), ("AmountRsCr", D)],
     "qcMonthFiles": [("Category", S), ("Month", T), ("Files", I), ("FileNames", S),
                      ("Rows", I), ("ValueRsCr", D)],
     "qcMasterDupes": [("Sheet", S), ("MatKey", S), ("Natures", I), ("TheyAre", S),
@@ -106,7 +108,7 @@ HIDDEN = {("factInventory", "MatKey"), ("factTB", "PlantCode"), ("dimDate", "Mon
 
 # tables kept out of the report field list (helpers/diagnostics still refresh)
 HIDDEN_TABLES = {"factTB_Unmapped", "qcHeaders", "qcVarHeaders", "qcNatureNoCapacity",
-                 "qcAttrMatch", "qcTBByGL", "qcPlantCodes",
+                 "qcAttrMatch", "qcTBByGL", "qcPlantCodes", "qcTBPlants",
                  "qcMonthFiles", "qcMasterDupes"}
 
 

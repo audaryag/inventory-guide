@@ -10,6 +10,39 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="0a", build="23", query="factTB_Staged",
+         title="Inventory (TB) missing plant 1905, and missing its Raw Material row",
+         why="Two faults, both on the TB side only \u2014 MB5B was never involved. <strong>The "
+             "plant:</strong> a trial balance row carries a profit centre, not a plant, and the "
+             "old code read the plant out of characters 3\u20136 of it and nowhere else. A "
+             "profit centre written to any other pattern therefore resolved to no plant, and "
+             "the row was dropped \u2014 which is how one plant disappears from Inventory (TB) "
+             "while MB5B still shows it. Now: those four characters first, then the first of "
+             "1900 / 1902 / 1905 appearing <em>anywhere</em> in the profit centre, then in its "
+             "description, then the Plant or Nature written against that GL on your "
+             "<strong>TB Master</strong> sheet. <strong>The RM row:</strong> the category test "
+             "asked about consumables before raw material, and an account called \"Raw "
+             "Material &amp; Packing\" contains the word PACK \u2014 so the whole of RM was "
+             "filed as Consumables, the RM row vanished and Consumables read far too high. Raw "
+             "material is now tested first. Nothing is dropped silently any more: "
+             "<strong>qcTBPlants</strong> on Checks lists every profit centre, what it resolved "
+             "to and what it is worth, so an unresolved one can be read off the screen instead "
+             "of guessed at."),
+    dict(n="0b", build="23", query="factTB",
+         title="Same fix, second half \u2014 the RM / FG / Consumables split and the plant filter",
+         why="Paste this straight after the one above; they are one change in two queries. Raw "
+             "material is tested before consumables here, and the rows that resolve to none of "
+             "the three plants are left out at this step rather than the one before it, so "
+             "qcTBPlants can still account for them. There is still no Unallocated plant."),
+    dict(n="0c", build="23", query="qcTBPlants",
+         title="New self-check \u2014 every TB profit centre and the plant it resolved to",
+         why="A brand new query, so create it rather than replace it: Power Query \u2192 Home "
+             "\u2192 New Source \u2192 Blank Query \u2192 Advanced Editor \u2192 paste \u2192 "
+             "Done \u2192 rename it exactly <code>qcTBPlants</code>, and leave Enable load "
+             "<strong>on</strong>. It is the table that answers \"why is that plant not on the "
+             "TB side\" without either of us guessing: a blank or (none) under PlantResolved is "
+             "a row Inventory (TB) leaves out, and the amount beside it is exactly what is "
+             "missing. Read me those profit centre codes and the rule becomes exact."),
     dict(n="0", build="22", query="",
          title="Empty tables, and no months under TB / MB5B / Difference \u2014 take the "
                "download for this one",
