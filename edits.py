@@ -10,41 +10,37 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
-    dict(n="0", build="21", query="",
-         title="Blank matrices, and no months under TB / MB5B / Difference \u2014 six visuals to "
-               "correct by hand",
-         why="Two faults with one cause: a matrix with <em>two</em> fields in Columns. Power BI "
-             "opens such a matrix on the outer level only \u2014 one figure per metric, no months "
-             "\u2014 and where the file tries to pre-open it, Desktop draws the visual as an empty "
-             "card instead, which is why Summary's lower block and the FG and RM tables were "
-             "missing altogether. The cure is to stop nesting: <strong>one</strong> field in "
-             "Columns (the month) and the metrics as measures side by side underneath, which is "
-             "the same grid read the other way and needs no expanding. On each of the six "
-             "matrices below: click it, and in the Visualizations pane drag "
-             "<code>dimMetric[Metric]</code> (or <code>dimMeasure[Measure]</code>) out of the "
-             "Columns box, leaving <code>dimDate[MonthName]</code> alone in there. Then remove "
-             "the single measure from Values and drag these in instead, in order \u2014 and "
-             "double-click each one in the Values box to type the short name over it, because "
-             "that is what the column heading reads.",
+    dict(n="0", build="22", query="",
+         title="Empty tables, and no months under TB / MB5B / Difference \u2014 take the "
+               "download for this one",
+         why="One fault behind both: a matrix with <em>two</em> fields in Columns, a metric "
+             "above the month. Power BI opens such a matrix on its outer level only \u2014 one "
+             "figure per metric and no month history, which is why ticking months changed a "
+             "single number instead of adding columns \u2014 and where the file tries to "
+             "pre-open it, Desktop draws the visual as an empty card, which is what emptied "
+             "Summary's lower block and the FG and RM tables. Build 22 stops nesting: each "
+             "metric gets its own matrix with <code>dimDate[MonthName]</code> as the only "
+             "field in Columns, laid out side by side \u2014 an <strong>In MW</strong> block, "
+             "an <strong>In Rs Cr</strong> block and an <strong>In Days</strong> block on FG, "
+             "In Rs Cr and In Days on RM, and TB / as per MB5B / Check on Summary, each over "
+             "its own row of months. That is the layout of the Excel sheets these pages "
+             "replace. Column subtotals are off everywhere too: inventory is a level, not a "
+             "flow, so there is no Total column adding March to July \u2014 the Total row, "
+             "which adds the plants inside one month, stays.",
          steps=[
-             "<strong>Summary</strong>, both matrices \u2014 Values: <code>TB Inventory Rs Cr</code> "
-             "renamed <strong>TB</strong>, <code>Inventory Rs Cr</code> renamed "
-             "<strong>MB5B</strong>, <code>Difference Inventory Rs Cr</code> renamed "
-             "<strong>Difference</strong>. Drop <code>Summary Value Rs Cr</code>.",
-             "<strong>FG</strong>, both matrices \u2014 Values: <code>Inventory MW</code> renamed "
-             "<strong>MW</strong>, <code>Inventory Rs Cr</code> renamed <strong>Rs Cr.</strong>, "
-             "<code>Days</code> renamed <strong>Days</strong>. Drop "
-             "<code>Unit Value by Period</code>.",
-             "<strong>RM</strong>, both matrices \u2014 Values: <code>Inventory Rs Cr</code> renamed "
-             "<strong>Rs Cr.</strong>, <code>Days</code> renamed <strong>Days</strong>. Drop "
-             "<code>Unit Value by Period</code>, and remove the <code>dimMeasure[Measure]</code> "
-             "entry from the Filters pane as well \u2014 it has nothing left to filter.",
-             "Then click each of the six, and in the Filters pane leave "
-             "<code>In Summary Window is 1</code> exactly as it is: that is what holds the "
-             "columns to the newest March plus the three months after it until you tick months "
-             "yourself.",
-             "Everything else on those pages stays put. If you would rather not do it by hand, "
-             "the download on the <strong>Auto</strong> tab is already built this way.",
+             "This one is ten new visuals across three pages, so doing it by hand is not "
+             "worth your evening: take the download on the <strong>Auto</strong> tab. Every "
+             "query fix on this page is already inside it, so nothing you pasted is lost.",
+             "If you do want to do it by hand: on each existing matrix, drag "
+             "<code>dimMetric[Metric]</code> (or <code>dimMeasure[Measure]</code>) out of the "
+             "Columns box so only <code>dimDate[MonthName]</code> is left, put a "
+             "<strong>single</strong> measure in Values, then copy-paste the visual once per "
+             "extra metric and swap that measure. Format pane \u2192 Subtotals \u2192 Column "
+             "subtotals: Off on each.",
+             "Leave <code>In Summary Window is 1</code> in the Filters pane exactly as it is: "
+             "that is what holds the columns to the newest March plus the three months after "
+             "it until you tick months yourself.",
+             "Overview and Detail are untouched.",
          ],
          find="", repl=""),
     dict(n="1", build="20", query="dimTBMaster",

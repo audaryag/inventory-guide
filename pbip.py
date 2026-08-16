@@ -315,10 +315,11 @@ def matrix_objects(rows_levels, expand, subtotals=True, column_total=False):
                                    "backColorPrimary": {"solid": {"color": txt("#FFFFFF")}},
                                    "backColorSecondary": {"solid": {"color": txt("#F7FAF7")}},
                                    "bandedRowHeaders": literal("true")}}],
-        # The bottom Total row is always on. The right-hand Total column is on only where the
-        # columns are months, which is the one place a total across columns means anything:
-        # across MW / In Rs Cr / In Days, or across TB / MB5B / Difference, it would add three
-        # unlike things together and print a number that means nothing.
+        # The bottom Total row is always on: it adds the plants inside one month, and plants
+        # at the same date do add up. The right-hand Total column is always off, because the
+        # columns are months and inventory is a level, not a flow - a total across March and
+        # July counts the same steel twice. The figure for a window of months is the closing
+        # month's level, which the measures themselves return.
         "subTotals": [{"properties": {
             "rowSubtotals": literal("true"),
             "columnSubtotals": literal("true" if column_total else "false"),
@@ -582,7 +583,7 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
         cols = [spec.base(f) for w, fs in wells if w == "Columns" for f in fs]
         objects = matrix_objects(rows_levels, expand=rows_levels > 1,
                                  subtotals=rows_levels > 1,
-                                 column_total=cols == ["dimDate[MonthName]"])
+                                 column_total=False)
     elif vt == "card":
         objects = card_objects(pos[2], pos[3])
     elif vt == "slicer":

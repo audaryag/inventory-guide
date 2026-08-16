@@ -462,71 +462,95 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
 
     ("Summary", "Matrix",
-     "Inventory (TB) · Inventory (MB5B) · Difference by Plant (Rs Cr.)",
+     'Inventory (TB) — by Plant and Type (Rs Cr.)',
      [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
       ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["TB Inventory Rs Cr" + AS + "TB",
-                  "Inventory Rs Cr" + AS + "MB5B",
-                  "Difference Inventory Rs Cr" + AS + "Difference"]),
+      ("Values", ["TB Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["In Summary Window  →  is 1"])],
-     (16, 88, 1248, 232),
-     "The whole reconciliation in one grid: each period a master column with Inventory (TB), "
-     "Inventory (MB5B) and Difference under it, one row per plant (Jaipur Module, Dholera "
-     "Module, Dholera Cell) opening into RM, FG and Consumables, and a total for each plant. "
-     "Everything in crore rupees.",
-     ["The three figures are three measures in the Values box, in this order: TB Inventory Rs "
-      "Cr, Inventory Rs Cr, Difference Inventory Rs Cr. Columns holds dimDate[MonthName] and "
-      "nothing else.",
-      "Why this way round: a matrix nests its measures underneath whatever is in Columns, so "
-      "with real month names on show the months have to be the outer level and TB / MB5B / "
-      "Difference the inner one. The other arrangement \u2014 a Metric field above a Month field "
-      "\u2014 is a two-level column hierarchy, and one of those opens collapsed on a single "
-      "figure per metric until you expand it by hand. Same twelve cells, read the other way, "
-      "and it needs no clicking.",
-      "Format pane \u2192 Row headers \u2192 Stepped layout: Off, so Plant and Type get a column "
-      "each instead of being indented into one.",
-      "Format pane \u2192 Row headers \u2192 +/- icons: On \u2014 that is the click-to-expand control on "
-      "each plant.",
-      "Format pane \u2192 Subtotals \u2192 Row subtotals: On, and switch ON 'Per row level' so each "
-      "plant shows its own total. Column subtotals: On, for the Total column on the right.",
-      "Format pane \u2192 Subtotals \u2192 Grand total: Off on this matrix. The total of the totals, "
-      "split by RM / FG / Consumables, is the second matrix underneath \u2014 a matrix can only "
-      "give one flat grand total row, so the split has to be its own visual.",
-      "Colour the differences: in the Values box click the small down-arrow next to "
-      "Difference Inventory Rs Cr, click 'Conditional formatting', then 'Background color'. Set "
-      "Format style to Diverging, tick 'Add a middle colour', set the middle number to 0, "
-      "and make both the Minimum and Maximum colours red. A difference either direction is "
-      "equally wrong, so both ends are red.",
-      "Right-click any plant row, click 'Expand', then 'All', so RM, FG and Consumables "
-      "show under every plant. Then press Ctrl+S \u2014 Power BI remembers it.",
-      "Format pane \u2192 General \u2192 Title \u2192 Text: type the heading above, and leave the fx "
-      "button alone. The columns are always months, so the heading is always right.",
-      "With twelve periods ticked this is 36 columns of figures, so a scrollbar appears "
-      "along the bottom of the matrix. That is normal: scroll it sideways, or untick "
-      "periods until it fits."]),
+     (16, 88, 408, 232),
+     'The books: what the trial balance says is on hand, one row per plant opening into RM, FG and Consumables, and one column per month — the newest March plus the three months after it by default. This is the left-hand block of the Excel sheet, unchanged in meaning.',
+     ['Columns holds dimDate[MonthName] and nothing else, and Values holds one measure. That is what puts the months on show with nothing to expand: a Metric field above the month is a two-level column hierarchy, and Desktop opens one of those collapsed onto a single figure per metric — or draws the visual as an empty card, which is what emptied this page. One metric per matrix, side by side, is the same grid the Excel sheet had.',
+      'Filters pane → drag the measure In Summary Window in → is 1. That is what gives you the newest March plus three months by default, and the months you tick in the slicer when you tick them.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      'Format pane → Row headers → Stepped layout: Off, +/- icons: On, so Plant and Type sit in two columns with an expander on each plant.',
+      "Format pane → Subtotals → Row subtotals: On with 'Per row level' On, so each plant totals its own three types.",
+      'Format pane → Values → Font: Arial, Font size: 8, Colour: #1F2A24; Row headers → Font size: 8; Column headers → Font size: 8. Three blocks across the width means every column has to earn its pixels.',
+      'All three blocks carry the same filter and the same slicers, so they always show the same months in the same order — read straight across.']),
 
-    ("Summary", "Matrix", "Total across All Plants by Type (Rs Cr.)",
+    ("Summary", "Matrix",
+     'As per MB5B — by Plant and Type (Rs Cr.)',
+     [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
+      ("Filters", ["In Summary Window  →  is 1"])],
+     (432, 88, 408, 232),
+     'The stock report against it: the same rows and the same months, valued from MB5B. Read it beside the block on its left, month for month.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.',
+      'Filters pane → drag the measure In Summary Window in → is 1. That is what gives you the newest March plus three months by default, and the months you tick in the slicer when you tick them.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      'Format pane → Row headers → Stepped layout: Off, +/- icons: On, so Plant and Type sit in two columns with an expander on each plant.',
+      "Format pane → Subtotals → Row subtotals: On with 'Per row level' On, so each plant totals its own three types.",
+      'Format pane → Values → Font: Arial, Font size: 8, Colour: #1F2A24; Row headers → Font size: 8; Column headers → Font size: 8. Three blocks across the width means every column has to earn its pixels.',
+      'All three blocks carry the same filter and the same slicers, so they always show the same months in the same order — read straight across.']),
+
+    ("Summary", "Matrix",
+     'Check — TB Minus MB5B (Rs Cr.)',
+     [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Difference Inventory Rs Cr" + AS + "Rs Cr."]),
+      ("Filters", ["In Summary Window  →  is 1"])],
+     (848, 88, 408, 232),
+     'The reconciliation itself, month by month: books minus stock report. A figure either side of zero is equally wrong, which is why both ends are coloured red.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.',
+      'Filters pane → drag the measure In Summary Window in → is 1. That is what gives you the newest March plus three months by default, and the months you tick in the slicer when you tick them.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      'Format pane → Row headers → Stepped layout: Off, +/- icons: On, so Plant and Type sit in two columns with an expander on each plant.',
+      "Format pane → Subtotals → Row subtotals: On with 'Per row level' On, so each plant totals its own three types.",
+      'Format pane → Values → Font: Arial, Font size: 8, Colour: #1F2A24; Row headers → Font size: 8; Column headers → Font size: 8. Three blocks across the width means every column has to earn its pixels.',
+      'All three blocks carry the same filter and the same slicers, so they always show the same months in the same order — read straight across.',
+      "Values box → the down-arrow next to the measure → Conditional formatting → Background color → Format style: Diverging, tick 'Add a middle colour', middle number 0, and make both Minimum and Maximum red."]),
+
+    ("Summary", "Matrix",
+     'Total Overall — Inventory (TB) (Rs Cr.)',
      [("Rows", ["dimCategory[Category]"]),
       ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["TB Inventory Rs Cr" + AS + "TB",
-                  "Inventory Rs Cr" + AS + "MB5B",
-                  "Difference Inventory Rs Cr" + AS + "Difference"]),
+      ("Values", ["TB Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["In Summary Window  →  is 1"])],
-     (16, 328, 1248, 128),
-     "The bottom block: the same periods and the same three figures under each, but every "
-     "plant added together \u2014 one row for RM, one for FG, one for Consumables, so you can "
-     "read total RM across all plants at a glance, and a Total row under them which is the "
-     "total inventory.",
-     ["Same columns and the same three measures in the same order as the matrix above, so the "
-      "two line up column for column. Keep the same months ticked.",
-      "Format pane \u2192 Row headers \u2192 Stepped layout: Off.",
-      "Format pane \u2192 Subtotals \u2192 Row subtotals: On \u2014 that bottom row is the total of the "
-      "totals, the whole inventory. Column subtotals: On, for the Total column on the right.",
-      "Format pane \u2192 Row headers \u2192 Font: Arial, Font size: 9, Bold: On, so this block reads "
-      "as the summary of the one above rather than as more detail.",
-      "This matrix has no Plant field on purpose. Leave the Plant slicer on 'All' when you "
-      "want the across-all-plants figure \u2014 picking one plant filters this block too."]),
+     (16, 328, 408, 112),
+     'Every plant added together, by type: one row for RM, one for FG, one for Consumables and a Total under them — the bottom block of the Excel sheet. Plants inside one month add up legitimately, which is why this block exists at all.',
+     ['Same as the block directly above it with dimPlant[Plant] taken out of Rows — copy that matrix, paste, remove the Plant field, and set the size below.',
+      'Filters pane → In Summary Window → is 1, so it shows the same months as the block above and lines up column for column.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      'Format pane → Row headers → Font: Arial, Font size: 8, Bold: On.',
+      'This matrix has no Plant field on purpose. Leave the Plant slicer on All when you want the across-all-plants figure — picking one plant filters this block too.']),
 
+    ("Summary", "Matrix",
+     'Total Overall — as per MB5B (Rs Cr.)',
+     [("Rows", ["dimCategory[Category]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
+      ("Filters", ["In Summary Window  →  is 1"])],
+     (432, 328, 408, 112),
+     'The same three types across all plants, from the stock report.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.',
+      'Filters pane → In Summary Window → is 1, so it shows the same months as the block above and lines up column for column.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      'Format pane → Row headers → Font: Arial, Font size: 8, Bold: On.',
+      'This matrix has no Plant field on purpose. Leave the Plant slicer on All when you want the across-all-plants figure — picking one plant filters this block too.']),
+
+    ("Summary", "Matrix",
+     'Total Overall — Check (Rs Cr.)',
+     [("Rows", ["dimCategory[Category]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Difference Inventory Rs Cr" + AS + "Rs Cr."]),
+      ("Filters", ["In Summary Window  →  is 1"])],
+     (848, 328, 408, 112),
+     'And the gap on the whole business, by type and by month. This is the number to take to a review: if it is small on every type in every month, the report reconciles.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.',
+      'Filters pane → In Summary Window → is 1, so it shows the same months as the block above and lines up column for column.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      'Format pane → Row headers → Font: Arial, Font size: 8, Bold: On.',
+      'This matrix has no Plant field on purpose. Leave the Plant slicer on All when you want the across-all-plants figure — picking one plant filters this block too.']),
     ("Summary", "Clustered column chart",
      "Inventory (TB) vs Inventory (MB5B) by Month (Rs Cr.)",
      [("X-axis", ["dimDate[MonthName]"]),
@@ -620,63 +644,99 @@ VISUALS = [
      "Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
 
-    ("FG", "Matrix", "FG by Plant — MW · Rs Cr. · Days",
+    ("FG", "Matrix",
+     'Inventory FG by Plant — In MW',
      [("Rows", ["dimPlant[Plant]"]),
       ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["Inventory MW" + AS + "MW",
-                  "Inventory Rs Cr" + AS + "Rs Cr.",
-                  "Days" + AS + "Days"]),
+      ("Values", ["Inventory MW" + AS + "MW"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Summary Window  →  is 1"])],
-     (16, 88, 1248, 132),
-     "Finished goods per plant in all three units at once — megawatts, crore rupees and "
-     "days — under each of four periods by default. Days is MW ÷ capacity MW, so a plant "
-     "with no capacity figure is blank on purpose.",
-     ["Three measures in the Values box, in this order: Inventory MW, Inventory Rs Cr, Days. "
-      "Columns holds dimDate[MonthName] and nothing else, so each period is a master column "
-      "with the three units under it and no expanding to do.",
-      "All three average the month-ends in the Total column instead of adding them, because "
-      "stock is a level, not a flow.",
-      "Filters pane → drag dimCategory[Category] in → tick FG only. Then drag the measure "
-      "In Summary Window in and set 'is 1' — that is what limits it to four periods, or to "
-      "the ones you tick, up to twelve.",
-      "Format pane → Row headers → Stepped layout: Off, +/- icons: On.",
-      "Format pane → Subtotals → Row subtotals: On, Column subtotals: On.",
-      "Format pane → Values → Font: Arial, Font size: 9, Colour: #1F2A24. Everything else "
-      "comes from the theme.",
-      "Format pane → General → Title → Font: Arial, Font size: 12, Colour: #14532D.",
-      "Click a plant row and the technology matrix and the charts below follow it.",
-      "With twelve periods ticked this is 36 number columns, so the matrix scrolls "
-      "sideways. That is normal — scroll inside it, do not widen it."]),
+     (16, 88, 408, 112),
+     'Finished goods per plant in megawatts, one column per month — the newest March plus the three after it by default. The Excel sheet had this as one wide table with an IN MW block, an IN CRS block and an IN DAYS block; these are those blocks.',
+     ['Columns holds dimDate[MonthName] and nothing else, and Values holds one measure. That is what puts the months on show with nothing to expand: a Metric field above the month is a two-level column hierarchy, and Desktop opens one of those collapsed onto a single figure per metric — or draws the visual as an empty card, which is what emptied this page. One metric per matrix, side by side, is the same grid the Excel sheet had.',
+      'Filters pane → dimCategory[Category] → tick FG only, then the measure In Summary Window → is 1.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      'Format pane → Values → Font: Arial, Font size: 8, Colour: #1F2A24; Row headers → Font size: 8; Column headers → Font size: 8. Three blocks across the width means every column has to earn its pixels.',
+      'Clicking a plant row filters the technology blocks and the charts below to it.']),
 
-    ("FG", "Matrix", "FG by Technology — MW · Rs Cr. · Days",
+    ("FG", "Matrix",
+     'Inventory FG by Plant — In Rs Cr',
+     [("Rows", ["dimPlant[Plant]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
+      ("Filters", ["dimCategory[Category]  →  is FG",
+                   "In Summary Window  →  is 1"])],
+     (432, 88, 408, 112),
+     'Finished goods per plant in crore rupees, one column per month — the newest March plus the three after it by default. The Excel sheet had this as one wide table with an IN MW block, an IN CRS block and an IN DAYS block; these are those blocks.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.',
+      'Filters pane → dimCategory[Category] → tick FG only, then the measure In Summary Window → is 1.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      'Format pane → Values → Font: Arial, Font size: 8, Colour: #1F2A24; Row headers → Font size: 8; Column headers → Font size: 8. Three blocks across the width means every column has to earn its pixels.',
+      'Clicking a plant row filters the technology blocks and the charts below to it.']),
+
+    ("FG", "Matrix",
+     'Inventory FG by Plant — In Days',
+     [("Rows", ["dimPlant[Plant]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Days" + AS + "Days"]),
+      ("Filters", ["dimCategory[Category]  →  is FG",
+                   "In Summary Window  →  is 1"])],
+     (848, 88, 408, 112),
+     'Finished goods per plant in days of cover, one column per month — the newest March plus the three after it by default. The Excel sheet had this as one wide table with an IN MW block, an IN CRS block and an IN DAYS block; these are those blocks.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.',
+      'Filters pane → dimCategory[Category] → tick FG only, then the measure In Summary Window → is 1.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      'Format pane → Values → Font: Arial, Font size: 8, Colour: #1F2A24; Row headers → Font size: 8; Column headers → Font size: 8. Three blocks across the width means every column has to earn its pixels.',
+      'Days is MW ÷ capacity MW, so a plant with no row on the MW Capacity sheet is blank here on purpose — a missing denominator is not the same as no stock.']),
+
+    ("FG", "Matrix",
+     'Inventory FG by Techno — In MW',
      [("Rows", ["dimNature[Nature]"]),
       ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["Inventory MW" + AS + "MW",
-                  "Inventory Rs Cr" + AS + "Rs Cr.",
-                  "Days" + AS + "Days"]),
+      ("Values", ["Inventory MW" + AS + "MW"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Summary Window  →  is 1"])],
-     (16, 228, 1248, 176),
-     "Exactly the same periods and the same three units under each, but by module technology "
-     "rather than by plant — which is where a build-up in one technology shows up.",
-     ["Build it the fastest way: click the matrix above, Ctrl+C, Ctrl+V, then in the Rows "
-      "box remove dimPlant[Plant] and drag dimNature[Nature] in. Everything else, filters "
-      "included, comes with the copy.",
-      "Then set its position and size from the numbers below, and retype the title.",
-      "Check the filters came across: the Filters pane should still show Category is FG and "
-      "In Summary Window is 1.",
-      "Format pane → Row headers → Stepped layout: Off.",
-      "Format pane → Subtotals → Row subtotals: On, Column subtotals: On.",
-      "With the Plant slicer on one plant, this becomes that plant's technology split."]),
+     (16, 208, 408, 180),
+     'The same months and the same unit, by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows take dimPlant[Plant] out and drag dimNature[Nature] in.',
+      'Check the filters came across: Category is FG, In Summary Window is 1.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      "With the Plant slicer on one plant this becomes that plant's technology split, which is the Module block the Excel sheet had."]),
 
+    ("FG", "Matrix",
+     'Inventory FG by Techno — In Rs Cr',
+     [("Rows", ["dimNature[Nature]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
+      ("Filters", ["dimCategory[Category]  →  is FG",
+                   "In Summary Window  →  is 1"])],
+     (432, 208, 408, 180),
+     'The same months and the same unit, by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows take dimPlant[Plant] out and drag dimNature[Nature] in.',
+      'Check the filters came across: Category is FG, In Summary Window is 1.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      "With the Plant slicer on one plant this becomes that plant's technology split, which is the Module block the Excel sheet had."]),
+
+    ("FG", "Matrix",
+     'Inventory FG by Techno — In Days',
+     [("Rows", ["dimNature[Nature]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Days" + AS + "Days"]),
+      ("Filters", ["dimCategory[Category]  →  is FG",
+                   "In Summary Window  →  is 1"])],
+     (848, 208, 408, 180),
+     'The same months and the same unit, by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows take dimPlant[Plant] out and drag dimNature[Nature] in.',
+      'Check the filters came across: Category is FG, In Summary Window is 1.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      "With the Plant slicer on one plant this becomes that plant's technology split, which is the Module block the Excel sheet had."]),
     ("FG", "Line and clustered column chart",
      "FG by Technology, Latest Month — Rs Cr. as Bars, MW as the Line",
      [("X-axis", ["dimNature[Nature]"]),
       ("Column y-axis", ["Latest Month Value ₹ Cr"]),
       ("Line y-axis", ["Latest Month MW"]),
       ("Filters", ["dimCategory[Category]  →  is FG"])],
-     (16, 412, 412, 292),
+     (16, 396, 412, 292),
      "Which technology is holding the finished goods right now, in money as bars and in "
      "megawatts as the line over them. Money is on the bars because every technology has a "
      "value, while a megawatt figure only exists for the ones your MW Capacity sheet covers — "
@@ -703,7 +763,7 @@ VISUALS = [
       ("Line y-axis", ["Days vs LM"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Last 12  →  is 1"])],
-     (444, 412, 428, 292),
+     (444, 396, 428, 292),
      "How long the finished goods on hand would last, month by month, with the change on "
      "last month printed above each bar — so a slow build-up is visible before it becomes a "
      "number anyone argues about.",
@@ -725,7 +785,7 @@ VISUALS = [
     ("FG", "Donut chart", "FG Share by Plant (%), Latest Month",
      [("Legend", ["dimPlant[Plant]"]),
       ("Values", ["Latest Month FG ₹ Cr"])],
-     (888, 412, 376, 292),
+     (888, 396, 376, 292),
      "Where the finished goods are sitting, as a share of the whole. Pinned to the latest "
      "month for the same reason as the bar chart: a share of four added-up months would "
      "mean nothing.",
@@ -779,56 +839,74 @@ VISUALS = [
      "Format pane → Slicer settings → Options → Style: Dropdown.",
       "Format pane → Values → Font: Arial, Font size: 10, Colour: #1F2A24."]),
 
-    ("RM", "Matrix", "RM Inventory by Plant — Rs Cr. · Days",
+    ("RM", "Matrix",
+     'RM Inventory Plant Wise — In Rs Cr',
      [("Rows", ["dimPlant[Plant]"]),
       ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr.", "Days" + AS + "Days"]),
+      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "In Summary Window  →  is 1"])],
-     (16, 88, 1248, 132),
-     "The top block of the old RM sheet, rebuilt: one row per plant, each period a master "
-     "column with Rs Cr. and Days under it. MW is left out because an RM megawatt figure is "
-     "derived from a BOM, not measured, so it does not belong beside the other two.",
-     ["Two measures in the Values box: Inventory Rs Cr, then Days. Columns holds "
-      "dimDate[MonthName] and nothing else.",
-      "Filters pane → dimCategory[Category] → tick RM only; then drag In Summary Window in "
-      "and set 'is 1' for the four-periods-by-default behaviour.",
-      "Both measures average the month-ends in the Total column rather than adding them.",
-      "Format pane → Row headers → Stepped layout: Off.",
-      "Format pane → Subtotals → Row subtotals: On (that is the Grand Total row the Excel "
-      "sheet had), Column subtotals: On.",
-      "Format pane → General → Title → Font: Arial, Font size: 12, Colour: #14532D.",
-      "Clicking a plant row filters the material matrix and both charts below it."]),
+     (16, 88, 616, 112),
+     'Raw material and packing per plant in crore rupees, one column per month — the top block of the old RM sheet, which had IN CRS and IN DAYS side by side over the same three plants. MW is left out because an RM megawatt figure is derived from a BOM rather than measured.',
+     ['Columns holds dimDate[MonthName] and nothing else, and Values holds one measure. That is what puts the months on show with nothing to expand: a Metric field above the month is a two-level column hierarchy, and Desktop opens one of those collapsed onto a single figure per metric — or draws the visual as an empty card, which is what emptied this page. One metric per matrix, side by side, is the same grid the Excel sheet had.',
+      'Filters pane → dimCategory[Category] → tick RM only, then In Summary Window → is 1.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      'Format pane → Values → Font: Arial, Font size: 9, Colour: #1F2A24.',
+      'Clicking a plant row filters the nature blocks and both charts below it.']),
 
-    ("RM", "Matrix", "RM Inventory by Group Nature and Nature — Rs Cr. · Days",
+    ("RM", "Matrix",
+     'RM Inventory Plant Wise — In Days',
+     [("Rows", ["dimPlant[Plant]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Days" + AS + "Days"]),
+      ("Filters", ["dimCategory[Category]  →  is RM",
+                   "In Summary Window  →  is 1"])],
+     (648, 88, 616, 112),
+     'Raw material and packing per plant in days of cover, one column per month — the top block of the old RM sheet, which had IN CRS and IN DAYS side by side over the same three plants. MW is left out because an RM megawatt figure is derived from a BOM rather than measured.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.',
+      'Filters pane → dimCategory[Category] → tick RM only, then In Summary Window → is 1.',
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      'Format pane → Values → Font: Arial, Font size: 9, Colour: #1F2A24.',
+      'Clicking a plant row filters the nature blocks and both charts below it.']),
+
+    ("RM", "Matrix",
+     'RM Inventory by Group Nature and Nature — In Rs Cr',
      [("Rows", ["factInventory[GroupNature]", "dimNature[Nature]"]),
       ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr.", "Days" + AS + "Days"]),
+      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "In Summary Window  →  is 1"])],
-     (16, 228, 1248, 268),
-     "The second block of the old sheet: Module and Cell, each opening into its materials — "
-     "cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — in the same "
-     "two units and the same periods, with a subtotal on each group and a grand total under "
-     "them.",
-     ["Fastest way: click the matrix above, Ctrl+C, Ctrl+V, then drop "
-      "factInventory[GroupNature] and dimNature[Nature] into Rows and remove "
-      "dimPlant[Plant]. The three filters come with the copy.",
-      "Then set its position and size from the numbers below, and retype the title.",
-      "Format pane → Row headers → Stepped layout: Off, +/- icons: On. Group Nature and "
-      "Nature then sit in two columns with an expander on each group row.",
-      "Format pane → Subtotals → Row subtotals: On, and switch 'Per row level' On so both "
-      "the Total Module and Total Cell lines appear, not only the grand total.",
-      "Right-click a material row → Drill through → Detail for the material-by-material "
-      "list behind it."]),
+     (16, 208, 616, 220),
+     'The second block of the old sheet in crore rupees: Module and Cell, each opening into its natures — cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — with a subtotal on each group and a grand total under them.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop factInventory[GroupNature] and dimNature[Nature] in and take dimPlant[Plant] out.',
+      'Format pane → Row headers → Stepped layout: Off, +/- icons: On, so Group Nature and Nature get a column each with an expander on each group.',
+      "Format pane → Subtotals → Row subtotals: On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total.",
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      "A nature reading Unassigned is a material the RM master does not carry — it is money the report will not silently file under someone else's nature. qcAttrMatch on Checks names them.",
+      'Right-click a nature row → Drill through → Detail for the material-by-material list behind it.']),
 
+    ("RM", "Matrix",
+     'RM Inventory by Group Nature and Nature — In Days',
+     [("Rows", ["factInventory[GroupNature]", "dimNature[Nature]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Days" + AS + "Days"]),
+      ("Filters", ["dimCategory[Category]  →  is RM",
+                   "In Summary Window  →  is 1"])],
+     (648, 208, 616, 220),
+     'The second block of the old sheet in days of cover: Module and Cell, each opening into its natures — cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — with a subtotal on each group and a grand total under them.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop factInventory[GroupNature] and dimNature[Nature] in and take dimPlant[Plant] out.',
+      'Format pane → Row headers → Stepped layout: Off, +/- icons: On, so Group Nature and Nature get a column each with an expander on each group.',
+      "Format pane → Subtotals → Row subtotals: On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total.",
+      "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
+      "A nature reading Unassigned is a material the RM master does not carry — it is money the report will not silently file under someone else's nature. qcAttrMatch on Checks names them.",
+      'Right-click a nature row → Drill through → Detail for the material-by-material list behind it.']),
     ("RM", "Clustered column chart", "RM Inventory (Rs Cr.) by Plant",
      [("X-axis", ["dimDate[MonthName]"]),
       ("Legend", ["dimPlant[Plant]"]),
       ("Y-axis", ["Inventory Rs Cr"]),
       ("Filters", ["dimCategory[Category]  \u2192  is RM",
                    "In Summary Window  \u2192  is 1"])],
-     (16, 504, 616, 200),
+     (16, 436, 616, 200),
      "Raw material held in crore rupees: one group per period along the bottom and the three "
      "plants side by side inside each group, so you read the months left to right and compare "
      "the plants within a month. It follows the pickers above, so it is four periods by "
@@ -854,7 +932,7 @@ VISUALS = [
       ("Line y-axis", ["RM Days All Plants by Period"]),
       ("Filters", ["dimCategory[Category]  \u2192  is RM",
                    "In Summary Window  \u2192  is 1"])],
-     (648, 504, 616, 200),
+     (648, 436, 616, 200),
      "The same chart in days rather than rupees \u2014 how long each plant's raw material would "
      "last at its own capacity, three plant bars per month, and over them a line for the "
      "whole business: every plant's RM megawatts added together over every plant's capacity "
