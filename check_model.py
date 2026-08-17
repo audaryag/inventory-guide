@@ -91,6 +91,46 @@ for e in model["expressions"]:
         if ref not in known and ref != e["name"]:
             problems.append(f"query {e['name']}: references {ref!r} which is not in the model")
 
+# ---- 6. every identifier a query uses is defined somewhere in it -------------------------
+# The one class of fault the M parser cannot see: a step that is referenced but never
+# defined. Power Query only says so at refresh - "The import MasterGL matches no exports.
+# Did you miss a module reference?" - which is a broken build in the user's hands rather
+# than a failure here. So: strip the strings, the comments and the [field] references, then
+# every bare word left must be a step defined in the same query, a function parameter, a
+# query in the model, a parameter, or M's own vocabulary.
+MKEY = {"let", "in", "if", "then", "else", "each", "try", "otherwise", "and", "or", "not",
+        "as", "is", "meta", "error", "true", "false", "null", "type", "nullable", "optional",
+        "function", "any", "anynonnull", "binary", "date", "datetime", "datetimezone",
+        "duration", "list", "logical", "none", "number", "record", "table", "text", "time",
+        "section", "shared"}
+
+
+def undefined_identifiers(code):
+    body = re.sub(r"//[^\n]*", "", code)
+    # M escapes a quote by doubling it and treats a backslash as an ordinary character,
+    # so "C:\" is a string holding a backslash - reading it the C way swallows the rest
+    # of the query and every word in it then looks undefined.
+    body = re.sub(r'"(?:[^"]|"")*"', ' "" ', body)             # string literals
+    body = re.sub(r"\[[^\]]*\]", " ", body)                    # [field] references
+    body = re.sub(r"\b[A-Za-z_]\w*\.[A-Za-z_]\w*", " ", body)   # Table.Group and friends
+    body = re.sub(r"#\w+", " ", body)                          # #table, #date, #shared
+    defined = set(re.findall(r"(?<![<>=])\b([A-Za-z_]\w*)\s*=(?![=>])", body))
+    defined |= set(re.findall(r"[(,]\s*([A-Za-z_]\w*)\s+as\b", body))
+    for params in re.findall(r"\(([^()]*)\)\s*=>", body):        # lambda arguments
+        defined |= set(re.findall(r"[A-Za-z_]\w*", params))
+    used = set(re.findall(r"(?<![\w.])([A-Za-z_]\w*)", body))
+    return sorted(u for u in used - defined - known
+                  if u.lower() not in MKEY and not u.startswith("_"))
+
+
+for t in model["tables"]:
+    for u in undefined_identifiers(t["partitions"][0]["source"]["expression"]):
+        problems.append(f"query {t['name']}: uses {u!r}, which is defined nowhere in it")
+for e in model["expressions"]:
+    for u in undefined_identifiers(e["expression"]):
+        problems.append(f"query {e['name']}: uses {u!r}, which is defined nowhere in it")
+
+
 print(f"{len(tables)} tables, {len(cols)} columns, {len(meas)} measures, "
       f"{len(exprs)} helper queries, {len(model['relationships'])} relationships, "
       f"{n_vis} visuals checked")

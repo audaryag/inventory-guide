@@ -10,6 +10,13 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000", build="37", query="factTB_Staged",
+         title="Fixes build 36's refresh error (MasterGL matches no exports)",
+         why="Build 36 rewrote this query and deleted a step it still referenced, so the "
+             "refresh stopped with <em>The import MasterGL matches no exports</em> and sixteen "
+             "queries were blocked. The step is restored. Nothing else about build 36 changed.",
+         steps=["Repaste <code>factTB_Staged</code> below and refresh."],
+         find="", repl=""),
     dict(n="0000000000000", build="36", query="factTB_Staged",
          title="A GL and profit centre pair only counts where TB Master agrees with itself",
          why="Where the same GL account and profit centre appear on <code>TB Master</code> twice "

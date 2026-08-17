@@ -1779,11 +1779,11 @@ Position: Horizontal 731, Vertical 160, Width 533, Height 100.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
 
-**4.70** **Table** — Empty is good, and empty is the target. Every pair listed here is money in no trial-balance figure anywhere in the report — not on a wrong plant, not in a total, nowhere — because the plant and nature of a TB line come from the row TB Master holds for that GL and profit centre together. Type each pair onto that sheet with its Plant and Nature and it leaves this list. Biggest amount first, so the top row is the one worth doing next. OnSheetAsGL True means the GL is on the sheet but not against this profit centre.
+**4.70** **Table** — Empty is good, and empty is the target. Every pair listed here is money in no trial-balance figure anywhere in the report — not on a wrong plant, not in a total, nowhere — because the plant and nature of a TB line come from the row TB Master holds for that GL and profit centre together. Type each pair onto that sheet with its Plant and Nature and it leaves this list. Biggest amount first, so the top row is the one worth doing next. Reason says which of the two it is: no row at all for that pair, or two rows with different Plants for it — the second is why some accounts landed on the wrong plant, and it is fixed by correcting or deleting the duplicate row.
 
 | Well | Field |
 |---|---|
-| Columns | `qcTBUnmatched[GLAccount]`, `qcTBUnmatched[GLDesc]`, `qcTBUnmatched[ProfitCentre]`, `qcTBUnmatched[PCKey]`, `qcTBUnmatched[OnSheetAsGL]`, `qcTBUnmatched[AmountRsCr]` |
+| Columns | `qcTBUnmatched[GLAccount]`, `qcTBUnmatched[GLDesc]`, `qcTBUnmatched[ProfitCentre]`, `qcTBUnmatched[Reason]`, `qcTBUnmatched[AmountRsCr]` |
 
 Title: `GL and Profit Centre Pairs TB Master Has No Row for`
 
@@ -3141,6 +3141,16 @@ let
     // others right, scattered rather than swapped, and no way to see it had happened. Those
     // pairs are held back here: they resolve to nothing, they are counted nowhere, and
     // qcTBUnmatched names them with 'two plants on TB Master for this pair'.
+    // and the same sheet read by GL alone, for the two jobs the pair cannot do: saying whether
+    // an account is an inventory account at all, and giving its nature where the pair has no
+    // row. Its plant is deliberately not used - that is the ambiguity the pair exists to
+    // remove.
+    MasterGL = Table.Buffer(
+                   Table.RenameColumns(
+                       Table.Distinct(
+                           Table.SelectColumns(MPlanted, {"GLAccount","Nature","TBSort"}),
+                           {"GLAccount"}),
+                       {{"Nature","GLNature"},{"TBSort","GLTBSort"}})),
     MGroup   = Table.Group(MPlanted, {"GLAccount", "PCKey"}, {
                    {"Plants",  each List.Distinct(List.Select(List.Transform([TBPlant],
                                    each Text.Trim(Text.From(_ ?? ""))), each _ <> "")), type list},

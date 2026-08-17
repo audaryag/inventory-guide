@@ -495,6 +495,13 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 37 &mdash; fixes a broken build 36:</strong> build 36 referenced a step,
+<code>MasterGL</code>, that its own rewrite had deleted, so the refresh stopped with <em>&ldquo;The import MasterGL
+matches no exports. Did you miss a module reference?&rdquo;</em> and sixteen queries were blocked. The step is back,
+and so is a check that would have caught it here rather than on your screen: every name a query uses must now be a step
+defined in that query, one of its parameters, or another query in the model &mdash; the build refuses to publish
+otherwise. Nothing else changed; build 36&rsquo;s duplicate-pair handling is intact.</blockquote>
+
 <blockquote><strong>Build 36 &mdash; a pair only counts where <code>TB Master</code> is unanimous about it:</strong>
 where the same GL account and profit centre sit on that sheet twice with <em>different</em> Plants, the join was taking
 whichever row it met first &mdash; which put some accounts on the wrong plant and left others right, scattered rather
