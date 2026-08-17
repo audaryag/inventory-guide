@@ -465,6 +465,11 @@ AUTO = r"""
 one of them. If a route fails, close Power BI, open the next route, and lose nothing — the manual
 tabs stay exactly as they are.</p>
 
+<p><a href="Variables and Calculations.xlsx"><strong>Download Variables and Calculations.xlsx</strong></a>
+&nbsp; the master workbook, on its own and not inside the zip: all six sheets in the shapes the queries read,
+the three plants and <code>RM_MW_FACTOR</code> filled in, <code>MW Capacity</code> as a month per column, and the
+three master sheets as headings for your own rows to be pasted under. Its first tab says what each sheet is.</p>
+
 <p><a href="InventoryReport-pbip.zip"><strong>Download InventoryReport-pbip.zip</strong></a> &nbsp;
 Right-click it &rarr; <strong>Extract All&hellip;</strong> &rarr; put the extracted folder on your
 <strong>Desktop</strong>. Open the extracted folder and you will see:</p>
