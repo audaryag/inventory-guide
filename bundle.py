@@ -20,7 +20,7 @@ STAGE = pathlib.Path("/home/ubuntu/bundle")
 ZIP = HERE / "InventoryReport-pbip.zip"
 # bumped on every published fix, and used as the folder name inside the zip so an old
 # extraction can never be mistaken for a new one
-BUILD = 40
+BUILD = 41
 
 md = GUIDE.read_text()
 queries = build.parse_queries(md[md.index("# Appendix A"):md.index("# Appendix B")])

@@ -495,6 +495,18 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 41 &mdash; one stock line per material per plant, and the extra TB plants
+ignored again:</strong> an export holds one line per material per plant per month, so a second line for the same four
+is the same balance arriving twice &mdash; a storage-location or special-stock split, or a month re-exported &mdash; and
+the report was adding them, which is what put Dholera Cell&rsquo;s FG in MW several times over while the rate itself
+(the 580 from <code>Constants</code>) was applied correctly. <code>factInventory</code> now keeps one line per plant,
+material, month and type: the one with the largest closing quantity, which is the whole balance rather than a part of
+it. Every line it set aside is on <strong>Checks Stock</strong> under <em>Materials an export gave more than one line
+for</em>, with what those lines held, so the choice can be seen rather than trusted &mdash; empty is what you want.
+Build 40&rsquo;s other change is reverted: the trial balance names plants beyond 1900, 1902 and 1905 and those are
+deliberately not part of this report, so the plant list is the <code>Plant Master</code> sheet again and
+<code>qcPlantCodes</code> says what the ignored codes hold.</blockquote>
+
 <blockquote><strong>Build 40 &mdash; the trial balance now behaves exactly like the VLOOKUP that
 produced the old figures, and every plant is reported:</strong> <code>TB Master</code> carries the same GL account and
 profit centre on more than one row with different Plants, for many pairs &mdash; so nothing in the sheet can tell those

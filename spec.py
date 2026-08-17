@@ -1296,11 +1296,25 @@ VISUALS = [
      "wattage is a description that does not end in it.",
      []),
 
+    ("Checks Stock", "Table", "Materials an export gave more than one line for",
+     [("Columns", ["qcStockDupes[Month]", "qcStockDupes[ValuationArea]",
+                   "qcStockDupes[Category]", "qcStockDupes[Material]",
+                   "qcStockDupes[MaterialDesc]", "qcStockDupes[RowsForMaterial]",
+                   "qcStockDupes[CloseQty]", "qcStockDupes[QtyNotUsed]",
+                   "qcStockDupes[MWValue]", "qcStockDupes[RsCr]"])],
+     (8, 524, 1264, 92),
+     "Empty is what you want. An export holds one line per material per plant, so a second "
+     "line for the same material, plant and month is the same balance arriving twice \u2014 a "
+     "storage-location or special-stock split, or a month re-exported \u2014 and adding them "
+     "multiplies that material's stock. The line with the largest closing quantity is the one "
+     "used; QtyNotUsed is what the others held, so you can see the choice rather than trust it.",
+     []),
+
     ("Checks Stock", "Table", "Each RM material: its BOM standard quantity, and its MW",
      [("Columns", ["qcRMRate[Month]", "qcRMRate[ValuationArea]", "qcRMRate[Material]",
                    "qcRMRate[MaterialDesc]", "qcRMRate[Nature]", "qcRMRate[BOMStdQty]",
                    "qcRMRate[CloseQty]", "qcRMRate[MWValue]", "qcRMRate[RsCr]"])],
-     (8, 524, 1264, 188),
+     (8, 624, 1264, 88),
      "RM megawatts are quantity \u00f7 BOM standard quantity \u00d7 the Constants figure "
      "\u00f7 10\u2076. A blank BOMStdQty is a material RM Master does not carry, and that is "
      "the only reason its MW is blank.",

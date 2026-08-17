@@ -10,6 +10,27 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="000000000000000000", build="41", query="factInventory",
+         title="One stock line per material per plant, so a split line cannot multiply a material\u2019s stock",
+         why="An export holds one line per material per plant per month. A second line for the "
+             "same four is the same balance arriving twice \u2014 a storage-location or "
+             "special-stock split, or a month re-exported \u2014 and adding them multiplied "
+             "the material\u2019s stock, which is what put Dholera Cell\u2019s FG in MW "
+             "several times over while the 580 from Constants was being applied correctly. The "
+             "line kept is the one with the largest closing quantity; the rest are listed on "
+             "Checks Stock with what they held. Build 40\u2019s wider plant list is reverted: "
+             "the trial balance names plants outside 1900, 1902 and 1905 and those are not part "
+             "of this report.",
+         steps=[
+             "Repaste <code>factInventory</code>, <code>varPlantCodes</code> and "
+             "<code>dimPlant</code> from the <strong>Queries</strong> tab, add "
+             "<code>qcStockDupes</code> as a new Blank Query, then refresh.",
+             "Checks Stock \u2192 <em>Materials an export gave more than one line for</em>: "
+             "empty means no material was ever split. Rows there show what was set aside.",
+             "FG page: Dholera Cell in MW should now agree with the export\u2019s own "
+             "closing stock times 580 \u00f7 1,000,000.",
+         ],
+         find="", repl=""),
     dict(n="00000000000000000", build="40", query="factTB_Staged",
          title="The trial balance behaves like the VLOOKUP that produced the old figures, and every plant is reported",
          why="<code>TB Master</code> carries the same GL account and profit centre on more than "

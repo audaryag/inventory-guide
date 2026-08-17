@@ -38,6 +38,7 @@ MB5B_COLS = [
     ("Month", T), ("Category", S), ("Nature", S), ("GroupNature", S), ("BOMStdQty", D),
     ("Item", S), ("AttrMissing", B), ("MW Qty", D), ("Rate", D), ("RateParseFailed", B),
     ("Mid", S), ("Base", S), ("INR_WP", D), ("PlantType", S),
+    ("RowsForMaterial", I), ("QtyNotUsed", D),
 ]
 
 # tables that load into the model, with their exact column list
@@ -82,6 +83,9 @@ TABLES = {
                  ("RsCr", D)],
     "qcTBRules": [("Month", T), ("ValuationArea", S), ("Nature", S), ("Rule", S),
                   ("Rows", I), ("GLAccounts", I), ("AmountRsCr", D)],
+    "qcStockDupes": [("Month", T), ("ValuationArea", S), ("Category", S), ("Material", S),
+                     ("MaterialDesc", S), ("RowsForMaterial", I), ("CloseQty", D),
+                     ("QtyNotUsed", D), ("MWValue", D), ("RsCr", D)],
     "qcTBPlants": [("ProfitCentre", S), ("Description", S), ("PlantResolved", S),
                    ("Rows", I), ("InventoryRows", I), ("MatchedRows", I), ("AmountRsCr", D)],
     "qcMonthFiles": [("Category", S), ("Month", T), ("Files", I), ("FileNames", S),
@@ -130,7 +134,7 @@ HIDDEN = {("factInventory", "MatKey"), ("factTB", "PlantCode"),
 HIDDEN_TABLES = {"factTB_Unmapped", "qcHeaders", "qcVarHeaders", "qcNatureNoCapacity",
                  "qcAttrMatch", "qcTBByGL", "qcPlantCodes", "qcTBPlants",
                  "qcMonthFiles", "qcMasterDupes", "qcTBUnmatched",
-                 "qcStockCheck", "qcFGRate", "qcRMRate", "qcTBRules"}
+                 "qcStockCheck", "qcFGRate", "qcRMRate", "qcTBRules", "qcStockDupes"}
 
 
 def measure_format(name):
