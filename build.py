@@ -495,6 +495,16 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 32 &mdash; the trial balance takes its plant from the GL, which is what brings Dholera Cell
+back:</strong> column C of the TB export against column D of <code>TB Master</code>. That mapping was only ever a last
+resort before, tried after the profit centre &mdash; and 1905's profit centre carries no code, so its rows resolved to
+nothing and Dholera Cell simply had no trial balance. It is the first thing consulted now, with the profit centre as
+the fallback. One guard on it, because it decides whether this is safe rather than merely convenient: a GL that
+<code>TB Master</code> gives to <em>two</em> plants cannot name a plant by itself &mdash; the profit centre is then the
+only thing separating them &mdash; so a GL is trusted only where the sheet is unanimous about it, and an ambiguous one
+falls back rather than moving money to the wrong plant. <code>qcTBByGL</code> on Checks now shows the plant each GL
+landed under, so an account under the wrong one is visible in a glance.</blockquote>
+
 <blockquote><strong>Build 31 &mdash; capacity can be typed per plant, which is what 1905 was missing:</strong>
 a row on the MW sheet labelled <code>Total</code> is that plant's whole capacity &mdash; the
 <em>March&rsquo;26 | MW(S)</em> block on your working, 8.28 against 1902, 6.17 against 1900, 5.63 against 1905.

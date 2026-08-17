@@ -10,6 +10,27 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="000000000", build="32", query="factTB_Staged",
+         title="The trial balance reads its plant from the GL account, so Dholera Cell comes back",
+         why="1905 had no trial balance at all because the plant was read out of the profit "
+             "centre first, and 1905’s profit centre carries no code to read. The GL account "
+             "is the one key the export and <code>TB Master</code> certainly share — column C "
+             "against column D — so that is what is consulted first now, with the profit "
+             "centre as the fallback. A GL that <code>TB Master</code> gives to two different "
+             "plants is left to the profit centre instead: where the sheet is not unanimous, the "
+             "GL cannot name a plant on its own, and picking one would move money to the wrong "
+             "plant.",
+         steps=[
+             "In <code>Variables and Calculations.xlsx</code> → <code>TB Master</code>, make "
+             "sure the <strong>Plant</strong> column reads 1905 against Dholera Cell’s GLs "
+             "(1902 / 1900 against the others). This is the sheet the report now believes.",
+             "Repaste <code>factTB_Staged</code> below, and <code>qcTBByGL</code> from the "
+             "<strong>Queries</strong> tab — it now shows the plant each GL landed under.",
+             "Refresh, then look at Summary: Inventory (TB) should carry a 1905 row. If it does "
+             "not, Checks → <em>Trial balance by GL account</em> shows which plant those GLs "
+             "went to instead.",
+         ],
+         find="", repl=""),
     dict(n="00000000", build="31", query="varMWCapacity",
          title="Capacity typed per plant, so 1905 finally has days of cover",
          why="Days of cover is megawatts over capacity, and capacity could only be typed per "

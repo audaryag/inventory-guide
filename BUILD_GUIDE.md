@@ -1836,7 +1836,7 @@ Position: Horizontal 192, Vertical 268, Width 533, Height 100.
 
 | Well | Field |
 |---|---|
-| Columns | `qcTBByGL[GLAccount]`, `qcTBByGL[GLDesc]`, `qcTBByGL[Category]`, `qcTBByGL[AmountRsCr]` |
+| Columns | `qcTBByGL[GLAccount]`, `qcTBByGL[GLDesc]`, `qcTBByGL[Category]`, `qcTBByGL[ValuationArea]`, `qcTBByGL[AmountRsCr]` |
 
 Title: `Trial Balance by GL Account, Signed`
 
@@ -3105,21 +3105,40 @@ let
                         else if Anywhere([Nature]) <> null then Anywhere([Nature])
                         else if ByName([TBPlant]) <> null then ByName([TBPlant])
                         else ByName([Nature]), type text),
-    MKeep    = MCols & {"MasterPlant"},
-    Master   = Table.Buffer(Table.Distinct(Table.SelectColumns(MPlanted, MKeep), {"GLAccount"})),
+    // The GL account is the one key the TB export and TB Master certainly share - column C
+    // against column D - so the plant written beside a GL on that sheet is the plant, and it
+    // is trusted ahead of anything read out of a profit centre. With one caution that decides
+    // whether this is safe: a GL that TB Master gives to two different plants cannot name a
+    // plant on its own, because the profit centre is then the only thing separating them. So
+    // a GL is authoritative only where the sheet is unanimous about it; a GL written against
+    // two plants falls back to the profit centre instead of picking one and moving money to
+    // the wrong plant.
+    MGrouped = Table.Group(MPlanted, {"GLAccount"}, {
+                   {"PlantList", each List.Distinct(List.RemoveNulls([MasterPlant])), type list}}),
+    MOne     = Table.AddColumn(MGrouped, "MasterPlant",
+                   each if List.Count([PlantList]) = 1 then [PlantList]{0} else null, type text),
+    MBase    = Table.Distinct(Table.SelectColumns(MPlanted, MCols), {"GLAccount"}),
+    MJoined  = Table.NestedJoin(MBase, {"GLAccount"},
+                   Table.SelectColumns(MOne, {"GLAccount","MasterPlant"}), {"GLAccount"},
+                   "mp", JoinKind.LeftOuter),
+    Master   = Table.Buffer(Table.ExpandTableColumn(MJoined, "mp", {"MasterPlant"})),
     Joined   = Table.NestedJoin(Typed, {"GLAccount"}, Master, {"GLAccount"},
                    "tpl", JoinKind.LeftOuter),
     Flagged  = Table.AddColumn(Joined, "Whitelisted",
                    each not Table.IsEmpty([tpl]), type logical),
     Widened  = Table.ExpandTableColumn(Flagged, "tpl",
                    {"Nature","TBPlant","TBSort","MasterPlant"}),
-    // the master's plant is a last resort and only for a row that is a real posting: a line
-    // with no profit centre at all is usually SAP's subtotal for the account above it, and
-    // giving that a plant would count the same money twice
+    // The master's plant comes first now, because it is the one the workbook states outright:
+    // the GL on column C of the export against the plant on column D of TB Master. The profit
+    // centre is the fallback, for a GL the sheet does not carry or is not unanimous about.
+    // One row is still left unplaced on purpose: a line with no profit centre and no plant of
+    // its own is usually SAP's subtotal for the account above it, and giving that a plant
+    // would count the same money twice.
     Resolved = Table.AddColumn(Widened, "PlantResolved",
-                   each if [ValuationArea] <> null then [ValuationArea]
-                        else if Text.Trim(Text.From([ProfitCentre] ?? "")) = "" then null
-                        else [MasterPlant], type text),
+                   each if Text.Trim(Text.From([ProfitCentre] ?? "")) = ""
+                             and [ValuationArea] = null then null
+                        else if [MasterPlant] <> null then [MasterPlant]
+                        else [ValuationArea], type text),
     Dropped  = Table.RemoveColumns(Resolved, {"ValuationArea"}),
     Renamed2 = Table.RenameColumns(Dropped, {{"PlantResolved", "ValuationArea"}}),
     // Rows that resolve to none of the three plants are kept HERE and left out in factTB, so
@@ -3508,17 +3527,18 @@ in
 
 ## qcTBByGL
 
-> Every GL account the trial balance brought in, with the nature TB Master gives it and its signed total. This is where a credit-balance GL shows itself: an inventory account with a negative total is the reason a plant's TB nets to zero. Leave Enable load ON.
+> Every GL account the trial balance brought in, with the nature TB Master gives it, the plant it landed under and its signed total. This is where a credit-balance GL shows itself: an inventory account with a negative total is the reason a plant's TB nets to zero. It is also where to look for a plant missing from the TB side - the GLs that belong to it either are not here at all, or are here under another plant because TB Master's Plant column is empty against them. Leave Enable load ON.
 
 ```
 let
-    Grouped = Table.Group(factTB, {"GLAccount", "GLDesc", "Nature", "Category"}, {
+    Grouped = Table.Group(factTB, {"GLAccount", "GLDesc", "Nature", "Category", "ValuationArea"}, {
                   {"AmountRsCr", each List.Sum([Amount]) / 10000000, type number},
                   {"Rows", each Table.RowCount(_), Int64.Type}}),
     Sorted  = Table.Sort(Grouped, {{"AmountRsCr", Order.Ascending}}),
     Typed   = Table.TransformColumnTypes(Sorted, {
                   {"GLAccount", type text}, {"GLDesc", type text},
-                  {"Nature", type text}, {"Category", type text}})
+                  {"Nature", type text}, {"Category", type text},
+                  {"ValuationArea", type text}})
 in
     Typed
 ```

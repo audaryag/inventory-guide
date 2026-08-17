@@ -67,7 +67,7 @@ TABLES = {
     "qcAttrMatch": [("Source", S), ("DistinctMaterials", I),
                     ("MatchedToStockFiles", I), ("FirstEight", S)],
     "qcTBByGL": [("GLAccount", S), ("GLDesc", S), ("Nature", S), ("Category", S),
-                 ("AmountRsCr", D), ("Rows", I)],
+                 ("ValuationArea", S), ("AmountRsCr", D), ("Rows", I)],
     "qcPlantCodes": [("Code", S), ("Rows", I), ("ValueRsCr", D), ("InReport", B)],
     "qcTBPlants": [("ProfitCentre", S), ("Description", S), ("PlantResolved", S),
                    ("Rows", I), ("InventoryRows", I), ("AmountRsCr", D)],
