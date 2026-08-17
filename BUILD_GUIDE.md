@@ -2002,7 +2002,7 @@ Find the words Power BI showed you in the left column.
 | the Summary matrix is completely blank | `dimMetric` has been connected to something | delete every relationship on `dimMetric` and `dimMeasure`; they must stay disconnected |
 | months read Apr, Aug, Dec… | `MonthName` is not sorted by `MonthSort` | do 2.5 |
 | Difference is a big number, not 0.00 | a source file for that month is missing, duplicated, or was hand-edited | check the four folders have exactly one file each for that month |
-| `1905` shows blank Days | correct behaviour | it has no capacity row on the MW sheet; `qcNatureNoCapacity` lists any others |
+| `1905` shows blank Days | it has no capacity to divide by | add a `Total` row for it on the MW sheet with the plant's whole capacity (8.28 / 6.17 / 5.63 style). Where a plant has no `Total` row its technology rows are added up instead; `qcNatureNoCapacity` lists the technologies with neither |
 | `Drill through` is greyed out | the four fields are not in the Drill through box | do the drill-through step on the Detail page |
 
 If a message is not in this table, send me the exact wording — including the name in
@@ -2715,6 +2715,15 @@ let
     Codes   = {"1900","1902","1905"},
     AsTxt   = (v as any) as text => Text.Trim(Text.From(v ?? "")),
     IsCode  = (v as any) as logical => List.Contains(Codes, AsTxt(v)),
+    // a row that is the plant's whole capacity rather than one technology's. Written as
+    // Total on the MW sheet - the March'26 | MW(S) block - and carried through as (All),
+    // which is the name the days-of-cover measure looks for. It is not a nature and never
+    // appears as one: dimNature drops it, so it cannot be sliced or drawn as a slice.
+    TechName = (v as any) as text =>
+                  let T = AsTxt(v) in
+                  if List.Contains({"TOTAL","ALL","ALLPLANTS","PLANTTOTAL","TOTALPLANT",
+                                    "GRANDTOTAL","MWS","CAPACITY","ALL"}, Norm(T))
+                      then "(All)" else T,
     // a header cell that is a real date. A number is never taken for one: 1900 is a plant,
     // and Date.From would happily read it as a day in 1904.
     AsDate  = (v as any) as nullable date =>
@@ -2760,7 +2769,7 @@ let
                               [ EffectiveFrom = (if iDate < 0 then #date(1900,1,1)
                                                  else try DateTime.Date(DateTime.From(r{iDate}))
                                                       otherwise #date(1900,1,1)),
-                                Tech          = AsTxt(r{iTech}),
+                                Tech          = TechName(r{iTech}),
                                 ValuationArea = AsTxt(r{iArea}),
                                 MW            = (try Number.From(r{iMW}) otherwise 0) ])
               in  Recs,
@@ -2779,7 +2788,7 @@ let
                                   (m) => (try r{m[Idx]} otherwise null) <> null))),
                   Recs  = List.TransformMany(Keep, (r) => Map, (r, m) =>
                               [ EffectiveFrom = #date(1900,1,1),
-                                Tech          = AsTxt(List.First(r)),
+                                Tech          = TechName(List.First(r)),
                                 ValuationArea = m[Code],
                                 MW            = (try Number.From(r{m[Idx]}) otherwise 0) ])
               in  Recs,
@@ -2819,7 +2828,7 @@ let
                   Cells  = List.TransformMany(Keep, (r) => Cols, (r, c) =>
                                [ EffectiveFrom = c[D],
                                  Tech          = if iTech < 0 or AsTxt(try r{iTech} otherwise null) = ""
-                                                 then "(All)" else AsTxt(r{iTech}),
+                                                 then "(All)" else TechName(r{iTech}),
                                  ValuationArea = AsTxt(r{iArea}),
                                  Raw           = (try r{c[Idx]} otherwise null) ]),
                   Filled = List.Select(Cells, (x) => AsTxt(x[Raw]) <> ""),
@@ -3712,17 +3721,35 @@ FG MW = CALCULATE([MW], factInventory[Category] = "FG")
 ```
 
 ```
-Capacity MW = SUM(dimCapacity[CapacityMW])
+Capacity MW = CALCULATE(SUM(dimCapacity[CapacityMW]), dimCapacity[Tech] <> "(All)")
 ```
 
 ```
-Capacity MW (plant) = CALCULATE(SUM(dimCapacity[CapacityMW]), REMOVEFILTERS(dimNature))
+Capacity MW (plant) =
+VAR Whole =
+    CALCULATE(SUM(dimCapacity[CapacityMW]),
+        REMOVEFILTERS(dimNature),
+        dimCapacity[Tech] = "(All)")
+VAR ByTech =
+    CALCULATE(SUM(dimCapacity[CapacityMW]),
+        REMOVEFILTERS(dimNature),
+        dimCapacity[Tech] <> "(All)")
+RETURN
+    IF(Whole <> 0 && NOT ISBLANK(Whole), Whole, ByTech)
 ```
 
 The second one exists for a real problem: capacity is keyed by technology, and an RM nature
 (`Glass`, `Wafer`) is not a technology, so plain `Capacity MW` goes blank the moment an RM
 row filters it. Removing the nature filter falls back to the plant's capacity, which is the
 right denominator for RM.
+
+And a plant's capacity can be given two ways, which is what `(All)` is doing in both of them.
+A `Total` row on the MW sheet is the plant's whole capacity, typed directly - the figures on
+your `March'26 | MW(S)` block, 8.28 against 1902 and so on. Where you have typed one, it *is*
+the plant's denominator; where you have not, the technology rows are added up instead. So a
+plant with no technologies on that sheet - 1905 - still gets days of cover the moment its
+total is typed, and a plant with both does not count its capacity twice. `Capacity MW` leaves
+those total rows out entirely, because a technology's own denominator is its own row.
 
 *Days works the same way for every category: the stock converted to megawatts, divided by*
 

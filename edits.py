@@ -10,6 +10,31 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000", build="31", query="varMWCapacity",
+         title="Capacity typed per plant, so 1905 finally has days of cover",
+         why="Days of cover is megawatts over capacity, and capacity could only be typed per "
+             "technology — so 1905, which has no technology rows on the MW sheet, had no "
+             "denominator and dropped out of every Days table. A row labelled <code>Total</code> "
+             "is now read as that plant’s whole capacity: the <em>March’26 | MW(S)</em> "
+             "block on your working, 8.28 against 1902, 6.17 against 1900, 5.63 against 1905. "
+             "Where a plant has a Total row that is its denominator; where it has none the "
+             "technology rows are added up as before, so a plant with both cannot count its "
+             "capacity twice. <code>Total</code>, <code>All</code>, <code>All Plants</code> and "
+             "<code>MW(S)</code> all mean the same thing, and none of them is ever shown as a "
+             "technology.",
+         steps=[
+             "On the <code>MW Capacity</code> sheet, keep your layout exactly as it is and add "
+             "one row: <em>Total</em> in the technology column, and each plant’s whole "
+             "capacity under its own plant column.",
+             "Repaste <code>varMWCapacity</code> below, then <code>dimNature</code> from the "
+             "<strong>Queries</strong> tab so the total row cannot appear as a nature.",
+             "On the <strong>Measures</strong> tab repaste <code>Capacity MW</code> and "
+             "<code>Capacity MW (plant)</code> — those two are what choose between the "
+             "plant total and the technology rows.",
+             "Refresh. 1905 now has a figure in every Days table; if it does not, "
+             "<code>qcMWSheet</code> on Checks shows the sheet exactly as the query reads it.",
+         ],
+         find="", repl=""),
     dict(n="0000000", build="30", query="varMWCapacity",
          title="The MW sheet as a month per column, so a new month is a new column",
          why="The sheet is now read the way your FG working has it: a plant down the side, a "

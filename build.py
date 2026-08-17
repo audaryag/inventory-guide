@@ -495,6 +495,16 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 31 &mdash; capacity can be typed per plant, which is what 1905 was missing:</strong>
+a row on the MW sheet labelled <code>Total</code> is that plant's whole capacity &mdash; the
+<em>March&rsquo;26 | MW(S)</em> block on your working, 8.28 against 1902, 6.17 against 1900, 5.63 against 1905.
+Days of cover uses it where you have typed one and adds the technology rows up where you have not, so a plant with
+both cannot count its capacity twice, and 1905 &mdash; which has no technology rows at all &mdash; gets days of cover
+the moment its total is typed. Your existing sheet layout is untouched: this is one more row on it, and
+<code>Total</code>, <code>All</code>, <code>All Plants</code> and <code>MW(S)</code> are all read as meaning the same
+thing. It never appears as a technology: it is left out of the nature list, so it cannot be sliced or drawn as a slice,
+and a technology's own days still divide by its own row.</blockquote>
+
 <blockquote><strong>Build 30 &mdash; the MW sheet is a month per column now:</strong> a plant per row and a column per month,
 headed with that month's date, the way your black-and-white table on the FG sheet has it &mdash; a new month is a new
 column and nothing already typed is touched. <code>varMWCapacity</code> unpivots it itself and reads three layouts, so
