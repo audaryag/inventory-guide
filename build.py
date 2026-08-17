@@ -490,6 +490,21 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 29 &mdash; the plant codes as your workbook has them, and the expandable plant row back:</strong>
+1902 is Jaipur Module, 1900 is Dholera Module, 1905 is Dholera Cell. Build 28 had the first two the other way
+round, which is why Jaipur and Dholera read each other's figures: the codes were fixed in the code from an
+instruction, and your own Summary workbook labels its rows 1902 Jaipur / 1900 Dholera Module &mdash; the figures
+against 1902 here (Mar: RM 212.86, FG 209.45, Consumables 19.78) are the figures that sheet prints on the Jaipur
+row. The three names are still decided in one place, <code>dimPlant</code>, and read by every page, slicer, legend,
+card and row label, and the trial balance now reads a spelled-out profit centre the same way (JAIPUR &rarr; 1902,
+CELL &rarr; 1905, DHOLERA &rarr; 1900).
+<br><br><strong>Summary's rows are a plant again</strong>, expanding into RM, FG and Consumables, as they were
+before build 28: <code>dimPlant[Plant]</code> then <code>dimCategory[Category]</code>, so the table opens on three
+plant rows carrying that plant's whole inventory for the month and the + opens the three types underneath.
+Flattening them was my answer to Desktop opening things collapsed, and it was the wrong answer: collapsed is what
+a plant row should be. The columns stay flat &mdash; the months are the only column field in each of the three
+blocks, which is the hierarchy that was actually hiding the history.</blockquote>
+
 <blockquote><strong>Build 28 &mdash; nothing left to expand, and the three plants are now decided in one place:</strong>
 your Desktop opens every hierarchy collapsed however the file is saved &mdash; the three metric headings with no
 months under them, the plants with no RM / FG / Consumables under them &mdash; so Summary no longer uses one.

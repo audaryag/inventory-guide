@@ -174,8 +174,8 @@ VISUALS = [
       "Vertical (Y) to 14 and 242 exactly, or the card will not sit square inside its box."],
      ),
 
-    ("Overview", "Card", "1900 Jaipur Module",
-     [("Fields", ["Ticker 1900 Rs Cr"])],
+    ("Overview", "Card", "1902 Jaipur Module",
+     [("Fields", ["Ticker 1902 Rs Cr"])],
      (14, 332, 156, 58),
      "Panel figure, sitting inside the white box. It reads the latest month that has data "
      "and ignores every slicer on the page, because stock is a level, not something you "
@@ -192,8 +192,8 @@ VISUALS = [
       "Vertical (Y) to 14 and 332 exactly, or the card will not sit square inside its box."],
      ),
 
-    ("Overview", "Card", "1902 Dholera Module",
-     [("Fields", ["Ticker 1902 Rs Cr"])],
+    ("Overview", "Card", "1900 Dholera Module",
+     [("Fields", ["Ticker 1900 Rs Cr"])],
      (14, 392, 156, 58),
      "Panel figure, sitting inside the white box. It reads the latest month that has data "
      "and ignores every slicer on the page, because stock is a level, not something you "
@@ -476,15 +476,15 @@ VISUALS = [
 
     ("Summary", "Matrix",
      'Inventory (TB)',
-     [("Rows", ["dimPlantType[Plant and Type]"]),
+     [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["TB Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
      (16, 88, 416, 248),
-     'The first of the three master columns: what the books say, month by month. The rows are plant and type together, nine of them, always visible, and the months under this heading are the newest March plus the three most recent unless the slicer above says otherwise.',
-     ['Rows takes one field only: dimPlantType[Plant and Type]. It already reads '
-      '<b>1900 Jaipur Module  \u2014  RM</b>, so the nine rows are simply there: there is no '
-      'hierarchy to expand, and nothing a version of Desktop can open collapsed and hide.',
+     'The first of the three master columns: what the books say, month by month. A row per plant, opening into RM, FG and Consumables, and the months under this heading are the newest March plus the three most recent unless the slicer above says otherwise.',
+     ['Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. '
+      'The table opens on the plant, showing that plant\u2019s whole inventory for the month, '
+      'and the + beside it opens RM, FG and Consumables underneath.',
       'Columns takes one field only: dimDate[MonthName]. The months are the columns of this '
       'block and the heading above them is its master column.',
       'Filters pane \u2192 drag the measure In Summary Window in \u2192 is 1. That is what gives '
@@ -496,19 +496,19 @@ VISUALS = [
       'and types inside one month, which is a real figure: one point in time.',
       'Format pane \u2192 Row headers \u2192 Values \u2192 Font size: 8; Column headers \u2192 '
       'Font size: 8, Word wrap: On; Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24.',
-      'Row headers are shown on this first block only, so the three blocks read as one table across the page. Drag its right-hand edge until the nine labels fit on one line.']),
+      'Row headers are shown on this first block only, so the three blocks read as one table across the page.']),
 
     ("Summary", "Matrix",
      'Inventory (MB5B)',
-     [("Rows", ["dimPlantType[Plant and Type]"]),
+     [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
      (440, 88, 416, 248),
-     'The second master column: the same nine rows and the same months as the MB5B stock report has them. Read straight across from the block on its left and you are comparing the books with the stock for one plant, one type, one month.',
-     ['Rows takes one field only: dimPlantType[Plant and Type]. It already reads '
-      '<b>1900 Jaipur Module  \u2014  RM</b>, so the nine rows are simply there: there is no '
-      'hierarchy to expand, and nothing a version of Desktop can open collapsed and hide.',
+     'The second master column: the same rows and the same months as the MB5B stock report has them. Read straight across from the block on its left and you are comparing the books with the stock for one plant, one type, one month.',
+     ['Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. '
+      'The table opens on the plant, showing that plant\u2019s whole inventory for the month, '
+      'and the + beside it opens RM, FG and Consumables underneath.',
       'Columns takes one field only: dimDate[MonthName]. The months are the columns of this '
       'block and the heading above them is its master column.',
       'Filters pane \u2192 drag the measure In Summary Window in \u2192 is 1. That is what gives '
@@ -520,19 +520,19 @@ VISUALS = [
       'and types inside one month, which is a real figure: one point in time.',
       'Format pane \u2192 Row headers \u2192 Values \u2192 Font size: 8; Column headers \u2192 '
       'Font size: 8, Word wrap: On; Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24.',
-      'The nine row labels are repeated on this block, so it can be read on its own and no row can ever be misread against the wrong plant. If you would rather the three blocks looked like one continuous table, Format pane \u2192 Row headers: Off here and on the block to the right of it.']),
+      'The plant labels are repeated on this block, so it can be read on its own and no row can ever be misread against the wrong plant. Expand a plant here and expand it on the other two blocks so the three read across.']),
 
     ("Summary", "Matrix",
      'Difference',
-     [("Rows", ["dimPlantType[Plant and Type]"]),
+     [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Difference Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
      (864, 88, 416, 248),
-     'The third master column: the books less the stock report, on the same rows and the same months. Anything other than a small figure here is the reconciliation asking a question, and the Detail page is where it is answered.',
-     ['Rows takes one field only: dimPlantType[Plant and Type]. It already reads '
-      '<b>1900 Jaipur Module  \u2014  RM</b>, so the nine rows are simply there: there is no '
-      'hierarchy to expand, and nothing a version of Desktop can open collapsed and hide.',
+     'The third master column: the books less the stock report, on the same plant rows and the same months. Anything other than a small figure here is the reconciliation asking a question, and the Detail page is where it is answered.',
+     ['Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. '
+      'The table opens on the plant, showing that plant\u2019s whole inventory for the month, '
+      'and the + beside it opens RM, FG and Consumables underneath.',
       'Columns takes one field only: dimDate[MonthName]. The months are the columns of this '
       'block and the heading above them is its master column.',
       'Filters pane \u2192 drag the measure In Summary Window in \u2192 is 1. That is what gives '
@@ -544,7 +544,7 @@ VISUALS = [
       'and types inside one month, which is a real figure: one point in time.',
       'Format pane \u2192 Row headers \u2192 Values \u2192 Font size: 8; Column headers \u2192 '
       'Font size: 8, Word wrap: On; Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24.',
-      'The nine row labels are repeated on this block, so it can be read on its own and no row can ever be misread against the wrong plant. If you would rather the three blocks looked like one continuous table, Format pane \u2192 Row headers: Off here and on the block to the right of it.']),
+      'The plant labels are repeated on this block, so it can be read on its own and no row can ever be misread against the wrong plant. Expand a plant here and expand it on the other two blocks so the three read across.']),
 
     ("Summary", "Clustered column chart",
      "Inventory (TB) vs Inventory (MB5B) by Month (Rs Cr.)",

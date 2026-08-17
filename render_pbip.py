@@ -14,7 +14,7 @@ GREEN, DARK, LIGHT, RED = "#2E7D46", "#14532D", "#7FBB84", "#B3261E"
 # set of colours while Power BI draws another
 SERIES = ["#2E7D46", "#7FBB84", "#146E6B", "#B2D8B2", "#4F9A5B", "#4C8C74"]
 MONTHS = ["Apr'26", "May'26", "Jun'26", "Jul'26"]
-PLANTS = ["1900 Jaipur Module", "1902 Dholera Module", "1905 Dholera Cell"]
+PLANTS = ["1902 Jaipur Module", "1900 Dholera Module", "1905 Dholera Cell"]
 CATS = ["RM", "FG", "Consumables"]
 NATURES = ["M10 Mono PERC", "G12R TOPCon", "M10 TOPCon", "Cell M10", "Encapsulant"]
 # nature means module technology on the FG side and material family on the RM side, so a

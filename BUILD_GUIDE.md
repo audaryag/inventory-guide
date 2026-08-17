@@ -437,9 +437,9 @@ Position: Horizontal 14, Vertical 242, Width 156, Height 58.
 
 | Well | Field |
 |---|---|
-| Fields | `Ticker 1900 Rs Cr` |
+| Fields | `Ticker 1902 Rs Cr` |
 
-Title: `1900 Jaipur Module`
+Title: `1902 Jaipur Module`
 
 Position: Horizontal 14, Vertical 332, Width 156, Height 58.
 
@@ -455,9 +455,9 @@ Position: Horizontal 14, Vertical 332, Width 156, Height 58.
 
 | Well | Field |
 |---|---|
-| Fields | `Ticker 1902 Rs Cr` |
+| Fields | `Ticker 1900 Rs Cr` |
 
-Title: `1902 Dholera Module`
+Title: `1900 Dholera Module`
 
 Position: Horizontal 14, Vertical 392, Width 156, Height 58.
 
@@ -808,11 +808,11 @@ Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font size' and set it to 10, Colour: #14532D.
 
-**4.26** **Matrix** — The first of the three master columns: what the books say, month by month. The rows are plant and type together, nine of them, always visible, and the months under this heading are the newest March plus the three most recent unless the slicer above says otherwise.
+**4.26** **Matrix** — The first of the three master columns: what the books say, month by month. A row per plant, opening into RM, FG and Consumables, and the months under this heading are the newest March plus the three most recent unless the slicer above says otherwise.
 
 | Well | Field |
 |---|---|
-| Rows | `dimPlantType[Plant and Type]` |
+| Rows | `dimPlant[Plant]`, `dimCategory[Category]` |
 | Columns | `dimDate[MonthName]` |
 | Values | `TB Inventory Rs Cr` → rename it to **Rs Cr.** |
 | Filters | `In Summary Window  →  is 1` |
@@ -826,19 +826,19 @@ Position: Horizontal 192, Vertical 88, Width 357, Height 248.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Rows takes one field only: dimPlantType[Plant and Type]. It already reads <b>1900 Jaipur Module  —  RM</b>, so the nine rows are simply there: there is no hierarchy to expand, and nothing a version of Desktop can open collapsed and hide.
+- Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. The table opens on the plant, showing that plant’s whole inventory for the month, and the + beside it opens RM, FG and Consumables underneath.
 - Columns takes one field only: dimDate[MonthName]. The months are the columns of this block and the heading above them is its master column.
 - Filters pane → drag the measure In Summary Window in → is 1. That is what gives the newest March plus the three most recent months by default, and your ticks instead when you tick months in the slicer.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March to July, the same steel counted twice.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On. The Grand Total row adds the plants and types inside one month, which is a real figure: one point in time.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Values', then 'Font size: 8; Column headers', then 'Font size: 8, Word wrap: On; Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24.
-- Row headers are shown on this first block only, so the three blocks read as one table across the page. Drag its right-hand edge until the nine labels fit on one line.
+- Row headers are shown on this first block only, so the three blocks read as one table across the page.
 
-**4.27** **Matrix** — The second master column: the same nine rows and the same months as the MB5B stock report has them. Read straight across from the block on its left and you are comparing the books with the stock for one plant, one type, one month.
+**4.27** **Matrix** — The second master column: the same rows and the same months as the MB5B stock report has them. Read straight across from the block on its left and you are comparing the books with the stock for one plant, one type, one month.
 
 | Well | Field |
 |---|---|
-| Rows | `dimPlantType[Plant and Type]` |
+| Rows | `dimPlant[Plant]`, `dimCategory[Category]` |
 | Columns | `dimDate[MonthName]` |
 | Values | `Inventory Rs Cr` → rename it to **Rs Cr.** |
 | Filters | `In Summary Window  →  is 1` |
@@ -852,19 +852,19 @@ Position: Horizontal 556, Vertical 88, Width 357, Height 248.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Rows takes one field only: dimPlantType[Plant and Type]. It already reads <b>1900 Jaipur Module  —  RM</b>, so the nine rows are simply there: there is no hierarchy to expand, and nothing a version of Desktop can open collapsed and hide.
+- Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. The table opens on the plant, showing that plant’s whole inventory for the month, and the + beside it opens RM, FG and Consumables underneath.
 - Columns takes one field only: dimDate[MonthName]. The months are the columns of this block and the heading above them is its master column.
 - Filters pane → drag the measure In Summary Window in → is 1. That is what gives the newest March plus the three most recent months by default, and your ticks instead when you tick months in the slicer.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March to July, the same steel counted twice.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On. The Grand Total row adds the plants and types inside one month, which is a real figure: one point in time.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Values', then 'Font size: 8; Column headers', then 'Font size: 8, Word wrap: On; Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Row headers' and set it to Off. The block on its left carries the labels, and the blocks sit flush against each other so the three read as one table with three master columns.
+- The plant labels are repeated on this block, so it can be read on its own and no row can ever be misread against the wrong plant. Expand a plant here and expand it on the other two blocks so the three read across.
 
-**4.28** **Matrix** — The third master column: the books less the stock report, on the same rows and the same months. Anything other than a small figure here is the reconciliation asking a question, and the Detail page is where it is answered.
+**4.28** **Matrix** — The third master column: the books less the stock report, on the same plant rows and the same months. Anything other than a small figure here is the reconciliation asking a question, and the Detail page is where it is answered.
 
 | Well | Field |
 |---|---|
-| Rows | `dimPlantType[Plant and Type]` |
+| Rows | `dimPlant[Plant]`, `dimCategory[Category]` |
 | Columns | `dimDate[MonthName]` |
 | Values | `Difference Inventory Rs Cr` → rename it to **Rs Cr.** |
 | Filters | `In Summary Window  →  is 1` |
@@ -878,13 +878,13 @@ Position: Horizontal 920, Vertical 88, Width 357, Height 248.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Rows takes one field only: dimPlantType[Plant and Type]. It already reads <b>1900 Jaipur Module  —  RM</b>, so the nine rows are simply there: there is no hierarchy to expand, and nothing a version of Desktop can open collapsed and hide.
+- Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. The table opens on the plant, showing that plant’s whole inventory for the month, and the + beside it opens RM, FG and Consumables underneath.
 - Columns takes one field only: dimDate[MonthName]. The months are the columns of this block and the heading above them is its master column.
 - Filters pane → drag the measure In Summary Window in → is 1. That is what gives the newest March plus the three most recent months by default, and your ticks instead when you tick months in the slicer.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March to July, the same steel counted twice.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On. The Grand Total row adds the plants and types inside one month, which is a real figure: one point in time.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Values', then 'Font size: 8; Column headers', then 'Font size: 8, Word wrap: On; Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Row headers' and set it to Off. The block on its left carries the labels, and the blocks sit flush against each other so the three read as one table with three master columns.
+- The plant labels are repeated on this block, so it can be read on its own and no row can ever be misread against the wrong plant. Expand a plant here and expand it on the other two blocks so the three read across.
 
 **4.29** **Clustered column chart** — The books against the stock report, two bars per period: the same figures as the matrix above, but you can see a gap opening without reading a single number. Same periods as the matrices, because it carries the same filter.
 
@@ -2959,15 +2959,16 @@ let
                    let Txt  = Text.From(t ?? ""),
                        Hits = List.Select(Known, each Text.Contains(Txt, _))
                    in  if List.IsEmpty(Hits) then null else Hits{0},
-    // 1900 Jaipur Module, 1902 Dholera Module, 1905 Dholera Cell - the same three names the
-    // whole report uses. A profit centre that spells the plant out instead of numbering it is
-    // still a plant, and 1905 was being lost for exactly that reason: "Dholera Cell" carries
-    // no 1905 anywhere in it.
+    // 1902 Jaipur Module, 1900 Dholera Module, 1905 Dholera Cell - the same three names the
+    // whole report uses, and the codes as the Summary workbook has them. A profit centre that
+    // spells the plant out instead of numbering it is still a plant, and 1905 was being lost
+    // for exactly that reason: "Dholera Cell" carries no 1905 anywhere in it. Cell is tested
+    // before Dholera, because Dholera Cell contains both words.
     ByName   = (t as any) as nullable text =>
                    let T = Text.Upper(Text.From(t ?? "")) in
-                   if Text.Contains(T, "JAIPUR") then "1900"
+                   if Text.Contains(T, "JAIPUR") then "1902"
                    else if Text.Contains(T, "CELL") then "1905"
-                   else if Text.Contains(T, "DHOLERA") then "1902"
+                   else if Text.Contains(T, "DHOLERA") then "1900"
                    else null,
     PlantRaw = Table.AddColumn(Keys, "PlantCode",
                    each try Text.Middle([ProfitCentre], 2, 4) otherwise null, type text),
@@ -3065,15 +3066,16 @@ in
 ```
 let
     // The three plants and their names are decided here and nowhere else. Every page, slicer,
-    // legend, card and row label reads this table, so no sheet and no page can call 1900
-    // anything but Jaipur Module. Plant Master may still add a sort order; it is not allowed
-    // to rename these three, because a swapped pair of rows in a spreadsheet renamed both
-    // Jaipur and Dholera on every page at once.
+    // legend, card and row label reads this table, so no sheet and no page can call 1902
+    // anything but Jaipur Module. The codes are as the Summary workbook has them - 1902
+    // Jaipur, 1900 Dholera Module - and Plant Master may still add a sort order; it is not
+    // allowed to rename these three, because a swapped pair of rows in a spreadsheet renamed
+    // both Jaipur and Dholera on every page at once.
     Fixed    = #table(
         type table [ValuationArea = text, Plant = text, PlantSortNo = Int64.Type],
         {
-            {"1900", "1900 Jaipur Module",  1},
-            {"1902", "1902 Dholera Module", 2},
+            {"1902", "1902 Jaipur Module",  1},
+            {"1900", "1900 Dholera Module", 2},
             {"1905", "1905 Dholera Cell",   3}
         }),
     Master   = try dimPlantMaster otherwise Fixed,
@@ -3486,7 +3488,7 @@ in
 
 ## dimPlantType
 
-> One row per plant **and** type - `1900 Jaipur Module  —  RM`, `1900 Jaipur Module  —  FG` and so on, nine rows for three plants. It exists so the Summary table can list plant and type without a two-level row hierarchy: a hierarchy has to be expanded, and some versions of Desktop open one collapsed however the file was saved, which hid every row. Built from `dimPlant` and `dimCategory`, so the three plant names come from the one place that decides them and can never disagree with the rest of the report. Leave Enable load ON.
+> One row per plant **and** type - `1902 Jaipur Module  —  RM`, `1902 Jaipur Module  —  FG` and so on, nine rows for three plants. It exists so the Summary table can list plant and type without a two-level row hierarchy: a hierarchy has to be expanded, and some versions of Desktop open one collapsed however the file was saved, which hid every row. Built from `dimPlant` and `dimCategory`, so the three plant names come from the one place that decides them and can never disagree with the rest of the report. Leave Enable load ON.
 
 ```
 let
@@ -4318,7 +4320,7 @@ because there a total across the columns is the inventory of the window.
 **There are three plants.** 1903, 1904 and 1908 turn up in the exports and are not plants;
 `factInventory` sends those rows to `Unallocated`, keeping their value, and `dimPlant` lists the
 three plants plus `Unallocated` if anything landed there. The plant is labelled with its code -
-`1900 Jaipur Module` - so the slicer, the legends and the ticker cards all read the same.
+`1902 Jaipur Module` - so the slicer, the legends and the ticker cards all read the same.
 
 **`dimNature` carries `Consumables` and `Unassigned`.** Both are written by the fact queries
 rather than read from a master sheet, so the bridge table did not have them and a fifth of the

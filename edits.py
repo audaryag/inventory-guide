@@ -10,6 +10,36 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="000000", build="29", query="",
+         title="1902 is Jaipur Module and 1900 is Dholera Module, and the plant row expands again",
+         why="Jaipur and Dholera were reading each other\u2019s figures because I fixed the codes "
+             "in the code the way they were dictated to me, and your own Summary workbook has "
+             "them the other way round: it labels its rows <em>1902 Jaipur Module</em>, "
+             "<em>1900 Dholera Module</em>, <em>1905 Dholera Cell</em>, and the figures the "
+             "report shows against 1902 are the figures that sheet prints on the Jaipur row. "
+             "Both names are decided in <code>dimPlant</code> and read by every page, so this "
+             "one query settles it everywhere. And Summary\u2019s rows go back to what you had: "
+             "a plant, carrying that plant\u2019s whole inventory for the month, with a + that "
+             "opens RM, FG and Consumables underneath.",
+         steps=[
+             "Repaste <code>dimPlant</code> from the <strong>Queries</strong> tab \u2014 that is "
+             "where the three codes and names are decided \u2014 and <code>factTB_Staged</code>, "
+             "which reads a profit centre that spells the plant out (JAIPUR \u2192 1902, "
+             "CELL \u2192 1905, DHOLERA \u2192 1900).",
+             "On Summary, on each of the three matrices \u2014 <em>Inventory (TB)</em>, "
+             "<em>Inventory (MB5B)</em>, <em>Difference</em> \u2014 empty the Rows well and put "
+             "in <code>dimPlant[Plant]</code> first, then <code>dimCategory[Category]</code> "
+             "under it. Leave Columns as <code>dimDate[MonthName]</code> alone: the months must "
+             "stay the only column field, because that is the hierarchy that was hiding the "
+             "history.",
+             "The table now opens on three plant rows. Click the + beside a plant to see RM, FG "
+             "and Consumables, or the expand arrows at the top of the row header to open all "
+             "three at once; whichever way you leave it is how it saves.",
+             "Overview\u2019s two plant cards swap with them: the card fed by "
+             "<code>Ticker 1902 Rs Cr</code> is titled <em>1902 Jaipur Module</em> and the one "
+             "fed by <code>Ticker 1900 Rs Cr</code> is <em>1900 Dholera Module</em>.",
+         ],
+         find="", repl=""),
     dict(n="00000", build="28", query="",
          title="Summary with nothing to expand, and the plant names fixed in one place",
          why="Your Desktop opens every hierarchy collapsed however the file is saved \u2014 the "
