@@ -10,6 +10,28 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000", build="40", query="factTB_Staged",
+         title="The trial balance behaves like the VLOOKUP that produced the old figures, and every plant is reported",
+         why="<code>TB Master</code> carries the same GL account and profit centre on more than "
+             "one row with different Plants, for many pairs \u2014 so nothing on the sheet tells "
+             "those rows apart. Holding them back emptied a plant\u2019s RM; breaking the tie by "
+             "profit centre moved figures without fixing them. The old Excel used VLOOKUP, which "
+             "takes the first matching row, and its figures are the ones being compared against "
+             "\u2014 so the report now takes the first row too, in the sheet\u2019s own order. "
+             "Separately, plant codes outside 1900, 1902 and 1905 are no longer discarded: the "
+             "plant list is every code Plant Master names, every code TB Master\u2019s Plant "
+             "column names, and every code the exports contain.",
+         steps=[
+             "Repaste <code>factTB_Staged</code>, <code>varPlantCodes</code>, "
+             "<code>factInventory</code> and <code>dimPlant</code> from the "
+             "<strong>Queries</strong> tab, then refresh.",
+             "Checks TB \u2192 <em>Where every rupee went</em>: no row should say "
+             "<em>dropped: two plants on TB Master</em> any more.",
+             "A line placed by row order says <em>sheet gave two plants, first row used</em>. "
+             "To stop depending on row order, correct those pairs on <code>TB Master</code> "
+             "\u2014 they are listed with both plants on the unmatched table.",
+         ],
+         find="", repl=""),
     dict(n="0000000000000000", build="39", query="qcStockCheck",
          title="Three diagnostic pages, so a wrong figure shows its own ingredients",
          why="Nothing on the five report pages changed and no existing query was rewritten \u2014 "

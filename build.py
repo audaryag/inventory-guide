@@ -495,6 +495,21 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 40 &mdash; the trial balance now behaves exactly like the VLOOKUP that
+produced the old figures, and every plant is reported:</strong> <code>TB Master</code> carries the same GL account and
+profit centre on more than one row with different Plants, for many pairs &mdash; so nothing in the sheet can tell those
+rows apart. Build 36 held such pairs back, which emptied a plant&rsquo;s RM; build 38 broke the tie by profit centre,
+which moved figures rather than fixed them. Both were answering a question the sheet does not answer. The old Excel used
+VLOOKUP, which takes the <strong>first</strong> matching row and says nothing about it &mdash; so that is now what the
+report does, in the sheet&rsquo;s own row order, and the figures it produces are the figures the old report was checked
+against. Nothing is dropped for ambiguity any more; the lines that depended on row order carry the Rule <em>sheet gave
+two plants, first row used</em>, and <code>qcTBUnmatched</code> still names every contradictory pair with both plants so
+the sheet can be corrected and the answer stop depending on order at all. Second change: <strong>plant codes outside
+1900, 1902 and 1905 are no longer discarded.</strong> The plant list is every code <code>Plant Master</code> names, every
+code the Plant column of <code>TB Master</code> names, and every code the exports contain &mdash; named by the sheets
+where they name it and by its own code where they do not, the three known plants keeping their names and their order.
+</blockquote>
+
 <blockquote><strong>Build 39 &mdash; three diagnostic pages, so a wrong figure shows its own
 ingredients:</strong> nothing on the five report pages changed and no existing query was rewritten &mdash; this build only
 adds. Three new pages, deliberately plain, each sized to be read or photographed without scrolling, and each on the latest
