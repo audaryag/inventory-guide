@@ -1965,8 +1965,9 @@ and the header cards to **none** (so the band always shows the company total).
 
 **5.4** Tell them the two permanent rules:
 1. Close all Excel files before refreshing.
-2. On `MW Capacity` and `Constants`, never overwrite a number — add a new row with the
-   date it takes effect. Overwriting silently rewrites past months.
+2. On `MW Capacity` and `Constants`, never overwrite a number — add a new **column**
+   headed with the date it takes effect (`MW Capacity`), or a new row with that date
+   (`Constants`). Overwriting silently rewrites past months.
 
 ---
 
@@ -1977,7 +1978,7 @@ Find the words Power BI showed you in the left column.
 | What Power BI says | What is actually wrong | Fix |
 |---|---|---|
 | `Not enough elements in the enumeration to complete the operation` | a query expected more columns than the sheet has | you are on an old copy of that query — refresh the guide page and re-copy it |
-| `could not find a row in the MW sheet containing at least two of 1900, 1902, 1905` | the MW sheet is in the effective-dated layout, not the wide one | re-copy `varMWCapacity`; the current one reads both layouts. Paste `qcMWSheet` to see the sheet raw |
+| `The MW sheet is none of the three layouts I recognise` / `has month columns but no column of plant codes` | the MW sheet is not laid out as dates across the top over a column of 1900/1902/1905 | put the plant codes in their own column, the month dates in the header row, and re-copy `varMWCapacity`. Paste `qcMWSheet` to see the sheet exactly as the query reads it |
 | `Column 'GL Account Number' of the table wasn't found` | your TB export spells the header differently | re-copy `factTB_Staged`; it matches headers loosely and leaves a column blank rather than failing |
 | `The Column Month in the table dimDate contains duplicate value` | you are on the old daily `dimDate` | re-copy `dimDate` (it is monthly now), Close & Apply, then make the relationship |
 | `Mark as date table` will not accept any column | nothing is wrong | skip 2.4 entirely; a monthly table is deliberate and no measure needs it |
@@ -2697,7 +2698,7 @@ in
 
 ## varMWCapacity
 
-> Handles either MW sheet layout and picks automatically: the long one (`Effective From | Tech | Valuation Area | MW`, one row per combination) or the original wide one (a `Tech` column with 1900/1902/1905 across the top). Headers are matched ignoring case, spaces and punctuation. A missing `Effective From` defaults to 1900-01-01, `-` becomes 0, and plant codes are forced to text so they join to `dimPlant`.
+> Reads the MW sheet in whichever of three layouts it is written, and picks by itself. **The one to keep it in** is a date across the top and a plant down the side: an optional first column naming the technology, a column of plant codes, then one column per month, headed with that month's date - a new month is a new column and nothing already typed is touched. It also still reads the long layout (`Effective From | Tech | Valuation Area | MW`) and the original wide one (`Tech` down the side, 1900/1902/1905 across the top). Headers are matched ignoring case, spaces and punctuation. A date column is an *effective from*, so a month with no column keeps the last figure typed before it; an empty cell is left empty rather than read as nought; `-` is nought. Plant codes are forced to text so they join to `dimPlant`. With no technology column the row is the plant's whole capacity, written against `(All)`.
 
 ```
 let
@@ -2714,6 +2715,15 @@ let
     Codes   = {"1900","1902","1905"},
     AsTxt   = (v as any) as text => Text.Trim(Text.From(v ?? "")),
     IsCode  = (v as any) as logical => List.Contains(Codes, AsTxt(v)),
+    // a header cell that is a real date. A number is never taken for one: 1900 is a plant,
+    // and Date.From would happily read it as a day in 1904.
+    AsDate  = (v as any) as nullable date =>
+                  if v = null then null
+                  else if Value.Is(v, type date) then v
+                  else if Value.Is(v, type datetime) then DateTime.Date(v)
+                  else if Value.Is(v, type text) and (Text.Contains(v, "/") or Text.Contains(v, "-"))
+                       then (try Date.From(v) otherwise null)
+                  else null,
 
     // ---- decide which layout this sheet is -------------------------------------------------
     // long layout is identified by an Effective From header; wide layout by a row of plant codes
@@ -2723,6 +2733,10 @@ let
                       List.AnyTrue(List.Transform(r, (c) => List.Contains(DateHdr, Norm(c))))), true),
     WideIdx = List.PositionOf(
                   List.Transform(Rows, (r) => List.Count(List.Select(r, IsCode)) >= 2), true),
+    // matrix layout: a header row carrying two or more real dates, plants down the side
+    MtxIdx  = List.PositionOf(
+                  List.Transform(Rows, (r) =>
+                      List.Count(List.RemoveNulls(List.Transform(r, AsDate))) >= 2), true),
 
     // ---- long layout: one row per Tech per plant --------------------------------------------
     Long    = let
@@ -2770,10 +2784,59 @@ let
                                 MW            = (try Number.From(r{m[Idx]}) otherwise 0) ])
               in  Recs,
 
+    // ---- matrix layout: a month per column, a plant per row ---------------------------------
+    // the layout to keep the sheet in. Each date column is an effective-from, so the figure
+    // stands until a later column changes it and a month with no column of its own is not a
+    // hole. A blank cell is not nought: nought capacity would wipe out the figure before it.
+    Matrix  = let
+                  Hdr    = Rows{MtxIdx},
+                  Cols   = List.Select(
+                               List.Transform({0..List.Count(Hdr) - 1},
+                                   (i) => [Idx = i, D = AsDate(Hdr{i})]),
+                               (m) => m[D] <> null),
+                  DIdx   = List.Transform(Cols, each _[Idx]),
+                  Body   = List.Skip(Rows, MtxIdx + 1),
+                  Other  = List.Select({0..List.Count(Hdr) - 1}, (i) => not List.Contains(DIdx, i)),
+                  // the plant column is whichever of the remaining columns holds the codes
+                  Score  = List.Transform(Other, (i) =>
+                               [ Idx = i,
+                                 N   = List.Count(List.Select(Body,
+                                           (r) => IsCode(try r{i} otherwise null))) ]),
+                  Best   = List.Last(List.Sort(Score, (a, b) => Value.Compare(a[N], b[N])), null),
+                  iArea  = if Best = null or Best[N] = 0 then -1 else Best[Idx],
+                  Chk    = if iArea < 0
+                               then error "The MW sheet has month columns but no column of plant "
+                                        & "codes (1900 / 1902 / 1905) beside them. Read qcMWSheet."
+                               else true,
+                  // a technology column is optional: the first other column that carries text
+                  Named  = List.Select(Other, (i) =>
+                               i <> iArea and List.AnyTrue(List.Transform(Body,
+                                   (r) => AsTxt(try r{i} otherwise null) <> ""
+                                          and not IsCode(try r{i} otherwise null)))),
+                  iTech  = if not Chk or List.IsEmpty(Named) then -1 else List.First(Named),
+                  Keep   = if Chk then List.Select(Body, (r) => IsCode(try r{iArea} otherwise null))
+                           else {},
+                  Cells  = List.TransformMany(Keep, (r) => Cols, (r, c) =>
+                               [ EffectiveFrom = c[D],
+                                 Tech          = if iTech < 0 or AsTxt(try r{iTech} otherwise null) = ""
+                                                 then "(All)" else AsTxt(r{iTech}),
+                                 ValuationArea = AsTxt(r{iArea}),
+                                 Raw           = (try r{c[Idx]} otherwise null) ]),
+                  Filled = List.Select(Cells, (x) => AsTxt(x[Raw]) <> ""),
+                  Recs   = List.Transform(Filled, (x) =>
+                               [ EffectiveFrom = x[EffectiveFrom],
+                                 Tech          = x[Tech],
+                                 ValuationArea = x[ValuationArea],
+                                 MW            = (if AsTxt(x[Raw]) = "-" then 0
+                                                  else try Number.From(x[Raw]) otherwise 0) ])
+              in  Recs,
+
     Pairs   = if LongIdx >= 0 then Long
+              else if MtxIdx >= 0 then Matrix
               else if WideIdx >= 0 then Wide
-              else error "The MW sheet is neither layout I recognise: no Effective From/Tech header "
-                       & "row, and no row containing two of 1900/1902/1905. Read qcMWSheet.",
+              else error "The MW sheet is none of the three layouts I recognise: no Effective "
+                       & "From/Tech header row, no row of month dates over a column of plant "
+                       & "codes, and no row containing two of 1900/1902/1905. Read qcMWSheet.",
     T       = Table.FromRecords(Pairs,
                   type table [EffectiveFrom = date, Tech = text, ValuationArea = text, MW = number]),
     Out     = Table.Buffer(T)
@@ -2812,7 +2875,9 @@ in
 let
     FromRM  = List.RemoveNulls(dimMaterialAttr[Nature]),
     FromFG  = List.RemoveNulls(dimFGAttr[Nature]),
-    FromCap = List.RemoveNulls(varMWCapacity[Tech]),
+    // (All) is the MW sheet saying 'this is the whole plant, not one technology'. It is a
+    // capacity row, never a nature, and listing it here would draw it as a slice and a slicer tick.
+    FromCap = List.Select(List.RemoveNulls(varMWCapacity[Tech]), each _ <> "(All)"),
     // 'Consumables' and 'Unassigned' are written by the fact queries rather than read from a
     // master sheet, so they have to be listed here as well. A nature that a fact row carries
     // and this table does not is what draws a slice labelled (Blank).

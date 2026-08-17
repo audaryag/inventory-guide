@@ -490,6 +490,17 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 30 &mdash; the MW sheet is a month per column now:</strong> a plant per row and a column per month,
+headed with that month's date, the way your black-and-white table on the FG sheet has it &mdash; a new month is a new
+column and nothing already typed is touched. <code>varMWCapacity</code> unpivots it itself and reads three layouts, so
+whichever way your sheet is written today it still loads: this new one, the long <em>Effective From | Tech | Valuation
+Area | MW</em> one, and the original wide one. A date column is an <em>effective from</em>, so a month with no column of
+its own keeps the last figure typed before it; an empty cell stays empty rather than being read as nought, which would
+wipe out the figure before it; a dash is nought. The <strong>Techno</strong> column is optional &mdash; leave it out and
+the row is that plant's whole capacity, and days of cover then reads per plant with the per-technology figure left blank
+rather than invented. A blank template of the sheet, with the read-me on its second tab, is in the download as
+<code>MW Capacity - sheet layout.xlsx</code>.</blockquote>
+
 <blockquote><strong>Build 29 &mdash; the plant codes as your workbook has them, and the expandable plant row back:</strong>
 1902 is Jaipur Module, 1900 is Dholera Module, 1905 is Dholera Cell. Build 28 had the first two the other way
 round, which is why Jaipur and Dholera read each other's figures: the codes were fixed in the code from an

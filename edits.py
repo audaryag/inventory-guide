@@ -10,6 +10,31 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="0000000", build="30", query="varMWCapacity",
+         title="The MW sheet as a month per column, so a new month is a new column",
+         why="The sheet is now read the way your FG working has it: a plant down the side, a "
+             "month across the top, the column heading being the date those figures take "
+             "effect from. Type a new month into a new column and nothing already there is "
+             "touched \u2014 which matters, because a month with no column of its own keeps the "
+             "last figure to its left, so overwriting one rewrites history. An empty cell is "
+             "left empty rather than read as nought (nought capacity would wipe out the figure "
+             "before it) and a dash is nought. The <strong>Techno</strong> column is optional: "
+             "without it the row is that plant\u2019s whole capacity, and days of cover then "
+             "reads per plant with the per-technology figure blank rather than invented. The "
+             "old two layouts still load, so nothing breaks while you move the sheet over.",
+         steps=[
+             "Lay the <code>MW Capacity</code> sheet out as: <em>Techno</em> (optional), "
+             "<em>Plant</em> holding 1902 / 1900 / 1905, then one column per month headed with "
+             "that month\u2019s date as a real date, not text. A blank copy is in the "
+             "<strong>Auto</strong> download as <code>MW Capacity - sheet layout.xlsx</code>.",
+             "Repaste <code>varMWCapacity</code> below, and <code>dimNature</code> from the "
+             "<strong>Queries</strong> tab \u2014 it now leaves the plant-level "
+             "<code>(All)</code> row out of the nature list, so it cannot appear as a slice or "
+             "a slicer tick.",
+             "Refresh. <code>qcMWSheet</code> on Checks shows the sheet exactly as the query "
+             "reads it, cell for cell, if a column is not being picked up.",
+         ],
+         find="", repl=""),
     dict(n="000000", build="29", query="",
          title="1902 is Jaipur Module and 1900 is Dholera Module, and the plant row expands again",
          why="Jaipur and Dholera were reading each other\u2019s figures because I fixed the codes "
