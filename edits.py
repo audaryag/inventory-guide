@@ -10,6 +10,22 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="000000000000000", build="38", query="factTB_Staged",
+         title="A contradictory pair no longer empties a plant, and every line says how it was placed",
+         why="Build 36 dropped every GL and profit centre pair that <code>TB Master</code> gives "
+             "two different Plants — which took Dholera Module’s entire RM with it. "
+             "There is now one tie-break that invents nothing: where the sheet argues between "
+             "two plants and the line’s own profit centre names one of those two, that is "
+             "the one. Where it still cannot decide, the row stays out and stays visible.",
+         steps=[
+             "Repaste <code>factTB_Staged</code>, then <code>factTB</code> and "
+             "<code>qcTBByGL</code> from the <strong>Queries</strong> tab.",
+             "Refresh. Checks → <em>Trial balance by GL account</em> now has a "
+             "<strong>Rule</strong> column saying how each account was placed.",
+             "A plant reading short: filter that table to it and read the Rule — it says "
+             "whether the sheet has no row for those accounts or contradicts itself about them.",
+         ],
+         find="", repl=""),
     dict(n="00000000000000", build="37", query="factTB_Staged",
          title="Fixes build 36's refresh error (MasterGL matches no exports)",
          why="Build 36 rewrote this query and deleted a step it still referenced, so the "

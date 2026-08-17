@@ -1163,7 +1163,8 @@ VISUALS = [
 
     ("Checks", "Table", "Trial balance by GL account, signed",
      [("Columns", ["qcTBByGL[GLAccount]", "qcTBByGL[GLDesc]", "qcTBByGL[Category]",
-                   "qcTBByGL[ValuationArea]", "qcTBByGL[AmountRsCr]"])],
+                   "qcTBByGL[ValuationArea]", "qcTBByGL[Rule]",
+                   "qcTBByGL[AmountRsCr]"])],
      (16, 592, 620, 100),
      "Sorted with the most negative first. An inventory account sitting there as a credit is "
      "why a plant's Inventory (TB) nets to nearly zero on Summary while the by-type block "

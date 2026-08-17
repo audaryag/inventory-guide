@@ -495,6 +495,16 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 38 &mdash; a contradictory pair no longer empties a plant, and every line says how it was
+placed:</strong> build 36 dropped every GL and profit centre pair that <code>TB Master</code> gives two different
+Plants, which took Dholera Module&rsquo;s whole RM with it. There is now one tie-break, and it invents nothing: where
+the sheet argues between two plants and the line&rsquo;s own profit centre names one of those two, that is the one.
+Where it cannot decide, the row still stays out and stays visible. Every trial-balance line now carries a
+<strong>Rule</strong> &mdash; <em>matched on GL and profit centre</em>, <em>sheet gave two plants, profit centre
+decided</em>, <em>dropped: two plants on TB Master</em>, <em>dropped: no row for this GL and profit centre</em> &mdash;
+and Checks &rarr; <em>Trial balance by GL account</em> shows it, so a plant reading short says which of those it
+is.</blockquote>
+
 <blockquote><strong>Build 37 &mdash; fixes a broken build 36:</strong> build 36 referenced a step,
 <code>MasterGL</code>, that its own rewrite had deleted, so the refresh stopped with <em>&ldquo;The import MasterGL
 matches no exports. Did you miss a module reference?&rdquo;</em> and sixteen queries were blocked. The step is back,

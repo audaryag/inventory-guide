@@ -3200,10 +3200,36 @@ let
     // TB Master now resolves to nothing, is left out of every trial-balance figure, and is
     // listed by qcTBUnmatched with what it is worth. That list is finite: type those pairs
     // onto the sheet and the trial balance is right by construction.
-    Resolved = Table.AddColumn(Natured, "PlantResolved",
+    // The plant from the matched pair, and where the sheet contradicts itself about a pair,
+    // one tie-break that adds no guesswork: if the profit centre on the line names one of the
+    // very plants the sheet is arguing between, that is the one. It cannot invent a plant the
+    // sheet did not offer, and where it cannot decide the row stays unresolved and visible.
+    // Dropping every contradictory pair outright emptied a whole plant's RM, which is a
+    // worse answer than a tie-break the sheet itself constrains.
+    FromPair = Table.AddColumn(Natured, "PairPlant",
                    each if Anywhere([TBPlant]) <> null then Anywhere([TBPlant])
                         else ByName([TBPlant]), type text),
-    Dropped  = Table.RemoveColumns(Resolved, {"ValuationArea"}),
+    TieBreak = Table.AddColumn(FromPair, "TiePlant",
+                   each let Cands = if [AmbigPlants] = null then {}
+                                    else List.Transform(Text.Split([AmbigPlants], " / "),
+                                             each Text.Trim(_)),
+                            Codes = List.RemoveNulls(List.Transform(Cands,
+                                        each if Anywhere(_) <> null then Anywhere(_)
+                                             else ByName(_))),
+                            Pc    = [ValuationArea]
+                        in  if Pc <> null and List.Contains(Codes, Pc) then Pc else null,
+                   type text),
+    Resolved = Table.AddColumn(TieBreak, "PlantResolved",
+                   each if [PairPlant] <> null then [PairPlant] else [TiePlant], type text),
+    // how each line was placed, in words - so Checks can say whether a plant is short
+    // because the sheet has no row for it or because the sheet contradicts itself
+    Ruled    = Table.AddColumn(Resolved, "Rule",
+                   each if [PairPlant] <> null then "matched on GL and profit centre"
+                        else if [TiePlant] <> null then "sheet gave two plants, profit centre decided"
+                        else if [AmbigPlants] <> null then "dropped: two plants on TB Master"
+                        else if [Whitelisted] then "dropped: no row for this GL and profit centre"
+                        else "not an inventory account", type text),
+    Dropped  = Table.RemoveColumns(Ruled, {"ValuationArea", "PairPlant", "TiePlant"}),
     Renamed2 = Table.RenameColumns(Dropped, {{"PlantResolved", "ValuationArea"}}),
     // Rows that resolve to none of the three plants are kept HERE and left out in factTB, so
     // qcTBPlants can still see them: a plant going missing from Inventory (TB) has to be
@@ -3215,7 +3241,7 @@ let
                    {"GLNature", "GLTBSort"}),
     Out      = Table.TransformColumnTypes(Natured2, {
                    {"Nature", type text}, {"TBPlant", type text}, {"TBSort", Int64.Type},
-                   {"ValuationArea", type text}})
+                   {"ValuationArea", type text}, {"Rule", type text}})
 in
     Out
 ```
@@ -3328,7 +3354,8 @@ let
                   each Bucket([Nature], [GLDesc]), type text),
     // exact column list and types, so the table is the same shape every refresh
     Wanted  = {"SourceFile","Month","GLAccount","GLDesc","ProfitCentre","ProfitCentreDesc",
-               "Amount","PlantCode","ValuationArea","Nature","TBPlant","TBSort","Category"},
+               "Amount","PlantCode","ValuationArea","Nature","TBPlant","TBSort","Category",
+               "Rule"},
     Padded  = List.Accumulate(List.Difference(Wanted, Table.ColumnNames(Cat)), Cat,
                   (t, c) => Table.AddColumn(t, c, each null)),
     Slim    = Table.SelectColumns(Padded, Wanted),
@@ -3336,7 +3363,7 @@ let
                   {"SourceFile", type text}, {"Month", type date},
                   {"GLAccount", type text}, {"GLDesc", type text},
                   {"ProfitCentre", type text}, {"ProfitCentreDesc", type text},
-                  {"Amount", type number}, {"PlantCode", type text},
+                  {"Amount", type number}, {"PlantCode", type text}, {"Rule", type text},
                   {"ValuationArea", type text}, {"Nature", type text},
                   {"TBPlant", type text}, {"TBSort", Int64.Type},
                   {"Category", type text}}),
@@ -3606,6 +3633,8 @@ in
 ```
 let
     Grouped = Table.Group(factTB, {"GLAccount", "GLDesc", "Nature", "Category", "ValuationArea"}, {
+              {"Rule", each Text.Combine(List.Distinct(List.Transform([Rule],
+                                each Text.From(_ ?? ""))), " | "), type text},
                   {"AmountRsCr", each List.Sum([Amount]) / 10000000, type number},
                   {"Rows", each Table.RowCount(_), Int64.Type}}),
     Sorted  = Table.Sort(Grouped, {{"AmountRsCr", Order.Ascending}}),
