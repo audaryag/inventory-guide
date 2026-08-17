@@ -26,6 +26,19 @@ PANEL_SUB = "#BFE3C6"    # the small wording on the green panel
 BOX = "#FFFFFF"          # the three white boxes inside the panel
 UP, DOWN = "#2E7D32", "#B3261E"
 
+# Matrices whose row members must be listed even when every figure on the row is blank.
+# 1905 has no module capacity, so its Days cell is blank, and a matrix quietly drops a row
+# whose only value is blank - which is how a plant went missing from a table that was right.
+# A blank is a question; an absent row is a lie.
+SHOW_ALL_ROWS = {
+    "Inventory (TB)", "Inventory (MB5B)", "Difference",
+    "Inventory FG by Plant \u2014 In MW",
+    "Inventory FG by Plant \u2014 In Rs Cr",
+    "Inventory FG by Plant \u2014 In Days",
+    "RM Inventory Plant Wise \u2014 In Rs Cr",
+    "RM Inventory Plant Wise \u2014 In Days",
+}
+
 # Overview and Summary carry their own controls, so they are built visual by visual.
 # No page uses the old card-and-slicer band any more: all five carry their own controls.
 BAND_PAGES = []
@@ -462,43 +475,76 @@ VISUALS = [
       "Format pane \u2192 General \u2192 Title \u2192 Font size: 10, Colour: #14532D."]),
 
     ("Summary", "Matrix",
-     'Inventory by Plant and Type \u2014 TB, MB5B and the Check, month by month (Rs Cr.)',
-     [("Rows", ["dimPlant[Plant]", "dimCategory[Category]"]),
-      ("Columns", ["dimMetric[Metric]", "dimDate[MonthName]"]),
-      ("Values", ["Summary Value Rs Cr" + AS + "Rs Cr."]),
+     'Inventory (TB)',
+     [("Rows", ["dimPlantType[Plant and Type]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["TB Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (16, 88, 1248, 248),
-     'One table, laid out the way the Excel sheet was: three master columns \u2014 '
-     '<b>Inventory (TB)</b>, <b>Inventory (MB5B)</b> and <b>Difference</b> \u2014 and under each '
-     'of them the months, the newest March plus the three after it by default. Rows are the '
-     'three plants, each opening into RM, FG and Consumables. The Total row under a plant is '
-     'that plant across its three types and the Grand Total row at the foot is every plant '
-     'added together, which is what the Total Overall block used to say.',
-     ['Columns takes two fields, in this order: dimMetric[Metric] first, then dimDate[MonthName]. '
-      'That is what makes the metric the master column and the months the columns underneath it.',
-      'The file opens with both column levels already showing. If a version of Desktop opens it '
-      'on the metric level only \u2014 three figures, no months \u2014 click the matrix and use '
-      'the expand arrows at the top right of its header, or right-click any of the three '
-      'headings \u2192 Expand \u2192 All, then save: Power BI remembers it.',
-      'Values holds one measure, Summary Value Rs Cr. It reads which master column a cell sits '
-      'in and returns the trial balance, the MB5B figure or the gap between them accordingly, '
-      'which is how one measure fills all three blocks.',
-      'Filters pane \u2192 drag the measure In Summary Window in \u2192 is 1. That is what gives you '
-      'the newest March plus three months by default, and the months you tick in the slicer '
-      'when you tick them.',
-      "Format pane \u2192 Subtotals \u2192 Column subtotals: Off. Stock is a level, not a flow: a "
-      "Total column would add March's steel to July's steel, which is the same steel counted "
-      "twice.",
-      "Format pane \u2192 Subtotals \u2192 Row subtotals: On with 'Per row level' On \u2014 those add "
-      "plants inside one month, which is a real figure: one point in time, three stock "
-      "locations.",
-      'Format pane \u2192 Row headers \u2192 Stepped layout: Off, +/- icons: On, so Plant and Type sit '
-      'in two columns with an expander on each plant.',
-      'Format pane \u2192 Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24; Row headers \u2192 '
-      'Font size: 8; Column headers \u2192 Font size: 8, Word wrap: On. Twelve figures across the '
-      'width means every column has to earn its pixels.',
-      'Drag the line between two column headings if a figure shows three dots; column widths '
-      'are remembered when you save.']),
+     (16, 88, 416, 248),
+     'The first of the three master columns: what the books say, month by month. The rows are plant and type together, nine of them, always visible, and the months under this heading are the newest March plus the three most recent unless the slicer above says otherwise.',
+     ['Rows takes one field only: dimPlantType[Plant and Type]. It already reads '
+      '<b>1900 Jaipur Module  \u2014  RM</b>, so the nine rows are simply there: there is no '
+      'hierarchy to expand, and nothing a version of Desktop can open collapsed and hide.',
+      'Columns takes one field only: dimDate[MonthName]. The months are the columns of this '
+      'block and the heading above them is its master column.',
+      'Filters pane \u2192 drag the measure In Summary Window in \u2192 is 1. That is what gives '
+      'the newest March plus the three most recent months by default, and your ticks instead '
+      'when you tick months in the slicer.',
+      'Format pane \u2192 Subtotals \u2192 Column subtotals: Off. Stock is a level, not a flow: a '
+      'Total column would add March to July, the same steel counted twice.',
+      'Format pane \u2192 Subtotals \u2192 Row subtotals: On. The Grand Total row adds the plants '
+      'and types inside one month, which is a real figure: one point in time.',
+      'Format pane \u2192 Row headers \u2192 Values \u2192 Font size: 8; Column headers \u2192 '
+      'Font size: 8, Word wrap: On; Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24.',
+      'Row headers are shown on this first block only, so the three blocks read as one table across the page. Drag its right-hand edge until the nine labels fit on one line.']),
+
+    ("Summary", "Matrix",
+     'Inventory (MB5B)',
+     [("Rows", ["dimPlantType[Plant and Type]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
+      ("Filters", ["In Summary Window  \u2192  is 1"])],
+     (440, 88, 416, 248),
+     'The second master column: the same nine rows and the same months as the MB5B stock report has them. Read straight across from the block on its left and you are comparing the books with the stock for one plant, one type, one month.',
+     ['Rows takes one field only: dimPlantType[Plant and Type]. It already reads '
+      '<b>1900 Jaipur Module  \u2014  RM</b>, so the nine rows are simply there: there is no '
+      'hierarchy to expand, and nothing a version of Desktop can open collapsed and hide.',
+      'Columns takes one field only: dimDate[MonthName]. The months are the columns of this '
+      'block and the heading above them is its master column.',
+      'Filters pane \u2192 drag the measure In Summary Window in \u2192 is 1. That is what gives '
+      'the newest March plus the three most recent months by default, and your ticks instead '
+      'when you tick months in the slicer.',
+      'Format pane \u2192 Subtotals \u2192 Column subtotals: Off. Stock is a level, not a flow: a '
+      'Total column would add March to July, the same steel counted twice.',
+      'Format pane \u2192 Subtotals \u2192 Row subtotals: On. The Grand Total row adds the plants '
+      'and types inside one month, which is a real figure: one point in time.',
+      'Format pane \u2192 Row headers \u2192 Values \u2192 Font size: 8; Column headers \u2192 '
+      'Font size: 8, Word wrap: On; Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24.',
+      'The nine row labels are repeated on this block, so it can be read on its own and no row can ever be misread against the wrong plant. If you would rather the three blocks looked like one continuous table, Format pane \u2192 Row headers: Off here and on the block to the right of it.']),
+
+    ("Summary", "Matrix",
+     'Difference',
+     [("Rows", ["dimPlantType[Plant and Type]"]),
+      ("Columns", ["dimDate[MonthName]"]),
+      ("Values", ["Difference Inventory Rs Cr" + AS + "Rs Cr."]),
+      ("Filters", ["In Summary Window  \u2192  is 1"])],
+     (864, 88, 416, 248),
+     'The third master column: the books less the stock report, on the same rows and the same months. Anything other than a small figure here is the reconciliation asking a question, and the Detail page is where it is answered.',
+     ['Rows takes one field only: dimPlantType[Plant and Type]. It already reads '
+      '<b>1900 Jaipur Module  \u2014  RM</b>, so the nine rows are simply there: there is no '
+      'hierarchy to expand, and nothing a version of Desktop can open collapsed and hide.',
+      'Columns takes one field only: dimDate[MonthName]. The months are the columns of this '
+      'block and the heading above them is its master column.',
+      'Filters pane \u2192 drag the measure In Summary Window in \u2192 is 1. That is what gives '
+      'the newest March plus the three most recent months by default, and your ticks instead '
+      'when you tick months in the slicer.',
+      'Format pane \u2192 Subtotals \u2192 Column subtotals: Off. Stock is a level, not a flow: a '
+      'Total column would add March to July, the same steel counted twice.',
+      'Format pane \u2192 Subtotals \u2192 Row subtotals: On. The Grand Total row adds the plants '
+      'and types inside one month, which is a real figure: one point in time.',
+      'Format pane \u2192 Row headers \u2192 Values \u2192 Font size: 8; Column headers \u2192 '
+      'Font size: 8, Word wrap: On; Values \u2192 Font: Arial, Font size: 8, Colour: #1F2A24.',
+      'The nine row labels are repeated on this block, so it can be read on its own and no row can ever be misread against the wrong plant. If you would rather the three blocks looked like one continuous table, Format pane \u2192 Row headers: Off here and on the block to the right of it.']),
 
     ("Summary", "Clustered column chart",
      "Inventory (TB) vs Inventory (MB5B) by Month (Rs Cr.)",
@@ -682,8 +728,8 @@ VISUALS = [
     ("FG", "Line and clustered column chart",
      "FG by Technology, Latest Month — Rs Cr. as Bars, MW as the Line",
      [("X-axis", ["dimNature[Nature]"]),
-      ("Column y-axis", ["Latest Month Value ₹ Cr"]),
-      ("Line y-axis", ["Latest Month MW"]),
+      ("Column y-axis", ["Latest Month FG ₹ Cr"]),
+      ("Line y-axis", ["Latest Month FG MW"]),
       ("Filters", ["dimCategory[Category]  →  is FG"])],
      (16, 396, 412, 292),
      "Which technology is holding the finished goods right now, in money as bars and in "

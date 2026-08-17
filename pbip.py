@@ -37,7 +37,7 @@ MB5B_COLS = [
     ("CloseQty", D), ("CloseVal", D), ("BaseUOM", S), ("SpecialStock", S), ("Currency", S),
     ("Month", T), ("Category", S), ("Nature", S), ("GroupNature", S), ("BOMStdQty", D),
     ("Item", S), ("AttrMissing", B), ("MW Qty", D), ("Rate", D), ("RateParseFailed", B),
-    ("Mid", S), ("Base", S), ("INR_WP", D),
+    ("Mid", S), ("Base", S), ("INR_WP", D), ("PlantType", S),
 ]
 
 # tables that load into the model, with their exact column list
@@ -46,7 +46,7 @@ TABLES = {
     "factTB": [("SourceFile", S), ("Month", T), ("GLAccount", S), ("GLDesc", S),
                ("ProfitCentre", S), ("ProfitCentreDesc", S), ("Amount", D),
                ("PlantCode", S), ("ValuationArea", S), ("Nature", S), ("TBPlant", S),
-               ("TBSort", I), ("Category", S)],
+               ("TBSort", I), ("Category", S), ("PlantType", S)],
     "factTB_Unmapped": [("GLAccount", S), ("GLDesc", S), ("Amount", D), ("Rows", I)],
     "dimPlant": [("ValuationArea", S), ("Plant", S), ("PlantSort", I)],
     "dimDate": [("Month", T), ("MonthName", S), ("MonthSort", I), ("MonthIndex", I),
@@ -57,6 +57,8 @@ TABLES = {
     "dimTBMaster": [("GLAccount", S), ("GLDescMaster", S), ("Nature", S), ("TBPlant", S),
                     ("TBSort", I)],
     "dimCategory": [("Category", S), ("CategorySort", I)],
+    "dimPlantType": [("PlantType", S), ("Plant and Type", S), ("Plant", S),
+                     ("Category", S), ("RowSort", I)],
     "dimMetric": [("Metric", S), ("MetricSort", I)],
     "dimMeasure": [("Measure", S), ("MeasureSort", I)],
     "qcHeaders": [("Folder", S), ("Name", S), ("SheetNames", S), ("Headers", S)],
@@ -94,13 +96,18 @@ RELATIONSHIPS = [
     ("dimTBMaster", "GLAccount", "factTB", "GLAccount"),
     ("dimCategory", "Category", "factInventory", "Category"),
     ("dimCategory", "Category", "factTB", "Category"),
+    ("dimPlantType", "PlantType", "factInventory", "PlantType"),
+    ("dimPlantType", "PlantType", "factTB", "PlantType"),
 ]
 
 SORT_BY = {("dimDate", "MonthName"): "MonthSort", ("dimPlant", "Plant"): "PlantSort",
+           ("dimPlantType", "Plant and Type"): "RowSort",
            ("dimCategory", "Category"): "CategorySort", ("dimMetric", "Metric"): "MetricSort",
            ("dimMeasure", "Measure"): "MeasureSort", ("dimDate", "Quarter"): "QuarterSort"}
 
-HIDDEN = {("factInventory", "MatKey"), ("factTB", "PlantCode"), ("dimDate", "MonthSort"),
+HIDDEN = {("factInventory", "MatKey"), ("factTB", "PlantCode"),
+          ("factInventory", "PlantType"), ("factTB", "PlantType"),
+          ("dimPlantType", "PlantType"), ("dimPlantType", "RowSort"), ("dimDate", "MonthSort"),
           ("dimDate", "MonthIndex"), ("dimDate", "FYMonthNo"), ("dimDate", "QuarterNo"),
           ("dimDate", "QuarterSort"), ("dimPlant", "PlantSort"),
           ("dimCategory", "CategorySort"), ("dimMetric", "MetricSort"),
@@ -581,6 +588,12 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
         qstate["Rows"].pop("showAll")
     for r in ("Explain",):
         qstate.get(r, {}).pop("showAll", None)
+
+    # 'Show items with no data' on the rows of the matrices that must list every plant: a
+    # blank Days cell (1905 has no module capacity on the MW sheet) otherwise takes the whole
+    # row away, and a missing plant reads as a data fault when it is a capacity gap.
+    if vt == "pivotTable" and title in spec.SHOW_ALL_ROWS and "Rows" in qstate:
+        qstate["Rows"]["showAll"] = True
 
     query = {"queryState": qstate}
     if vt == "pivotTable":

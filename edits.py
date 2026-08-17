@@ -10,6 +10,46 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000", build="28", query="",
+         title="Summary with nothing to expand, and the plant names fixed in one place",
+         why="Your Desktop opens every hierarchy collapsed however the file is saved \u2014 the "
+             "three metric headings with no months under them, the plants with no RM / FG / "
+             "Consumables under them. So Summary no longer has a hierarchy in it. Rows are one "
+             "flat field that already reads <em>1900 Jaipur Module \u2014 RM</em>, and the three "
+             "master columns are three matrices sitting flush across one box, each with the "
+             "months as its only columns: the newest March plus the three most recent by default, "
+             "your slicer ticks instead when you tick them. Same layout you asked for, nine rows "
+             "that are simply there.",
+         steps=[
+             "This one needs a new query and two relationships, so the <strong>Auto</strong> tab "
+             "download is much the quicker route \u2014 everything on this page is already in it.",
+             "By hand, in Power Query: add the new query <code>dimPlantType</code> from the "
+             "<strong>Queries</strong> tab, and repaste <code>factInventory</code>, "
+             "<code>factTB</code> and <code>dimPlant</code> from there too \u2014 the two facts "
+             "gain the key <code>PlantType</code> that it joins on, and dimPlant is where the "
+             "three plant names are now decided.",
+             "Model view: join <code>dimPlantType[PlantType]</code> to "
+             "<code>factInventory[PlantType]</code> and to <code>factTB[PlantType]</code>, both "
+             "One to many, Single. Then sort <code>dimPlantType[Plant and Type]</code> by "
+             "<code>RowSort</code> (Column tools \u2192 Sort by column).",
+             "On the page: three matrices side by side where the one table was, about 416 wide "
+             "and 248 high each. Rows: <code>dimPlantType[Plant and Type]</code> only. Columns: "
+             "<code>dimDate[MonthName]</code> only. Values: <code>TB Inventory Rs Cr</code> on "
+             "the first, <code>Inventory Rs Cr</code> on the second, "
+             "<code>Difference Inventory Rs Cr</code> on the third. Titles: "
+             "<em>Inventory (TB)</em>, <em>Inventory (MB5B)</em>, <em>Difference</em> \u2014 those "
+             "titles <em>are</em> your three master columns.",
+             "On each: Filters pane \u2192 the measure <code>In Summary Window</code> \u2192 is 1; "
+             "Format \u2192 Subtotals \u2192 Column subtotals <strong>Off</strong>, Row subtotals "
+             "On; and in the Rows well click the field\u2019s arrow \u2192 "
+             "<strong>Show items with no data</strong>, so a plant with a blank figure still "
+             "shows as a row instead of disappearing.",
+             "Also repaste <code>factTB_Staged</code> (1905 read from the plant name as well as "
+             "the code) and, on the Detail matrix, replace <code>Share of Total %</code> with its "
+             "new text from the <strong>Measures</strong> tab \u2014 it read 100% on every row "
+             "because its denominator was the row itself.",
+         ],
+         find="", repl=""),
     dict(n="0000", build="27", query="",
          title="Ticking months adds them up \u2014 the seven measures that asked the visual what "
                "grain they were being read at",

@@ -490,6 +490,29 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 28 &mdash; nothing left to expand, and the three plants are now decided in one place:</strong>
+your Desktop opens every hierarchy collapsed however the file is saved &mdash; the three metric headings with no
+months under them, the plants with no RM / FG / Consumables under them &mdash; so Summary no longer uses one.
+Rows are a single flat field, <code>dimPlantType[Plant and Type]</code>, reading <em>1900 Jaipur Module &mdash; RM</em>:
+nine rows that are simply there. The three master columns are three matrices sitting flush across one box, headed
+<strong>Inventory (TB)</strong>, <strong>Inventory (MB5B)</strong> and <strong>Difference</strong>, each with the months
+as its only columns &mdash; the newest March plus the three most recent by default, the slicer overriding that. The
+layout you asked for, with no expanding and nothing that can hide.
+<br><br>Four faults with it. <strong>The plant names are fixed in the code</strong>: 1900 Jaipur Module, 1902 Dholera
+Module, 1905 Dholera Cell, decided in <code>dimPlant</code> and read by every page, slicer, legend, card and row label,
+so a swapped pair of rows on the <em>Plant Master</em> sheet can no longer rename a plant anywhere &mdash; that sheet
+may still set the sort order, never the name. <strong>1905 in the trial balance</strong>: its profit centre spells the
+plant out, and &ldquo;Dholera Cell&rdquo; carries no 1905 to find, so the row was dropped; the plant is now read from
+the name as well as the code, in the profit centre, its description and the plant written against that GL on
+<em>TB Master</em> &mdash; the GL account being the one key the two sides certainly share. <strong>A plant with no
+capacity no longer vanishes</strong>: days of cover is megawatts over the <em>MW Capacity</em> sheet, 1905's
+technologies have no row there, and a matrix quietly drops a row whose only figure is blank &mdash; those matrices now
+list every plant, blank rather than absent, and <code>qcNatureNoCapacity</code> on Checks names the technologies to add.
+<strong>Share of Total % read 100% on every row</strong>: its denominator only dropped the category filter, so on the
+Detail matrix each material was divided by itself; it now divides by the visual's own total. The empty
+<em>FG by Technology</em> chart is fixed the same way &mdash; it names finished goods inside its measures instead of
+leaning on a filter, so an RM nature returns blank and leaves the axis by itself.</blockquote>
+
 <blockquote><strong>Build 27 &mdash; nothing can add two month-ends together any more:</strong> seven measures
 used to ask the visual whether a month was on show (<em>ISINSCOPE</em>) and only then return a closing level. A
 matrix whose column hierarchy is sitting collapsed does not always answer that truthfully, and the figure came
