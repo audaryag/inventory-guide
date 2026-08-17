@@ -70,7 +70,7 @@ TABLES = {
                  ("ValuationArea", S), ("AmountRsCr", D), ("Rows", I)],
     "qcPlantCodes": [("Code", S), ("Rows", I), ("ValueRsCr", D), ("InReport", B)],
     "qcTBUnmatched": [("GLAccount", S), ("ProfitCentre", S), ("PCKey", S), ("GLDesc", S),
-                      ("OnSheetAsGL", B), ("Rows", I), ("AmountRsCr", D)],
+                      ("OnSheetAsGL", B), ("Reason", S), ("Rows", I), ("AmountRsCr", D)],
     "qcTBPlants": [("ProfitCentre", S), ("Description", S), ("PlantResolved", S),
                    ("Rows", I), ("InventoryRows", I), ("MatchedRows", I), ("AmountRsCr", D)],
     "qcMonthFiles": [("Category", S), ("Month", T), ("Files", I), ("FileNames", S),

@@ -495,6 +495,15 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 36 &mdash; a pair only counts where <code>TB Master</code> is unanimous about it:</strong>
+where the same GL account and profit centre sit on that sheet twice with <em>different</em> Plants, the join was taking
+whichever row it met first &mdash; which put some accounts on the wrong plant and left others right, scattered rather
+than swapped, with nothing to show it had happened. Those pairs now resolve to nothing, are counted nowhere, and are
+listed on Checks with the reason <em>&ldquo;two plants on TB Master for this pair&rdquo;</em> and both plants named.
+Correct or delete the duplicate row and the pair resolves. The unmatched table now carries a <strong>Reason</strong>
+column, so each row says whether it is a pair the sheet does not have or a pair the sheet contradicts itself
+about.</blockquote>
+
 <blockquote><strong>Build 35 &mdash; the profit centre matches however it is written:</strong> the export writes it with
 two leading zeros the sheet does not have, and Excel holds one side as a number and the other as text. The key now
 takes the digits and letters, drops spaces, punctuation and leading zeros, and upper-cases what is left, on both

@@ -1783,7 +1783,7 @@ Position: Horizontal 731, Vertical 160, Width 533, Height 100.
 
 | Well | Field |
 |---|---|
-| Columns | `qcTBUnmatched[GLAccount]`, `qcTBUnmatched[GLDesc]`, `qcTBUnmatched[ProfitCentre]`, `qcTBUnmatched[OnSheetAsGL]`, `qcTBUnmatched[AmountRsCr]` |
+| Columns | `qcTBUnmatched[GLAccount]`, `qcTBUnmatched[GLDesc]`, `qcTBUnmatched[ProfitCentre]`, `qcTBUnmatched[PCKey]`, `qcTBUnmatched[OnSheetAsGL]`, `qcTBUnmatched[AmountRsCr]` |
 
 Title: `GL and Profit Centre Pairs TB Master Has No Row for`
 
@@ -3135,30 +3135,49 @@ let
     // profit centre - is what identifies one row of that sheet, and only then do its Plant,
     // Nature and Sort belong to the trial-balance line. That pair is the report's answer for
     // every trial-balance figure on every page.
-    MasterPair = Table.Buffer(Table.Distinct(Table.SelectColumns(MPlanted, MCols),
-                     {"GLAccount", "PCKey"})),
-    // and the same sheet read a second way, by GL alone, for two jobs the pair cannot do:
-    // saying whether an account is an inventory account at all, and giving its nature where
-    // the pair has no row yet. Its plant is deliberately not used - that is the ambiguity the
-    // pair exists to remove.
-    MasterGL  = Table.Buffer(
-                    Table.RenameColumns(
-                        Table.Distinct(Table.SelectColumns(MPlanted, {"GLAccount","Nature","TBSort"}),
-                            {"GLAccount"}),
-                        {{"Nature","GLNature"},{"TBSort","GLTBSort"}})),
+    // A pair is only an answer if the sheet is unanimous about it. Where the same GL account
+    // and profit centre appear on TB Master twice with different Plants, the join used to
+    // take whichever row it met first - which put some accounts on the wrong plant and left
+    // others right, scattered rather than swapped, and no way to see it had happened. Those
+    // pairs are held back here: they resolve to nothing, they are counted nowhere, and
+    // qcTBUnmatched names them with 'two plants on TB Master for this pair'.
+    MGroup   = Table.Group(MPlanted, {"GLAccount", "PCKey"}, {
+                   {"Plants",  each List.Distinct(List.Select(List.Transform([TBPlant],
+                                   each Text.Trim(Text.From(_ ?? ""))), each _ <> "")), type list},
+                   {"Natures", each List.Distinct(List.Select(List.Transform([Nature],
+                                   each Text.Trim(Text.From(_ ?? ""))), each _ <> "")), type list},
+                   {"Rows",    each Table.RowCount(_), Int64.Type}}),
+    MAmbig   = Table.SelectRows(MGroup, each List.Count([Plants]) > 1),
+    MClean   = Table.SelectRows(MGroup, each List.Count([Plants]) <= 1),
+    MasterPair = Table.Buffer(
+                     Table.NestedJoin(
+                         Table.Distinct(Table.SelectColumns(MPlanted, MCols),
+                             {"GLAccount", "PCKey"}),
+                         {"GLAccount","PCKey"},
+                         Table.SelectColumns(MClean, {"GLAccount","PCKey"}), {"GLAccount","PCKey"},
+                         "ok", JoinKind.Inner)),
+    // the ambiguous pairs, kept so the report can say why a line went nowhere
+    AmbigKeys = Table.Buffer(Table.AddColumn(
+                    Table.SelectColumns(MAmbig, {"GLAccount","PCKey","Plants"}),
+                    "AmbigPlants", each Text.Combine([Plants], " / "), type text)),
     Joined   = Table.NestedJoin(Typed, {"GLAccount","PCKey"}, MasterPair, {"GLAccount","PCKey"},
                    "tpl", JoinKind.LeftOuter),
     Joined2  = Table.NestedJoin(Joined, {"GLAccount"}, MasterGL, {"GLAccount"},
                    "tgl", JoinKind.LeftOuter),
+    Joined3  = Table.NestedJoin(Joined2, {"GLAccount","PCKey"},
+                   Table.SelectColumns(AmbigKeys, {"GLAccount","PCKey","AmbigPlants"}),
+                   {"GLAccount","PCKey"}, "tam", JoinKind.LeftOuter),
     // an inventory account is one the sheet lists at all; whether its plant is known is a
     // separate question, answered by PairMatched below
-    Flagged  = Table.AddColumn(Joined2, "Whitelisted",
+    Flagged  = Table.AddColumn(Joined3, "Whitelisted",
                    each not Table.IsEmpty([tgl]), type logical),
     Paired   = Table.AddColumn(Flagged, "PairMatched",
                    each not Table.IsEmpty([tpl]), type logical),
     Widened  = Table.ExpandTableColumn(
-                   Table.ExpandTableColumn(Paired, "tpl", {"Nature","TBPlant","TBSort"}),
-                   "tgl", {"GLNature","GLTBSort"}),
+                   Table.ExpandTableColumn(
+                       Table.ExpandTableColumn(Paired, "tpl", {"Nature","TBPlant","TBSort"}),
+                       "tgl", {"GLNature","GLTBSort"}),
+                   "tam", {"AmbigPlants"}),
     // the nature is the matched row's, and where the pair has no row yet the GL's own nature
     // stands in - so Consumables & Spares is never guessed at from the account name
     Natured  = Table.AddColumn(Widened, "NatureUse",
@@ -3606,6 +3625,11 @@ let
                   {"PCKey", each Text.From(List.First([PCKey]) ?? ""), type text},
                   {"OnSheetAsGL", each List.AnyTrue(List.Transform([Whitelisted], each _ = true)),
                    type logical},
+                  // why it went nowhere, in words rather than by deduction
+                  {"Reason", each
+                       let A = Text.From(List.First(List.RemoveNulls([AmbigPlants])) ?? "") in
+                       if A <> "" then "two plants on TB Master for this pair: " & A
+                       else "no row on TB Master for this GL and profit centre", type text},
                   {"Rows", each Table.RowCount(_), Int64.Type},
                   {"AmountRsCr", each List.Sum(List.Transform([Amount], each _ ?? 0)) / 10000000,
                    type number}}),
@@ -3613,7 +3637,7 @@ let
     Sorted  = Table.Sort(Grouped, {{"AmountRsCr", Order.Descending}}),
     Typed   = Table.TransformColumnTypes(Sorted, {
                   {"GLAccount", type text}, {"ProfitCentre", type text},
-                  {"PCKey", type text}, {"GLDesc", type text}})
+                  {"PCKey", type text}, {"GLDesc", type text}, {"Reason", type text}})
 in
     Typed
 ```

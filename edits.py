@@ -10,6 +10,22 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="0000000000000", build="36", query="factTB_Staged",
+         title="A GL and profit centre pair only counts where TB Master agrees with itself",
+         why="Where the same GL account and profit centre appear on <code>TB Master</code> twice "
+             "with different Plants, the join took whichever row it met first — so some "
+             "accounts landed on the wrong plant and others were right, scattered rather than "
+             "swapped, and nothing said so. Such a pair now resolves to nothing and is named "
+             "on Checks with both plants, so the duplicate row can be corrected.",
+         steps=[
+             "Repaste <code>factTB_Staged</code> and <code>qcTBUnmatched</code> below.",
+             "Refresh, then read Checks → <em>GL and profit centre pairs TB Master has no "
+             "row for</em>. The new <strong>Reason</strong> column says which rows are "
+             "duplicates the sheet contradicts itself about.",
+             "On <code>TB Master</code>, correct or delete the duplicate so each GL and profit "
+             "centre pair appears once with one Plant, and refresh again.",
+         ],
+         find="", repl=""),
     dict(n="000000000000", build="35", query="factTB_Staged",
          title="The profit centre matches however either file writes it",
          why="The TB export writes the profit centre with two leading zeros that "

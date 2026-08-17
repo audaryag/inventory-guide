@@ -1128,8 +1128,7 @@ VISUALS = [
 
     ("Checks", "Table", "GL and profit centre pairs TB Master has no row for",
      [("Columns", ["qcTBUnmatched[GLAccount]", "qcTBUnmatched[GLDesc]",
-                   "qcTBUnmatched[ProfitCentre]", "qcTBUnmatched[PCKey]",
-                   "qcTBUnmatched[OnSheetAsGL]",
+                   "qcTBUnmatched[ProfitCentre]", "qcTBUnmatched[Reason]",
                    "qcTBUnmatched[AmountRsCr]"])],
      (644, 268, 620, 100),
      "Empty is good, and empty is the target. Every pair listed here is money in no "
@@ -1137,8 +1136,9 @@ VISUALS = [
      "nowhere \u2014 because the plant and nature of a TB line come from the row TB Master "
      "holds for that GL and profit centre together. Type each pair onto that sheet with its "
      "Plant and Nature and it leaves this list. Biggest amount first, so the top row is the "
-     "one worth doing next. OnSheetAsGL True means the GL is on the sheet but not against "
-     "this profit centre.",
+     "one worth doing next. Reason says which of the two it is: no row at all for that pair, "
+     "or two rows with different Plants for it \u2014 the second is why some accounts landed on "
+     "the wrong plant, and it is fixed by correcting or deleting the duplicate row.",
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
 
