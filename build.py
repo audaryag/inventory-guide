@@ -498,8 +498,10 @@ Area | MW</em> one, and the original wide one. A date column is an <em>effective
 its own keeps the last figure typed before it; an empty cell stays empty rather than being read as nought, which would
 wipe out the figure before it; a dash is nought. The <strong>Techno</strong> column is optional &mdash; leave it out and
 the row is that plant's whole capacity, and days of cover then reads per plant with the per-technology figure left blank
-rather than invented. A blank template of the sheet, with the read-me on its second tab, is in the download as
-<code>MW Capacity - sheet layout.xlsx</code>.</blockquote>
+rather than invented. A revised <code>Variables and Calculations.xlsx</code> is in the download as
+<code>Variables and Calculations - sheet layout.xlsx</code>: all six sheets in the shapes the queries read, the plants
+and <code>RM_MW_FACTOR</code> filled in, the masters headers-only for your own rows to go under, and a read-me tab
+saying what each sheet is and the one rule for keeping it.</blockquote>
 
 <blockquote><strong>Build 29 &mdash; the plant codes as your workbook has them, and the expandable plant row back:</strong>
 1902 is Jaipur Module, 1900 is Dholera Module, 1905 is Dholera Cell. Build 28 had the first two the other way

@@ -9,6 +9,8 @@ on the Auto tab of the guide.
 """
 import json, pathlib, shutil, subprocess, sys, zipfile
 
+import varsbook
+
 HERE = pathlib.Path(__file__).parent
 sys.path.insert(0, str(HERE))
 import build  # noqa: E402
@@ -72,63 +74,6 @@ Write-Host "Done. Open the .pbip and press Refresh."
 '''
 
 
-def mw_template(path):
-    """The MW Capacity sheet in the layout the report now reads: a plant per row, a
-    month per column. A new month is a new column, so nothing already typed is touched -
-    each date column is the date its figures take effect from."""
-    import datetime
-    from openpyxl import Workbook
-    from openpyxl.styles import Alignment, Font, PatternFill
-
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "MW Capacity"
-    head = Font(name="Arial", size=10, bold=True, color="FFFFFF")
-    body = Font(name="Arial", size=10)
-    fill = PatternFill("solid", fgColor="14532D")
-    months = [datetime.date(2026, 3, 31), datetime.date(2026, 4, 30),
-              datetime.date(2026, 5, 31), datetime.date(2026, 6, 30)]
-
-    ws.append(["Techno", "Plant"] + months)
-    for c in ws[1]:
-        c.font, c.fill = head, fill
-        c.alignment = Alignment(horizontal="center")
-    for tech in ["G12 Perc Module", "G12R Topcon Module", "M10 Perc Module",
-                 "M10 Topcon Module", "M10R Perc Module", "M10R Topcon Module"]:
-        for code in ["1902", "1900", "1905"]:
-            ws.append([tech, code])
-    for row in ws.iter_rows(min_row=2):
-        for c in row:
-            c.font = body
-    for col, w in zip("ABCDEF", [26, 10, 13, 13, 13, 13]):
-        ws.column_dimensions[col].width = w
-    for c in ws[1][2:]:
-        c.number_format = "dd-mmm-yy"
-
-    n = wb.create_sheet("Read me")
-    for i, line in enumerate([
-        "MW Capacity \u2014 how the report reads this sheet",
-        "",
-        "One row per plant, one column per month. The column heading is a real date:",
-        "the month-end the figures in that column take effect from.",
-        "",
-        "A new month is a NEW COLUMN on the right. Never overwrite a figure already",
-        "typed: a month with no column of its own keeps the last figure to its left,",
-        "so overwriting rewrites history.",
-        "",
-        "The Techno column is optional. Leave it out and the row is that plant's whole",
-        "capacity; the report then shows days of cover per plant and leaves days per",
-        "technology blank, which is honest rather than invented.",
-        "",
-        "An empty cell means unchanged since the last column. A dash means nought.",
-        "Plant codes: 1902 Jaipur Module, 1900 Dholera Module, 1905 Dholera Cell.",
-    ], 1):
-        c = n.cell(row=i, column=1, value=line)
-        c.font = Font(name="Arial", size=10, bold=(i == 1))
-    n.column_dimensions["A"].width = 84
-    wb.save(path)
-
-
 def main():
     if STAGE.exists():
         shutil.rmtree(STAGE)
@@ -150,7 +95,7 @@ def main():
     (STAGE / "4 - tabular editor").mkdir()
     (STAGE / "4 - tabular editor" / "add-all-measures.csx").write_text(csx())
 
-    mw_template(STAGE / "MW Capacity - sheet layout.xlsx")
+    varsbook.build(STAGE / "Variables and Calculations - sheet layout.xlsx")
 
     (STAGE / "set-proot.ps1").write_text(PS1)
     shutil.copy(HERE / "inventory-theme.json", STAGE / "inventory-theme.json")

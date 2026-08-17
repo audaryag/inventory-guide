@@ -25,8 +25,10 @@ EDITS = [
          steps=[
              "Lay the <code>MW Capacity</code> sheet out as: <em>Techno</em> (optional), "
              "<em>Plant</em> holding 1902 / 1900 / 1905, then one column per month headed with "
-             "that month\u2019s date as a real date, not text. A blank copy is in the "
-             "<strong>Auto</strong> download as <code>MW Capacity - sheet layout.xlsx</code>.",
+             "that month\u2019s date as a real date, not text. A revised workbook is in "
+             "the <strong>Auto</strong> download as <code>Variables and Calculations - sheet "
+             "layout.xlsx</code> — all six sheets, a read-me tab, and your own rows to be "
+             "pasted under the headings of the three master sheets.",
              "Repaste <code>varMWCapacity</code> below, and <code>dimNature</code> from the "
              "<strong>Queries</strong> tab \u2014 it now leaves the plant-level "
              "<code>(All)</code> row out of the nature list, so it cannot appear as a slice or "
