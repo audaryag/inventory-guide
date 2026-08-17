@@ -3017,9 +3017,18 @@ let
     Slim     = Table.SelectColumns(WithMonth, {"Name","Month","Data"}),
     Expanded = Table.ExpandTableColumn(Slim, "Data", Wanted),
     Renamed  = Table.RenameColumns(Expanded, {{"Name","SourceFile"}}),
-    Keys     = Table.TransformColumns(Renamed, {
-                   {"GLAccount",    each Text.TrimStart(Text.Trim(Text.From(_ ?? "")), "0"), type text},
-                   {"ProfitCentre", each Text.Trim(Text.From(_ ?? "")), type text}}),
+    // one normalisation for both keys and both sides. Text.From on a number that Excel has
+    // stored as a double gives 123400 for a whole number, so a profit centre held as a number
+    // in the export and as text on the sheet still meets its match.
+    KeyOf    = (v as any) as text =>
+                   let T = Text.Trim(Text.From(v ?? "")),
+                       N = if Text.EndsWith(T, ".0") then Text.Start(T, Text.Length(T) - 2) else T
+                   in  Text.TrimStart(N, "0"),
+    Keys     = Table.AddColumn(
+                   Table.TransformColumns(Renamed, {
+                       {"GLAccount",    each KeyOf(_), type text},
+                       {"ProfitCentre", each Text.Trim(Text.From(_ ?? "")), type text}}),
+                   "PCKey", each KeyOf([ProfitCentre]), type text),
     // the three named plant codes, written out here rather than read from dimPlant: a query
     // that opens a folder itself may not also reference another query, or the refresh stops
     // with 'references other queries or steps, so it may not directly access a data source'
@@ -3080,15 +3089,23 @@ let
                             "Account Description","Account Name"},                "GLDescMaster"},
                           {{"Nature","NaturePlant","Nature Plant"},               "Nature"},
                           {{"Plant","Valuation Area","NaturePlant2"},             "TBPlant"},
-                          {{"Sort Order","SortOrder","Sort"},                      "TBSort"}
+                          {{"Sort Order","SortOrder","Sort"},                      "TBSort"},
+                          {{"Profit Center","Profit Centre","ProfitCenter","ProfitCentre",
+                            "Profit Ctr","PRCTR"},                                  "MPC"}
                         })
                 otherwise #table({}, {}),
-    MCols    = {"GLAccount","Nature","TBPlant","TBSort"},
-    MPad     = List.Accumulate(List.Difference(MCols, Table.ColumnNames(MasterRaw)), MasterRaw,
-                   (t, c) => Table.AddColumn(t, c, each null)),
-    MKey     = Table.TransformColumns(MPad, {
-                   {"GLAccount", each Text.TrimStart(Text.Trim(Text.From(_ ?? "")), "0"),
-                    type text}}),
+    MCols    = {"GLAccount","PCKey","Nature","TBPlant","TBSort"},
+    MPad     = List.Accumulate(
+                   List.Difference({"GLAccount","MPC","Nature","TBPlant","TBSort"},
+                       Table.ColumnNames(MasterRaw)),
+                   MasterRaw, (t, c) => Table.AddColumn(t, c, each null)),
+    // Both keys normalised the same way on both sides, so a code typed as a number in one
+    // file and as text in the other still matches: 0000123400 and 123400 and 123400.0 all
+    // come out as 123400.
+    MKey     = Table.AddColumn(
+                   Table.TransformColumns(MPad, {
+                       {"GLAccount", each KeyOf(_), type text}}),
+                   "PCKey", each KeyOf([MPC]), type text),
     MSort    = Table.TransformColumns(MKey, {
                    {"TBSort", each try Int64.From(Number.Round(Number.From(_))) otherwise null,
                     Int64.Type},
@@ -3105,46 +3122,60 @@ let
                         else if Anywhere([Nature]) <> null then Anywhere([Nature])
                         else if ByName([TBPlant]) <> null then ByName([TBPlant])
                         else ByName([Nature]), type text),
-    // The GL account is the one key the TB export and TB Master certainly share - column C
-    // against column D - so the plant written beside a GL on that sheet is the plant, and it
-    // is trusted ahead of anything read out of a profit centre. With one caution that decides
-    // whether this is safe: a GL that TB Master gives to two different plants cannot name a
-    // plant on its own, because the profit centre is then the only thing separating them. So
-    // a GL is authoritative only where the sheet is unanimous about it; a GL written against
-    // two plants falls back to the profit centre instead of picking one and moving money to
-    // the wrong plant.
-    MGrouped = Table.Group(MPlanted, {"GLAccount"}, {
-                   {"PlantList", each List.Distinct(List.RemoveNulls([MasterPlant])), type list}}),
-    MOne     = Table.AddColumn(MGrouped, "MasterPlant",
-                   each if List.Count([PlantList]) = 1 then [PlantList]{0} else null, type text),
-    MBase    = Table.Distinct(Table.SelectColumns(MPlanted, MCols), {"GLAccount"}),
-    MJoined  = Table.NestedJoin(MBase, {"GLAccount"},
-                   Table.SelectColumns(MOne, {"GLAccount","MasterPlant"}), {"GLAccount"},
-                   "mp", JoinKind.LeftOuter),
-    Master   = Table.Buffer(Table.ExpandTableColumn(MJoined, "mp", {"MasterPlant"})),
-    Joined   = Table.NestedJoin(Typed, {"GLAccount"}, Master, {"GLAccount"},
+    // The GL account alone cannot name a plant: TB Master lists the same GL against all three
+    // plants, so on its own it is a whitelist and nothing more. The pair - GL account AND
+    // profit centre - is what identifies one row of that sheet, and only then do its Plant,
+    // Nature and Sort belong to the trial-balance line. That pair is the report's answer for
+    // every trial-balance figure on every page.
+    MasterPair = Table.Buffer(Table.Distinct(Table.SelectColumns(MPlanted, MCols),
+                     {"GLAccount", "PCKey"})),
+    // and the same sheet read a second way, by GL alone, for two jobs the pair cannot do:
+    // saying whether an account is an inventory account at all, and giving its nature where
+    // the pair has no row yet. Its plant is deliberately not used - that is the ambiguity the
+    // pair exists to remove.
+    MasterGL  = Table.Buffer(
+                    Table.RenameColumns(
+                        Table.Distinct(Table.SelectColumns(MPlanted, {"GLAccount","Nature","TBSort"}),
+                            {"GLAccount"}),
+                        {{"Nature","GLNature"},{"TBSort","GLTBSort"}})),
+    Joined   = Table.NestedJoin(Typed, {"GLAccount","PCKey"}, MasterPair, {"GLAccount","PCKey"},
                    "tpl", JoinKind.LeftOuter),
-    Flagged  = Table.AddColumn(Joined, "Whitelisted",
+    Joined2  = Table.NestedJoin(Joined, {"GLAccount"}, MasterGL, {"GLAccount"},
+                   "tgl", JoinKind.LeftOuter),
+    // an inventory account is one the sheet lists at all; whether its plant is known is a
+    // separate question, answered by PairMatched below
+    Flagged  = Table.AddColumn(Joined2, "Whitelisted",
+                   each not Table.IsEmpty([tgl]), type logical),
+    Paired   = Table.AddColumn(Flagged, "PairMatched",
                    each not Table.IsEmpty([tpl]), type logical),
-    Widened  = Table.ExpandTableColumn(Flagged, "tpl",
-                   {"Nature","TBPlant","TBSort","MasterPlant"}),
-    // The master's plant comes first now, because it is the one the workbook states outright:
-    // the GL on column C of the export against the plant on column D of TB Master. The profit
-    // centre is the fallback, for a GL the sheet does not carry or is not unanimous about.
-    // One row is still left unplaced on purpose: a line with no profit centre and no plant of
-    // its own is usually SAP's subtotal for the account above it, and giving that a plant
-    // would count the same money twice.
-    Resolved = Table.AddColumn(Widened, "PlantResolved",
-                   each if Text.Trim(Text.From([ProfitCentre] ?? "")) = ""
-                             and [ValuationArea] = null then null
-                        else if [MasterPlant] <> null then [MasterPlant]
+    Widened  = Table.ExpandTableColumn(
+                   Table.ExpandTableColumn(Paired, "tpl", {"Nature","TBPlant","TBSort"}),
+                   "tgl", {"GLNature","GLTBSort"}),
+    // the nature is the matched row's, and where the pair has no row yet the GL's own nature
+    // stands in - so Consumables & Spares is never guessed at from the account name
+    Natured  = Table.AddColumn(Widened, "NatureUse",
+                   each if Text.Trim(Text.From([Nature] ?? "")) <> "" then [Nature]
+                        else [GLNature], type text),
+    // The plant is the matched pair's Plant column, read as a code or as a plant name. Where
+    // the sheet has no row for that pair the old reading of the profit centre stands in, so
+    // this can never take away a plant that used to appear - and qcTBPlants shows which rows
+    // are leaning on that fallback, because those are the pairs still to be typed into
+    // TB Master.
+    Resolved = Table.AddColumn(Natured, "PlantResolved",
+                   each if Anywhere([TBPlant]) <> null then Anywhere([TBPlant])
+                        else if ByName([TBPlant]) <> null then ByName([TBPlant])
                         else [ValuationArea], type text),
     Dropped  = Table.RemoveColumns(Resolved, {"ValuationArea"}),
     Renamed2 = Table.RenameColumns(Dropped, {{"PlantResolved", "ValuationArea"}}),
     // Rows that resolve to none of the three plants are kept HERE and left out in factTB, so
     // qcTBPlants can still see them: a plant going missing from Inventory (TB) has to be
     // visible somewhere, and a row silently dropped at this step is a row nobody can find.
-    Out      = Table.TransformColumnTypes(Renamed2, {
+    Natured2 = Table.RemoveColumns(
+                   Table.RenameColumns(
+                       Table.RemoveColumns(Renamed2, {"Nature"}),
+                       {{"NatureUse", "Nature"}}),
+                   {"GLNature", "GLTBSort"}),
+    Out      = Table.TransformColumnTypes(Natured2, {
                    {"Nature", type text}, {"TBPlant", type text}, {"TBSort", Int64.Type},
                    {"ValuationArea", type text}})
 in
@@ -3239,8 +3270,13 @@ let
     // "Raw Material & Packing" holds the word PACK, so with consumables tested first the whole
     // of RM was filed under Consumables and the RM row vanished from Inventory (TB) while
     // Consumables read far too high. Packing on its own still lands in Consumables.
+    // The Nature column on TB Master is the answer where it is filled - Consumables & Spares,
+    // Raw Materials & Packing, Finished Goods - and the account description is read only when
+    // that column is empty. Guessing from the description is what put Consumables on the FG
+    // row: an account named for what it feeds is not an account named for what it holds.
     Bucket  = (n as any, d as any) as text =>
-                  let T = Text.Upper(Text.From(n ?? "") & " " & Text.From(d ?? "")) in
+                  let N = Text.Trim(Text.From(n ?? "")),
+                      T = Text.Upper(if N <> "" then N else Text.From(d ?? "")) in
                   if Text.Contains(T, "FINISH") or Text.Contains(T, "FG")
                       then "FG"
                   else if Text.Contains(T, "RAW") or Text.Contains(T, "RM")
@@ -3646,7 +3682,7 @@ in
 
 ## qcTBPlants
 
-> Every profit centre the trial balance files contain, with the plant the report resolved it to and what it is worth. A blank `PlantResolved` is a row Inventory (TB) leaves out - so if a plant is missing from Summary while MB5B has it, this table names the profit centres that did not resolve, and the fix is a rule, not a guess. Leave Enable load ON.
+> Every profit centre the trial balance files contain, with the plant the report resolved it to and what it is worth. `MatchedRows` is how many of its rows found their GL-and-profit-centre pair on `TB Master`: a profit centre with rows but no matches is one still to be typed into that sheet, and it is the difference between a figure the workbook decided and a figure the report fell back to guessing. A blank `PlantResolved` is a row Inventory (TB) leaves out - so if a plant is missing from Summary while MB5B has it, this table names the profit centres that did not resolve, and the fix is a rule, not a guess. Leave Enable load ON.
 
 ```
 let
@@ -3661,6 +3697,8 @@ let
                                             each Text.From(_ ?? "(none)")), " | "), type text},
                   {"Rows", each Table.RowCount(_), Int64.Type},
                   {"InventoryRows", each List.Count(List.Select([Whitelisted], each _ = true)),
+                   Int64.Type},
+                  {"MatchedRows", each List.Count(List.Select([PairMatched], each _ = true)),
                    Int64.Type},
                   {"AmountRsCr", each List.Sum(List.Transform([Amount], each _ ?? 0)) / 10000000,
                    type number}}),

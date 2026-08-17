@@ -495,6 +495,18 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 33 &mdash; the trial balance is matched on GL <em>and</em> profit centre, and the FG
+technology chart stops drawing RM:</strong> <code>TB Master</code> lists the same GL against all three plants, so the
+GL alone is a whitelist and nothing more &mdash; the pair identifies one row of that sheet, and only then do its
+<strong>Plant</strong>, <strong>Nature</strong> and <strong>Sort</strong> belong to the trial-balance line. Add a
+<strong>Profit Center</strong> column (F) to <code>TB Master</code> and fill the Plant beside it, and Dholera Cell
+separates from Module for good. The type comes from the sheet&rsquo;s <strong>Nature</strong> column now &mdash;
+Consumables &amp; Spares, Raw Materials &amp; Packing, Finished Goods &mdash; and the account name is read only where
+that column is empty, which is what put consumables on the FG row. A pair the sheet does not carry keeps the old
+profit-centre reading rather than disappearing, and <code>qcTBPlants</code> shows how many of each profit centre&rsquo;s
+rows found their pair, so what is still to be typed is visible. Separately: charts no longer show categories with no
+data, which is why <em>FG by Technology</em> was drawing an axis of RM natures with no bars.</blockquote>
+
 <blockquote><strong>Build 32 &mdash; the trial balance takes its plant from the GL, which is what brings Dholera Cell
 back:</strong> column C of the TB export against column D of <code>TB Master</code>. That mapping was only ever a last
 resort before, tried after the profit centre &mdash; and 1905's profit centre carries no code, so its rows resolved to

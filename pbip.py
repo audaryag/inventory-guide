@@ -70,7 +70,7 @@ TABLES = {
                  ("ValuationArea", S), ("AmountRsCr", D), ("Rows", I)],
     "qcPlantCodes": [("Code", S), ("Rows", I), ("ValueRsCr", D), ("InReport", B)],
     "qcTBPlants": [("ProfitCentre", S), ("Description", S), ("PlantResolved", S),
-                   ("Rows", I), ("InventoryRows", I), ("AmountRsCr", D)],
+                   ("Rows", I), ("InventoryRows", I), ("MatchedRows", I), ("AmountRsCr", D)],
     "qcMonthFiles": [("Category", S), ("Month", T), ("Files", I), ("FileNames", S),
                      ("Rows", I), ("ValueRsCr", D)],
     "qcMasterDupes": [("Sheet", S), ("MatKey", S), ("Natures", I), ("TheyAre", S),
@@ -580,8 +580,14 @@ def build_visual(page, idx, kind, title, wells, pos, extra_filters):
                 sort_field = fe
         st = qstate.setdefault(role, {"projections": []})
         st["projections"].extend(projections)
+        # 'Show items with no data' is deliberately OFF on a chart's axis. dimNature is a
+        # bridge table carrying every nature in the model, RM and FG alike, so with it on the
+        # FG-by-technology chart drew an axis of RM natures - Al Lam, Angle, Backsheet - each
+        # with no bar and no line, which is the chart that kept coming up empty. Off, a
+        # category with nothing to show removes itself. The matrices that must list a plant
+        # even when its figure is blank turn it back on by name, below.
         if role in ("Category", "Series", "Rows", "Columns", "Explain"):
-            st["showAll"] = True if role in ("Category", "Series") else st.get("showAll", False)
+            st["showAll"] = st.get("showAll", False)
         if role == "Rows":
             rows_levels = len(projections)
     if "showAll" in qstate.get("Rows", {}):

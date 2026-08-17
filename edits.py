@@ -10,6 +10,29 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="0000000000", build="33", query="factTB_Staged",
+         title="The trial balance is matched on GL and profit centre together",
+         why="<code>TB Master</code> lists the same GL account against all three plants, so a "
+             "GL on its own says only that an account is inventory — it cannot say whose. "
+             "The pair, GL account and profit centre, identifies one row of that sheet, and "
+             "only then do its Plant, Nature and Sort belong to the line. That is what "
+             "separates Dholera Cell from Dholera Module, and it is why 1905 had no trial "
+             "balance at all. The nature is read from the sheet’s <strong>Nature</strong> "
+             "column rather than guessed from the account description, which is what had "
+             "consumables sitting on the FG row.",
+         steps=[
+             "In <code>Variables and Calculations.xlsx</code> → <code>TB Master</code>, add "
+             "<strong>Profit Center</strong> as column F, written exactly as the TB export "
+             "writes it, and fill <strong>Plant</strong> (D) beside it on every row.",
+             "Repaste <code>factTB_Staged</code> below, then <code>factTB</code> and "
+             "<code>qcTBPlants</code> from the <strong>Queries</strong> tab.",
+             "Refresh. On Checks, <code>qcTBPlants</code> now has a <em>MatchedRows</em> "
+             "column: a profit centre with rows but no matches is one still to be typed into "
+             "TB Master.",
+             "A pair the sheet does not carry falls back to the old profit-centre reading "
+             "rather than vanishing, so nothing that worked before can be taken away by this.",
+         ],
+         find="", repl=""),
     dict(n="000000000", build="32", query="factTB_Staged",
          title="The trial balance reads its plant from the GL account, so Dholera Cell comes back",
          why="1905 had no trial balance at all because the plant was read out of the profit "

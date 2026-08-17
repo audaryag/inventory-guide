@@ -1168,7 +1168,7 @@ VISUALS = [
     ("Checks", "Table", "Trial balance profit centres, and the plant each resolved to",
      [("Columns", ["qcTBPlants[ProfitCentre]", "qcTBPlants[Description]",
                    "qcTBPlants[PlantResolved]", "qcTBPlants[InventoryRows]",
-                   "qcTBPlants[AmountRsCr]"])],
+                   "qcTBPlants[MatchedRows]", "qcTBPlants[AmountRsCr]"])],
      (644, 592, 620, 100),
      "The TB files carry a profit centre, not a plant, so every plant on the TB side of Summary "
      "is resolved from it. A blank or (none) in PlantResolved is a row Inventory (TB) leaves "
