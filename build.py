@@ -495,6 +495,13 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 35 &mdash; the profit centre matches however it is written:</strong> the export writes it with
+two leading zeros the sheet does not have, and Excel holds one side as a number and the other as text. The key now
+takes the digits and letters, drops spaces, punctuation and leading zeros, and upper-cases what is left, on both
+sides &mdash; so <code>001902001</code>, <code>1902001</code>, <code>1902001.0</code> and <code>1902-001</code> all
+meet, while a genuinely different code still does not. The unmatched-pairs table on Checks shows that key beside the
+raw value, so a mismatch is something you can see rather than deduce.</blockquote>
+
 <blockquote><strong>Build 34 &mdash; one rule for the trial balance, and a finite list of what is missing:</strong>
 build 33 kept the old profit-centre reading as a fallback, so while <code>TB Master</code> was half filled two rules
 ran at once and the figures moved further off rather than closer. There is one rule now: a TB line takes its

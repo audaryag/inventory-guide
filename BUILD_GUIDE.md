@@ -3018,13 +3018,20 @@ let
     Slim     = Table.SelectColumns(WithMonth, {"Name","Month","Data"}),
     Expanded = Table.ExpandTableColumn(Slim, "Data", Wanted),
     Renamed  = Table.RenameColumns(Expanded, {{"Name","SourceFile"}}),
-    // one normalisation for both keys and both sides. Text.From on a number that Excel has
-    // stored as a double gives 123400 for a whole number, so a profit centre held as a number
-    // in the export and as text on the sheet still meets its match.
+    // One normalisation for both keys and both sides, and it has to survive everything Excel
+    // and SAP do to a code that is really just a number. The export writes a profit centre
+    // with two leading zeros that the sheet does not have; one file holds it as text and the
+    // other as a number, so 1902001 arrives as "1902001", "001902001", "1902001.0" or with a
+    // space or a hyphen inside it. So: take the digits and letters, drop everything else,
+    // upper-case it, and drop leading zeros. All of those then come out as 1902001, and a
+    // code that is genuinely different still is.
     KeyOf    = (v as any) as text =>
                    let T = Text.Trim(Text.From(v ?? "")),
-                       N = if Text.EndsWith(T, ".0") then Text.Start(T, Text.Length(T) - 2) else T
-                   in  Text.TrimStart(N, "0"),
+                       // a code has no fraction: 1902001.0 is Excel's doing, not SAP's
+                       D = if Text.Contains(T, ".") then Text.Start(T, Text.PositionOf(T, ".")) else T,
+                       K = Text.Upper(Text.Select(D, {"0".."9", "a".."z", "A".."Z"})),
+                       Z = Text.TrimStart(K, "0")
+                   in  if Z = "" then K else Z,
     Keys     = Table.AddColumn(
                    Table.TransformColumns(Renamed, {
                        {"GLAccount",    each KeyOf(_), type text},
@@ -3593,6 +3600,10 @@ let
                    type text}}),
     Grouped = Table.Group(Named, {"GLAccount", "ProfitCentre"}, {
                   {"GLDesc", each Text.From(List.First([GLDesc]) ?? ""), type text},
+                  // the profit centre as the join actually sees it, once leading zeros,
+                  // spaces and punctuation are off it - so a mismatch between how the export
+                  // and the sheet write the same code is visible rather than deduced
+                  {"PCKey", each Text.From(List.First([PCKey]) ?? ""), type text},
                   {"OnSheetAsGL", each List.AnyTrue(List.Transform([Whitelisted], each _ = true)),
                    type logical},
                   {"Rows", each Table.RowCount(_), Int64.Type},
@@ -3602,7 +3613,7 @@ let
     Sorted  = Table.Sort(Grouped, {{"AmountRsCr", Order.Descending}}),
     Typed   = Table.TransformColumnTypes(Sorted, {
                   {"GLAccount", type text}, {"ProfitCentre", type text},
-                  {"GLDesc", type text}})
+                  {"PCKey", type text}, {"GLDesc", type text}})
 in
     Typed
 ```

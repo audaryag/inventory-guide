@@ -1128,7 +1128,8 @@ VISUALS = [
 
     ("Checks", "Table", "GL and profit centre pairs TB Master has no row for",
      [("Columns", ["qcTBUnmatched[GLAccount]", "qcTBUnmatched[GLDesc]",
-                   "qcTBUnmatched[ProfitCentre]", "qcTBUnmatched[OnSheetAsGL]",
+                   "qcTBUnmatched[ProfitCentre]", "qcTBUnmatched[PCKey]",
+                   "qcTBUnmatched[OnSheetAsGL]",
                    "qcTBUnmatched[AmountRsCr]"])],
      (644, 268, 620, 100),
      "Empty is good, and empty is the target. Every pair listed here is money in no "

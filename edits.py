@@ -10,6 +10,21 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="000000000000", build="35", query="factTB_Staged",
+         title="The profit centre matches however either file writes it",
+         why="The TB export writes the profit centre with two leading zeros that "
+             "<code>TB Master</code> does not have, and Excel holds one side as a number and "
+             "the other as text — so the same code failed to meet itself. The key is now "
+             "the digits and letters only, upper-cased, with spaces, punctuation and leading "
+             "zeros removed, on both sides.",
+         steps=[
+             "Repaste <code>factTB_Staged</code> and <code>qcTBUnmatched</code> below.",
+             "Refresh, then look at the Checks table <em>GL and profit centre pairs TB Master "
+             "has no row for</em>. It should be far shorter.",
+             "Its <em>PCKey</em> column is the profit centre as the join sees it — if a "
+             "pair is still listed, compare that key with what your sheet holds.",
+         ],
+         find="", repl=""),
     dict(n="00000000000", build="34", query="factTB_Staged",
          title="One rule for the trial balance, and a list of every pair still missing",
          why="Build 33 still read the plant out of the profit centre where <code>TB Master</code> "

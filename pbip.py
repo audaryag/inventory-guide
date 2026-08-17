@@ -69,7 +69,7 @@ TABLES = {
     "qcTBByGL": [("GLAccount", S), ("GLDesc", S), ("Nature", S), ("Category", S),
                  ("ValuationArea", S), ("AmountRsCr", D), ("Rows", I)],
     "qcPlantCodes": [("Code", S), ("Rows", I), ("ValueRsCr", D), ("InReport", B)],
-    "qcTBUnmatched": [("GLAccount", S), ("ProfitCentre", S), ("GLDesc", S),
+    "qcTBUnmatched": [("GLAccount", S), ("ProfitCentre", S), ("PCKey", S), ("GLDesc", S),
                       ("OnSheetAsGL", B), ("Rows", I), ("AmountRsCr", D)],
     "qcTBPlants": [("ProfitCentre", S), ("Description", S), ("PlantResolved", S),
                    ("Rows", I), ("InventoryRows", I), ("MatchedRows", I), ("AmountRsCr", D)],
