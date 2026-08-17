@@ -495,6 +495,20 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 39 &mdash; three diagnostic pages, so a wrong figure shows its own
+ingredients:</strong> nothing on the five report pages changed and no existing query was rewritten &mdash; this build only
+adds. Three new pages, deliberately plain, each sized to be read or photographed without scrolling, and each on the latest
+month only: <strong>Checks TB</strong> says where every rupee of the trial balance went and by which rule, per plant and
+nature, so a figure reading short is either on another plant&rsquo;s row or on a row marked <em>dropped</em>, and the rule
+says which. <strong>Checks Stock</strong> takes every MB5B figure apart &mdash; quantity, megawatts, crores, and the watts
+per piece those two imply, which is the number to hold against the 580 the working uses &mdash; then names the twelve
+largest FG materials with the rate read off each description, and the twelve largest RM materials with the BOM standard
+quantity matched to each. <strong>Checks Sources</strong> is the plumbing: every file read and its headers, every sheet in
+the workbook and its row count, whether a month arrived twice, whether the material numbers on the sheets match the ones in
+the files, duplicate master rows, plant codes left out, and the capacity behind every Days figure. Four new tables carry
+them &mdash; <code>qcTBRules</code>, <code>qcStockCheck</code>, <code>qcFGRate</code>, <code>qcRMRate</code> &mdash; all
+read-only summaries of what was already loaded.</blockquote>
+
 <blockquote><strong>Build 38 &mdash; a contradictory pair no longer empties a plant, and every line says how it was
 placed:</strong> build 36 dropped every GL and profit centre pair that <code>TB Master</code> gives two different
 Plants, which took Dholera Module&rsquo;s whole RM with it. There is now one tie-break, and it invents nothing: where

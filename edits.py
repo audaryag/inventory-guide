@@ -10,6 +10,25 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="0000000000000000", build="39", query="qcStockCheck",
+         title="Three diagnostic pages, so a wrong figure shows its own ingredients",
+         why="Nothing on the five report pages changed and no existing query was rewritten \u2014 "
+             "this build only adds. Four read-only tables summarise what is already loaded, and "
+             "three plain pages show them: <strong>Checks TB</strong> (where every rupee of the "
+             "trial balance went, and by which rule), <strong>Checks Stock</strong> (every MB5B "
+             "figure taken apart into quantity, MW, crores and the watts per piece those imply, "
+             "plus the twelve largest FG and RM materials with the rate and BOM quantity behind "
+             "each) and <strong>Checks Sources</strong> (files, sheets, headers, duplicate months, "
+             "material-number matching, duplicate master rows and the capacity behind Days). "
+             "Every one is the latest month only and sized to be read without scrolling.",
+         steps=[
+             "Add the four new queries from the <strong>Queries</strong> tab: "
+             "<code>qcStockCheck</code>, <code>qcFGRate</code>, <code>qcRMRate</code>, "
+             "<code>qcTBRules</code>. Leave Enable load ON for all four.",
+             "Or, simpler: download the build 39 package, which already has the pages in it.",
+             "Refresh, then read the three new page tabs at the bottom.",
+         ],
+         find="", repl=""),
     dict(n="000000000000000", build="38", query="factTB_Staged",
          title="A contradictory pair no longer empties a plant, and every line says how it was placed",
          why="Build 36 dropped every GL and profit centre pair that <code>TB Master</code> gives "

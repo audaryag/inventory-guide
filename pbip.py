@@ -71,6 +71,17 @@ TABLES = {
     "qcPlantCodes": [("Code", S), ("Rows", I), ("ValueRsCr", D), ("InReport", B)],
     "qcTBUnmatched": [("GLAccount", S), ("ProfitCentre", S), ("PCKey", S), ("GLDesc", S),
                       ("OnSheetAsGL", B), ("Reason", S), ("Rows", I), ("AmountRsCr", D)],
+    "qcStockCheck": [("ValuationArea", S), ("Category", S), ("Nature", S), ("Month", T),
+                     ("Rows", I), ("Materials", I), ("CloseQty", D), ("MWValue", D), ("RsCr", D),
+                     ("WattsPerPiece", D)],
+    "qcFGRate": [("ValuationArea", S), ("Material", S), ("MaterialDesc", S), ("Month", T),
+                 ("Rows", I), ("Nature", S), ("Rate", D), ("CloseQty", D), ("MWValue", D),
+                 ("RsCr", D)],
+    "qcRMRate": [("ValuationArea", S), ("Material", S), ("MaterialDesc", S), ("Month", T),
+                 ("Rows", I), ("Nature", S), ("BOMStdQty", D), ("CloseQty", D), ("MWValue", D),
+                 ("RsCr", D)],
+    "qcTBRules": [("Month", T), ("ValuationArea", S), ("Nature", S), ("Rule", S),
+                  ("Rows", I), ("GLAccounts", I), ("AmountRsCr", D)],
     "qcTBPlants": [("ProfitCentre", S), ("Description", S), ("PlantResolved", S),
                    ("Rows", I), ("InventoryRows", I), ("MatchedRows", I), ("AmountRsCr", D)],
     "qcMonthFiles": [("Category", S), ("Month", T), ("Files", I), ("FileNames", S),
@@ -118,7 +129,8 @@ HIDDEN = {("factInventory", "MatKey"), ("factTB", "PlantCode"),
 # tables kept out of the report field list (helpers/diagnostics still refresh)
 HIDDEN_TABLES = {"factTB_Unmapped", "qcHeaders", "qcVarHeaders", "qcNatureNoCapacity",
                  "qcAttrMatch", "qcTBByGL", "qcPlantCodes", "qcTBPlants",
-                 "qcMonthFiles", "qcMasterDupes", "qcTBUnmatched"}
+                 "qcMonthFiles", "qcMasterDupes", "qcTBUnmatched",
+                 "qcStockCheck", "qcFGRate", "qcRMRate", "qcTBRules"}
 
 
 def measure_format(name):

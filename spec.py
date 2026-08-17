@@ -8,7 +8,14 @@ CANVAS = (1280, 720)
 
 # Checks is last on purpose: the five report pages come first, and it is the page you
 # open when a figure looks wrong, so a refresh problem names itself.
-PAGES = ["Overview", "Summary", "FG", "RM", "Detail", "Checks"]
+PAGES = ["Overview", "Summary", "FG", "RM", "Detail", "Checks",
+         "Checks TB", "Checks Stock", "Checks Sources"]
+
+# The three diagnostic pages are deliberately plain: full-width tables, no panel, no styling,
+# no filters of their own. They exist to show where a number came from, so every ingredient of
+# every figure is a column you can read and compare against the old working. Nothing on them
+# is meant to be pretty and nothing on them is meant to be shown to anyone.
+PLAIN_PAGES = {"Checks TB", "Checks Stock", "Checks Sources"}
 
 # The drill-through page: right-click any bar, row or slice on the other pages and choose
 # Drill through → Detail, and these fields carry the clicked context across.
@@ -1219,6 +1226,144 @@ VISUALS = [
      "material gets depends on the order of the sheet. Delete the wrong row and refresh.",
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
+
+    # ---- Checks TB: every trial-balance figure, and the rule that placed it -------------
+    ("Checks TB", "Table", "Where every rupee of the trial balance went, and by which rule",
+     [("Columns", ["qcTBRules[Month]", "qcTBRules[ValuationArea]", "qcTBRules[Nature]",
+                   "qcTBRules[Rule]", "qcTBRules[GLAccounts]", "qcTBRules[Rows]",
+                   "qcTBRules[AmountRsCr]"])],
+     (8, 8, 1264, 230),
+     "Start here when a trial-balance figure is wrong. One row per month, plant, nature and "
+     "rule. Add up the rows for a plant and nature and you have exactly what Summary shows for "
+     "it \u2014 so if that is too low, the missing money is on a row whose Rule begins with "
+     "'dropped', and the Rule says why; if it is too high, the extra is on a row for the wrong "
+     "plant, and the same table shows which.",
+     []),
+
+    ("Checks TB", "Table", "Every GL account, its plant, its nature and how it was placed",
+     [("Columns", ["qcTBByGL[GLAccount]", "qcTBByGL[GLDesc]", "qcTBByGL[Nature]",
+                   "qcTBByGL[Category]", "qcTBByGL[ValuationArea]", "qcTBByGL[Rule]",
+                   "qcTBByGL[AmountRsCr]"])],
+     (8, 246, 1264, 230),
+     "The account-by-account version of the table above. Filter it to one plant and one "
+     "category and it is the list your old working adds up \u2014 compare the two and the "
+     "account that does not belong names itself. A negative amount is a credit-balance account, "
+     "which is a real figure and not an error.",
+     []),
+
+    ("Checks TB", "Table", "Pairs TB Master has no row for, or contradicts itself about",
+     [("Columns", ["qcTBUnmatched[GLAccount]", "qcTBUnmatched[GLDesc]",
+                   "qcTBUnmatched[ProfitCentre]", "qcTBUnmatched[PCKey]",
+                   "qcTBUnmatched[Reason]", "qcTBUnmatched[AmountRsCr]"])],
+     (8, 484, 628, 228),
+     "Empty is the target. Reason says which of the two problems it is: no row on TB Master for "
+     "that GL and profit centre, or two rows giving it different plants. PCKey is the profit "
+     "centre as the match sees it, after leading zeros and punctuation are taken off \u2014 so "
+     "if PCKey looks right and the pair is still listed, the sheet genuinely has no row for it.",
+     []),
+
+    ("Checks TB", "Table", "Every profit centre in the trial balance, and where it resolved",
+     [("Columns", ["qcTBPlants[ProfitCentre]", "qcTBPlants[Description]",
+                   "qcTBPlants[PlantResolved]", "qcTBPlants[InventoryRows]",
+                   "qcTBPlants[MatchedRows]", "qcTBPlants[AmountRsCr]"])],
+     (644, 484, 628, 228),
+     "MatchedRows is how many of a profit centre's lines found their pair on TB Master. A blank "
+     "PlantResolved is money in no figure at all.",
+     []),
+
+    # ---- Checks Stock: the ingredients of every MB5B figure -----------------------------
+    ("Checks Stock", "Table", "Every stock figure taken apart, by plant, type and month",
+     [("Columns", ["qcStockCheck[Month]", "qcStockCheck[ValuationArea]",
+                   "qcStockCheck[Category]", "qcStockCheck[Nature]",
+                   "qcStockCheck[Materials]", "qcStockCheck[CloseQty]", "qcStockCheck[MWValue]",
+                   "qcStockCheck[RsCr]", "qcStockCheck[WattsPerPiece]"])],
+     (8, 8, 1264, 300),
+     "Every MB5B number in the report, with what it is made of. WattsPerPiece is MW \u00d7 "
+     "10\u2076 \u00f7 quantity \u2014 the rate the report has effectively used. Compare it "
+     "with the rate your working uses: if the quantity matches your export and only this "
+     "differs, the fault is the rate; if the quantity differs, the fault is which rows are "
+     "counted, and the two tables below name them.",
+     []),
+
+    ("Checks Stock", "Table", "Each FG material: the rate read off its description, and its MW",
+     [("Columns", ["qcFGRate[Month]", "qcFGRate[ValuationArea]", "qcFGRate[Material]",
+                   "qcFGRate[MaterialDesc]", "qcFGRate[Nature]", "qcFGRate[Rate]",
+                   "qcFGRate[CloseQty]", "qcFGRate[MWValue]", "qcFGRate[RsCr]"])],
+     (8, 316, 1264, 200),
+     "FG megawatts are quantity \u00d7 Rate \u00f7 10\u2076, and Rate is the last three "
+     "characters of the description \u2014 the same formula as your working. Sorted biggest MW "
+     "first, so the material inflating a plant is at the top. A Rate that is not the material's "
+     "wattage is a description that does not end in it.",
+     []),
+
+    ("Checks Stock", "Table", "Each RM material: its BOM standard quantity, and its MW",
+     [("Columns", ["qcRMRate[Month]", "qcRMRate[ValuationArea]", "qcRMRate[Material]",
+                   "qcRMRate[MaterialDesc]", "qcRMRate[Nature]", "qcRMRate[BOMStdQty]",
+                   "qcRMRate[CloseQty]", "qcRMRate[MWValue]", "qcRMRate[RsCr]"])],
+     (8, 524, 1264, 188),
+     "RM megawatts are quantity \u00f7 BOM standard quantity \u00d7 the Constants figure "
+     "\u00f7 10\u2076. A blank BOMStdQty is a material RM Master does not carry, and that is "
+     "the only reason its MW is blank.",
+     []),
+
+    # ---- Checks Sources: what the files and the sheets actually gave ---------------------
+    ("Checks Sources", "Table", "Every file read, its folder and its sheets",
+     [("Columns", ["qcHeaders[Folder]", "qcHeaders[Name]", "qcHeaders[SheetNames]",
+                   "qcHeaders[Headers]"])],
+     (8, 8, 1264, 170),
+     "One row per file the four folders gave. A month missing from the report is missing here "
+     "first. Headers is what the report read as column names \u2014 a heading spelled "
+     "differently from the code is why a column comes through empty.",
+     []),
+
+    ("Checks Sources", "Table", "Every sheet in Variables and Calculations, and its size",
+     [("Columns", ["qcVarHeaders[SheetName]", "qcVarHeaders[DataRows]",
+                   "qcVarHeaders[Headers]"])],
+     (8, 186, 628, 170),
+     "TB Master, RM Nature, FG Master, Constants and MW all live here. A sheet showing 0 rows, "
+     "or headers that are not what you typed, is why whatever depends on it is empty.",
+     []),
+
+    ("Checks Sources", "Table", "Did any month arrive from two files",
+     [("Columns", ["qcMonthFiles[Category]", "qcMonthFiles[Month]", "qcMonthFiles[Files]",
+                   "qcMonthFiles[ValueRsCr]"])],
+     (644, 186, 628, 170),
+     "Files of 1 on every row is what you want. A 2 means one month arrived twice, which is the "
+     "classic reason a figure reads as a multiple of what it should be.",
+     []),
+
+    ("Checks Sources", "Table", "Do the material numbers match between the sheets and the files",
+     [("Columns", ["qcAttrMatch[Source]", "qcAttrMatch[DistinctMaterials]",
+                   "qcAttrMatch[MatchedToStockFiles]", "qcAttrMatch[FirstEight]"])],
+     (8, 364, 628, 170),
+     "MatchedToStockFiles near zero with a healthy DistinctMaterials count on both sides means "
+     "the sheets and the files key their materials differently \u2014 which is what makes "
+     "natures, MW and Days come out blank.",
+     []),
+
+    ("Checks Sources", "Table", "One material with two natures on a master sheet",
+     [("Columns", ["qcMasterDupes[Sheet]", "qcMasterDupes[MatKey]", "qcMasterDupes[TheyAre]",
+                   "qcMasterDupes[Rows]"])],
+     (644, 364, 628, 170),
+     "Empty is what you want. A row here is a material written twice with a different nature "
+     "each time, so which one it gets depends on the order of the sheet.",
+     []),
+
+    ("Checks Sources", "Table", "Every plant code the stock files contain",
+     [("Columns", ["qcPlantCodes[Code]", "qcPlantCodes[Rows]", "qcPlantCodes[ValueRsCr]",
+                   "qcPlantCodes[InReport]"])],
+     (8, 542, 628, 170),
+     "InReport False is a code the report leaves out, with what leaving it out costs.",
+     []),
+
+    ("Checks Sources", "Table", "The capacity the MW sheet gave, per technology and plant",
+     [("Columns", ["dimCapacity[ValuationArea]", "dimCapacity[Tech]", "dimCapacity[Month]",
+                   "dimCapacity[CapacityMW]"])],
+     (644, 542, 628, 170),
+     "Days of cover is stock MW \u00f7 this. A technology or plant absent from this table has "
+     "no capacity, which is the only reason its Days cell is blank \u2014 a plant-total row on "
+     "the MW sheet fills it in.",
+     []),
 ]
 
 
@@ -1270,7 +1415,7 @@ LEFT = PANEL_W + 8                 # 192: the first pixel a page's own visuals m
 RIGHT = CANVAS[0] - 16             # 1264: the last one
 _OLD_L, _OLD_R = 16, 1264          # what the five full-width pages were drawn against
 _SCALE = (RIGHT - LEFT) / (_OLD_R - _OLD_L)
-PANEL_PAGES = [p for p in PAGES if p != PAGES[0]]
+PANEL_PAGES = [p for p in PAGES if p != PAGES[0] and p not in PLAIN_PAGES]
 
 
 def squeeze(x, w):
@@ -1279,7 +1424,7 @@ def squeeze(x, w):
     return int(round(LEFT + (x - _OLD_L) * _SCALE)), int(round(w * _SCALE))
 
 
-VISUALS = [v if v[0] == PAGES[0] else
+VISUALS = [v if v[0] == PAGES[0] or v[0] in PLAIN_PAGES else
            (v[0], v[1], v[2], v[3],
             (squeeze(v[4][0], v[4][2])[0], v[4][1], squeeze(v[4][0], v[4][2])[1], v[4][3]),
             v[5], v[6])
