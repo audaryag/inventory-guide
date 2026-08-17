@@ -43,7 +43,7 @@ fail with a file-lock error. This applies every time you refresh, forever.
 **1.2** Ribbon: **Home** → **Transform data**. The Power Query Editor window opens.
 Everything in Part 1 happens in this window.
 
-### How to add each query (you will repeat this 41 times)
+### How to add each query (you will repeat this 42 times)
 
 1. In Power Query, ribbon: **Home** → **New Source** → **Blank Query**.
 2. Ribbon: **Home** → **Advanced Editor**.
@@ -101,7 +101,8 @@ Everything in Part 1 happens in this window.
 | 38 | `qcMonthFiles` | self-check — did any month arrive from two files |
 | 39 | `qcMasterDupes` | self-check — one material with two natures on a master sheet |
 | 40 | `qcTBPlants` | self-check — every TB profit centre and the plant it resolved to |
-| 41 | `dimPlantType` | one row per plant and type, so Summary needs no expanding |
+| 41 | `qcTBUnmatched` | self-check — the GL and profit centre pairs TB Master has no row for |
+| 42 | `dimPlantType` | one row per plant and type, so Summary needs no expanding |
 
 **1.4 — Do this before the first refresh; it is not optional.** The report reads two kinds of
 source - the four stock/TB folders and the `Variables and Calculations` workbook - and every nature,
@@ -135,14 +136,14 @@ dimNature, dimCapacity, dimTBMaster, dimMaterialAttr, dimFGAttr,
 dimCategory, dimMetric, dimMeasure, dimPlantType,
 qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet,
 qcAttrMatch, qcTBByGL, qcPlantCodes,
-qcMonthFiles, qcMasterDupes, qcTBPlants
+qcMonthFiles, qcMasterDupes, qcTBPlants, qcTBUnmatched
 ```
 
 **1.6** Ribbon: **Home** → **Close & Apply**. Wait for it to load.
 
 ### Checkpoint — do not go to Part 2 until all five are true
 
-1. The Queries list on the left of Power Query shows **41** names, and every name in the
+1. The Queries list on the left of Power Query shows **42** names, and every name in the
    table above appears in it, spelled identically. Compare them one by one; a missing one
    is the single most common cause of an error later.
 2. The 17 helper names in step 1.5 are shown in *italics* in that list (that is what
@@ -155,12 +156,12 @@ qcMonthFiles, qcMasterDupes, qcTBPlants
    missing from `TB Master`, so its money is not counted anywhere — add it to `TB Master`
    and refresh.
 
-After **Close & Apply**, the Data pane on the right must list exactly these 24 tables:
+After **Close & Apply**, the Data pane on the right must list exactly these 25 tables:
 `factInventory`, `factTB`, `factTB_Unmapped`, `dimPlant`, `dimDate`, `dimNature`,
 `dimCapacity`, `dimTBMaster`, `dimMaterialAttr`, `dimFGAttr`, `dimCategory`, `dimMetric`,
 `dimMeasure`, `dimPlantType`, `qcHeaders`, `qcVarHeaders`, `qcNatureNoCapacity`,
 `qcMWSheet`, `qcAttrMatch`, `qcTBByGL`, `qcPlantCodes`, `qcMonthFiles`, `qcMasterDupes`,
-`qcTBPlants`.
+`qcTBPlants`, `qcTBUnmatched`.
 
 ### If something fails here
 
@@ -173,7 +174,7 @@ After **Close & Apply**, the Data pane on the right must list exactly these 24 t
 | "Illegal characters in path" | `pRoot` is not your real path | open the folder in File Explorer, click the address bar, copy it in — keep the quote marks |
 | "Token Literal expected" | a text value lost its quote marks | `pRoot` must be `"C:\...\Inventory Report"`, quotes included |
 | "Not enough elements in the enumeration" | a query assumed more columns than the sheet has | you are on an old version of the query — refresh the guide page and re-copy |
-| "Expression.Syntax Error" right after pasting | the whole appendix went into one query | one query per Blank Query, 41 times |
+| "Expression.Syntax Error" right after pasting | the whole appendix went into one query | one query per Blank Query, 42 times |
 
 Send me the exact error text and I'll tell you the one-line fix.
 
@@ -1778,13 +1779,13 @@ Position: Horizontal 731, Vertical 160, Width 533, Height 100.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
 
-**4.70** **Table** — Empty is good. A long list here with 0 trial-balance rows above means TB Master is not matching your GL numbers at all, and the report is showing the whole trial balance rather than the inventory accounts.
+**4.70** **Table** — Empty is good, and empty is the target. Every pair listed here is money in no trial-balance figure anywhere in the report — not on a wrong plant, not in a total, nowhere — because the plant and nature of a TB line come from the row TB Master holds for that GL and profit centre together. Type each pair onto that sheet with its Plant and Nature and it leaves this list. Biggest amount first, so the top row is the one worth doing next. OnSheetAsGL True means the GL is on the sheet but not against this profit centre.
 
 | Well | Field |
 |---|---|
-| Columns | `factTB_Unmapped[GLAccount]`, `factTB_Unmapped[GLDesc]`, `factTB_Unmapped[Amount]` |
+| Columns | `qcTBUnmatched[GLAccount]`, `qcTBUnmatched[GLDesc]`, `qcTBUnmatched[ProfitCentre]`, `qcTBUnmatched[OnSheetAsGL]`, `qcTBUnmatched[AmountRsCr]` |
 
-Title: `GL Accounts in the TB Files That TB Master Does Not List`
+Title: `GL and Profit Centre Pairs TB Master Has No Row for`
 
 Position: Horizontal 731, Vertical 268, Width 533, Height 100.
 
@@ -1854,7 +1855,7 @@ Position: Horizontal 192, Vertical 592, Width 533, Height 100.
 
 | Well | Field |
 |---|---|
-| Columns | `qcTBPlants[ProfitCentre]`, `qcTBPlants[Description]`, `qcTBPlants[PlantResolved]`, `qcTBPlants[InventoryRows]`, `qcTBPlants[AmountRsCr]` |
+| Columns | `qcTBPlants[ProfitCentre]`, `qcTBPlants[Description]`, `qcTBPlants[PlantResolved]`, `qcTBPlants[InventoryRows]`, `qcTBPlants[MatchedRows]`, `qcTBPlants[AmountRsCr]` |
 
 Title: `Trial Balance Profit Centres, and the Plant Each Resolved to`
 
@@ -3156,15 +3157,16 @@ let
     Natured  = Table.AddColumn(Widened, "NatureUse",
                    each if Text.Trim(Text.From([Nature] ?? "")) <> "" then [Nature]
                         else [GLNature], type text),
-    // The plant is the matched pair's Plant column, read as a code or as a plant name. Where
-    // the sheet has no row for that pair the old reading of the profit centre stands in, so
-    // this can never take away a plant that used to appear - and qcTBPlants shows which rows
-    // are leaning on that fallback, because those are the pairs still to be typed into
-    // TB Master.
+    // The plant is the matched pair's Plant column, read as a code or as a plant name, and
+    // there is no second rule. Reading it from the profit centre as well made two rules run
+    // at once, and a row the sheet had not reached yet was placed by the old guess instead of
+    // standing out - which moved the figures further off, not closer. A pair with no row on
+    // TB Master now resolves to nothing, is left out of every trial-balance figure, and is
+    // listed by qcTBUnmatched with what it is worth. That list is finite: type those pairs
+    // onto the sheet and the trial balance is right by construction.
     Resolved = Table.AddColumn(Natured, "PlantResolved",
                    each if Anywhere([TBPlant]) <> null then Anywhere([TBPlant])
-                        else if ByName([TBPlant]) <> null then ByName([TBPlant])
-                        else [ValuationArea], type text),
+                        else ByName([TBPlant]), type text),
     Dropped  = Table.RemoveColumns(Resolved, {"ValuationArea"}),
     Renamed2 = Table.RenameColumns(Dropped, {{"PlantResolved", "ValuationArea"}}),
     // Rows that resolve to none of the three plants are kept HERE and left out in factTB, so
@@ -3575,6 +3577,32 @@ let
                   {"GLAccount", type text}, {"GLDesc", type text},
                   {"Nature", type text}, {"Category", type text},
                   {"ValuationArea", type text}})
+in
+    Typed
+```
+
+## qcTBUnmatched
+
+> The to-do list for `TB Master`. Every GL account and profit centre pair the trial balance contains that the sheet has no row for, with what it is worth. Those rows are in no trial-balance figure anywhere in the report - not on a wrong plant, not in a total, nowhere - so this table is the whole of what the TB side is missing. Type each pair onto `TB Master` with its Plant and Nature and it disappears from here. Leave Enable load ON.
+
+```
+let
+    Src     = Table.SelectRows(factTB_Staged, each [PairMatched] = false),
+    Named   = Table.TransformColumns(Src, {
+                  {"ProfitCentre", each if Text.From(_ ?? "") = "" then "(blank)" else _,
+                   type text}}),
+    Grouped = Table.Group(Named, {"GLAccount", "ProfitCentre"}, {
+                  {"GLDesc", each Text.From(List.First([GLDesc]) ?? ""), type text},
+                  {"OnSheetAsGL", each List.AnyTrue(List.Transform([Whitelisted], each _ = true)),
+                   type logical},
+                  {"Rows", each Table.RowCount(_), Int64.Type},
+                  {"AmountRsCr", each List.Sum(List.Transform([Amount], each _ ?? 0)) / 10000000,
+                   type number}}),
+    // biggest money first: that is the row worth typing in next
+    Sorted  = Table.Sort(Grouped, {{"AmountRsCr", Order.Descending}}),
+    Typed   = Table.TransformColumnTypes(Sorted, {
+                  {"GLAccount", type text}, {"ProfitCentre", type text},
+                  {"GLDesc", type text}})
 in
     Typed
 ```

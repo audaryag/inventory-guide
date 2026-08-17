@@ -1126,13 +1126,18 @@ VISUALS = [
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
 
-    ("Checks", "Table", "GL accounts in the TB files that TB Master does not list",
-     [("Columns", ["factTB_Unmapped[GLAccount]", "factTB_Unmapped[GLDesc]",
-                   "factTB_Unmapped[Amount]"])],
+    ("Checks", "Table", "GL and profit centre pairs TB Master has no row for",
+     [("Columns", ["qcTBUnmatched[GLAccount]", "qcTBUnmatched[GLDesc]",
+                   "qcTBUnmatched[ProfitCentre]", "qcTBUnmatched[OnSheetAsGL]",
+                   "qcTBUnmatched[AmountRsCr]"])],
      (644, 268, 620, 100),
-     "Empty is good. A long list here with 0 trial-balance rows above means TB Master is not "
-     "matching your GL numbers at all, and the report is showing the whole trial balance "
-     "rather than the inventory accounts.",
+     "Empty is good, and empty is the target. Every pair listed here is money in no "
+     "trial-balance figure anywhere in the report \u2014 not on a wrong plant, not in a total, "
+     "nowhere \u2014 because the plant and nature of a TB line come from the row TB Master "
+     "holds for that GL and profit centre together. Type each pair onto that sheet with its "
+     "Plant and Nature and it leaves this list. Biggest amount first, so the top row is the "
+     "one worth doing next. OnSheetAsGL True means the GL is on the sheet but not against "
+     "this profit centre.",
      ["Format pane \u2192 Values \u2192 Font: Arial, Font size: 9, Colour: #1F2A24.",
       "Format pane \u2192 Column headers \u2192 Font: Arial, Font size: 9, Colour: #14532D."]),
 

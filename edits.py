@@ -10,6 +10,26 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000", build="34", query="factTB_Staged",
+         title="One rule for the trial balance, and a list of every pair still missing",
+         why="Build 33 still read the plant out of the profit centre where <code>TB Master</code> "
+             "had no row for a pair — so with the sheet half filled, two rules ran at once "
+             "and the figures moved further off instead of closer. There is one rule now: the "
+             "GL account and profit centre together find a row on <code>TB Master</code>, and "
+             "that row’s Plant and Nature are used. A pair with no row is in no "
+             "trial-balance figure anywhere, and <code>qcTBUnmatched</code> lists it with what "
+             "it is worth, biggest first.",
+         steps=[
+             "Repaste <code>factTB_Staged</code> below.",
+             "Add <code>qcTBUnmatched</code> as a new blank query from the "
+             "<strong>Queries</strong> tab, and leave Enable load on.",
+             "Refresh, then read the new Checks table <em>GL and profit centre pairs TB Master "
+             "has no row for</em>. Every row on it is money the TB side is not counting.",
+             "Type those pairs onto <code>TB Master</code> — GL account, profit centre, "
+             "Plant, Nature — and refresh again. The list shrinks; when it is empty the "
+             "trial balance is complete by construction.",
+         ],
+         find="", repl=""),
     dict(n="0000000000", build="33", query="factTB_Staged",
          title="The trial balance is matched on GL and profit centre together",
          why="<code>TB Master</code> lists the same GL account against all three plants, so a "

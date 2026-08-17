@@ -495,6 +495,15 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 34 &mdash; one rule for the trial balance, and a finite list of what is missing:</strong>
+build 33 kept the old profit-centre reading as a fallback, so while <code>TB Master</code> was half filled two rules
+ran at once and the figures moved further off rather than closer. There is one rule now: a TB line takes its
+<strong>Plant</strong> and <strong>Nature</strong> from the row <code>TB Master</code> holds for its
+<strong>GL account and profit centre together</strong>, and a pair with no row is in no figure anywhere &mdash; not on
+a wrong plant, not in a total. Checks gains <em>GL and profit centre pairs TB Master has no row for</em>, biggest
+amount first, which is the whole of what the TB side is missing: type those pairs onto the sheet with their Plant and
+Nature and the trial balance is right by construction rather than by luck.</blockquote>
+
 <blockquote><strong>Build 33 &mdash; the trial balance is matched on GL <em>and</em> profit centre, and the FG
 technology chart stops drawing RM:</strong> <code>TB Master</code> lists the same GL against all three plants, so the
 GL alone is a whitelist and nothing more &mdash; the pair identifies one row of that sheet, and only then do its

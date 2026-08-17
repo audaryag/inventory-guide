@@ -69,6 +69,8 @@ TABLES = {
     "qcTBByGL": [("GLAccount", S), ("GLDesc", S), ("Nature", S), ("Category", S),
                  ("ValuationArea", S), ("AmountRsCr", D), ("Rows", I)],
     "qcPlantCodes": [("Code", S), ("Rows", I), ("ValueRsCr", D), ("InReport", B)],
+    "qcTBUnmatched": [("GLAccount", S), ("ProfitCentre", S), ("GLDesc", S),
+                      ("OnSheetAsGL", B), ("Rows", I), ("AmountRsCr", D)],
     "qcTBPlants": [("ProfitCentre", S), ("Description", S), ("PlantResolved", S),
                    ("Rows", I), ("InventoryRows", I), ("MatchedRows", I), ("AmountRsCr", D)],
     "qcMonthFiles": [("Category", S), ("Month", T), ("Files", I), ("FileNames", S),
@@ -116,7 +118,7 @@ HIDDEN = {("factInventory", "MatKey"), ("factTB", "PlantCode"),
 # tables kept out of the report field list (helpers/diagnostics still refresh)
 HIDDEN_TABLES = {"factTB_Unmapped", "qcHeaders", "qcVarHeaders", "qcNatureNoCapacity",
                  "qcAttrMatch", "qcTBByGL", "qcPlantCodes", "qcTBPlants",
-                 "qcMonthFiles", "qcMasterDupes"}
+                 "qcMonthFiles", "qcMasterDupes", "qcTBUnmatched"}
 
 
 def measure_format(name):
