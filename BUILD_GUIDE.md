@@ -1391,12 +1391,12 @@ Position: Horizontal 735, Vertical 88, Width 529, Height 112.
 
 | Well | Field |
 |---|---|
-| Rows | `factInventory[GroupNature]`, `dimNature[Nature]` |
+| Rows | `dimPlant[PlantGroup]`, `factInventory[GroupNature]` |
 | Columns | `dimDate[MonthName]` |
 | Values | `Inventory Rs Cr` → rename it to **Rs Cr.** |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
-Title: `RM Inventory by Group Nature and Nature — In Rs Cr`
+Title: `RM Inventory by Techno — In Rs Cr`
 
 Position: Horizontal 192, Vertical 208, Width 529, Height 268.
 
@@ -1405,9 +1405,9 @@ Position: Horizontal 192, Vertical 208, Width 529, Height 268.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop factInventory[GroupNature] and dimNature[Nature] in and take dimPlant[Plant] out.
-- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On, so Group Nature and Nature get a column each with an expander on each group.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total.
+- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop dimPlant[PlantGroup] and factInventory[GroupNature] in and take dimPlant[Plant] out.
+- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On, so Module/Cell and the nature get a column each with an expander on each group.
+- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total — the two subtotals the old sheet had.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
 - A nature reading Unassigned is a material the RM master does not carry — it is money the report will not silently file under someone else's nature. qcAttrMatch on Checks names them.
 - Right-click a nature row → Drill through → Detail for the material-by-material list behind it.
@@ -1416,12 +1416,12 @@ Position: Horizontal 192, Vertical 208, Width 529, Height 268.
 
 | Well | Field |
 |---|---|
-| Rows | `factInventory[GroupNature]`, `dimNature[Nature]` |
+| Rows | `dimPlant[PlantGroup]`, `factInventory[GroupNature]` |
 | Columns | `dimDate[MonthName]` |
-| Values | `Days` → rename it to **Days** |
+| Values | `Plant Days` → rename it to **Days** |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
-Title: `RM Inventory by Group Nature and Nature — In Days`
+Title: `RM Inventory by Techno — In Days`
 
 Position: Horizontal 735, Vertical 208, Width 529, Height 220.
 
@@ -1430,9 +1430,9 @@ Position: Horizontal 735, Vertical 208, Width 529, Height 220.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop factInventory[GroupNature] and dimNature[Nature] in and take dimPlant[Plant] out.
-- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On, so Group Nature and Nature get a column each with an expander on each group.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total.
+- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop dimPlant[PlantGroup] and factInventory[GroupNature] in and take dimPlant[Plant] out.
+- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On, so Module/Cell and the nature get a column each with an expander on each group.
+- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total — the two subtotals the old sheet had.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
 - A nature reading Unassigned is a material the RM master does not carry — it is money the report will not silently file under someone else's nature. qcAttrMatch on Checks names them.
 - Right-click a nature row → Drill through → Detail for the material-by-material list behind it.
@@ -2072,9 +2072,12 @@ let
                                 otherwise (try Number.From(
                                     Text.Select(t, {"0".."9","."})) otherwise null)
                         in  if v = null or v = 0 then null else v, type number),
-    Out      = Table.SelectColumns(Rate, {"ValuationArea", "Plant", "PlantSortNo", "MWD"})
+    Out      = Table.SelectColumns(Rate, {"ValuationArea", "Plant", "PlantSortNo", "MWD"}),
+    // three rows, and read by dimPlant, varPlantCodes and the fact queries: held in memory so
+    // the workbook is opened for them once rather than once per reader
+    Buffered = Table.Buffer(Out)
 in
-    Out
+    Buffered
 ```
 
 ## varPlantCodes
@@ -2526,28 +2529,6 @@ in
 ```
 
 
-## dimCapacity
-
-```
-let
-    Months   = List.Distinct(List.Sort(factInventory[Month])),
-    Combos   = Table.Distinct(Table.SelectColumns(varMWCapacity, {"Tech","ValuationArea"})),
-    Grid     = Table.AddColumn(Combos, "Month", each Months),
-    Expanded = Table.ExpandListColumn(Grid, "Month"),
-    AsOf     = Table.AddColumn(Expanded, "CapacityMW", (row) =>
-                   let
-                       Rows   = Table.SelectRows(varMWCapacity, each
-                                    [Tech] = row[Tech]
-                                    and [ValuationArea] = row[ValuationArea]
-                                    and [EffectiveFrom] <= row[Month]),
-                       Sorted = Table.Sort(Rows, {{"EffectiveFrom", Order.Descending}}),
-                       Val    = try Sorted{0}[MW] otherwise null
-                   in  Val, type number),
-    Typed    = Table.TransformColumnTypes(AsOf, {{"Month", type date}})
-in
-    Typed
-```
-
 ## dimNature
 
 > Bridge table. Without it, slicing FG by Nature leaves Capacity MW unfiltered and Days is wrong everywhere except the grand total.
@@ -2888,16 +2869,13 @@ let
     Named    = try varPlantCodes otherwise {"1900","1902","1905"},
     Seen     = List.Distinct(List.RemoveNulls(
                    List.Transform(Named, each Text.Trim(Text.From(_ ?? ""))))),
-    // a plant with nothing behind it is left out, so the slicer lists what the files contain
-    Live     = List.Distinct(List.RemoveNulls(
-                   List.Combine({
-                       List.Transform(factInventory[ValuationArea],
-                           each Text.Trim(Text.From(_ ?? ""))),
-                       List.Transform(factTB_Staged[ValuationArea],
-                           each Text.Trim(Text.From(_ ?? "")))}))),
-    Named2   = List.Select(Seen, each _ <> ""),
-    Codes    = let k = List.Select(Named2, each List.Contains(Live, _))
-               in  if List.IsEmpty(k) then Named2 else k,
+    // The plants are the ones Plant Master and TB Master name, and that is the end of it. This
+    // step used to read factInventory and factTB_Staged as well, to drop a plant that no file
+    // had any stock for - and it cost a fortune: every query that touches dimPlant made both
+    // fact tables run again, and each of those re-parses the workbook, which is why a refresh
+    // that took five minutes came to take thirty. A declared plant with no stock now shows as
+    // an empty row instead, which is the cheaper mistake and a visible one.
+    Codes    = List.Select(Seen, each _ <> ""),
     // the label: the fixed name for the three, the Plant Master name for anything else it
     // names, and the bare code for a plant nobody has named yet
     MWDOf    = (c as text) as nullable number =>
@@ -3080,6 +3058,31 @@ in
 `Quarter` reads `Q1 FY 2026-27` for April–June, `Q4 FY 2026-27` for January–March. Sort it by
 `QuarterSort` in step 2.5 or the slicer lists the quarters alphabetically, which puts Q1 of
 every year together.
+
+## dimCapacity
+
+```
+let
+    // the months come from dimDate, which has already worked them out, rather than from
+    // factInventory again - reading the fact table here made the whole stock folder parse a
+    // second time for a list of a dozen dates
+    Months   = List.Distinct(List.Sort(dimDate[Month])),
+    Combos   = Table.Distinct(Table.SelectColumns(varMWCapacity, {"Tech","ValuationArea"})),
+    Grid     = Table.AddColumn(Combos, "Month", each Months),
+    Expanded = Table.ExpandListColumn(Grid, "Month"),
+    AsOf     = Table.AddColumn(Expanded, "CapacityMW", (row) =>
+                   let
+                       Rows   = Table.SelectRows(varMWCapacity, each
+                                    [Tech] = row[Tech]
+                                    and [ValuationArea] = row[ValuationArea]
+                                    and [EffectiveFrom] <= row[Month]),
+                       Sorted = Table.Sort(Rows, {{"EffectiveFrom", Order.Descending}}),
+                       Val    = try Sorted{0}[MW] otherwise null
+                   in  Val, type number),
+    Typed    = Table.TransformColumnTypes(AsOf, {{"Month", type date}})
+in
+    Typed
+```
 
 ## dimCategory
 

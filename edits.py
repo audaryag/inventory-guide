@@ -10,6 +10,24 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000m", build="53", query="dimPlant",
+         title="The refresh was making the fact tables run inside the dimensions",
+         why="Every table that touches <code>dimPlant</code> was making "
+             "<code>factInventory</code> and <code>factTB_Staged</code> run again, because "
+             "<code>dimPlant</code> read both of them to drop a plant no file had stock for. "
+             "Each of those runs re-parses the workbook \u2014 which is the "
+             "<em>222 MB from Variables and Calculations.xlsx</em> appearing against table after "
+             "table on your refresh window, and why five minutes became thirty. The plants now "
+             "come from Plant Master and TB Master alone, <code>dimCapacity</code> takes its "
+             "months from <code>dimDate</code> instead of the stock table, and "
+             "<code>dimPlantMaster</code> is held in memory. No figure changes; a declared plant "
+             "with no stock now shows as an empty row rather than being hidden.",
+         steps=["Repaste <code>dimPlant</code>, <code>dimPlantMaster</code> and "
+                "<code>dimCapacity</code> from the <strong>Queries</strong> tab, or take the "
+                "fresh download.",
+                "Close every other Power BI window before refreshing \u2014 each one holds its "
+                "own engine and competes for the same memory."],
+         find="", repl=""),
     dict(n="00000000000000000l", build="52", query="dimPlant",
          title="RM\u2019s lower block groups by Module and Cell, as the old sheet did",
          why="The old RM sheet\u2019s lower half opens on <strong>Module</strong> and "
