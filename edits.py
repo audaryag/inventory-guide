@@ -10,6 +10,22 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000l", build="52", query="dimPlant",
+         title="RM\u2019s lower block groups by Module and Cell, as the old sheet did",
+         why="The old RM sheet\u2019s lower half opens on <strong>Module</strong> and "
+             "<strong>Cell</strong> \u2014 the module plants together, then the cell plant "
+             "\u2014 and the natures sit under each with a Total Module and a Total Cell. My "
+             "version opened on the nature group instead, so there was no Module or Cell row to "
+             "read a subtotal off and the two could not be compared side by side. "
+             "<code>dimPlant</code> now carries a <code>PlantGroup</code> column, read off the "
+             "plant\u2019s own name, and both RM lower tables use it as their first row level. "
+             "The figures are the same ones \u2014 Total Module is Jaipur plus Dholera Module, "
+             "Total Cell is Dholera Cell.",
+         steps=["Repaste <code>dimPlant</code> from the <strong>Queries</strong> tab and refresh, "
+                "or take the fresh download.",
+                "In each RM lower table, Rows should read <code>dimPlant[PlantGroup]</code> then "
+                "<code>factInventory[GroupNature]</code>."],
+         find="", repl=""),
     dict(n="00000000000000000k", build="51", query="dimPlantMaster",
          title="Plant Master was not loading at all \u2014 which is why MWD was blank",
          why="On that sheet the heading <code>Plant</code> fits both the code column and the name "

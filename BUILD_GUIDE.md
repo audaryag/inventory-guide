@@ -1368,7 +1368,7 @@ Position: Horizontal 192, Vertical 88, Width 529, Height 112.
 |---|---|
 | Rows | `dimPlant[Plant]` |
 | Columns | `dimDate[MonthName]` |
-| Values | `Days` → rename it to **Days** |
+| Values | `Plant Days` → rename it to **Days** |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
 Title: `RM Inventory Plant Wise — In Days`
@@ -1381,6 +1381,7 @@ Position: Horizontal 735, Vertical 88, Width 529, Height 112.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
 - Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.
+- Values takes Plant Days, not Days — MW ÷ the MWD column of Plant Master, the same denominator the FG plant table uses and no other.
 - Filters pane → dimCategory[Category] → tick RM only, then In Summary Window → is 1.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
@@ -2923,21 +2924,31 @@ let
                        else if not Table.IsEmpty(m)
                             then 100 + (try Number.From(Table.First(m)[PlantSortNo]) otherwise 0)
                        else 900 + (try Number.From(Text.Select(c, {"0".."9"})) otherwise 0),
+    // Module or Cell - the two groups the RM sheet's lower block is built on: the cell plant
+    // on one side, the module plants on the other. It is read off the plant's own name, so a
+    // plant added to Plant Master falls on the right side without anyone editing this.
+    GroupOf  = (c as text) as text =>
+                   if Text.Contains(Text.Upper(NameOf(c)), "CELL") then "Cell" else "Module",
     Built    = Table.FromRecords(List.Transform(Codes, (c) =>
                    [ValuationArea = c, Plant = NameOf(c), PlantSort = SortOf(c),
-                    MWD = MWDOf(c)]),
+                    MWD = MWDOf(c), PlantGroup = GroupOf(c)]),
                    type table [ValuationArea = text, Plant = text, PlantSort = number,
-                               MWD = nullable number]),
+                               MWD = nullable number, PlantGroup = text]),
     // if nothing has loaded yet, the three known plants still make a table, so the report opens
     Rows     = if List.IsEmpty(Codes)
                then Table.AddColumn(
-                        Table.RenameColumns(Fixed, {{"PlantSortNo", "PlantSort"}}),
-                        "MWD", each null, type number)
+                        Table.AddColumn(
+                            Table.RenameColumns(Fixed, {{"PlantSortNo", "PlantSort"}}),
+                            "MWD", each null, type number),
+                        "PlantGroup",
+                        each if Text.Contains(Text.Upper([Plant]), "CELL") then "Cell"
+                             else "Module", type text)
                else Built,
     Dedup    = Table.Distinct(Rows, {"ValuationArea"}),
     Typed    = Table.TransformColumnTypes(Dedup, {
                    {"ValuationArea", type text}, {"Plant", type text},
-                   {"PlantSort", Int64.Type}, {"MWD", type number}})
+                   {"PlantSort", Int64.Type}, {"MWD", type number},
+                   {"PlantGroup", type text}})
 in
     Typed
 ```
