@@ -574,49 +574,50 @@ def steps():
                 page=page, do=do, fields=fields, note=why,
                 check=_check(vtype, wells), stuck=_stuck(vtype, wells)))
 
-    S.append(dict(
-        title="Make clicking a bar open the pie charts",
-        page=DRILL_PAGE,
-        do=["At the bottom of the window click the tab named %s." % DRILL_PAGE,
-            "Click once on the empty grey space around the visuals, so no visual has a "
-            "border round it.",
-            "Look at the Visualizations pane on the right and scroll it down to the bottom: "
-            "there is a box called 'Drill through'.",
-            "Drag each of the four fields below out of the Data pane and drop it into that "
-            "'Drill through' box, one at a time. (Open the table first by clicking the arrow "
-            "next to its name.)",
-            "Leave the switch called 'Keep all filters' as it is — it is already on."],
-        fields=[("Drill through", f) for f in DRILL_FIELDS],
-        check="A round Back arrow has appeared by itself in the top-left corner of the %s "
-              "page, and the Drill through box lists all four fields." % DRILL_PAGE,
-        stuck="No Drill through box means a visual is still selected — press Escape and click "
-              "the grey space outside the page. If a field will not drop in, it came from the "
-              "wrong table; the table name is the part before the square bracket.",
-        note="This is what makes the report clickable: a Back arrow appears on this page "
-             "automatically, and every bar, row and slice on the other pages now offers "
-             "Drill through → %s." % DRILL_PAGE))
+    if DRILL_PAGE:
+        S.append(dict(
+            title="Make clicking a bar open the pie charts",
+            page=DRILL_PAGE,
+            do=["At the bottom of the window click the tab named %s." % DRILL_PAGE,
+                "Click once on the empty grey space around the visuals, so no visual has a "
+                "border round it.",
+                "Look at the Visualizations pane on the right and scroll it down to the bottom: "
+                "there is a box called 'Drill through'.",
+                "Drag each of the four fields below out of the Data pane and drop it into that "
+                "'Drill through' box, one at a time. (Open the table first by clicking the arrow "
+                "next to its name.)",
+                "Leave the switch called 'Keep all filters' as it is — it is already on."],
+            fields=[("Drill through", f) for f in DRILL_FIELDS],
+            check="A round Back arrow has appeared by itself in the top-left corner of the %s "
+                  "page, and the Drill through box lists all four fields." % DRILL_PAGE,
+            stuck="No Drill through box means a visual is still selected — press Escape and click "
+                  "the grey space outside the page. If a field will not drop in, it came from the "
+                  "wrong table; the table name is the part before the square bracket.",
+            note="This is what makes the report clickable: a Back arrow appears on this page "
+                 "automatically, and every bar, row and slice on the other pages now offers "
+                 "Drill through → %s." % DRILL_PAGE))
 
-    S.append(dict(
-        title="Try it — click a bar, get the pies",
-        page=PAGES[0],
-        do=["At the bottom of the window click the tab named %s." % PAGES[0],
-            "Right-click one coloured block of the 'Inventory by Month (Rs Cr.)' chart.",
-            "Choose Drill through → %s." % DRILL_PAGE,
-            "The %s page opens showing only that plant: cards, three pies and the material "
-            "list." % DRILL_PAGE,
-            "Click the circled Back arrow at the top-left of the %s page to return."
-            % DRILL_PAGE],
-        fields=[],
-        check="The %s page opens and its first card shows a smaller number than the company "
-              "total, because it is showing only the plant you clicked." % DRILL_PAGE,
-        stuck="'Drill through' greyed out means the four fields are not in the Drill through "
-              "box yet — go back one step. If the page opens but shows the full total, you "
-              "right-clicked something that is not one of the four drill-through fields; "
-              "right-click a coloured block of the month chart instead, or a slice of "
-              "'Share by Plant (%)'.",
-        note="A left-click filters the rest of the page instead (that is Power BI's built-in "
-             "cross-filtering, nothing to set up). Right-click is the one that opens the "
-             "pies."))
+        S.append(dict(
+            title="Try it — click a bar, get the pies",
+            page=PAGES[0],
+            do=["At the bottom of the window click the tab named %s." % PAGES[0],
+                "Right-click one coloured block of the 'Inventory by Month (Rs Cr.)' chart.",
+                "Choose Drill through → %s." % DRILL_PAGE,
+                "The %s page opens showing only that plant: cards, three pies and the material "
+                "list." % DRILL_PAGE,
+                "Click the circled Back arrow at the top-left of the %s page to return."
+                % DRILL_PAGE],
+            fields=[],
+            check="The %s page opens and its first card shows a smaller number than the company "
+                  "total, because it is showing only the plant you clicked." % DRILL_PAGE,
+            stuck="'Drill through' greyed out means the four fields are not in the Drill through "
+                  "box yet — go back one step. If the page opens but shows the full total, you "
+                  "right-clicked something that is not one of the four drill-through fields; "
+                  "right-click a coloured block of the month chart instead, or a slice of "
+                  "'Share by Plant (%)'.",
+            note="A left-click filters the rest of the page instead (that is Power BI's built-in "
+                 "cross-filtering, nothing to set up). Right-click is the one that opens the "
+                 "pies."))
 
     S.append(dict(
         title="Choose what a click filters",
@@ -656,20 +657,18 @@ def steps():
         do=["Pick a month in the header slicer and confirm every page changes with it.",
             "On Summary, the Difference column should be 0.00 (or very close) for every "
             "plant — that is the books agreeing with the stock report.",
-            "On FG, 1905 should show blank Days, because it has no capacity row.",
-            "Right-click a bar → Drill through → Detail, and check the cards match the bar.",
+            "On FG, 1905 should show blank Days if it has no capacity row.",
             "Then Ctrl+S."],
         fields=[],
-        check="All five pages react to the month dropdown, Summary's Difference column reads "
-              "about 0.00, and right-click → Drill through → %s opens filtered." % DRILL_PAGE,
+        check="Every page reacts to the month dropdown and Summary's Difference column reads "
+              "about 0.00.",
         stuck="Difference far from zero: a TB file or a Raw file is missing for that month, or "
               "one has been hand-edited. Blank pages: no month is picked in the header "
               "dropdown. The same number on every row of Summary: the two dimCategory "
               "relationships from Part 2 are missing.",
         note="If Difference is large, a source file is missing, duplicated or "
                         "hand-edited — the numbers on every page are wrong until that is "
-                        "fixed. The qc* queries are still in the model if you want to put "
-                        "them on a page of their own to see why."))
+                        "fixed."))
     # every step heading in Title Case, in one place
     for d in S:
         d["title"] = title_case(d["title"])
@@ -814,19 +813,19 @@ def part4_markdown():
                 L += ["- %s" % e]
             L.append("")
 
-    L += ["---", "", "## Making it clickable", "",
-          "**4.%d Drill through.** On the `%s` page click the empty area around the visuals "
-          "so" % (n + 1, DRILL_PAGE),
-          "nothing is selected, then drag these into the **Drill through** well of the",
-          "Visualizations pane (leave *Keep all filters* on):", ""]
-    for f in DRILL_FIELDS:
-        L.append("- `%s`" % f)
-    L += ["",
-          "That is the whole trick. A **Back** arrow appears on `%s` by itself, and every bar,"
-          % DRILL_PAGE,
-          "row and slice on the other pages now offers **right-click → Drill through → `%s`**,"
-          % DRILL_PAGE,
-          "which opens the pies filtered to whatever was clicked.", "",
+    L += ["---", "", "## Making it clickable", ""]
+    if DRILL_PAGE:
+        L += ["**4.%d Drill through.** On the `%s` page click the empty area around the "
+              "visuals so" % (n + 1, DRILL_PAGE),
+              "nothing is selected, then drag these into the **Drill through** well of the",
+              "Visualizations pane (leave *Keep all filters* on):", ""]
+        for f in DRILL_FIELDS:
+            L.append("- `%s`" % f)
+        L += ["",
+              "A **Back** arrow appears on `%s` by itself, and every bar, row and slice on the"
+              % DRILL_PAGE,
+              "other pages then offers **right-click → Drill through → `%s`**." % DRILL_PAGE, ""]
+    L += [
           "**4.%d Interactions.** A *left*-click needs no setup — it already cross-filters "
           "the rest" % (n + 2),
           "of the page. To change what it does: select a visual → ribbon **Format** →",

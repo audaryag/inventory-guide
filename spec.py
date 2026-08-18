@@ -8,18 +8,20 @@ CANVAS = (1280, 720)
 
 # Checks is last on purpose: the five report pages come first, and it is the page you
 # open when a figure looks wrong, so a refresh problem names itself.
-PAGES = ["Overview", "Summary", "FG", "RM", "Detail", "Checks",
-         "Checks TB", "Checks Stock", "Checks Sources"]
+# Four pages, and nothing else. Detail, Checks and the three diagnostic pages were scaffolding:
+# they cost a full re-read of the stock files each on every refresh and answered questions that
+# are now answered. What is left is the report itself.
+PAGES = ["Overview", "Summary", "FG", "RM"]
 
 # The three diagnostic pages are deliberately plain: full-width tables, no panel, no styling,
 # no filters of their own. They exist to show where a number came from, so every ingredient of
 # every figure is a column you can read and compare against the old working. Nothing on them
 # is meant to be pretty and nothing on them is meant to be shown to anyone.
-PLAIN_PAGES = {"Checks TB", "Checks Stock", "Checks Sources"}
+PLAIN_PAGES = set()
 
 # The drill-through page: right-click any bar, row or slice on the other pages and choose
 # Drill through → Detail, and these fields carry the clicked context across.
-DRILL_PAGE = "Detail"
+DRILL_PAGE = None
 DRILL_FIELDS = ["dimPlant[Plant]", "dimDate[MonthName]", "dimCategory[Category]",
                 "dimNature[Nature]"]
 
@@ -487,7 +489,7 @@ VISUALS = [
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["TB Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (16, 88, 416, 248),
+     (16, 88, 416, 300),
      'The first of the three master columns: what the books say, month by month. A row per plant, opening into RM, FG and Consumables, and the months under this heading are the newest March plus the three most recent unless the slicer above says otherwise.',
      ['Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. '
       'The table opens on the plant, showing that plant\u2019s whole inventory for the month, '
@@ -511,7 +513,7 @@ VISUALS = [
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (440, 88, 416, 248),
+     (440, 88, 416, 300),
      'The second master column: the same rows and the same months as the MB5B stock report has them. Read straight across from the block on its left and you are comparing the books with the stock for one plant, one type, one month.',
      ['Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. '
       'The table opens on the plant, showing that plant\u2019s whole inventory for the month, '
@@ -535,7 +537,7 @@ VISUALS = [
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Difference Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (864, 88, 416, 248),
+     (864, 88, 416, 300),
      'The third master column: the books less the stock report, on the same plant rows and the same months. Anything other than a small figure here is the reconciliation asking a question, and the Detail page is where it is answered.',
      ['Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. '
       'The table opens on the plant, showing that plant\u2019s whole inventory for the month, '
@@ -558,7 +560,7 @@ VISUALS = [
      [("X-axis", ["dimDate[MonthName]"]),
       ("Y-axis", ["TB Inventory Rs Cr", "Inventory Rs Cr"]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (16, 352, 616, 168),
+     (16, 396, 616, 152),
      "The books against the stock report, two bars per period: the same figures as the "
      "matrix above, but you can see a gap opening without reading a single number. Same "
      "periods as the matrices, because it carries the same filter.",
@@ -581,7 +583,7 @@ VISUALS = [
       ("Column y-axis", ["Difference Inventory Rs Cr"]),
       ("Line y-axis", ["Difference Inventory %"]),
       ("Filters", ["In Summary Window  \u2192  is 1"])],
-     (648, 352, 616, 168),
+     (648, 396, 616, 152),
      "The question the reconciliation is really asking: is the gap widening or closing. The "
      "bar is the difference in crore rupees, the line above it the same difference as a "
      "percentage of the trial balance, so a small gap on a big month reads as small.",
@@ -698,7 +700,7 @@ VISUALS = [
       ("Values", ["Inventory MW" + AS + "MW"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Summary Window  →  is 1"])],
-     (16, 208, 408, 180),
+     (16, 208, 408, 200),
      'The same months and the same unit, by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself.',
      ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows take dimPlant[Plant] out and drag dimNature[Nature] in.',
       'Check the filters came across: Category is FG, In Summary Window is 1.',
@@ -738,7 +740,7 @@ VISUALS = [
       ("Column y-axis", ["Latest Month FG ₹ Cr"]),
       ("Line y-axis", ["Latest Month FG MW"]),
       ("Filters", ["dimCategory[Category]  →  is FG"])],
-     (16, 396, 412, 292),
+     (16, 416, 412, 272),
      "Which technology is holding the finished goods right now, in money as bars and in "
      "megawatts as the line over them. Money is on the bars because every technology has a "
      "value, while a megawatt figure only exists for the ones your MW Capacity sheet covers — "
@@ -765,7 +767,7 @@ VISUALS = [
       ("Line y-axis", ["Days vs LM"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Last 12  →  is 1"])],
-     (444, 396, 428, 292),
+     (444, 416, 428, 272),
      "How long the finished goods on hand would last, month by month, with the change on "
      "last month printed above each bar — so a slow build-up is visible before it becomes a "
      "number anyone argues about.",
@@ -787,7 +789,7 @@ VISUALS = [
     ("FG", "Donut chart", "FG Share by Plant (%), Latest Month",
      [("Legend", ["dimPlant[Plant]"]),
       ("Values", ["Latest Month FG ₹ Cr"])],
-     (888, 396, 376, 292),
+     (888, 416, 376, 272),
      "Where the finished goods are sitting, as a share of the whole. Pinned to the latest "
      "month for the same reason as the bar chart: a share of four added-up months would "
      "mean nothing.",
@@ -878,7 +880,7 @@ VISUALS = [
       ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "In Summary Window  →  is 1"])],
-     (16, 208, 616, 220),
+     (16, 208, 616, 268),
      'The second block of the old sheet in crore rupees: Module and Cell, each opening into its natures — cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — with a subtotal on each group and a grand total under them.',
      ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop factInventory[GroupNature] and dimNature[Nature] in and take dimPlant[Plant] out.',
       'Format pane → Row headers → Stepped layout: Off, +/- icons: On, so Group Nature and Nature get a column each with an expander on each group.',
@@ -908,7 +910,7 @@ VISUALS = [
       ("Y-axis", ["Inventory Rs Cr"]),
       ("Filters", ["dimCategory[Category]  \u2192  is RM",
                    "In Summary Window  \u2192  is 1"])],
-     (16, 436, 616, 200),
+     (16, 484, 616, 200),
      "Raw material held in crore rupees: one group per period along the bottom and the three "
      "plants side by side inside each group, so you read the months left to right and compare "
      "the plants within a month. It follows the pickers above, so it is four periods by "
@@ -970,7 +972,7 @@ VISUALS = [
      [("X-axis", ["dimDate[MonthName]"]),
       ("Y-axis", ["RM Days", "FG Days", "Total Days (RM + FG)"]),
       ("Filters", ["In Last 12  \u2192  is 1"])],
-     (16, 536, 1248, 168),
+     (16, 556, 1248, 148),
      "The long view under the reconciliation: three lines across the last twelve months "
      "that have data, or fewer if that is all there is \u2014 raw material days, finished goods "
      "days, and the two added together, which is what the Overview card calls Days of "
@@ -1424,6 +1426,12 @@ def title_case(text):
 # is now repeated in the same place on all six pages and those five pages are squeezed into
 # the space to its right, so a reader always has the same block of figures in the same corner
 # whichever page they are on. Only the second line of the heading changes, to the page's name.
+# Anything laid out for a page that no longer exists is dropped here rather than deleted line
+# by line, so removing a page cannot leave a visual behind pointing at nothing.
+_KEEP = set(PAGES)
+VISUALS = [v for v in VISUALS if v[0] in _KEEP]
+DECOR = [d for d in DECOR if d[0] in _KEEP]
+
 PANEL_W = 184                      # the green strip's width, the same on every page
 LEFT = PANEL_W + 8                 # 192: the first pixel a page's own visuals may use
 RIGHT = CANVAS[0] - 16             # 1264: the last one

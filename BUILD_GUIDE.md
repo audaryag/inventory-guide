@@ -43,7 +43,7 @@ fail with a file-lock error. This applies every time you refresh, forever.
 **1.2** Ribbon: **Home** → **Transform data**. The Power Query Editor window opens.
 Everything in Part 1 happens in this window.
 
-### How to add each query (you will repeat this 42 times)
+### How to add each query (you will repeat this 29 times)
 
 1. In Power Query, ribbon: **Home** → **New Source** → **Blank Query**.
 2. Ribbon: **Home** → **Advanced Editor**.
@@ -83,26 +83,13 @@ Everything in Part 1 happens in this window.
 | 20 | `varMWCapacity` | reads the two-block MW sheet |
 | 21 | `dimCapacity` |  |
 | 22 | `dimNature` |  |
-| 23 | `dimTBMaster` |  |
 | 24 | `factTB_Staged` |  |
 | 25 | `factTB` |  |
-| 26 | `factTB_Unmapped` |  |
-| 27 | `dimDate` |  |
-| 28 | `qcHeaders` | self-check |
-| 29 | `qcVarHeaders` | self-check |
-| 30 | `qcNatureNoCapacity` | self-check |
-| 31 | `qcMWSheet` | self-check — shows the MW sheet raw |
-| 32 | `dimCategory` | lets TB and MB5B share one RM/FG/Consumables row |
-| 33 | `dimMetric` | makes Inventory (TB) / Inventory (MB5B) / Difference into columns |
-| 34 | `dimMeasure` | makes MW / In ₹ Cr / In Days into columns |
-| 35 | `qcAttrMatch` | self-check — do the material numbers match between sheets and files |
-| 36 | `qcTBByGL` | self-check — the trial balance by GL account, signed |
-| 37 | `qcPlantCodes` | self-check — every plant code the files contain, and what the ones outside the three cost |
-| 38 | `qcMonthFiles` | self-check — did any month arrive from two files |
-| 39 | `qcMasterDupes` | self-check — one material with two natures on a master sheet |
-| 40 | `qcTBPlants` | self-check — every TB profit centre and the plant it resolved to |
-| 41 | `qcTBUnmatched` | self-check — the GL and profit centre pairs TB Master has no row for |
-| 42 | `dimPlantType` | one row per plant and type, so Summary needs no expanding |
+| 26 | `dimDate` |  |
+| 27 | `dimCategory` | lets TB and MB5B share one RM/FG/Consumables row |
+| 28 | `dimMetric` | makes Inventory (TB) / Inventory (MB5B) / Difference into columns |
+| 29 | `dimMeasure` | makes MW / In ₹ Cr / In Days into columns |
+| 30 | `dimPlantType` | one row per plant and type, so Summary needs no expanding |
 
 **1.4 — Do this before the first refresh; it is not optional.** The report reads two kinds of
 source - the four stock/TB folders and the `Variables and Calculations` workbook - and every nature,
@@ -125,43 +112,35 @@ right-click the query in the left list and **untick "Enable load"**:
 ```
 pRoot, pVarsFile, fnCleanMB5B, stgRM, stgFG, stgConble,
 fnVarSheet, fnVarSheetSafe, dimPlantMaster, varPlantCodes,
-factRM, factFG, factConble, varConstants,
+factRM, factFG, factConble, varConstants, dimMaterialAttr, dimFGAttr,
 fnConstantAsOf, varMWCapacity, factTB_Staged
 ```
 
 Leave these ticked (they become your tables):
 ```
-factInventory, factTB, factTB_Unmapped, dimPlant, dimDate,
-dimNature, dimCapacity, dimTBMaster, dimMaterialAttr, dimFGAttr,
-dimCategory, dimMetric, dimMeasure, dimPlantType,
-qcHeaders, qcVarHeaders, qcNatureNoCapacity, qcMWSheet,
-qcAttrMatch, qcTBByGL, qcPlantCodes,
-qcMonthFiles, qcMasterDupes, qcTBPlants, qcTBUnmatched
+factInventory, factTB, dimPlant, dimDate, dimNature, dimCapacity,
+dimCategory, dimMetric, dimMeasure, dimPlantType
 ```
 
 **1.6** Ribbon: **Home** → **Close & Apply**. Wait for it to load.
 
 ### Checkpoint — do not go to Part 2 until all five are true
 
-1. The Queries list on the left of Power Query shows **42** names, and every name in the
+1. The Queries list on the left of Power Query shows **29** names, and every name in the
    table above appears in it, spelled identically. Compare them one by one; a missing one
    is the single most common cause of an error later.
-2. The 17 helper names in step 1.5 are shown in *italics* in that list (that is what
-   "Enable load off" looks like); the other 23 are not italic.
+2. The 19 helper names in step 1.5 are shown in *italics* in that list (that is what
+   "Enable load off" looks like); the other 11 are not italic.
 3. Click `factInventory`: the preview shows rows, and the columns include `CloseVal`,
    `Category`, `Nature`, `Month`, `ValuationArea`, `MW`.
 4. Click `factTB`: it shows rows, `Month` is filled in on every row, and `ValuationArea`
    is not the word `Unallocated` on every row.
-5. Click `factTB_Unmapped`: ideally empty. Rows here mean a GL account in your TB is
-   missing from `TB Master`, so its money is not counted anywhere — add it to `TB Master`
-   and refresh.
+5. Click `factTB`: `Rule` says how each line was placed. `dropped: no row for this GL
+   and profit centre` means that account is missing from `TB Master`, so its money is not
+   counted anywhere — add the pair to `TB Master` and refresh.
 
-After **Close & Apply**, the Data pane on the right must list exactly these 25 tables:
-`factInventory`, `factTB`, `factTB_Unmapped`, `dimPlant`, `dimDate`, `dimNature`,
-`dimCapacity`, `dimTBMaster`, `dimMaterialAttr`, `dimFGAttr`, `dimCategory`, `dimMetric`,
-`dimMeasure`, `dimPlantType`, `qcHeaders`, `qcVarHeaders`, `qcNatureNoCapacity`,
-`qcMWSheet`, `qcAttrMatch`, `qcTBByGL`, `qcPlantCodes`, `qcMonthFiles`, `qcMasterDupes`,
-`qcTBPlants`, `qcTBUnmatched`.
+After **Close & Apply**, the Data pane on the right must list exactly these 10 tables:
+`factInventory`, `factTB`, `dimPlant`, `dimDate`, `dimNature`, `dimCapacity`, `dimCategory`, `dimMetric`, `dimMeasure`, `dimPlantType`.
 
 ### If something fails here
 
@@ -174,7 +153,7 @@ After **Close & Apply**, the Data pane on the right must list exactly these 25 t
 | "Illegal characters in path" | `pRoot` is not your real path | open the folder in File Explorer, click the address bar, copy it in — keep the quote marks |
 | "Token Literal expected" | a text value lost its quote marks | `pRoot` must be `"C:\...\Inventory Report"`, quotes included |
 | "Not enough elements in the enumeration" | a query assumed more columns than the sheet has | you are on an old version of the query — refresh the guide page and re-copy |
-| "Expression.Syntax Error" right after pasting | the whole appendix went into one query | one query per Blank Query, 42 times |
+| "Expression.Syntax Error" right after pasting | the whole appendix went into one query | one query per Blank Query, 29 times |
 
 Send me the exact error text and I'll tell you the one-line fix.
 
@@ -187,7 +166,7 @@ Send me the exact error text and I'll tell you the one-line fix.
 **2.2** Power BI will have guessed some relationships. **Delete all of them**: click each
 connecting line and press Delete. Cleaner to start blank.
 
-**2.3** Create these 13 relationships. To create one: click and drag the **from** field onto
+**2.3** Create these 12 relationships. To create one: click and drag the **from** field onto
 the **to** field. Then double-click the line and confirm the settings.
 
 | From (the "one" side) | To (the "many" side) | Cardinality | Direction |
@@ -200,7 +179,6 @@ the **to** field. Then double-click the line and confirm the settings.
 | `dimPlant[ValuationArea]` | `dimCapacity[ValuationArea]` | One to many | Single |
 | `dimNature[Nature]` | `factInventory[Nature]` | One to many | Single |
 | `dimNature[Nature]` | `dimCapacity[Tech]` | One to many | Single |
-| `dimTBMaster[GLAccount]` | `factTB[GLAccount]` | One to many | Single |
 | `dimCategory[Category]` | `factInventory[Category]` | One to many | Single |
 | `dimCategory[Category]` | `factTB[Category]` | One to many | Single |
 | `dimPlantType[PlantType]` | `factInventory[PlantType]` | One to many | Single |
@@ -283,7 +261,7 @@ pasting out of order gives "cannot be determined" on a measure that is perfectly
 ### Checkpoint — do not go to Part 4 until all three are true
 
 1. Type `Value` into the Data pane search box: `Value ₹ Cr` is there, with a calculator icon.
-2. Count the measures (calculator icons) — there must be **79**. Fewer means Appendix B is
+2. Count the measures (calculator icons) — there must be **70**. Fewer means Appendix B is
    not finished; the pages will fail on whichever one is missing.
 3. None of these six old names survive: `Closing Value`, `Inv RM`, `Inv FG`,
    `Inv Consumables`, `TB Value`, `Prev Month`. Delete any you find (right-click → **Delete
@@ -351,7 +329,7 @@ asks you to colour anything.
 
 Only two colours are ever used for a printed number, and never grey: **#FFFFFF** bold when the number sits on top of a coloured bar or slice, and **#14532D** (or **#1F2A24** for plain figures) when it sits on the white card. If a number anywhere looks faint grey — inside a bar, above a line, on an axis — that visual predates this theme: re-import the theme file, then check the visual's **Data labels → Colour**. On a combo chart the two series are set separately, under **Data labels → Apply settings to → Series**: the column series #FFFFFF, the line series #14532D.
 
-**Create the 6 pages** with the **+** at the bottom, named: `Overview` · `Summary` · `FG` · `RM` · `Detail` · `Checks`.
+**Create the 4 pages** with the **+** at the bottom, named: `Overview` · `Summary` · `FG` · `RM`.
 
 ---
 
@@ -820,7 +798,7 @@ Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 
 Title: `Inventory (TB)`
 
-Position: Horizontal 192, Vertical 88, Width 357, Height 248.
+Position: Horizontal 192, Vertical 88, Width 357, Height 300.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -846,7 +824,7 @@ Position: Horizontal 192, Vertical 88, Width 357, Height 248.
 
 Title: `Inventory (MB5B)`
 
-Position: Horizontal 556, Vertical 88, Width 357, Height 248.
+Position: Horizontal 556, Vertical 88, Width 357, Height 300.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -872,7 +850,7 @@ Position: Horizontal 556, Vertical 88, Width 357, Height 248.
 
 Title: `Difference`
 
-Position: Horizontal 920, Vertical 88, Width 357, Height 248.
+Position: Horizontal 920, Vertical 88, Width 357, Height 300.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -897,7 +875,7 @@ Position: Horizontal 920, Vertical 88, Width 357, Height 248.
 
 Title: `Inventory (TB) vs Inventory (MB5B) by Month (Rs Cr.)`
 
-Position: Horizontal 192, Vertical 352, Width 529, Height 168.
+Position: Horizontal 192, Vertical 396, Width 529, Height 152.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -923,7 +901,7 @@ Position: Horizontal 192, Vertical 352, Width 529, Height 168.
 
 Title: `Difference by Month (Rs Cr. and % of TB)`
 
-Position: Horizontal 735, Vertical 352, Width 529, Height 168.
+Position: Horizontal 735, Vertical 396, Width 529, Height 152.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -949,7 +927,7 @@ Position: Horizontal 735, Vertical 352, Width 529, Height 168.
 
 Title: `Days of Inventory by Month, Last 12 Months — RM, FG and Total`
 
-Position: Horizontal 192, Vertical 536, Width 1072, Height 168.
+Position: Horizontal 192, Vertical 556, Width 1072, Height 148.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1139,7 +1117,7 @@ Position: Horizontal 907, Vertical 88, Width 350, Height 112.
 
 Title: `Inventory FG by Techno — In MW`
 
-Position: Horizontal 192, Vertical 208, Width 350, Height 180.
+Position: Horizontal 192, Vertical 208, Width 350, Height 200.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1208,7 +1186,7 @@ Position: Horizontal 907, Vertical 208, Width 350, Height 180.
 
 Title: `FG by Technology, Latest Month — Rs Cr. as Bars, MW as the Line`
 
-Position: Horizontal 192, Vertical 396, Width 354, Height 292.
+Position: Horizontal 192, Vertical 416, Width 354, Height 272.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1235,7 +1213,7 @@ Position: Horizontal 192, Vertical 396, Width 354, Height 292.
 
 Title: `FG Days by Month, Last 12 Months (Days and % vs LM)`
 
-Position: Horizontal 560, Vertical 396, Width 368, Height 292.
+Position: Horizontal 560, Vertical 416, Width 368, Height 272.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1261,7 +1239,7 @@ Position: Horizontal 560, Vertical 396, Width 368, Height 292.
 
 Title: `FG Share by Plant (%), Latest Month`
 
-Position: Horizontal 941, Vertical 396, Width 323, Height 292.
+Position: Horizontal 941, Vertical 416, Width 323, Height 272.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
@@ -1419,7 +1397,7 @@ Position: Horizontal 735, Vertical 88, Width 529, Height 112.
 
 Title: `RM Inventory by Group Nature and Nature — In Rs Cr`
 
-Position: Horizontal 192, Vertical 208, Width 529, Height 220.
+Position: Horizontal 192, Vertical 208, Width 529, Height 268.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
@@ -1469,7 +1447,7 @@ Position: Horizontal 735, Vertical 208, Width 529, Height 220.
 
 Title: `RM Inventory (Rs Cr.) by Plant`
 
-Position: Horizontal 192, Vertical 436, Width 529, Height 200.
+Position: Horizontal 192, Vertical 484, Width 529, Height 200.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'X-axis' and set Font size to 9. If the labels are turned on their side or cut off, that is the visual being too narrow — leave it, Power BI rotates them on purpose.
@@ -1516,431 +1494,9 @@ Position: Horizontal 735, Vertical 436, Width 529, Height 200.
 
 ---
 
-## Page — Detail
-
-**The panel first.** Go to `Overview`, click the green panel, then hold **Ctrl** and click the logo box, the two heading lines, the two section labels, the three white boxes and all 9 figures on the panel — or draw a selection box around the whole left strip. **Ctrl+C**, come back to `Detail`, **Ctrl+V**. Everything arrives at the same coordinates, so the panel is identical on every page.
-
-Then click the second heading line and change its text from `Overview` to `Detail`, so the panel doubles as the page's name. Nothing else on the panel changes: the nine figures ignore every slicer on every page by design, because they are the latest month's position and they must read the same wherever you are.
-
-The visuals below are what goes to the **right** of the panel, which is why every Horizontal starts at 192 rather than 16.
-
-**4.55** **Card** — The drill-through page opens already filtered to the bar or row you came from, so this card is that one number.
-
-| Well | Field |
-|---|---|
-| Fields | `Inventory Rs Cr` |
-
-Title: `Value ₹ Cr of What You Clicked`
-
-Position: Horizontal 192, Vertical 16, Width 254, Height 96.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Callout value' (that is the big number) and set Font size to 24.
-- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-
-**4.56** **Card** — Same slice in megawatts.
-
-| Well | Field |
-|---|---|
-| Fields | `Inventory MW` |
-
-Title: `MW Held`
-
-Position: Horizontal 453, Vertical 16, Width 254, Height 96.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Callout value' (that is the big number) and set Font size to 24.
-- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-
-**4.57** **Card** — Stock in MW divided by the MW capacity on the Variables sheet. With no category picked that MW is RM plus FG over the same capacity, so the two add up — the title says so rather than leaving a reader to assume it means FG alone. Blank where the plant has no capacity row — 1905.
-
-| Well | Field |
-|---|---|
-| Fields | `Days of Inventory` |
-
-Title: `Days of Inventory (RM + FG)`
-
-Position: Horizontal 714, Vertical 16, Width 254, Height 96.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Callout value' (that is the big number) and set Font size to 24.
-- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-
-**4.58** **Card** — How big this slice is against the whole.
-
-| Well | Field |
-|---|---|
-| Fields | `Share of Total %` |
-
-Title: `Share of the Total`
-
-Position: Horizontal 975, Vertical 16, Width 289, Height 96.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Callout value' (that is the big number) and set Font size to 24.
-- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-
-**4.59** **Pie chart** — RM / FG / consumables for exactly what you clicked.
-
-| Well | Field |
-|---|---|
-| Legend | `dimCategory[Category]` |
-| Values | `Inventory Rs Cr` |
-
-Title: `Split by Category`
-
-Position: Horizontal 192, Vertical 120, Width 347, Height 232.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
-- Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
-- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total.
-
-**4.60** **Donut chart** — Which technology or material nature the slice is made of.
-
-| Well | Field |
-|---|---|
-| Legend | `dimNature[Nature]` |
-| Values | `Inventory Rs Cr` |
-
-Title: `Split by Technology / Nature`
-
-Position: Horizontal 546, Vertical 120, Width 347, Height 232.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
-- Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
-- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total.
-
-**4.61** **Pie chart** — Where the slice sits. A single-colour pie means it is one plant already.
-
-| Well | Field |
-|---|---|
-| Legend | `dimPlant[Plant]` |
-| Values | `Inventory Rs Cr` |
-
-Title: `Split by Plant`
-
-Position: Horizontal 900, Vertical 120, Width 364, Height 232.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Detail labels' and set Font size to 9. If a slice label is still cut off, set 'Position' to Outside, and switch on 'Overflow text' if your version offers it.
-- Click 'Legend' and set Font size to 9 and Position to 'Top center'. If the legend eats the chart, switch Legend off entirely — the labels already name the slices.
-- In the Visualizations pane click the paintbrush icon, then click 'Detail labels', then 'Label contents' and set it to Category, percent of total.
-
-**4.62** **Matrix** — The line-item detail. A Matrix rather than a Table, so it opens nature → material instead of being one long flat list — that is the difference between clicking and scrolling.
-
-| Well | Field |
-|---|---|
-| Rows | `dimNature[Nature]`, `factInventory[Material]`, `factInventory[MaterialDesc]` |
-| Values | `Inventory Rs Cr`, `Inventory MW`, `Days`, `INR per Wp`, `Share of Total %` |
-
-Title: `Materials Behind This Number — Click + to Open a Nature`
-
-Position: Horizontal 192, Vertical 364, Width 1072, Height 348.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then '+/- icons' and set it to On, Stepped layout: Off. That is the click-to-open control.
-- In the Visualizations pane click the paintbrush icon, then click 'Grid', then 'Options', then 'Keep column headers visible' and set it to On. The headings then stay put while the rows scroll inside the visual, so a long list never makes the visual (or the page) grow.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On, so a closed nature row still shows its total.
-- Click the Value ₹ Cr column header once so it sorts largest first.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Text size' and set it to 9 and Row padding: 1. At 348 high that is about eighteen rows on screen at once, roughly twice what the default padding allows.
-- How to scroll it: put the mouse pointer inside the matrix, not on the page around it, and use the wheel — the scrollbar is hidden until the pointer is over the visual. Two-finger drag on a trackpad does the same.
-- If the wheel still does nothing, the page itself is being scrolled instead: ribbon View → Page view → Fit to page, so the whole canvas is on screen and the wheel belongs to the visual under the pointer.
-- For a really long list use Focus mode — hover the visual, click the diagonal-arrows icon in its top-right, and it fills the page with far more rows visible; the back arrow returns you. Or collapse a nature with its − icon to jump past it.
-
----
-
-## Page — Checks
-
-**The panel first.** Go to `Overview`, click the green panel, then hold **Ctrl** and click the logo box, the two heading lines, the two section labels, the three white boxes and all 9 figures on the panel — or draw a selection box around the whole left strip. **Ctrl+C**, come back to `Checks`, **Ctrl+V**. Everything arrives at the same coordinates, so the panel is identical on every page.
-
-Then click the second heading line and change its text from `Overview` to `Checks`, so the panel doubles as the page's name. Nothing else on the panel changes: the nine figures ignore every slicer on every page by design, because they are the latest month's position and they must read the same wherever you are.
-
-The visuals below are what goes to the **right** of the panel, which is why every Horizontal starts at 192 rather than 16.
-
-**4.63** **Card** — How many rows came out of RM Raw, FG Raw and Consble Raw together. Zero means pRoot is wrong or the three folders are named differently.
-
-| Well | Field |
-|---|---|
-| Fields | `Check MB5B Rows` |
-
-Title: `Stock Rows Loaded`
-
-Position: Horizontal 192, Vertical 56, Width 206, Height 88.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Callout value' (that is the big number) and set Font size to 24.
-- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 14, Colour: #14532D.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to #FFFFFF.
-
-**4.64** **Card** — Zero here is the reason Inventory (TB) reads as empty on Summary: either the TB folder has no TB_YYYYMM.xlsx files, or the GL numbers in them match nothing on TB Master.
-
-| Well | Field |
-|---|---|
-| Fields | `Check TB Rows` |
-
-Title: `Trial Balance Rows Loaded`
-
-Position: Horizontal 405, Vertical 56, Width 206, Height 88.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Callout value' (that is the big number) and set Font size to 24.
-- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 14, Colour: #14532D.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to #FFFFFF.
-
-**4.65** **Card** — How many month-ends the stock files cover. One month means only one file was read, and then every monthly chart has a single bar however it is built.
-
-| Well | Field |
-|---|---|
-| Fields | `Check Months of Data` |
-
-Title: `Months of Data`
-
-Position: Horizontal 618, Vertical 56, Width 206, Height 88.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Callout value' (that is the big number) and set Font size to 24.
-- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 14, Colour: #14532D.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to #FFFFFF.
-
-**4.66** **Card** — More than three means the stock files carry a valuation area beyond the three plants; those now appear as 'Plant xxxx' rather than as a blank row.
-
-| Well | Field |
-|---|---|
-| Fields | `Check Plant Codes` |
-
-Title: `Plant Codes in the Data`
-
-Position: Horizontal 831, Vertical 56, Width 206, Height 88.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Callout value' (that is the big number) and set Font size to 24.
-- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 14, Colour: #14532D.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to #FFFFFF.
-
-**4.67** **Card** — The share of stock rows the master sheets do not cover. Anything above zero is what shows up as an Unassigned slice on the donuts and an Unassigned row in the technology matrix — the material numbers differ between the master sheet and the raw files.
-
-| Well | Field |
-|---|---|
-| Fields | `Check Unassigned %` |
-
-Title: `Value with No Nature (%)`
-
-Position: Horizontal 1044, Vertical 56, Width 220, Height 88.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Callout value' (that is the big number) and set Font size to 24.
-- If the list has a 'Category label' — the small grey wording Power BI prints under the number — set its Font size to 10, or switch it off, because the title above already says the same thing. The newer Card visual has no category label at all, so skip this line if you cannot see it.
-- In the Visualizations pane click the paintbrush icon, then click 'Callout value', then 'Font' and set it to Arial, Font size: 14, Colour: #B3261E.
-- In the Visualizations pane click the paintbrush icon, then click 'General', then 'Effects', then 'Background' and set it to #FFFFFF.
-
-**4.68** **Table** — One row per file actually read. If a month is missing from the report, it is missing from this list first — check the file is in the folder and is a real .xlsx.
-
-| Well | Field |
-|---|---|
-| Columns | `qcHeaders[Folder]`, `qcHeaders[Name]`, `qcHeaders[SheetNames]` |
-
-Title: `Every File the Four Folders Gave, with Its Sheets`
-
-Position: Horizontal 192, Vertical 160, Width 533, Height 100.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
-
-**4.69** **Table** — The workbook that carries RM Nature, FG Master, TB Master, Constants and MW. A sheet missing from this list, or showing 0 rows, is why the natures or the trial balance are empty.
-
-| Well | Field |
-|---|---|
-| Columns | `qcVarHeaders[SheetName]`, `qcVarHeaders[DataRows]` |
-
-Title: `Sheets Found in Variables and Calculations`
-
-Position: Horizontal 731, Vertical 160, Width 533, Height 100.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
-
-**4.70** **Table** — Empty is good, and empty is the target. Every pair listed here is money in no trial-balance figure anywhere in the report — not on a wrong plant, not in a total, nowhere — because the plant and nature of a TB line come from the row TB Master holds for that GL and profit centre together. Type each pair onto that sheet with its Plant and Nature and it leaves this list. Biggest amount first, so the top row is the one worth doing next. Reason says which of the two it is: no row at all for that pair, or two rows with different Plants for it — the second is why some accounts landed on the wrong plant, and it is fixed by correcting or deleting the duplicate row.
-
-| Well | Field |
-|---|---|
-| Columns | `qcTBUnmatched[GLAccount]`, `qcTBUnmatched[GLDesc]`, `qcTBUnmatched[ProfitCentre]`, `qcTBUnmatched[Reason]`, `qcTBUnmatched[AmountRsCr]` |
-
-Title: `GL and Profit Centre Pairs TB Master Has No Row for`
-
-Position: Horizontal 731, Vertical 268, Width 533, Height 100.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
-
-**4.71** **Table** — Each of these gets blank Days, because days of inventory divides by capacity. Add the technology to the MW sheet and it fills in by itself.
-
-| Well | Field |
-|---|---|
-| Columns | `qcNatureNoCapacity[Nature]` |
-
-Title: `FG Technologies with No Capacity on the MW Sheet`
-
-Position: Horizontal 731, Vertical 376, Width 533, Height 100.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
-
-**4.72** **Table** — The one table that explains an Unassigned donut. If RM Nature and FG Master hold thousands of materials but Matched is near zero, the two sides are keyed differently — compare the first eight numbers on each row and the difference is usually visible at a glance (a prefix, a suffix, a plant code stuck to the front).
-
-| Well | Field |
-|---|---|
-| Columns | `qcAttrMatch[Source]`, `qcAttrMatch[DistinctMaterials]`, `qcAttrMatch[MatchedToStockFiles]`, `qcAttrMatch[FirstEight]` |
-
-Title: `Do the Material Numbers Match Between the Sheets and the Files`
-
-Position: Horizontal 192, Vertical 268, Width 533, Height 100.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
-
-**4.73** **Table** — Sorted with the most negative first. An inventory account sitting there as a credit is why a plant's Inventory (TB) nets to nearly zero on Summary while the by-type block shows a large minus figure — the sign, not the mapping, is what is wrong.
-
-| Well | Field |
-|---|---|
-| Columns | `qcTBByGL[GLAccount]`, `qcTBByGL[GLDesc]`, `qcTBByGL[Category]`, `qcTBByGL[ValuationArea]`, `qcTBByGL[AmountRsCr]` |
-
-Title: `Trial Balance by GL Account, Signed`
-
-Position: Horizontal 192, Vertical 592, Width 533, Height 100.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
-
-**4.74** **Table** — The TB files carry a profit centre, not a plant, so every plant on the TB side of Summary is resolved from it. A blank or (none) in PlantResolved is a row Inventory (TB) leaves out — so if a plant shows on the MB5B side and not on the TB side, its profit centres are the ones sitting here unresolved, and the amount beside them is what is missing. Read me those profit centre codes and the rule that reads them becomes exact.
-
-| Well | Field |
-|---|---|
-| Columns | `qcTBPlants[ProfitCentre]`, `qcTBPlants[Description]`, `qcTBPlants[PlantResolved]`, `qcTBPlants[InventoryRows]`, `qcTBPlants[MatchedRows]`, `qcTBPlants[AmountRsCr]` |
-
-Title: `Trial Balance Profit Centres, and the Plant Each Resolved to`
-
-Position: Horizontal 731, Vertical 592, Width 533, Height 100.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
-
-**4.75** **Table** — There are three plants. Any other code here — 1903, 1904, 1908, or a blank valuation area — is a row the report leaves out rather than parking it on an Unallocated plant that does not exist, and the value beside it is exactly what leaving it out costs. If that figure is large, the code belongs to one of the three and the export is writing it differently; tell me which and it joins its plant.
-
-| Well | Field |
-|---|---|
-| Columns | `qcPlantCodes[Code]`, `qcPlantCodes[Rows]`, `qcPlantCodes[ValueRsCr]`, `qcPlantCodes[InReport]` |
-
-Title: `Every Plant Code the Stock Files Contain, and What It Is Worth`
-
-Position: Horizontal 192, Vertical 484, Width 533, Height 100.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
-
-**4.76** **Table** — Files of 1 on every row is what you want. A 2 means the same month came in twice — one export saved under two names, or a folder holding a partial file and a full one. Identical lines are removed before anything is counted, so the figures are right either way, but the file that should not be there is still worth deleting.
-
-| Well | Field |
-|---|---|
-| Columns | `qcMonthFiles[Category]`, `qcMonthFiles[Month]`, `qcMonthFiles[Files]`, `qcMonthFiles[ValueRsCr]` |
-
-Title: `Did Any Month Arrive from Two Files`
-
-Position: Horizontal 731, Vertical 484, Width 533, Height 100.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
-
-**4.77** **Table** — Empty is what you want. A row here is a material written twice on RM Nature or FG Master with a different nature each time; only the first of them can be used, so which nature the material gets depends on the order of the sheet. Delete the wrong row and refresh.
-
-| Well | Field |
-|---|---|
-| Columns | `qcMasterDupes[Sheet]`, `qcMasterDupes[MatKey]`, `qcMasterDupes[TheyAre]`, `qcMasterDupes[Rows]` |
-
-Title: `One Material with Two Natures on a Master Sheet`
-
-Position: Horizontal 192, Vertical 376, Width 533, Height 100.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- In the Visualizations pane click the paintbrush icon, then click 'Column headers', then 'Font' and set it to Arial, Font size: 9, Colour: #14532D.
-
----
-
 ## Making it clickable
 
-**4.78 Drill through.** On the `Detail` page click the empty area around the visuals so
-nothing is selected, then drag these into the **Drill through** well of the
-Visualizations pane (leave *Keep all filters* on):
-
-- `dimPlant[Plant]`
-- `dimDate[MonthName]`
-- `dimCategory[Category]`
-- `dimNature[Nature]`
-
-That is the whole trick. A **Back** arrow appears on `Detail` by itself, and every bar,
-row and slice on the other pages now offers **right-click → Drill through → `Detail`**,
-which opens the pies filtered to whatever was clicked.
-
-**4.79 Interactions.** A *left*-click needs no setup — it already cross-filters the rest
+**4.56 Interactions.** A *left*-click needs no setup — it already cross-filters the rest
 of the page. To change what it does: select a visual → ribbon **Format** →
 **Edit interactions**, then on each other visual pick **filter** (funnel),
 **highlight** (chart) or **none**.
@@ -1985,7 +1541,7 @@ Find the words Power BI showed you in the left column.
 | `Mark as date table` will not accept any column | nothing is wrong | skip 2.4 entirely; a monthly table is deliberate and no measure needs it |
 | `dimMetric cannot find table` | `dimCategory` / `dimMetric` / `dimMeasure` were never created | paste those three queries, Close & Apply, then paste the measure again |
 | `Value ₹ Cr cannot be determined. Either the column does not exist, or there is no current row` | either `factInventory` has no `CloseVal` column, or you pasted measures out of order | check `CloseVal` exists in `factInventory`; if it does, paste Appendix B again strictly top to bottom |
-| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 79 from Appendix B, then delete the six old names listed in 3.7 |
+| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 70 from Appendix B, then delete the six old names listed in 3.7 |
 | RM and FG matrices show numbers under `In ₹ Cr` but nothing under `In Days` | the `Days` measure was deleted as an "old name" | paste `Days = [Days of Inventory]` back in; it is in Appendix B |
 | on a card, the number is fine but the wording is cut in half | the card's default text is too big for the space | set **Callout value** → Font size **24**, **General → Title** → Font size **12**, and Height **96** (every card in Part 4 is 96 high). A **Category label**, if your version has one, goes to **10** or off — the title says the same thing |
 | the paintbrush list has a **Callout value** but no **Category label** | you are on the newer Card visual, which has no category label | nothing to fix: the heading comes from **General → Title → Text**, which Part 4 gives you the wording for |
@@ -2023,7 +1579,7 @@ Nothing here is destructive.
    `dimCategory`, `dimMetric`, `dimMeasure`. Then **Close & Apply**.
 2. **Relationships.** Manage relationships must match 2.3 exactly — 11 rows, all Single,
    nothing on `dimMetric` or `dimMeasure`.
-3. **Measures.** Add all 79 from Appendix B top to bottom (adding beside old ones is safe),
+3. **Measures.** Add all 70 from Appendix B top to bottom (adding beside old ones is safe),
    then delete the six old names in 3.7 — keeping `Days`, whose formula you overwrite instead.
 4. **Sorting.** Set the five sort-by columns in 2.5 and 2.6.
 
@@ -2245,7 +1801,7 @@ in
 
 ## fnVarSheet
 
-> Shared helper. Create this BEFORE dimMaterialAttr, dimFGAttr, varConstants and dimTBMaster, which all call it.
+> Shared helper. Create this BEFORE dimMaterialAttr, dimFGAttr and varConstants, which all call it.
 
 ```
 let
@@ -2475,7 +2031,7 @@ in
 
 ## varPlantCodes
 
-> Just the list of plant codes on the Plant Master sheet, so the fact queries can keep to them without each one re-reading the workbook. Falls back to the three codes if the sheet gave nothing. Enable load OFF.
+> Just the list of plant codes on the Plant Master sheet, so the fact queries can keep to them without each one re-reading the workbook. The trial balance names other plants too and they are deliberately not in this report; `qcPlantCodes` on Checks says what they hold. Falls back to the three codes if the sheet gave nothing. Enable load OFF.
 
 ```
 let
@@ -2663,11 +2219,11 @@ let
     NoNulls  = Table.TransformColumns(Typed, {
                    {"Nature",      each if _ = null or _ = "" then "Unassigned" else _, type text},
                    {"GroupNature", each if _ = null or _ = "" then "Unassigned" else _, type text}}),
-    // the plants are the ones on the Plant Master sheet, through varPlantCodes. A row whose
-    // valuation area is blank, or is a code that sheet does not list, is dropped rather than
-    // parked on an Unallocated row - there is no such plant and no such provision.
-    // qcPlantCodes on Checks lists every code the files contained and what it was worth, so a
-    // dropped row is never a silent one.
+    // The report covers the plants Plant Master names, and the trial balance's other plants
+    // are deliberately ignored: they are real codes in SAP but no part of this report. A row
+    // whose valuation area is blank, or is a code that sheet does not list, is dropped rather
+    // than parked on an Unallocated row. qcPlantCodes on Checks lists every code the files
+    // contained and what it was worth, so a dropped row is never a silent one.
     Plants   = varPlantCodes,
     OnePlant = Table.SelectRows(NoNulls,
                    each List.Contains(Plants, Text.Trim(Text.From([ValuationArea] ?? "")))),
@@ -2684,9 +2240,39 @@ let
                 "OpenQty","OpenVal","ReceiptQty","ReceiptVal","IssueQty","IssueVal",
                 "CloseQty","CloseVal","Category"},
     OneEach  = Table.Distinct(Trimmed, DedupKey),
+    // One row per plant, material, month and type - because that is what an export holds. The
+    // same material appears for several plants, but never twice for one plant in one month, so
+    // a second line for the same four is the same balance arriving twice (a storage-location or
+    // special-stock split, or a month re-exported) and adding them multiplies that material's
+    // stock. The line kept is the one with the largest closing quantity, which is the whole
+    // balance rather than a part of it. RowsForMaterial and QtyNotUsed carry what the other
+    // lines were and what they held, so qcStockDupes can show every one of them and nothing is
+    // discarded out of sight.
+    ByQty    = Table.Sort(OneEach, {{"CloseQty", Order.Descending}}),
+    OnePer   = Table.Distinct(ByQty, {"ValuationArea", "Material", "Month", "Category"}),
+    Counts   = Table.Group(OneEach, {"ValuationArea", "Material", "Month", "Category"}, {
+                   {"RowsForMaterial", each Table.RowCount(_), Int64.Type},
+                   {"QtyAllLines", each List.Sum(List.Transform([CloseQty], each _ ?? 0)),
+                    type number}}),
+    WithCnt  = Table.ExpandTableColumn(
+                   Table.NestedJoin(OnePer,
+                       {"ValuationArea", "Material", "Month", "Category"},
+                       Counts,
+                       {"ValuationArea", "Material", "Month", "Category"},
+                       "cnt", JoinKind.LeftOuter),
+                   "cnt", {"RowsForMaterial", "QtyAllLines"}),
+    Unused   = Table.AddColumn(WithCnt, "QtyNotUsed",
+                   each try ([QtyAllLines] ?? 0) - ([CloseQty] ?? 0) otherwise null, type number),
+    // the column list written out, so what this query hands on is stated rather than inferred
+    KeepCols = {"SourceFile","ValuationArea","Material","MatKey","MaterialDesc","FromDate",
+                "ToDate","OpenQty","OpenVal","ReceiptQty","ReceiptVal","IssueQty","IssueVal",
+                "CloseQty","CloseVal","BaseUOM","SpecialStock","Currency","Month","Category",
+                "Nature","GroupNature","BOMStdQty","Item","AttrMissing","MW","Rate",
+                "RateParseFailed","Mid","Base","INR_WP","RowsForMaterial","QtyNotUsed"},
+    Collapsed = Table.SelectColumns(Unused, KeepCols),
     // the megawatt column is renamed because Power BI will not let a table hold a column
     // and a measure with the same name, and the report needs the measure to be called MW
-    Renamed  = Table.RenameColumns(OneEach, {{"MW", "MW Qty"}}),
+    Renamed  = Table.RenameColumns(Collapsed, {{"MW", "MW Qty"}}),
     // the flat plant-and-type key. dimPlantType joins on it, which is what lets a matrix show
     // one row per plant AND type without a two-level row hierarchy - and a hierarchy is the
     // one thing some versions of Desktop insist on opening collapsed, hiding the rows.
@@ -2899,47 +2485,6 @@ in
     Typed
 ```
 
-## dimTBMaster
-
-```
-let
-    Raw      = fnVarSheet(
-                   {"TB Master", "TBMaster", "TB"},
-                   {
-                     {{"GL Account Number","gl Account Number","GLAccountNumber",
-                       "GL Account","G/L Account","GL No"},                    "GLAccount"},
-                     {{"GL Account Description","GL Description","GLDescription",
-                       "Account Description","Account Name"},                  "GLDescMaster"},
-                     {{"Nature","NaturePlant","Nature Plant"},                "Nature"},
-                     {{"Plant","Valuation Area","NaturePlant2"},              "TBPlant"},
-                     {{"Sort Order","SortOrder","Sort"},                       "TBSort"}
-                   }),
-    Keys     = Table.TransformColumns(Raw, {
-                   {"GLAccount", each Text.TrimStart(Text.Trim(Text.From(_ ?? "")), "0"), type text}}),
-    NoBlank  = Table.SelectRows(Keys, each [GLAccount] <> null and [GLAccount] <> ""),
-    Wanted   = {"GLAccount","GLDescMaster","Nature","TBPlant","TBSort"},
-    Present  = Table.ColumnNames(NoBlank),
-    Padded   = List.Accumulate(List.Difference(Wanted, Present), NoBlank,
-                   (t, c) => Table.AddColumn(t, c, each null)),
-    Slim     = Table.SelectColumns(Padded, Wanted),
-    // Master columns are converted one cell at a time with a fallback, never with a straight
-    // type cast. A sort column holding 1.5, a blank, a dash or the word "last" is a typing
-    // habit on a spreadsheet, not a mistake in the data - but Int64.Type on any of them raises
-    // a row error, and Power BI then reports "Errors in dimTBMaster" and drops the whole
-    // whitelist, which is how eight perfectly good GL accounts stopped being inventory.
-    Sortable = Table.TransformColumns(Slim, {
-                   {"TBSort", each try Int64.From(Number.Round(Number.From(_))) otherwise null,
-                    Int64.Type}}),
-    Texted   = Table.TransformColumns(Sortable, {
-                   {"GLAccount",    each Text.From(_ ?? ""),  type text},
-                   {"GLDescMaster", each Text.From(_ ?? ""),  type text},
-                   {"Nature",       each Text.Trim(Text.From(_ ?? "")), type text},
-                   {"TBPlant",      each Text.Trim(Text.From(_ ?? "")), type text}}),
-    Dedup    = Table.Distinct(Texted, {"GLAccount"})
-in
-    Dedup
-```
-
 ## factTB_Staged
 
 > Header-tolerant: sheet names, header position, case, spaces and punctuation are all matched loosely, and the common SAP spellings (`gl Account Number`, `Profit Center`, `Amount in local currency`, …) are recognised. A column it genuinely cannot find comes through blank rather than failing the refresh. Month comes from the file name, so files must be `TB_YYYYMM.xlsx`.
@@ -3081,7 +2626,7 @@ let
     // ---- the TB Master whitelist, read HERE and not in a later query -----------------------
     // Power Query's firewall forbids a query that references another query from also reaching
     // a data source, and it applies that test to the whole chain: factTB referencing both
-    // factTB_Staged (which opens the TB folder) and dimTBMaster (which opens the workbook) is
+    // factTB_Staged (which opens the TB folder) and a query that opens the workbook is
     // exactly the combination it blocks, with 'references other queries or steps, so it may
     // not directly access a data source'. Doing the join in this query keeps both sources in
     // one place - a query may open as many sources as it likes as long as it leans on no other
@@ -3096,7 +2641,8 @@ let
                           {{"GL Account Description","GL Description","GLDescription",
                             "Account Description","Account Name"},                "GLDescMaster"},
                           {{"Nature","NaturePlant","Nature Plant"},               "Nature"},
-                          {{"Plant","Valuation Area","NaturePlant2"},             "TBPlant"},
+                          {{"Plant","Plant Number","Plant No","Plant Code",
+                            "Valuation Area","NaturePlant2"},                     "TBPlant"},
                           {{"Sort Order","SortOrder","Sort"},                      "TBSort"},
                           {{"Profit Center","Profit Centre","ProfitCenter","ProfitCentre",
                             "Profit Ctr","PRCTR"},                                  "MPC"}
@@ -3158,15 +2704,18 @@ let
                                    each Text.Trim(Text.From(_ ?? ""))), each _ <> "")), type list},
                    {"Rows",    each Table.RowCount(_), Int64.Type}}),
     MAmbig   = Table.SelectRows(MGroup, each List.Count([Plants]) > 1),
-    MClean   = Table.SelectRows(MGroup, each List.Count([Plants]) <= 1),
+    // One row per GL account and profit centre, and where TB Master carries that pair more
+    // than once it is the FIRST of them, in the sheet's own row order. That is not a choice
+    // about which plant is correct - it is what VLOOKUP does, and the figures the old report
+    // was checked against were produced by VLOOKUP on this same sheet. Holding those pairs
+    // back instead emptied a plant's RM; taking the first row reproduces the old numbers.
+    // qcTBUnmatched still names every such pair with both plants, so the sheet can be
+    // corrected and the answer then stops depending on row order at all.
     MasterPair = Table.Buffer(
-                     Table.NestedJoin(
-                         Table.Distinct(Table.SelectColumns(MPlanted, MCols),
-                             {"GLAccount", "PCKey"}),
-                         {"GLAccount","PCKey"},
-                         Table.SelectColumns(MClean, {"GLAccount","PCKey"}), {"GLAccount","PCKey"},
-                         "ok", JoinKind.Inner)),
-    // the ambiguous pairs, kept so the report can say why a line went nowhere
+                     Table.Distinct(Table.SelectColumns(MPlanted, MCols),
+                         {"GLAccount", "PCKey"})),
+    // the pairs the sheet contradicts itself about, carried through only so each line can say
+    // that its plant came from the first of two rows rather than from an unambiguous one
     AmbigKeys = Table.Buffer(Table.AddColumn(
                     Table.SelectColumns(MAmbig, {"GLAccount","PCKey","Plants"}),
                     "AmbigPlants", each Text.Combine([Plants], " / "), type text)),
@@ -3193,43 +2742,26 @@ let
     Natured  = Table.AddColumn(Widened, "NatureUse",
                    each if Text.Trim(Text.From([Nature] ?? "")) <> "" then [Nature]
                         else [GLNature], type text),
-    // The plant is the matched pair's Plant column, read as a code or as a plant name, and
-    // there is no second rule. Reading it from the profit centre as well made two rules run
-    // at once, and a row the sheet had not reached yet was placed by the old guess instead of
-    // standing out - which moved the figures further off, not closer. A pair with no row on
-    // TB Master now resolves to nothing, is left out of every trial-balance figure, and is
-    // listed by qcTBUnmatched with what it is worth. That list is finite: type those pairs
-    // onto the sheet and the trial balance is right by construction.
-    // The plant from the matched pair, and where the sheet contradicts itself about a pair,
-    // one tie-break that adds no guesswork: if the profit centre on the line names one of the
-    // very plants the sheet is arguing between, that is the one. It cannot invent a plant the
-    // sheet did not offer, and where it cannot decide the row stays unresolved and visible.
-    // Dropping every contradictory pair outright emptied a whole plant's RM, which is a
-    // worse answer than a tie-break the sheet itself constrains.
+    // The plant is the matched row's Plant column, read as a code (1905) or as a plant name
+    // (Dholera Cell). There is no second rule: reading it from the profit centre as well made
+    // two rules run at once and moved the figures further off. Where TB Master gives the pair
+    // two plants, the row used is the first one on the sheet - VLOOKUP's own behaviour, and
+    // the behaviour the old report's figures came from. A pair with no row at all resolves to
+    // nothing, is left out of every trial-balance figure, and is listed by qcTBUnmatched with
+    // what it is worth.
     FromPair = Table.AddColumn(Natured, "PairPlant",
                    each if Anywhere([TBPlant]) <> null then Anywhere([TBPlant])
                         else ByName([TBPlant]), type text),
-    TieBreak = Table.AddColumn(FromPair, "TiePlant",
-                   each let Cands = if [AmbigPlants] = null then {}
-                                    else List.Transform(Text.Split([AmbigPlants], " / "),
-                                             each Text.Trim(_)),
-                            Codes = List.RemoveNulls(List.Transform(Cands,
-                                        each if Anywhere(_) <> null then Anywhere(_)
-                                             else ByName(_))),
-                            Pc    = [ValuationArea]
-                        in  if Pc <> null and List.Contains(Codes, Pc) then Pc else null,
-                   type text),
-    Resolved = Table.AddColumn(TieBreak, "PlantResolved",
-                   each if [PairPlant] <> null then [PairPlant] else [TiePlant], type text),
+    Resolved = Table.AddColumn(FromPair, "PlantResolved", each [PairPlant], type text),
     // how each line was placed, in words - so Checks can say whether a plant is short
-    // because the sheet has no row for it or because the sheet contradicts itself
+    // because the sheet has no row for it, and which lines depended on the sheet's row order
     Ruled    = Table.AddColumn(Resolved, "Rule",
-                   each if [PairPlant] <> null then "matched on GL and profit centre"
-                        else if [TiePlant] <> null then "sheet gave two plants, profit centre decided"
-                        else if [AmbigPlants] <> null then "dropped: two plants on TB Master"
+                   each if [PairPlant] <> null and [AmbigPlants] <> null
+                        then "sheet gave two plants, first row used"
+                        else if [PairPlant] <> null then "matched on GL and profit centre"
                         else if [Whitelisted] then "dropped: no row for this GL and profit centre"
                         else "not an inventory account", type text),
-    Dropped  = Table.RemoveColumns(Ruled, {"ValuationArea", "PairPlant", "TiePlant"}),
+    Dropped  = Table.RemoveColumns(Ruled, {"ValuationArea", "PairPlant"}),
     Renamed2 = Table.RenameColumns(Dropped, {{"PlantResolved", "ValuationArea"}}),
     // Rows that resolve to none of the three plants are kept HERE and left out in factTB, so
     // qcTBPlants can still see them: a plant going missing from Inventory (TB) has to be
@@ -3249,16 +2781,12 @@ in
 
 ## dimPlant
 
-> One row per plant, taken from the **Plant Master** sheet through `dimPlantMaster`, and kept to the plants the files actually contain. No Unallocated row and no blank member: a fact row whose valuation area is not one of these was left out upstream, and `qcPlantCodes` on Checks says what that cost.
+> One row per plant the report knows about: every code the **Plant Master** sheet names, every code the Plant column of **TB Master** names, and every code the stock files and the trial balance actually contain. A code no sheet names is still listed, under itself, so no plant can be missing from a figure without appearing on the page. The three known plants keep their names whatever a sheet says, because a swapped pair of spreadsheet rows once renamed Jaipur and Dholera on every page at once.
 
 ```
 let
-    // The three plants and their names are decided here and nowhere else. Every page, slicer,
-    // legend, card and row label reads this table, so no sheet and no page can call 1902
-    // anything but Jaipur Module. The codes are as the Summary workbook has them - 1902
-    // Jaipur, 1900 Dholera Module - and Plant Master may still add a sort order; it is not
-    // allowed to rename these three, because a swapped pair of rows in a spreadsheet renamed
-    // both Jaipur and Dholera on every page at once.
+    // The three plants and their names are decided here and nowhere else, so no sheet and no
+    // page can call 1902 anything but Jaipur Module.
     Fixed    = #table(
         type table [ValuationArea = text, Plant = text, PlantSortNo = Int64.Type],
         {
@@ -3266,37 +2794,51 @@ let
             {"1900", "1900 Dholera Module", 2},
             {"1905", "1905 Dholera Cell",   3}
         }),
-    Master   = try dimPlantMaster otherwise Fixed,
-    Sheet    = if Table.IsEmpty(Master) then Fixed else Master,
-    // the sheet's own sort order, taken by code and never by position
-    WithSort = Table.AddColumn(Fixed, "SheetSort",
-                   each let m = Table.SelectRows(Sheet, (r) => r[ValuationArea] = [ValuationArea])
-                        in if Table.IsEmpty(m) then null
-                           else try Int64.From(Table.First(m)[PlantSortNo]) otherwise null,
-                   Int64.Type),
-    Ordered  = Table.AddColumn(WithSort, "SortNo",
-                   each [SheetSort] ?? [PlantSortNo], Int64.Type),
-    // any plant the sheet lists that is not one of the three is still allowed through, named
-    // as the sheet names it, so a fourth plant one day is not silently dropped
-    Extra    = Table.SelectRows(Sheet,
-                   each not List.Contains({"1900", "1902", "1905"}, [ValuationArea])),
-    ExtraSet = Table.AddColumn(Extra, "SortNo",
-                   each try Int64.From([PlantSortNo]) otherwise 99, Int64.Type),
-    Named    = Table.Combine({
-                   Table.SelectColumns(Ordered, {"ValuationArea", "Plant", "SortNo"}),
-                   Table.SelectColumns(ExtraSet, {"ValuationArea", "Plant", "SortNo"})}),
-    Renum    = Table.RenameColumns(Named, {{"SortNo", "PlantSortNo"}}),
-    // codes present in the stock files or the trial balance. Only other queries are read
-    // here and no folder is opened, which is what keeps the firewall quiet.
+    Master   = try dimPlantMaster otherwise #table(
+                   type table [ValuationArea = text, Plant = text, PlantSortNo = Int64.Type], {}),
+    // codes the masters name, and codes the files themselves hold - the union of the two, so a
+    // plant is reported whether it was declared or merely arrived
+    Named    = try varPlantCodes otherwise {"1900","1902","1905"},
     Seen     = List.Distinct(List.RemoveNulls(
-                   List.Combine({factInventory[ValuationArea], factTB_Staged[ValuationArea]}))),
-    // a named plant with nothing behind it is left out, so the Plant slicer lists what the
-    // files actually contain and not a fixed list padded with rows that pick nothing
-    Live     = Table.SelectRows(Renum, each List.Contains(Seen, [ValuationArea])),
-    Kept     = if Table.IsEmpty(Live) then Renum else Live,
-    Dedup    = Table.Distinct(Kept, {"ValuationArea"}),
-    Ren      = Table.RenameColumns(Dedup, {{"PlantSortNo", "PlantSort"}}),
-    Typed    = Table.TransformColumnTypes(Ren, {
+                   List.Transform(Named, each Text.Trim(Text.From(_ ?? ""))))),
+    // a plant with nothing behind it is left out, so the slicer lists what the files contain
+    Live     = List.Distinct(List.RemoveNulls(
+                   List.Combine({
+                       List.Transform(factInventory[ValuationArea],
+                           each Text.Trim(Text.From(_ ?? ""))),
+                       List.Transform(factTB_Staged[ValuationArea],
+                           each Text.Trim(Text.From(_ ?? "")))}))),
+    Named2   = List.Select(Seen, each _ <> ""),
+    Codes    = let k = List.Select(Named2, each List.Contains(Live, _))
+               in  if List.IsEmpty(k) then Named2 else k,
+    // the label: the fixed name for the three, the Plant Master name for anything else it
+    // names, and the bare code for a plant nobody has named yet
+    NameOf   = (c as text) as text =>
+                   let f = Table.SelectRows(Fixed,  (r) => r[ValuationArea] = c),
+                       m = Table.SelectRows(Master, (r) => r[ValuationArea] = c)
+                   in  if not Table.IsEmpty(f) then Table.First(f)[Plant]
+                       else if not Table.IsEmpty(m)
+                            and Text.Trim(Text.From(Table.First(m)[Plant] ?? "")) <> ""
+                            then Table.First(m)[Plant]
+                       else c,
+    // the three come first, in their own order; everything else after them, by code, so the
+    // report reads the way it always has and a new plant is added at the end
+    SortOf   = (c as text) as number =>
+                   let f = Table.SelectRows(Fixed,  (r) => r[ValuationArea] = c),
+                       m = Table.SelectRows(Master, (r) => r[ValuationArea] = c)
+                   in  if not Table.IsEmpty(f) then Number.From(Table.First(f)[PlantSortNo])
+                       else if not Table.IsEmpty(m)
+                            then 100 + (try Number.From(Table.First(m)[PlantSortNo]) otherwise 0)
+                       else 900 + (try Number.From(Text.Select(c, {"0".."9"})) otherwise 0),
+    Built    = Table.FromRecords(List.Transform(Codes, (c) =>
+                   [ValuationArea = c, Plant = NameOf(c), PlantSort = SortOf(c)]),
+                   type table [ValuationArea = text, Plant = text, PlantSort = number]),
+    // if nothing has loaded yet, the three known plants still make a table, so the report opens
+    Rows     = if List.IsEmpty(Codes)
+               then Table.RenameColumns(Fixed, {{"PlantSortNo", "PlantSort"}})
+               else Built,
+    Dedup    = Table.Distinct(Rows, {"ValuationArea"}),
+    Typed    = Table.TransformColumnTypes(Dedup, {
                    {"ValuationArea", type text}, {"Plant", type text},
                    {"PlantSort", Int64.Type}})
 in
@@ -3341,7 +2883,14 @@ let
     Bucket  = (n as any, d as any) as text =>
                   let N = Text.Trim(Text.From(n ?? "")),
                       T = Text.Upper(if N <> "" then N else Text.From(d ?? "")) in
-                  if Text.Contains(T, "FINISH") or Text.Contains(T, "FG")
+                  // the short codes first, because they are exact: a Nature column holding
+                  // RM / FG / CONS says which bucket it is and nothing needs reading into it.
+                  // CONS on its own would otherwise fall past the CONSUM test and land in RM.
+                  if T = "CONS" or T = "CONSUMABLE" or T = "CONSUMABLES"
+                      then "Consumables"
+                  else if T = "FG" then "FG"
+                  else if T = "RM" then "RM"
+                  else if Text.Contains(T, "FINISH") or Text.Contains(T, "FG")
                       then "FG"
                   else if Text.Contains(T, "RAW") or Text.Contains(T, "RM")
                       or Text.Contains(T, "WIP") or Text.Contains(T, "SEMI")
@@ -3374,20 +2923,6 @@ let
                   type text)
 in
     Keyed
-```
-
-## factTB_Unmapped
-
-> GL accounts present in the raw TB but absent from `TB Master`. Empty = good. This is what stops a new GL account silently vanishing - and, just as important, what stops a fixed-asset account being counted as inventory. It reads the same `Whitelisted` flag as `factTB`, so the two can never disagree.
-
-```
-let
-    Out   = Table.SelectRows(factTB_Staged, each [Whitelisted] = false),
-    Group = Table.Group(Out, {"GLAccount","GLDesc"},
-                {{"Amount", each List.Sum([Amount]), type number},
-                 {"Rows",   each Table.RowCount(_), Int64.Type}})
-in
-    Group
 ```
 
 ## dimDate
@@ -3437,269 +2972,6 @@ in
 `Quarter` reads `Q1 FY 2026-27` for April–June, `Q4 FY 2026-27` for January–March. Sort it by
 `QuarterSort` in step 2.5 or the slicer lists the quarters alphabetically, which puts Q1 of
 every year together.
-
-## qcHeaders
-
-> Your self-check: lists the real sheet names and headers of every file in all four folders. Leave Enable load ON.
-
-```
-let
-    Folders  = {"RM Raw", "FG Raw", "Consble Raw", "TB"},
-    AllFiles = Table.Combine(List.Transform(Folders, (f) =>
-                   Table.AddColumn(
-                       Table.SelectRows(Folder.Files(pRoot & "\" & f),
-                           each Text.Lower([Extension]) = ".xlsx"
-                           and not Text.StartsWith([Name], "~$")
-                           and not Text.StartsWith([Name], ".")),
-                       "Folder", each f, type text))),
-    Slim     = Table.SelectColumns(AllFiles, {"Folder","Name","Content"}),
-    Hdrs     = Table.AddColumn(Slim, "Headers", each
-                   let
-                       Wb = Excel.Workbook([Content], null, true),
-                       Sh = Table.SelectRows(Wb, each [Kind] = "Sheet"),
-                       D  = try Sh{[Item="Sheet1", Kind="Sheet"]}[Data] otherwise Sh{0}[Data],
-                       P  = Table.PromoteHeaders(D, [PromoteAllScalars=true])
-                   in
-                       Text.Combine(List.Transform(Table.ColumnNames(P), Text.From), " | "),
-                   type text),
-    Sheets   = Table.AddColumn(Hdrs, "SheetNames", each
-                   let Wb = Excel.Workbook([Content], null, true)
-                   in  Text.Combine(Table.SelectRows(Wb, each [Kind] = "Sheet")[Item], " | "),
-                   type text),
-    Out      = Table.SelectColumns(Sheets, {"Folder","Name","SheetNames","Headers"})
-in
-    Out
-```
-
-## qcVarHeaders
-
-> Your self-check for Variables and Calculations: every sheet, its exact headers, and its row count. Leave Enable load ON.
-
-```
-let
-    Wb    = Excel.Workbook(File.Contents(pVarsFile), null, true),
-    Sh    = Table.SelectRows(Wb, each [Kind] = "Sheet"),
-    Slim  = Table.SelectColumns(Sh, {"Item","Data"}),
-    Hdrs  = Table.AddColumn(Slim, "Headers", each
-                Text.Combine(List.Transform(
-                    Table.ColumnNames(Table.PromoteHeaders([Data], [PromoteAllScalars=true])),
-                    Text.From), " | "), type text),
-    Rows  = Table.AddColumn(Hdrs, "DataRows", each Table.RowCount([Data]) - 1, Int64.Type),
-    Slim2 = Table.SelectColumns(Rows, {"Item","Headers","DataRows"}),
-    Out   = Table.RenameColumns(Slim2, {{"Item","SheetName"}})
-in
-    Out
-```
-
-## qcNatureNoCapacity
-
-> Lists FG Natures with no matching Tech on the MW sheet. Those rows get blank Days. Empty table = good.
-
-```
-let
-    FGNatures = List.Distinct(List.RemoveNulls(dimFGAttr[Nature])),
-    CapTechs  = List.Distinct(List.RemoveNulls(varMWCapacity[Tech])),
-    Orphans   = List.Difference(FGNatures, CapTechs),
-    T         = Table.FromList(Orphans, Splitter.SplitByNothing(), {"Nature"}),
-    Typed     = Table.TransformColumnTypes(T, {{"Nature", type text}})
-in
-    Typed
-```
-
-## qcAttrMatch
-
-> Answers one question: are the material numbers in the stock files the same numbers as in RM Nature and FG Master? `Matched` near zero with a healthy `Distinct` on both sides means the two sheets are keyed differently - read me the samples. Leave Enable load ON.
-
-```
-let
-    MB5B    = List.Distinct(List.RemoveNulls(factInventory[Material])),
-    RM      = List.Distinct(List.RemoveNulls(dimMaterialAttr[Material])),
-    FG      = List.Distinct(List.RemoveNulls(dimFGAttr[Material])),
-    Sample  = (l as list) as text =>
-                  Text.Combine(List.Transform(List.FirstN(List.Sort(l), 8), Text.From), " | "),
-    // the same question again on the description, because a master sheet keyed by description
-    // rather than by material number would show Matched near zero above and healthy here
-    MB5BD   = List.Distinct(List.RemoveNulls(List.Transform(factInventory[MaterialDesc],
-                  each Text.Upper(Text.Trim(Text.From(_ ?? "")))))),
-    RMD     = List.Distinct(List.RemoveNulls(List.Transform(dimMaterialAttr[DescKey],
-                  each Text.Upper(Text.Trim(Text.From(_ ?? "")))))),
-    Rows    = {
-        {"Stock files (MB5B)", List.Count(MB5B), null, Sample(MB5B)},
-        {"RM Nature sheet",    List.Count(RM),
-         List.Count(List.Intersect({RM, MB5B})), Sample(RM)},
-        {"FG Master sheet",    List.Count(FG),
-         List.Count(List.Intersect({FG, MB5B})), Sample(FG)},
-        {"Stock files - descriptions", List.Count(MB5BD), null, Sample(MB5BD)},
-        {"RM Nature - descriptions",   List.Count(RMD),
-         List.Count(List.Intersect({RMD, MB5BD})), Sample(RMD)}
-    },
-    T       = Table.FromRows(Rows,
-                  type table [Source = text, DistinctMaterials = Int64.Type,
-                              MatchedToStockFiles = Int64.Type, FirstEight = text])
-in
-    T
-```
-
-## qcPlantCodes
-
-> Every valuation area the stock files actually contain, with its rows and its closing value, before the three-plant rule is applied. A code here that is not 1900 / 1902 / 1905 is a row the report leaves out, so this is where you see what leaving it out costs. Leave Enable load ON.
-
-```
-let
-    Src     = Table.Combine({factRM, factFG, factConble}),
-    Coded   = Table.AddColumn(Src, "Code",
-                  each Text.Trim(Text.From([ValuationArea] ?? "")), type text),
-    Named   = Table.TransformColumns(Coded, {
-                  {"Code", each if _ = "" then "(blank)" else _, type text}}),
-    Grouped = Table.Group(Named, {"Code"}, {
-                  {"Rows",     each Table.RowCount(_), Int64.Type},
-                  {"ValueRsCr", each List.Sum(List.Transform(_[CloseVal],
-                                    each _ ?? 0)) / 10000000, type number}}),
-    Flagged = Table.AddColumn(Grouped, "InReport",
-                  each List.Contains({"1900","1902","1905"}, [Code]), type logical),
-    Sorted  = Table.Sort(Flagged, {{"ValueRsCr", Order.Descending}})
-in
-    Sorted
-```
-
-## qcMonthFiles
-
-> One row per category and month, with how many files it came from. `Files` of 1 everywhere is what you want. A 2 means the same month arrived twice - the same export saved under two names, or a folder holding both a partial and a full file - and the duplicate lines are removed before anything is counted, but the file that should not be there is still worth deleting. Leave Enable load ON.
-
-```
-let
-    Src     = factInventory,
-    Grouped = Table.Group(Src, {"Category", "Month"}, {
-                  {"Files",     each List.Count(List.Distinct([SourceFile])), Int64.Type},
-                  {"FileNames", each Text.Combine(
-                                    List.Transform(List.Distinct([SourceFile]), Text.From),
-                                    " | "), type text},
-                  {"Rows",      each Table.RowCount(_), Int64.Type},
-                  {"ValueRsCr", each List.Sum(List.Transform([CloseVal], each _ ?? 0))
-                                    / 10000000, type number}}),
-    Sorted  = Table.Sort(Grouped, {{"Files", Order.Descending}, {"Month", Order.Descending}})
-in
-    Sorted
-```
-
-## qcMasterDupes
-
-> Master rows that contradict each other: one material carrying two different natures on the RM or FG sheet. Only one of them can be used - the first - so this is the list to clean up on the sheet itself, and until it is, the nature a material gets depends on which row Excel happens to hold first. Empty is what you want. Leave Enable load ON.
-
-```
-let
-    NormMat = (v as any) as text =>
-                  let Bare = Text.Select(Text.Upper(Text.From(v ?? "")), {"A".."Z", "0".."9"}),
-                      Cut  = Text.TrimStart(Bare, "0")
-                  in  if Cut = "" and Bare <> "" then "0" else Cut,
-    Read    = (sheet as list, label as text) as table =>
-        let
-            Raw    = fnVarSheetSafe(sheet, {
-                         {{"Valuation Area","Val Area","Plant","Valuation area"}, "ValuationArea"},
-                         {{"Material","Material No","Material Number"},           "Material"},
-                         {{"Nature","Tech","Technology"},                         "Nature"}
-                     }),
-            Cols   = {"ValuationArea","Material","Nature"},
-            Padded = List.Accumulate(List.Difference(Cols, Table.ColumnNames(Raw)), Raw,
-                         (t, c) => Table.AddColumn(t, c, each null)),
-            Slim   = Table.SelectColumns(Padded, Cols),
-            Keys   = Table.TransformColumns(Slim, {
-                         {"ValuationArea", each Text.Trim(Text.From(_ ?? "")), type text},
-                         {"Material",      each NormMat(_), type text},
-                         {"Nature",        each Text.Trim(Text.From(_ ?? "")), type text}}),
-            Real   = Table.SelectRows(Keys, each [Material] <> ""),
-            Keyed  = Table.AddColumn(Real, "MatKey",
-                         each [ValuationArea] & "|" & [Material], type text),
-            Named  = Table.AddColumn(Keyed, "Sheet", each label, type text)
-        in
-            Table.SelectColumns(Named, {"Sheet","MatKey","Nature"}),
-    RM      = Read({"RM Nature", "RM Master", "RMNature", "RM"}, "RM Nature"),
-    FG      = Read({"FG Master", "FM Master", "FG Nature", "FGMaster", "FG"}, "FG Master"),
-    Both    = Table.Combine({RM, FG}),
-    Grouped = Table.Group(Both, {"Sheet","MatKey"}, {
-                  {"Natures",  each List.Count(List.Distinct([Nature])), Int64.Type},
-                  {"TheyAre",  each Text.Combine(List.Distinct([Nature]), " | "), type text},
-                  {"Rows",     each Table.RowCount(_), Int64.Type}}),
-    Clashes = Table.SelectRows(Grouped, each [Natures] > 1),
-    Sorted  = Table.Sort(Clashes, {{"Sheet", Order.Ascending}, {"MatKey", Order.Ascending}})
-in
-    Sorted
-```
-
-## qcTBByGL
-
-> Every GL account the trial balance brought in, with the nature TB Master gives it, the plant it landed under and its signed total. This is where a credit-balance GL shows itself: an inventory account with a negative total is the reason a plant's TB nets to zero. It is also where to look for a plant missing from the TB side - the GLs that belong to it either are not here at all, or are here under another plant because TB Master's Plant column is empty against them. Leave Enable load ON.
-
-```
-let
-    Grouped = Table.Group(factTB, {"GLAccount", "GLDesc", "Nature", "Category", "ValuationArea"}, {
-              {"Rule", each Text.Combine(List.Distinct(List.Transform([Rule],
-                                each Text.From(_ ?? ""))), " | "), type text},
-                  {"AmountRsCr", each List.Sum([Amount]) / 10000000, type number},
-                  {"Rows", each Table.RowCount(_), Int64.Type}}),
-    Sorted  = Table.Sort(Grouped, {{"AmountRsCr", Order.Ascending}}),
-    Typed   = Table.TransformColumnTypes(Sorted, {
-                  {"GLAccount", type text}, {"GLDesc", type text},
-                  {"Nature", type text}, {"Category", type text},
-                  {"ValuationArea", type text}})
-in
-    Typed
-```
-
-## qcTBUnmatched
-
-> The to-do list for `TB Master`. Every GL account and profit centre pair the trial balance contains that the sheet has no row for, with what it is worth. Those rows are in no trial-balance figure anywhere in the report - not on a wrong plant, not in a total, nowhere - so this table is the whole of what the TB side is missing. Type each pair onto `TB Master` with its Plant and Nature and it disappears from here. Leave Enable load ON.
-
-```
-let
-    Src     = Table.SelectRows(factTB_Staged, each [PairMatched] = false),
-    Named   = Table.TransformColumns(Src, {
-                  {"ProfitCentre", each if Text.From(_ ?? "") = "" then "(blank)" else _,
-                   type text}}),
-    Grouped = Table.Group(Named, {"GLAccount", "ProfitCentre"}, {
-                  {"GLDesc", each Text.From(List.First([GLDesc]) ?? ""), type text},
-                  // the profit centre as the join actually sees it, once leading zeros,
-                  // spaces and punctuation are off it - so a mismatch between how the export
-                  // and the sheet write the same code is visible rather than deduced
-                  {"PCKey", each Text.From(List.First([PCKey]) ?? ""), type text},
-                  {"OnSheetAsGL", each List.AnyTrue(List.Transform([Whitelisted], each _ = true)),
-                   type logical},
-                  // why it went nowhere, in words rather than by deduction
-                  {"Reason", each
-                       let A = Text.From(List.First(List.RemoveNulls([AmbigPlants])) ?? "") in
-                       if A <> "" then "two plants on TB Master for this pair: " & A
-                       else "no row on TB Master for this GL and profit centre", type text},
-                  {"Rows", each Table.RowCount(_), Int64.Type},
-                  {"AmountRsCr", each List.Sum(List.Transform([Amount], each _ ?? 0)) / 10000000,
-                   type number}}),
-    // biggest money first: that is the row worth typing in next
-    Sorted  = Table.Sort(Grouped, {{"AmountRsCr", Order.Descending}}),
-    Typed   = Table.TransformColumnTypes(Sorted, {
-                  {"GLAccount", type text}, {"ProfitCentre", type text},
-                  {"PCKey", type text}, {"GLDesc", type text}, {"Reason", type text}})
-in
-    Typed
-```
-
-## qcMWSheet
-
-> Diagnostic. Shows the MW sheet exactly as it sits in Excel, cell for cell, with no interpretation. If `varMWCapacity` complains, look here and read me the layout. Leave Enable load ON.
-
-```
-let
-    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
-    Sh      = Table.SelectRows(Wb, each [Kind] = "Sheet"),
-    Norm    = (n as any) as text =>
-                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")), {" ",".","_","-"})),
-    Hit     = Table.SelectRows(Sh, each
-                  List.Contains({"MW","MWCAPACITY","CAPACITY","MWCAP"}, Norm([Item]))),
-    Data    = Hit{0}[Data],
-    AsText  = Table.TransformColumns(Data,
-                  List.Transform(Table.ColumnNames(Data),
-                      (c) => {c, each Text.From(_ ?? ""), type text}))
-in
-    AsText
-```
 
 ## dimCategory
 
@@ -3782,34 +3054,6 @@ in
 
 ---
 
-## qcTBPlants
-
-> Every profit centre the trial balance files contain, with the plant the report resolved it to and what it is worth. `MatchedRows` is how many of its rows found their GL-and-profit-centre pair on `TB Master`: a profit centre with rows but no matches is one still to be typed into that sheet, and it is the difference between a figure the workbook decided and a figure the report fell back to guessing. A blank `PlantResolved` is a row Inventory (TB) leaves out - so if a plant is missing from Summary while MB5B has it, this table names the profit centres that did not resolve, and the fix is a rule, not a guess. Leave Enable load ON.
-
-```
-let
-    Src     = factTB_Staged,
-    Named   = Table.TransformColumns(Src, {
-                  {"ProfitCentre", each if Text.From(_ ?? "") = "" then "(blank)" else _,
-                   type text}}),
-    Grouped = Table.Group(Named, {"ProfitCentre"}, {
-                  {"Description", each Text.From(List.First([ProfitCentreDesc]) ?? ""), type text},
-                  {"PlantResolved", each Text.Combine(
-                                        List.Transform(List.Distinct([ValuationArea]),
-                                            each Text.From(_ ?? "(none)")), " | "), type text},
-                  {"Rows", each Table.RowCount(_), Int64.Type},
-                  {"InventoryRows", each List.Count(List.Select([Whitelisted], each _ = true)),
-                   Int64.Type},
-                  {"MatchedRows", each List.Count(List.Select([PairMatched], each _ = true)),
-                   Int64.Type},
-                  {"AmountRsCr", each List.Sum(List.Transform([Amount], each _ ?? 0)) / 10000000,
-                   type number}}),
-    Sorted  = Table.Sort(Grouped, {{"PlantResolved", Order.Ascending},
-                                   {"AmountRsCr", Order.Descending}})
-in
-    Sorted
-```
-
 # Appendix B — measures
 
 Add these one at a time (**Home → New measure**), with `factInventory` selected. Copy the
@@ -3860,14 +3104,6 @@ FG ₹ Cr = CALCULATE([Value ₹ Cr], factInventory[Category] = "FG")
 
 ```
 Consumables ₹ Cr = CALCULATE([Value ₹ Cr], factInventory[Category] = "Consumables")
-```
-
-```
-Share of Total % =
-VAR Whole =
-    CALCULATE([Value ₹ Cr],
-        ALLSELECTED(factInventory), ALLSELECTED(dimNature), ALLSELECTED(dimCategory))
-RETURN DIVIDE([Value ₹ Cr], Whole)
 ```
 
 *megawatts and days*
@@ -4045,18 +3281,6 @@ Difference % = DIVIDE([Difference ₹ Cr], [TB ₹ Cr])
 ```
 
 *data quality*
-
-```
-Stock Recon ₹ Cr = [Opening Value ₹ Cr] + [Receipts ₹ Cr] - [Issues ₹ Cr] - [Value ₹ Cr]
-```
-
-```
-Rows Missing Attr = CALCULATE(COUNTROWS(factInventory), factInventory[AttrMissing] = TRUE())
-```
-
-```
-Unmapped TB ₹ Cr = DIVIDE(SUM(factTB_Unmapped[Amount]), 10000000)
-```
 
 *days*
 
@@ -4305,24 +3529,6 @@ VAR LastM =
     MAXX(FILTER(VALUES(dimDate[MonthIndex]), CALCULATE(COUNTROWS(factInventory)) > 0),
          dimDate[MonthIndex])
 RETURN CALCULATE([Days], dimDate[MonthIndex] = LastM)
-
-Check MB5B Rows = COUNTROWS(factInventory)
-
-Check TB Rows = COUNTROWS(factTB)
-
-Check Months of Data = DISTINCTCOUNT(factInventory[Month])
-
-Check Plant Codes = DISTINCTCOUNT(factInventory[ValuationArea])
-
-Check Unassigned % =
-VAR Unnamed =
-    CALCULATE(
-        SUM(factInventory[CloseVal]),
-        factInventory[Nature] IN {"Unassigned", "(blank)"}
-    )
-RETURN
-DIVIDE(Unnamed, SUM(factInventory[CloseVal]))
-
 ```
 
 `Summary Value Rs Cr` is the Summary page's only figure. It is `Summary Value ₹ Cr` with the
@@ -4414,10 +3620,10 @@ figure exists.
 
 ### Changed in build 20
 
-**No forced type casts on the master sheets.** *Errors in dimTBMaster* on all eight rows was a
+**No forced type casts on the master sheets.** *Errors in the trial-balance whitelist* on all eight rows was a
 `Int64.Type` cast on the sort column: a blank, a dash, `1.5` or a number stored as text errors the
 whole row, and what is lost is the whitelist of inventory GL accounts - so Inventory (TB) reads
-empty. Every master column in `dimTBMaster`, `dimMaterialAttr`, `varConstants` and the trial
+empty. Every master column in `dimMaterialAttr`, `varConstants` and the trial
 balance's own amount is now converted cell by cell with a fallback, so an oddly typed cell becomes a
 blank instead of an error. A spreadsheet typed by hand is allowed to be untidy; the report has to
 cope with it.

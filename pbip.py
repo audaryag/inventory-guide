@@ -48,58 +48,25 @@ TABLES = {
                ("ProfitCentre", S), ("ProfitCentreDesc", S), ("Amount", D),
                ("PlantCode", S), ("ValuationArea", S), ("Nature", S), ("TBPlant", S),
                ("TBSort", I), ("Category", S), ("Rule", S), ("PlantType", S)],
-    "factTB_Unmapped": [("GLAccount", S), ("GLDesc", S), ("Amount", D), ("Rows", I)],
     "dimPlant": [("ValuationArea", S), ("Plant", S), ("PlantSort", I)],
     "dimDate": [("Month", T), ("MonthName", S), ("MonthSort", I), ("MonthIndex", I),
                 ("FY", S), ("FYMonthNo", I), ("QuarterNo", I), ("Quarter", S),
                 ("QuarterSort", I)],
     "dimNature": [("Nature", S)],
     "dimCapacity": [("Tech", S), ("ValuationArea", S), ("Month", T), ("CapacityMW", D)],
-    "dimTBMaster": [("GLAccount", S), ("GLDescMaster", S), ("Nature", S), ("TBPlant", S),
-                    ("TBSort", I)],
     "dimCategory": [("Category", S), ("CategorySort", I)],
     "dimPlantType": [("PlantType", S), ("Plant and Type", S), ("Plant", S),
                      ("Category", S), ("RowSort", I)],
     "dimMetric": [("Metric", S), ("MetricSort", I)],
     "dimMeasure": [("Measure", S), ("MeasureSort", I)],
-    "qcHeaders": [("Folder", S), ("Name", S), ("SheetNames", S), ("Headers", S)],
-    "qcVarHeaders": [("SheetName", S), ("Headers", S), ("DataRows", I)],
-    "qcNatureNoCapacity": [("Nature", S)],
-    "qcAttrMatch": [("Source", S), ("DistinctMaterials", I),
-                    ("MatchedToStockFiles", I), ("FirstEight", S)],
-    "qcTBByGL": [("GLAccount", S), ("GLDesc", S), ("Nature", S), ("Category", S),
-                 ("ValuationArea", S), ("Rule", S), ("AmountRsCr", D), ("Rows", I)],
-    "qcPlantCodes": [("Code", S), ("Rows", I), ("ValueRsCr", D), ("InReport", B)],
-    "qcTBUnmatched": [("GLAccount", S), ("ProfitCentre", S), ("PCKey", S), ("GLDesc", S),
-                      ("OnSheetAsGL", B), ("Reason", S), ("Rows", I), ("AmountRsCr", D)],
-    "qcStockCheck": [("ValuationArea", S), ("Category", S), ("Nature", S), ("Month", T),
-                     ("Rows", I), ("Materials", I), ("CloseQty", D), ("MWValue", D), ("RsCr", D),
-                     ("WattsPerPiece", D)],
-    "qcFGRate": [("ValuationArea", S), ("Material", S), ("MaterialDesc", S), ("Month", T),
-                 ("Rows", I), ("Nature", S), ("Rate", D), ("CloseQty", D), ("MWValue", D),
-                 ("RsCr", D)],
-    "qcRMRate": [("ValuationArea", S), ("Material", S), ("MaterialDesc", S), ("Month", T),
-                 ("Rows", I), ("Nature", S), ("BOMStdQty", D), ("CloseQty", D), ("MWValue", D),
-                 ("RsCr", D)],
-    "qcTBRules": [("Month", T), ("ValuationArea", S), ("Nature", S), ("Rule", S),
-                  ("Rows", I), ("GLAccounts", I), ("AmountRsCr", D)],
-    "qcStockDupes": [("Month", T), ("ValuationArea", S), ("Category", S), ("Material", S),
-                     ("MaterialDesc", S), ("RowsForMaterial", I), ("CloseQty", D),
-                     ("QtyNotUsed", D), ("MWValue", D), ("RsCr", D)],
-    "qcTBPlants": [("ProfitCentre", S), ("Description", S), ("PlantResolved", S),
-                   ("Rows", I), ("InventoryRows", I), ("MatchedRows", I), ("AmountRsCr", D)],
-    "qcMonthFiles": [("Category", S), ("Month", T), ("Files", I), ("FileNames", S),
-                     ("Rows", I), ("ValueRsCr", D)],
-    "qcMasterDupes": [("Sheet", S), ("MatKey", S), ("Natures", I), ("TheyAre", S),
-                      ("Rows", I)],
 }
 
 # every other query stays a shared expression: helpers, staging, and the diagnostic whose
-# shape depends on the sheet (qcMWSheet), which a fixed column list could not describe.
+# shape depends on the sheet, which a fixed column list could not describe.
 EXPRESSION_ORDER = ["pRoot", "pVarsFile", "fnCleanMB5B", "fnVarSheet", "fnVarSheetSafe", "stgRM", "stgFG",
                     "stgConble", "dimPlantMaster", "varPlantCodes", "dimMaterialAttr", "dimFGAttr", "varConstants",
                     "fnConstantAsOf", "factRM", "factFG", "factConble", "varMWCapacity",
-                    "factTB_Staged", "qcMWSheet"]
+                    "factTB_Staged"]
 
 RELATIONSHIPS = [
     ("dimDate", "Month", "factInventory", "Month"),
@@ -110,7 +77,6 @@ RELATIONSHIPS = [
     ("dimPlant", "ValuationArea", "dimCapacity", "ValuationArea"),
     ("dimNature", "Nature", "factInventory", "Nature"),
     ("dimNature", "Nature", "dimCapacity", "Tech"),
-    ("dimTBMaster", "GLAccount", "factTB", "GLAccount"),
     ("dimCategory", "Category", "factInventory", "Category"),
     ("dimCategory", "Category", "factTB", "Category"),
     ("dimPlantType", "PlantType", "factInventory", "PlantType"),
@@ -131,10 +97,7 @@ HIDDEN = {("factInventory", "MatKey"), ("factTB", "PlantCode"),
           ("dimMeasure", "MeasureSort")}
 
 # tables kept out of the report field list (helpers/diagnostics still refresh)
-HIDDEN_TABLES = {"factTB_Unmapped", "qcHeaders", "qcVarHeaders", "qcNatureNoCapacity",
-                 "qcAttrMatch", "qcTBByGL", "qcPlantCodes", "qcTBPlants",
-                 "qcMonthFiles", "qcMasterDupes", "qcTBUnmatched",
-                 "qcStockCheck", "qcFGRate", "qcRMRate", "qcTBRules", "qcStockDupes"}
+HIDDEN_TABLES = set()
 
 
 def measure_format(name):

@@ -10,6 +10,17 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="000000000000000000a", build="42", query="factTB",
+         title="A Nature column reading CONS is consumables, not raw material",
+         why="TB Master\u2019s Nature column can be written as the three short codes RM, FG "
+             "and CONS instead of the long wording. CONS fell past the test that looks for "
+             "CONSUM and ended up in the catch-all, so every consumables account was counted "
+             "as raw material. The short codes are now tested first, exactly, before anything "
+             "is read into the wording.",
+         steps=["Repaste <code>factTB</code> from the <strong>Queries</strong> tab and refresh.",
+                "Summary: the Consumables row should be a few crore per plant, and the RM row "
+                "should drop by the same amount."],
+         find="", repl=""),
     dict(n="000000000000000000", build="41", query="factInventory",
          title="One stock line per material per plant, so a split line cannot multiply a material\u2019s stock",
          why="An export holds one line per material per plant per month. A second line for the "
@@ -522,7 +533,17 @@ def edit_cards(qcode):
         if name:
             code = qcode.get(name)
             if code is None:
-                raise SystemExit("edits.py names a query the guide does not define: " + name)
+                # an edit to a query the report no longer has - a diagnostic that has since been
+                # taken out. The history stays readable; there is nothing left to paste.
+                out.append(
+                    '<section class="card" id="e-%s" data-name="%s">\n'
+                    '  <header><span class="num">%s</span><h3>%s</h3>'
+                    '<p class="why">%s</p></header>\n'
+                    '  <p class="note">The query <strong>%s</strong> is no longer part of the '
+                    'report, so this edit is history only.</p>\n</section>'
+                    % (e["n"], html.escape(name), e["n"], html.escape(e["title"]),
+                       e["why"], html.escape(name)))
+                continue
             body = ("<p class='note'>Power Query &rarr; click <strong>%s</strong> in the list on "
                     "the left &rarr; <strong>Home &rarr; Advanced Editor</strong> &rarr; "
                     "<strong>Ctrl+A</strong> &rarr; <strong>Delete</strong> &rarr; paste this "

@@ -495,6 +495,16 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 42 &mdash; four pages, nothing else, and a Nature column that can say
+just RM, FG or CONS:</strong> Detail, Checks and the three diagnostic pages are gone, and with them the
+sixteen <code>qc</code> queries and nine data-quality measures. They were scaffolding: each one made Power
+Query re-read the stock folders on every refresh, which is why each build took longer to load than the one
+before it. What is left is <strong>Overview, Summary, FG and RM</strong>, eleven tables against the previous
+thirty, and the same figures computed the same way. The trial balance also now reads a
+<code>Nature</code> column written as <code>RM</code> / <code>FG</code> / <code>CONS</code> as well as the
+long wording &mdash; <code>CONS</code> on its own used to fall past the test for
+<em>Consumables</em> and land in raw material, which put consumables&rsquo; money on the RM row.</blockquote>
+
 <blockquote><strong>Build 41 &mdash; one stock line per material per plant, and the extra TB plants
 ignored again:</strong> an export holds one line per material per plant per month, so a second line for the same four
 is the same balance arriving twice &mdash; a storage-location or special-stock split, or a month re-exported &mdash; and
