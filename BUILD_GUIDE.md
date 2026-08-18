@@ -261,7 +261,7 @@ pasting out of order gives "cannot be determined" on a measure that is perfectly
 ### Checkpoint — do not go to Part 4 until all three are true
 
 1. Type `Value` into the Data pane search box: `Value ₹ Cr` is there, with a calculator icon.
-2. Count the measures (calculator icons) — there must be **70**. Fewer means Appendix B is
+2. Count the measures (calculator icons) — there must be **71**. Fewer means Appendix B is
    not finished; the pages will fail on whichever one is missing.
 3. None of these six old names survive: `Closing Value`, `Inv RM`, `Inv FG`,
    `Inv Consumables`, `TB Value`, `Prev Month`. Delete any you find (right-click → **Delete
@@ -418,7 +418,7 @@ Position: Horizontal 14, Vertical 242, Width 156, Height 58.
 |---|---|
 | Fields | `Ticker 1902 Rs Cr` |
 
-Title: `1902 Jaipur Module`
+Title: `1900 Jaipur Module`
 
 Position: Horizontal 14, Vertical 332, Width 156, Height 58.
 
@@ -436,7 +436,7 @@ Position: Horizontal 14, Vertical 332, Width 156, Height 58.
 |---|---|
 | Fields | `Ticker 1900 Rs Cr` |
 
-Title: `1900 Dholera Module`
+Title: `1902 Dholera Module`
 
 Position: Horizontal 14, Vertical 392, Width 156, Height 58.
 
@@ -787,85 +787,33 @@ Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font size' and set it to 10, Colour: #14532D.
 
-**4.26** **Matrix** — The first of the three master columns: what the books say, month by month. A row per plant, opening into RM, FG and Consumables, and the months under this heading are the newest March plus the three most recent unless the slicer above says otherwise.
+**4.26** **Matrix** — One table, the shape the Excel sheet has it: a row per plant that opens into RM, FG and Consumables, and across the top the three master columns — what the books say, what the stock report says, and the difference — with the months underneath each. Read straight across a row and you are comparing the books with the stock for one plant, one type, one month.
 
 | Well | Field |
 |---|---|
 | Rows | `dimPlant[Plant]`, `dimCategory[Category]` |
 | Columns | `dimDate[MonthName]` |
-| Values | `TB Inventory Rs Cr` → rename it to **Rs Cr.** |
+| Values | `TB Inventory Rs Cr` → rename it to **Inventory (TB)**, `Inventory Rs Cr` → rename it to **Inventory (MB5B)**, `Difference Inventory Rs Cr` → rename it to **Difference** |
 | Filters | `In Summary Window  →  is 1` |
 
-Title: `Inventory (TB)`
+Title: `Inventory Summary — Inventory (TB), Inventory (MB5B) and Difference`
 
-Position: Horizontal 192, Vertical 88, Width 357, Height 300.
+Position: Horizontal 192, Vertical 88, Width 1072, Height 300.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. The table opens on the plant, showing that plant’s whole inventory for the month, and the + beside it opens RM, FG and Consumables underneath.
-- Columns takes one field only: dimDate[MonthName]. The months are the columns of this block and the heading above them is its master column.
-- Filters pane → drag the measure In Summary Window in → is 1. That is what gives the newest March plus the three most recent months by default, and your ticks instead when you tick months in the slicer.
+- Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. The table opens on the plant and the + beside it opens RM, FG and Consumables underneath.
+- Columns takes one field: dimDate[MonthName].
+- Values takes three measures, in this order: TB Inventory Rs Cr, Inventory Rs Cr, Difference Inventory Rs Cr — renamed Inventory (TB), Inventory (MB5B) and Difference by double-clicking each one in the Values box. One table, every figure on the row: the books, the stock report and the difference under each month. A Metric field above the month would read closer to the Excel sheet, but Desktop opens a two-level column hierarchy collapsed and sometimes draws it as an empty card, so the three measures go in as values instead.
+- Filters pane → drag the measure In Summary Window in → is 1. That gives the newest March plus the three most recent months by default, and your ticks instead when you tick months in the slicer.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March to July, the same steel counted twice.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On. The Grand Total row adds the plants and types inside one month, which is a real figure: one point in time.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Values', then 'Font size: 8; Column headers', then 'Font size: 8, Word wrap: On; Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24.
-- Row headers are shown on this first block only, so the three blocks read as one table across the page.
 
-**4.27** **Matrix** — The second master column: the same rows and the same months as the MB5B stock report has them. Read straight across from the block on its left and you are comparing the books with the stock for one plant, one type, one month.
-
-| Well | Field |
-|---|---|
-| Rows | `dimPlant[Plant]`, `dimCategory[Category]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `Inventory Rs Cr` → rename it to **Rs Cr.** |
-| Filters | `In Summary Window  →  is 1` |
-
-Title: `Inventory (MB5B)`
-
-Position: Horizontal 556, Vertical 88, Width 357, Height 300.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. The table opens on the plant, showing that plant’s whole inventory for the month, and the + beside it opens RM, FG and Consumables underneath.
-- Columns takes one field only: dimDate[MonthName]. The months are the columns of this block and the heading above them is its master column.
-- Filters pane → drag the measure In Summary Window in → is 1. That is what gives the newest March plus the three most recent months by default, and your ticks instead when you tick months in the slicer.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March to July, the same steel counted twice.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On. The Grand Total row adds the plants and types inside one month, which is a real figure: one point in time.
-- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Values', then 'Font size: 8; Column headers', then 'Font size: 8, Word wrap: On; Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24.
-- The plant labels are repeated on this block, so it can be read on its own and no row can ever be misread against the wrong plant. Expand a plant here and expand it on the other two blocks so the three read across.
-
-**4.28** **Matrix** — The third master column: the books less the stock report, on the same plant rows and the same months. Anything other than a small figure here is the reconciliation asking a question, and the Detail page is where it is answered.
-
-| Well | Field |
-|---|---|
-| Rows | `dimPlant[Plant]`, `dimCategory[Category]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `Difference Inventory Rs Cr` → rename it to **Rs Cr.** |
-| Filters | `In Summary Window  →  is 1` |
-
-Title: `Difference`
-
-Position: Horizontal 920, Vertical 88, Width 357, Height 300.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Rows takes two fields, in this order: dimPlant[Plant], then dimCategory[Category]. The table opens on the plant, showing that plant’s whole inventory for the month, and the + beside it opens RM, FG and Consumables underneath.
-- Columns takes one field only: dimDate[MonthName]. The months are the columns of this block and the heading above them is its master column.
-- Filters pane → drag the measure In Summary Window in → is 1. That is what gives the newest March plus the three most recent months by default, and your ticks instead when you tick months in the slicer.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March to July, the same steel counted twice.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On. The Grand Total row adds the plants and types inside one month, which is a real figure: one point in time.
-- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Values', then 'Font size: 8; Column headers', then 'Font size: 8, Word wrap: On; Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24.
-- The plant labels are repeated on this block, so it can be read on its own and no row can ever be misread against the wrong plant. Expand a plant here and expand it on the other two blocks so the three read across.
-
-**4.29** **Clustered column chart** — The books against the stock report, two bars per period: the same figures as the matrix above, but you can see a gap opening without reading a single number. Same periods as the matrices, because it carries the same filter.
+**4.27** **Clustered column chart** — The books against the stock report, two bars per period: the same figures as the matrix above, but you can see a gap opening without reading a single number. Same periods as the matrices, because it carries the same filter.
 
 | Well | Field |
 |---|---|
@@ -890,7 +838,7 @@ Position: Horizontal 192, Vertical 396, Width 529, Height 152.
 - In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Inner padding: 30%, and General', then 'Properties', then 'Padding' and set it to Left 12, Right 12, so the first and last bar keep off the card edges.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 
-**4.30** **Line and clustered column chart** — The question the reconciliation is really asking: is the gap widening or closing. The bar is the difference in crore rupees, the line above it the same difference as a percentage of the trial balance, so a small gap on a big month reads as small.
+**4.28** **Line and clustered column chart** — The question the reconciliation is really asking: is the gap widening or closing. The bar is the difference in crore rupees, the line above it the same difference as a percentage of the trial balance, so a small gap on a big month reads as small.
 
 | Well | Field |
 |---|---|
@@ -917,7 +865,7 @@ Position: Horizontal 735, Vertical 396, Width 529, Height 152.
 - In the Visualizations pane click the paintbrush icon, then click 'Legend' and set it to Off — the title says which is which, and 120 pixels of height has none to spare.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 
-**4.31** **Line chart** — The long view under the reconciliation: three lines across the last twelve months that have data, or fewer if that is all there is — raw material days, finished goods days, and the two added together, which is what the Overview card calls Days of inventory (RM + FG). Every month is its own closing figure divided by capacity, so nothing is added across months. Read it for shape: RM climbing while FG is flat means material is arriving faster than it is being consumed.
+**4.29** **Line chart** — The long view under the reconciliation: three lines across the last twelve months that have data, or fewer if that is all there is — raw material days, finished goods days, and the two added together, which is what the Overview card calls Days of inventory (RM + FG). Every month is its own closing figure divided by capacity, so nothing is added across months. Read it for shape: RM climbing while FG is flat means material is arriving faster than it is being consumed.
 
 | Well | Field |
 |---|---|
@@ -954,7 +902,7 @@ Then click the second heading line and change its text from `Overview` to `FG`, 
 
 The visuals below are what goes to the **right** of the panel, which is why every Horizontal starts at 192 rather than 16.
 
-**4.32** **Slicer** — Which months appear under each master column. Tick nothing and it shows the last four with data; tick your own and it shows those, up to twelve.
+**4.30** **Slicer** — Which months appear under each master column. Tick nothing and it shows the last four with data; tick your own and it shows those, up to twelve.
 
 | Well | Field |
 |---|---|
@@ -975,7 +923,7 @@ Position: Horizontal 192, Vertical 8, Width 258, Height 76.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - Do not sync this one either. Both FG matrices read it, and nothing else should.
 
-**4.33** **Slicer** — A coarser filter over the same months: tick Q1 and only April, May and June are left for the two matrices to show. Leave it empty to see every month.
+**4.31** **Slicer** — A coarser filter over the same months: tick Q1 and only April, May and June are left for the two matrices to show. Leave it empty to see every month.
 
 | Well | Field |
 |---|---|
@@ -996,7 +944,7 @@ Position: Horizontal 463, Vertical 8, Width 206, Height 76.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 - It filters the months rather than replacing them, so the columns stay months.
 
-**4.34** **Slicer** — One plant, or all of them. It filters the technology matrix and all three charts, so picking Dholera Cell turns the page into a Dholera Cell page.
+**4.32** **Slicer** — One plant, or all of them. It filters the technology matrix and all three charts, so picking Dholera Cell turns the page into a Dholera Cell page.
 
 | Well | Field |
 |---|---|
@@ -1015,7 +963,7 @@ Position: Horizontal 683, Vertical 8, Width 189, Height 76.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.35** **Slicer** — One module technology, when you want the page to be about that technology only.
+**4.33** **Slicer** — One module technology, when you want the page to be about that technology only.
 
 | Well | Field |
 |---|---|
@@ -1034,148 +982,57 @@ Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.36** **Matrix** — Finished goods per plant in megawatts, one column per month — the newest March plus the three after it by default. The Excel sheet had this as one wide table with an IN MW block, an IN CRS block and an IN DAYS block; these are those blocks.
+**4.34** **Matrix** — Finished goods per plant, in one table the way the Excel sheet has it: IN MW, IN CRS and IN DAYS across the top, the months underneath each, a row per plant and a Grand Total row.
 
 | Well | Field |
 |---|---|
 | Rows | `dimPlant[Plant]` |
 | Columns | `dimDate[MonthName]` |
-| Values | `Inventory MW` → rename it to **MW** |
+| Values | `Inventory MW` → rename it to **MW**, `Inventory Rs Cr` → rename it to **Rs Cr.**, `Days` → rename it to **Days** |
 | Filters | `dimCategory[Category]  →  is FG`, `In Summary Window  →  is 1` |
 
-Title: `Inventory FG by Plant — In MW`
+Title: `Inventory FG Details — By Plant`
 
-Position: Horizontal 192, Vertical 88, Width 350, Height 112.
+Position: Horizontal 192, Vertical 88, Width 1072, Height 148.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Columns holds dimDate[MonthName] and nothing else, and Values holds one measure. That is what puts the months on show with nothing to expand: a Metric field above the month is a two-level column hierarchy, and Desktop opens one of those collapsed onto a single figure per metric — or draws the visual as an empty card, which is what emptied this page. One metric per matrix, side by side, is the same grid the Excel sheet had.
+- Rows takes one field: dimPlant[Plant].
+- Columns takes one field: dimDate[MonthName].
+- Values takes three measures, in this order: Inventory MW, Inventory Rs Cr, Days — renamed MW, Rs Cr. and Days by double-clicking each one in the Values box. That is what makes it one table rather than three, with MW, crores and days under each month. A Measure field above the month would put the blocks in the Excel sheet’s order, but Desktop opens a two-level column hierarchy collapsed and sometimes draws it as an empty card, so the measures go in as values instead.
 - Filters pane → dimCategory[Category] → tick FG only, then the measure In Summary Window → is 1.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font: Arial, Font size: 8, Colour: #1F2A24; Row headers', then 'Font size: 8; Column headers', then 'Font size' and set it to 8. Three blocks across the width means every column has to earn its pixels.
-- Clicking a plant row filters the technology blocks and the charts below to it.
+- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March’s stock to July’s, the same panels counted twice. Row subtotals: On — that adds the plants inside one month, which is the Grand Total row the Excel sheet had.
+- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font: Arial, Font size: 8, Colour: #1F2A24; Row headers', then 'Font size: 8; Column headers', then 'Font size' and set it to 8.
+- Days is MW ÷ capacity MW, so a plant with no row on the MW Capacity sheet is blank there on purpose — a missing denominator is not the same as no stock.
 
-**4.37** **Matrix** — Finished goods per plant in crore rupees, one column per month — the newest March plus the three after it by default. The Excel sheet had this as one wide table with an IN MW block, an IN CRS block and an IN DAYS block; these are those blocks.
-
-| Well | Field |
-|---|---|
-| Rows | `dimPlant[Plant]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `Inventory Rs Cr` → rename it to **Rs Cr.** |
-| Filters | `dimCategory[Category]  →  is FG`, `In Summary Window  →  is 1` |
-
-Title: `Inventory FG by Plant — In Rs Cr`
-
-Position: Horizontal 549, Vertical 88, Width 350, Height 112.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.
-- Filters pane → dimCategory[Category] → tick FG only, then the measure In Summary Window → is 1.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font: Arial, Font size: 8, Colour: #1F2A24; Row headers', then 'Font size: 8; Column headers', then 'Font size' and set it to 8. Three blocks across the width means every column has to earn its pixels.
-- Clicking a plant row filters the technology blocks and the charts below to it.
-
-**4.38** **Matrix** — Finished goods per plant in days of cover, one column per month — the newest March plus the three after it by default. The Excel sheet had this as one wide table with an IN MW block, an IN CRS block and an IN DAYS block; these are those blocks.
-
-| Well | Field |
-|---|---|
-| Rows | `dimPlant[Plant]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `Days` → rename it to **Days** |
-| Filters | `dimCategory[Category]  →  is FG`, `In Summary Window  →  is 1` |
-
-Title: `Inventory FG by Plant — In Days`
-
-Position: Horizontal 907, Vertical 88, Width 350, Height 112.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.
-- Filters pane → dimCategory[Category] → tick FG only, then the measure In Summary Window → is 1.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font: Arial, Font size: 8, Colour: #1F2A24; Row headers', then 'Font size: 8; Column headers', then 'Font size' and set it to 8. Three blocks across the width means every column has to earn its pixels.
-- Days is MW ÷ capacity MW, so a plant with no row on the MW Capacity sheet is blank here on purpose — a missing denominator is not the same as no stock.
-
-**4.39** **Matrix** — The same months and the same unit, by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself.
+**4.35** **Matrix** — The same three blocks by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself. Modules only, as the Excel sheet has it.
 
 | Well | Field |
 |---|---|
 | Rows | `dimNature[Nature]` |
 | Columns | `dimDate[MonthName]` |
-| Values | `Inventory MW` → rename it to **MW** |
-| Filters | `dimCategory[Category]  →  is FG`, `In Summary Window  →  is 1` |
+| Values | `Inventory MW` → rename it to **MW**, `Inventory Rs Cr` → rename it to **Rs Cr.**, `Days` → rename it to **Days** |
+| Filters | `dimCategory[Category]  →  is FG`, `dimPlant[Plant]  →  Jaipur Module and Dholera Module`, `dimNature[Nature]  →  is not Unassigned`, `In Summary Window  →  is 1` |
 
-Title: `Inventory FG by Techno — In MW`
+Title: `Inventory FG Details — By Techno`
 
-Position: Horizontal 192, Vertical 208, Width 350, Height 200.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows take dimPlant[Plant] out and drag dimNature[Nature] in.
-- Check the filters came across: Category is FG, In Summary Window is 1.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
-- With the Plant slicer on one plant this becomes that plant's technology split, which is the Module block the Excel sheet had.
-
-**4.40** **Matrix** — The same months and the same unit, by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself.
-
-| Well | Field |
-|---|---|
-| Rows | `dimNature[Nature]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `Inventory Rs Cr` → rename it to **Rs Cr.** |
-| Filters | `dimCategory[Category]  →  is FG`, `In Summary Window  →  is 1` |
-
-Title: `Inventory FG by Techno — In Rs Cr`
-
-Position: Horizontal 549, Vertical 208, Width 350, Height 180.
+Position: Horizontal 192, Vertical 244, Width 1072, Height 164.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows take dimPlant[Plant] out and drag dimNature[Nature] in.
-- Check the filters came across: Category is FG, In Summary Window is 1.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
-- With the Plant slicer on one plant this becomes that plant's technology split, which is the Module block the Excel sheet had.
+- Rows takes one field: dimNature[Nature] — the technology.
+- Columns takes one field: dimDate[MonthName], and Values the same three measures as the block above it, in the same order.
+- Filters pane → dimCategory[Category] → tick FG only; the measure In Summary Window → is 1; then dimPlant[Plant] → tick Jaipur Module and Dholera Module only, and dimNature[Nature] → untick Unassigned. Those last two are why this table holds the module technologies and nothing else, which is how the Excel sheet has it: a cell is not a module technology, and a material the FG Master does not carry is not one either. The plant table above still counts every plant and every material, so nothing is hidden from the totals.
+- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off, Row subtotals: On.
+- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font: Arial, Font size: 8, Colour: #1F2A24; Row headers', then 'Font size: 8; Column headers', then 'Font size' and set it to 8.
 
-**4.41** **Matrix** — The same months and the same unit, by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself.
-
-| Well | Field |
-|---|---|
-| Rows | `dimNature[Nature]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `Days` → rename it to **Days** |
-| Filters | `dimCategory[Category]  →  is FG`, `In Summary Window  →  is 1` |
-
-Title: `Inventory FG by Techno — In Days`
-
-Position: Horizontal 907, Vertical 208, Width 350, Height 180.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows take dimPlant[Plant] out and drag dimNature[Nature] in.
-- Check the filters came across: Category is FG, In Summary Window is 1.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
-- With the Plant slicer on one plant this becomes that plant's technology split, which is the Module block the Excel sheet had.
-
-**4.42** **Line and clustered column chart** — Which technology is holding the finished goods right now, in money as bars and in megawatts as the line over them. Money is on the bars because every technology has a value, while a megawatt figure only exists for the ones your MW Capacity sheet covers — as bars, that left the chart looking empty. It is deliberately pinned to the latest month with data: there is no period on the axis here, so without that pin it would add four months of stock together and read four times too high.
+**4.36** **Line and clustered column chart** — Which technology is holding the finished goods right now, in money as bars and in megawatts as the line over them. Money is on the bars because every technology has a value, while a megawatt figure only exists for the ones your MW Capacity sheet covers — as bars, that left the chart looking empty. It is deliberately pinned to the latest month with data: there is no period on the axis here, so without that pin it would add four months of stock together and read four times too high.
 
 | Well | Field |
 |---|---|
@@ -1202,7 +1059,7 @@ Position: Horizontal 192, Vertical 416, Width 354, Height 272.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 - Clicking a bar filters both matrices to that technology; right-click → Drill through → Detail for the materials behind it.
 
-**4.43** **Line and clustered column chart** — How long the finished goods on hand would last, month by month, with the change on last month printed above each bar — so a slow build-up is visible before it becomes a number anyone argues about.
+**4.37** **Line and clustered column chart** — How long the finished goods on hand would last, month by month, with the change on last month printed above each bar — so a slow build-up is visible before it becomes a number anyone argues about.
 
 | Well | Field |
 |---|---|
@@ -1230,7 +1087,7 @@ Position: Horizontal 560, Vertical 416, Width 368, Height 272.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 11, Colour: #14532D.
 - Right-click any bar → Drill through → Detail for the split behind that month.
 
-**4.44** **Donut chart** — Where the finished goods are sitting, as a share of the whole. Pinned to the latest month for the same reason as the bar chart: a share of four added-up months would mean nothing.
+**4.38** **Donut chart** — Where the finished goods are sitting, as a share of the whole. Pinned to the latest month for the same reason as the bar chart: a share of four added-up months would mean nothing.
 
 | Well | Field |
 |---|---|
@@ -1260,7 +1117,7 @@ Then click the second heading line and change its text from `Overview` to `RM`, 
 
 The visuals below are what goes to the **right** of the panel, which is why every Horizontal starts at 192 rather than 16.
 
-**4.45** **Slicer** — Which months appear under each master column, and on both charts along the bottom. Nothing ticked means the last four with data; tick your own for up to twelve.
+**4.39** **Slicer** — Which months appear under each master column, and on both charts along the bottom. Nothing ticked means the last four with data; tick your own for up to twelve.
 
 | Well | Field |
 |---|---|
@@ -1280,7 +1137,7 @@ Position: Horizontal 192, Vertical 8, Width 258, Height 76.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection', then ''Multi-select with CTRL'' and set it to Off.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.46** **Slicer** — The quarter-mode equivalent: empty means the last four fiscal quarters.
+**4.40** **Slicer** — The quarter-mode equivalent: empty means the last four fiscal quarters.
 
 | Well | Field |
 |---|---|
@@ -1300,7 +1157,7 @@ Position: Horizontal 463, Vertical 8, Width 206, Height 76.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Selection', then ''Multi-select with CTRL'' and set it to Off.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.47** **Slicer** — One plant, or all three.
+**4.41** **Slicer** — One plant, or all three.
 
 | Well | Field |
 |---|---|
@@ -1319,7 +1176,7 @@ Position: Horizontal 683, Vertical 8, Width 189, Height 76.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.48** **Slicer** — Module or Cell, when you want the page to be about one of the two only — the same split the Excel sheet had as its Module and Cell blocks.
+**4.42** **Slicer** — Module or Cell, when you want the page to be about one of the two only — the same split the Excel sheet had as its Module and Cell blocks.
 
 | Well | Field |
 |---|---|
@@ -1338,105 +1195,56 @@ Position: Horizontal 886, Vertical 8, Width 179, Height 76.
 - In the Visualizations pane click the paintbrush icon, then click 'Slicer settings', then 'Options', then 'Style' and set it to Dropdown.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 10, Colour: #1F2A24.
 
-**4.49** **Matrix** — Raw material and packing per plant in crore rupees, one column per month — the top block of the old RM sheet, which had IN CRS and IN DAYS side by side over the same three plants. MW is left out because an RM megawatt figure is derived from a BOM rather than measured.
+**4.43** **Matrix** — Raw material and packing per plant, in one table: crore rupees and days of cover under each month, a row per plant and a Grand Total row — the top block of the old RM sheet.
 
 | Well | Field |
 |---|---|
 | Rows | `dimPlant[Plant]` |
 | Columns | `dimDate[MonthName]` |
-| Values | `Inventory Rs Cr` → rename it to **Rs Cr.** |
+| Values | `Inventory Rs Cr` → rename it to **Rs Cr.**, `Days` → rename it to **Days** |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
-Title: `RM Inventory Plant Wise — In Rs Cr`
+Title: `RM Inventory Plant Wise — Rs Cr and Days`
 
-Position: Horizontal 192, Vertical 88, Width 529, Height 112.
+Position: Horizontal 192, Vertical 88, Width 1072, Height 148.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Columns holds dimDate[MonthName] and nothing else, and Values holds one measure. That is what puts the months on show with nothing to expand: a Metric field above the month is a two-level column hierarchy, and Desktop opens one of those collapsed onto a single figure per metric — or draws the visual as an empty card, which is what emptied this page. One metric per matrix, side by side, is the same grid the Excel sheet had.
+- Rows takes one field: dimPlant[Plant]. Columns takes one field: dimDate[MonthName].
+- Values takes two measures, in this order: Inventory Rs Cr and Days, renamed Rs Cr. and Days by double-clicking each one in the Values box — one table with both figures under each month, the way the old RM sheet had IN CRS and IN DAYS side by side. MW is left out because an RM megawatt figure is derived from a BOM rather than measured.
 - Filters pane → dimCategory[Category] → tick RM only, then In Summary Window → is 1.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
+- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March’s steel to July’s, the same steel counted twice. Row subtotals: On — that adds the plants inside one month, which is the Grand Total row the Excel sheet had.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- Clicking a plant row filters the nature blocks and both charts below it.
+- Clicking a plant row filters the nature block and both charts below it.
 
-**4.50** **Matrix** — Raw material and packing per plant in days of cover, one column per month — the top block of the old RM sheet, which had IN CRS and IN DAYS side by side over the same three plants. MW is left out because an RM megawatt figure is derived from a BOM rather than measured.
-
-| Well | Field |
-|---|---|
-| Rows | `dimPlant[Plant]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `Days` → rename it to **Days** |
-| Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
-
-Title: `RM Inventory Plant Wise — In Days`
-
-Position: Horizontal 735, Vertical 88, Width 529, Height 112.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.
-- Filters pane → dimCategory[Category] → tick RM only, then In Summary Window → is 1.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
-- In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
-- Clicking a plant row filters the nature blocks and both charts below it.
-
-**4.51** **Matrix** — The second block of the old sheet in crore rupees: Module and Cell, each opening into its natures — cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — with a subtotal on each group and a grand total under them.
+**4.44** **Matrix** — The second block of the old sheet, both figures together: Module and Cell, each opening into its natures — cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — with a subtotal on each group and a grand total under them.
 
 | Well | Field |
 |---|---|
 | Rows | `factInventory[GroupNature]`, `dimNature[Nature]` |
 | Columns | `dimDate[MonthName]` |
-| Values | `Inventory Rs Cr` → rename it to **Rs Cr.** |
+| Values | `Inventory Rs Cr` → rename it to **Rs Cr.**, `Days` → rename it to **Days** |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
-Title: `RM Inventory by Group Nature and Nature — In Rs Cr`
+Title: `RM Inventory by Group Nature and Nature — Rs Cr and Days`
 
-Position: Horizontal 192, Vertical 208, Width 529, Height 268.
+Position: Horizontal 192, Vertical 244, Width 1072, Height 232.
 
 - Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
 - Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop factInventory[GroupNature] and dimNature[Nature] in and take dimPlant[Plant] out.
+- Rows takes two fields, in this order: factInventory[GroupNature], then dimNature[Nature]. Columns takes dimDate[MonthName], and Values the same two measures as the block above, in the same order.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On, so Group Nature and Nature get a column each with an expander on each group.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
-- A nature reading Unassigned is a material the RM master does not carry — it is money the report will not silently file under someone else's nature. qcAttrMatch on Checks names them.
-- Right-click a nature row → Drill through → Detail for the material-by-material list behind it.
+- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off.
+- A nature reading Unassigned is a material the RM master does not carry — it is money the report will not silently file under someone else's nature, so it is shown rather than dropped.
 
-**4.52** **Matrix** — The second block of the old sheet in days of cover: Module and Cell, each opening into its natures — cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — with a subtotal on each group and a grand total under them.
-
-| Well | Field |
-|---|---|
-| Rows | `factInventory[GroupNature]`, `dimNature[Nature]` |
-| Columns | `dimDate[MonthName]` |
-| Values | `Days` → rename it to **Days** |
-| Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
-
-Title: `RM Inventory by Group Nature and Nature — In Days`
-
-Position: Horizontal 735, Vertical 208, Width 529, Height 220.
-
-- Still in the paintbrush pane, click General, then Title, and set Font size to 12. If the title still ends in three dots, shorten the text you typed — a clipped title is the visual telling you it has run out of width.
-- Click 'Column headers' and set Font size to 10; if there is a 'Word wrap' toggle under it, switch it On so a long heading goes onto two lines instead of being cut.
-- Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
-- Click 'Values' and set Font size to 10.
-- Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop factInventory[GroupNature] and dimNature[Nature] in and take dimPlant[Plant] out.
-- In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On, so Group Nature and Nature get a column each with an expander on each group.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total.
-- In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
-- A nature reading Unassigned is a material the RM master does not carry — it is money the report will not silently file under someone else's nature. qcAttrMatch on Checks names them.
-- Right-click a nature row → Drill through → Detail for the material-by-material list behind it.
-
-**4.53** **Clustered column chart** — Raw material held in crore rupees: one group per period along the bottom and the three plants side by side inside each group, so you read the months left to right and compare the plants within a month. It follows the pickers above, so it is four periods by default and up to twelve if you tick them.
+**4.45** **Clustered column chart** — Raw material held in crore rupees: one group per period along the bottom and the three plants side by side inside each group, so you read the months left to right and compare the plants within a month. It follows the pickers above, so it is four periods by default and up to twelve if you tick them.
 
 | Well | Field |
 |---|---|
@@ -1462,7 +1270,7 @@ Position: Horizontal 192, Vertical 484, Width 529, Height 200.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
 - Clicking one plant's bar filters both matrices to that plant and that period.
 
-**4.54** **Line and clustered column chart** — The same chart in days rather than rupees — how long each plant's raw material would last at its own capacity, three plant bars per month, and over them a line for the whole business: every plant's RM megawatts added together over every plant's capacity added together. The line is not the average of the three bars, and it is not their sum: it is one big plant's worth of days, which is the figure to quote for the company. Read together with the chart beside it, this tells you whether a bigger rupee figure is actually more stock or just a dearer month.
+**4.46** **Line and clustered column chart** — The same chart in days rather than rupees — how long each plant's raw material would last at its own capacity, three plant bars per month, and over them a line for the whole business: every plant's RM megawatts added together over every plant's capacity added together. The line is not the average of the three bars, and it is not their sum: it is one big plant's worth of days, which is the figure to quote for the company. Read together with the chart beside it, this tells you whether a bigger rupee figure is actually more stock or just a dearer month.
 
 | Well | Field |
 |---|---|
@@ -1496,7 +1304,7 @@ Position: Horizontal 735, Vertical 436, Width 529, Height 200.
 
 ## Making it clickable
 
-**4.56 Interactions.** A *left*-click needs no setup — it already cross-filters the rest
+**4.48 Interactions.** A *left*-click needs no setup — it already cross-filters the rest
 of the page. To change what it does: select a visual → ribbon **Format** →
 **Edit interactions**, then on each other visual pick **filter** (funnel),
 **highlight** (chart) or **none**.
@@ -1541,7 +1349,7 @@ Find the words Power BI showed you in the left column.
 | `Mark as date table` will not accept any column | nothing is wrong | skip 2.4 entirely; a monthly table is deliberate and no measure needs it |
 | `dimMetric cannot find table` | `dimCategory` / `dimMetric` / `dimMeasure` were never created | paste those three queries, Close & Apply, then paste the measure again |
 | `Value ₹ Cr cannot be determined. Either the column does not exist, or there is no current row` | either `factInventory` has no `CloseVal` column, or you pasted measures out of order | check `CloseVal` exists in `factInventory`; if it does, paste Appendix B again strictly top to bottom |
-| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 70 from Appendix B, then delete the six old names listed in 3.7 |
+| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 71 from Appendix B, then delete the six old names listed in 3.7 |
 | RM and FG matrices show numbers under `In ₹ Cr` but nothing under `In Days` | the `Days` measure was deleted as an "old name" | paste `Days = [Days of Inventory]` back in; it is in Appendix B |
 | on a card, the number is fine but the wording is cut in half | the card's default text is too big for the space | set **Callout value** → Font size **24**, **General → Title** → Font size **12**, and Height **96** (every card in Part 4 is 96 high). A **Category label**, if your version has one, goes to **10** or off — the title says the same thing |
 | the paintbrush list has a **Callout value** but no **Category label** | you are on the newer Card visual, which has no category label | nothing to fix: the heading comes from **General → Title → Text**, which Part 4 gives you the wording for |
@@ -1579,7 +1387,7 @@ Nothing here is destructive.
    `dimCategory`, `dimMetric`, `dimMeasure`. Then **Close & Apply**.
 2. **Relationships.** Manage relationships must match 2.3 exactly — 11 rows, all Single,
    nothing on `dimMetric` or `dimMeasure`.
-3. **Measures.** Add all 70 from Appendix B top to bottom (adding beside old ones is safe),
+3. **Measures.** Add all 71 from Appendix B top to bottom (adding beside old ones is safe),
    then delete the six old names in 3.7 — keeping `Days`, whose formula you overwrite instead.
 4. **Sorting.** Set the five sort-by columns in 2.5 and 2.6.
 
@@ -2003,9 +1811,10 @@ let
                     {{"Valuation Area","Val Area","Plant Code","Code","Plant"}, "ValuationArea"},
                     {{"Plant Name","Name","Description","Plant Description",
                       "Valuation Area Description"}, "PlantName"},
-                    {{"Sort","Order","Sort Order"}, "PlantSort"}
+                    {{"Sort","Order","Sort Order"}, "PlantSort"},
+                    {{"MWD","MW D","MWD (MW per day)","MW per Day","MW Day","MWPD"}, "PlantMWD"}
                   }),
-    Cols    = {"ValuationArea", "PlantName", "PlantSort"},
+    Cols    = {"ValuationArea", "PlantName", "PlantSort", "PlantMWD"},
     Padded  = List.Accumulate(List.Difference(Cols, Table.ColumnNames(Raw)), Raw,
                   (t, c) => Table.AddColumn(t, c, each null)),
     Slim    = Table.SelectColumns(Padded, Cols),
@@ -2024,7 +1833,12 @@ let
     Indexed = Table.AddIndexColumn(Sorted, "Seq", 1, 1, Int64.Type),
     Order   = Table.AddColumn(Indexed, "PlantSortNo",
                   each Int64.From([SortNo] ?? [Seq]), Int64.Type),
-    Out     = Table.SelectColumns(Order, {"ValuationArea", "Plant", "PlantSortNo"})
+    // MWD - the plant's megawatts a day, typed on Plant Master. It is the denominator for
+    // days of cover on the plant rows: days = inventory MW / MWD, nothing else divided in.
+    Rate    = Table.AddColumn(Order, "MWD",
+                  each let v = try Number.From([PlantMWD]) otherwise null
+                       in  if v = null or v = 0 then null else v, type number),
+    Out     = Table.SelectColumns(Rate, {"ValuationArea", "Plant", "PlantSortNo", "MWD"})
 in
     Out
 ```
@@ -2141,26 +1955,43 @@ let
     Named    = Table.TransformColumns(Flag, {
                    {"Nature", each if _ = null or _ = "" then "Unassigned" else _, type text}}),
 
-    // Rate = RIGHT(desc,3)
+    // The last three digits of the material description. For a module they are its wattage
+    // (580, 595); for a cell they are its efficiency in tenths of a percent (235 = 23.5%).
     RateTxt  = Table.AddColumn(Named, "RateText",
                    each Text.End(Text.Trim([MaterialDesc] ?? ""), 3), type text),
-    Rate     = Table.AddColumn(RateTxt, "Rate",
+    RateNum  = Table.AddColumn(RateTxt, "RateRaw",
                    each try Number.From(Text.Select([RateText], {"0".."9","."})) otherwise null,
+                   type number),
+
+    // Mid = MID(desc,13,13)  -- M counts from 0, so the start is 12. On a cell this is the
+    // wafer size, written "182.20x183.75".
+    MidCol   = Table.AddColumn(RateNum, "Mid",
+                   each try Text.Middle(Text.Trim([MaterialDesc] ?? ""), 12, 13) otherwise null,
+                   type text),
+    // Base = LEFT(Mid,6) - the first of the two dimensions, as a number
+    BaseCol  = Table.AddColumn(MidCol, "Base",
+                   each try Number.From(Text.Select(Text.Start([Mid], 6), {"0".."9","."}))
+                        otherwise null, type number),
+
+    // A module and a cell are rated differently, and the plant is what says which:
+    //   1900, 1902 (modules):  Rate = RIGHT(description,3)                  -> about 580 W
+    //   1905 (cells):          Rate = Base x Base x efficiency / 1000       -> about 7.8 W
+    // Reading a cell's last three digits as its wattage is what put Dholera Cell's MW several
+    // times too high: 235 W where the cell is 7.8 W. The efficiency is those same three digits
+    // as a fraction (235 -> 0.235); a value already written as a fraction is left alone, so
+    // either way of typing it comes out the same.
+    Rate     = Table.AddColumn(BaseCol, "Rate",
+                   each if [RateRaw] = null then null
+                        else if Text.Trim(Text.From([ValuationArea] ?? "")) = "1905"
+                        then (let Eff = if [RateRaw] > 1 then [RateRaw] / 1000 else [RateRaw] in
+                              try [Base] * [Base] * Eff / 1000 otherwise null)
+                        else [RateRaw],
                    type number),
     RateBad  = Table.AddColumn(Rate, "RateParseFailed",
                    each [Rate] = null, type logical),
 
-    // Mid = MID(desc,13,13)  -- M is 0-based, so start = 12
-    MidCol   = Table.AddColumn(RateBad, "Mid",
-                   each try Text.Middle(Text.Trim([MaterialDesc] ?? ""), 12, 13) otherwise null,
-                   type text),
-    // Base = LEFT(desc,6)
-    BaseCol  = Table.AddColumn(MidCol, "Base",
-                   each try Text.Start(Text.Trim([MaterialDesc] ?? ""), 6) otherwise null,
-                   type text),
-
     // MW = Closing Stock * Rate / 10^6
-    MW       = Table.AddColumn(BaseCol, "MW",
+    MW       = Table.AddColumn(RateBad, "MW",
                    each try [CloseQty] * [Rate] / 1000000 otherwise null, type number),
 
     // Inr Wp = Closing Value / (MW * 10^6). A zero or missing MW is left blank rather than
@@ -2169,7 +2000,7 @@ let
                    each if [MW] = null or [MW] = 0 then null
                         else try [CloseVal] / ([MW] * 1000000) otherwise null, type number),
 
-    Cleaned  = Table.RemoveColumns(INRwp, {"RateText"})
+    Cleaned  = Table.RemoveColumns(INRwp, {"RateText", "RateRaw"})
 in
     Cleaned
 ```
@@ -2595,16 +2426,16 @@ let
                    let Txt  = Text.From(t ?? ""),
                        Hits = List.Select(Known, each Text.Contains(Txt, _))
                    in  if List.IsEmpty(Hits) then null else Hits{0},
-    // 1902 Jaipur Module, 1900 Dholera Module, 1905 Dholera Cell - the same three names the
+    // 1900 Jaipur Module, 1902 Dholera Module, 1905 Dholera Cell - the same three names the
     // whole report uses, and the codes as the Summary workbook has them. A profit centre that
     // spells the plant out instead of numbering it is still a plant, and 1905 was being lost
     // for exactly that reason: "Dholera Cell" carries no 1905 anywhere in it. Cell is tested
     // before Dholera, because Dholera Cell contains both words.
     ByName   = (t as any) as nullable text =>
                    let T = Text.Upper(Text.From(t ?? "")) in
-                   if Text.Contains(T, "JAIPUR") then "1902"
+                   if Text.Contains(T, "JAIPUR") then "1900"
                    else if Text.Contains(T, "CELL") then "1905"
-                   else if Text.Contains(T, "DHOLERA") then "1900"
+                   else if Text.Contains(T, "DHOLERA") then "1902"
                    else null,
     PlantRaw = Table.AddColumn(Keys, "PlantCode",
                    each try Text.Middle([ProfitCentre], 2, 4) otherwise null, type text),
@@ -2786,12 +2617,12 @@ in
 ```
 let
     // The three plants and their names are decided here and nowhere else, so no sheet and no
-    // page can call 1902 anything but Jaipur Module.
+    // page can call 1900 anything but Jaipur Module.
     Fixed    = #table(
         type table [ValuationArea = text, Plant = text, PlantSortNo = Int64.Type],
         {
-            {"1902", "1902 Jaipur Module",  1},
-            {"1900", "1900 Dholera Module", 2},
+            {"1900", "1900 Jaipur Module",  1},
+            {"1902", "1902 Dholera Module", 2},
             {"1905", "1905 Dholera Cell",   3}
         }),
     Master   = try dimPlantMaster otherwise #table(
@@ -2813,6 +2644,10 @@ let
                in  if List.IsEmpty(k) then Named2 else k,
     // the label: the fixed name for the three, the Plant Master name for anything else it
     // names, and the bare code for a plant nobody has named yet
+    MWDOf    = (c as text) as nullable number =>
+                   let m = Table.SelectRows(Master, (r) => r[ValuationArea] = c)
+                   in  if Table.IsEmpty(m) then null
+                       else try Number.From(Table.First(m)[MWD]) otherwise null,
     NameOf   = (c as text) as text =>
                    let f = Table.SelectRows(Fixed,  (r) => r[ValuationArea] = c),
                        m = Table.SelectRows(Master, (r) => r[ValuationArea] = c)
@@ -2831,16 +2666,20 @@ let
                             then 100 + (try Number.From(Table.First(m)[PlantSortNo]) otherwise 0)
                        else 900 + (try Number.From(Text.Select(c, {"0".."9"})) otherwise 0),
     Built    = Table.FromRecords(List.Transform(Codes, (c) =>
-                   [ValuationArea = c, Plant = NameOf(c), PlantSort = SortOf(c)]),
-                   type table [ValuationArea = text, Plant = text, PlantSort = number]),
+                   [ValuationArea = c, Plant = NameOf(c), PlantSort = SortOf(c),
+                    MWD = MWDOf(c)]),
+                   type table [ValuationArea = text, Plant = text, PlantSort = number,
+                               MWD = nullable number]),
     // if nothing has loaded yet, the three known plants still make a table, so the report opens
     Rows     = if List.IsEmpty(Codes)
-               then Table.RenameColumns(Fixed, {{"PlantSortNo", "PlantSort"}})
+               then Table.AddColumn(
+                        Table.RenameColumns(Fixed, {{"PlantSortNo", "PlantSort"}}),
+                        "MWD", each null, type number)
                else Built,
     Dedup    = Table.Distinct(Rows, {"ValuationArea"}),
     Typed    = Table.TransformColumnTypes(Dedup, {
                    {"ValuationArea", type text}, {"Plant", type text},
-                   {"PlantSort", Int64.Type}})
+                   {"PlantSort", Int64.Type}, {"MWD", type number}})
 in
     Typed
 ```
@@ -2992,7 +2831,7 @@ in
 
 ## dimPlantType
 
-> One row per plant **and** type - `1902 Jaipur Module  —  RM`, `1902 Jaipur Module  —  FG` and so on, nine rows for three plants. It exists so the Summary table can list plant and type without a two-level row hierarchy: a hierarchy has to be expanded, and some versions of Desktop open one collapsed however the file was saved, which hid every row. Built from `dimPlant` and `dimCategory`, so the three plant names come from the one place that decides them and can never disagree with the rest of the report. Leave Enable load ON.
+> One row per plant **and** type - `1900 Jaipur Module  —  RM`, `1900 Jaipur Module  —  FG` and so on, nine rows for three plants. It exists so the Summary table can list plant and type without a two-level row hierarchy: a hierarchy has to be expanded, and some versions of Desktop open one collapsed however the file was saved, which hid every row. Built from `dimPlant` and `dimCategory`, so the three plant names come from the one place that decides them and can never disagree with the rest of the report. Leave Enable load ON.
 
 ```
 let
@@ -3121,7 +2960,12 @@ Capacity MW = CALCULATE(SUM(dimCapacity[CapacityMW]), dimCapacity[Tech] <> "(All
 ```
 
 ```
+Plant MWD = SUM(dimPlant[MWD])
+```
+
+```
 Capacity MW (plant) =
+VAR MWD = CALCULATE(SUM(dimPlant[MWD]), REMOVEFILTERS(dimNature))
 VAR Whole =
     CALCULATE(SUM(dimCapacity[CapacityMW]),
         REMOVEFILTERS(dimNature),
@@ -3131,8 +2975,14 @@ VAR ByTech =
         REMOVEFILTERS(dimNature),
         dimCapacity[Tech] <> "(All)")
 RETURN
-    IF(Whole <> 0 && NOT ISBLANK(Whole), Whole, ByTech)
+    IF(MWD <> 0 && NOT ISBLANK(MWD), MWD,
+        IF(Whole <> 0 && NOT ISBLANK(Whole), Whole, ByTech))
 ```
+
+`MWD` comes first because that is the figure you type per plant on **Plant Master**, and it is
+what days of cover on a plant row divides by: `days = inventory MW / MWD`. The `MW Capacity`
+sheet is left to the technology rows, which have their own denominator, and its `Total` rows
+are only used for a plant that has no `MWD` typed against it.
 
 The second one exists for a real problem: capacity is keyed by technology, and an RM nature
 (`Glass`, `Wafer`) is not a technology, so plain `Capacity MW` goes blank the moment an RM
@@ -3155,7 +3005,10 @@ those total rows out entirely, because a technology's own denominator is its own
 
 ```
 Days of Inventory =
-VAR Cap = IF(ISBLANK([Capacity MW]), [Capacity MW (plant)], [Capacity MW])
+VAR Cap =
+    IF(HASONEVALUE(dimNature[Nature]),
+        IF(ISBLANK([Capacity MW]), [Capacity MW (plant)], [Capacity MW]),
+        [Capacity MW (plant)])
 RETURN DIVIDE([MW], Cap)
 ```
 
@@ -3778,7 +3631,7 @@ because there a total across the columns is the inventory of the window.
 **There are three plants.** 1903, 1904 and 1908 turn up in the exports and are not plants;
 `factInventory` sends those rows to `Unallocated`, keeping their value, and `dimPlant` lists the
 three plants plus `Unallocated` if anything landed there. The plant is labelled with its code -
-`1902 Jaipur Module` - so the slicer, the legends and the ticker cards all read the same.
+`1900 Jaipur Module` - so the slicer, the legends and the ticker cards all read the same.
 
 **`dimNature` carries `Consumables` and `Unassigned`.** Both are written by the fact queries
 rather than read from a master sheet, so the bridge table did not have them and a fifth of the

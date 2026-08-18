@@ -10,6 +10,49 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="000000000000000000d", build="44", query="dimPlantMaster",
+         title="Days by plant divides by MWD on Plant Master",
+         why="Days of cover on the plant rows now reads the <code>MWD</code> column you type on "
+             "<strong>Plant Master</strong> — the plant’s megawatts a day — and "
+             "divides the inventory MW by it, nothing else converted in. The "
+             "<code>MW Capacity</code> sheet is left to the technology rows, which have their "
+             "own denominator; its <code>Total</code> row is only used for a plant with no "
+             "<code>MWD</code> against it. Keep <code>Sort Order</code> as the order: that is "
+             "what holds the plants in your sequence rather than alphabetical.",
+         steps=["On <strong>Plant Master</strong>, a fourth column headed <code>MWD</code>, one "
+                "figure per plant.",
+                "Repaste <code>dimPlantMaster</code> and <code>dimPlant</code> from the "
+                "<strong>Queries</strong> tab, add the measure <code>Plant MWD</code> and "
+                "repaste <code>Capacity MW (plant)</code> and <code>Days of Inventory</code> "
+                "from the <strong>Measures</strong> tab, then refresh."],
+         find="", repl=""),
+    dict(n="000000000000000000c", build="44", query="factFG",
+         title="A cell is about 7.8 W, not 580 W — Dholera Cell’s MW",
+         why="A module’s wattage is the last three digits of its description, and that is "
+             "what the report was reading for every plant. A cell is not rated that way: on "
+             "1905 those three digits are the cell’s <em>efficiency</em>, and the watts "
+             "come from the wafer size in the description — "
+             "<code>Mid = MID(description,13,13)</code>, <code>Base = LEFT(Mid,6)</code>, then "
+             "<code>Base × Base × efficiency ÷ 1000</code>, which is about 7.8 W "
+             "against a module’s 580. Reading 235 W where the cell holds 7.8 W is why "
+             "Dholera Cell’s MW came out several times too high while its ₹ Cr was "
+             "right all along — ₹ Cr never uses the rate. Modules are unchanged.",
+         steps=["Repaste <code>factFG</code> from the <strong>Queries</strong> tab and refresh.",
+                "FG: Dholera Cell’s MW should now be tens rather than hundreds, and Jaipur "
+                "and Dholera Module should not move by a rupee or a megawatt."],
+         find="", repl=""),
+    dict(n="000000000000000000b", build="44", query="dimPlant",
+         title="1900 is Jaipur Module and 1902 is Dholera Module",
+         why="The valuation areas were the other way round in the masters and are now corrected "
+             "there, so the report is corrected to match: <strong>1900 Jaipur Module</strong>, "
+             "<strong>1902 Dholera Module</strong>, <strong>1905 Dholera Cell</strong>. The "
+             "names live in <code>dimPlant</code> and every page reads them from there, and the "
+             "name-based fallback in the trial balance (a profit centre that spells the plant "
+             "out instead of numbering it) follows the same pairing.",
+         steps=["Repaste <code>dimPlant</code> and <code>factTB</code> from the "
+                "<strong>Queries</strong> tab and refresh.",
+                "Check one figure you know by heart against the old sheet’s Jaipur row."],
+         find="", repl=""),
     dict(n="000000000000000000a", build="42", query="factTB",
          title="A Nature column reading CONS is consumables, not raw material",
          why="TB Master\u2019s Nature column can be written as the three short codes RM, FG "

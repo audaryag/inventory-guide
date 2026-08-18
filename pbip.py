@@ -37,7 +37,7 @@ MB5B_COLS = [
     ("CloseQty", D), ("CloseVal", D), ("BaseUOM", S), ("SpecialStock", S), ("Currency", S),
     ("Month", T), ("Category", S), ("Nature", S), ("GroupNature", S), ("BOMStdQty", D),
     ("Item", S), ("AttrMissing", B), ("MW Qty", D), ("Rate", D), ("RateParseFailed", B),
-    ("Mid", S), ("Base", S), ("INR_WP", D), ("PlantType", S),
+    ("Mid", S), ("Base", D), ("INR_WP", D), ("PlantType", S),
 ]
 
 # tables that load into the model, with their exact column list
@@ -47,7 +47,7 @@ TABLES = {
                ("ProfitCentre", S), ("ProfitCentreDesc", S), ("Amount", D),
                ("PlantCode", S), ("ValuationArea", S), ("Nature", S), ("TBPlant", S),
                ("TBSort", I), ("Category", S), ("Rule", S), ("PlantType", S)],
-    "dimPlant": [("ValuationArea", S), ("Plant", S), ("PlantSort", I)],
+    "dimPlant": [("ValuationArea", S), ("Plant", S), ("PlantSort", I), ("MWD", D)],
     "dimDate": [("Month", T), ("MonthName", S), ("MonthSort", I), ("MonthIndex", I),
                 ("FY", S), ("FYMonthNo", I), ("QuarterNo", I), ("Quarter", S),
                 ("QuarterSort", I)],
