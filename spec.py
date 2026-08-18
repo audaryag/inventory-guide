@@ -682,7 +682,7 @@ VISUALS = [
      'Inventory FG by Plant — In Days',
      [("Rows", ["dimPlant[Plant]"]),
       ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["Days" + AS + "Days"]),
+      ("Values", ["Plant Days" + AS + "Days"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
                    "In Summary Window  →  is 1"])],
      (848, 88, 408, 112),
@@ -691,7 +691,7 @@ VISUALS = [
       'Filters pane → dimCategory[Category] → tick FG only, then the measure In Summary Window → is 1.',
       "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
       'Format pane → Values → Font: Arial, Font size: 8, Colour: #1F2A24; Row headers → Font size: 8; Column headers → Font size: 8. Three blocks across the width means every column has to earn its pixels.',
-      'Days is MW ÷ capacity MW, so a plant with no row on the MW Capacity sheet is blank here on purpose — a missing denominator is not the same as no stock.']),
+      'Values takes Plant Days, not Days. Plant Days is MW ÷ the MWD column of Plant Master and has no other denominator — the MW Capacity sheet belongs to the technology table below. A blank cell means MWD is empty for that plant on the sheet.']),
 
     ("FG", "Matrix",
      'Inventory FG by Techno — In MW',

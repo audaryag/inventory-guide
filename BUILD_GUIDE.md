@@ -261,7 +261,7 @@ pasting out of order gives "cannot be determined" on a measure that is perfectly
 ### Checkpoint — do not go to Part 4 until all three are true
 
 1. Type `Value` into the Data pane search box: `Value ₹ Cr` is there, with a calculator icon.
-2. Count the measures (calculator icons) — there must be **71**. Fewer means Appendix B is
+2. Count the measures (calculator icons) — there must be **72**. Fewer means Appendix B is
    not finished; the pages will fail on whichever one is missing.
 3. None of these six old names survive: `Closing Value`, `Inv RM`, `Inv FG`,
    `Inv Consumables`, `TB Value`, `Prev Month`. Delete any you find (right-click → **Delete
@@ -1088,7 +1088,7 @@ Position: Horizontal 549, Vertical 88, Width 350, Height 112.
 |---|---|
 | Rows | `dimPlant[Plant]` |
 | Columns | `dimDate[MonthName]` |
-| Values | `Days` → rename it to **Days** |
+| Values | `Plant Days` → rename it to **Days** |
 | Filters | `dimCategory[Category]  →  is FG`, `In Summary Window  →  is 1` |
 
 Title: `Inventory FG by Plant — In Days`
@@ -1104,7 +1104,7 @@ Position: Horizontal 907, Vertical 88, Width 350, Height 112.
 - Filters pane → dimCategory[Category] → tick FG only, then the measure In Summary Window → is 1.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font: Arial, Font size: 8, Colour: #1F2A24; Row headers', then 'Font size: 8; Column headers', then 'Font size' and set it to 8. Three blocks across the width means every column has to earn its pixels.
-- Days is MW ÷ capacity MW, so a plant with no row on the MW Capacity sheet is blank here on purpose — a missing denominator is not the same as no stock.
+- Values takes Plant Days, not Days. Plant Days is MW ÷ the MWD column of Plant Master and has no other denominator — the MW Capacity sheet belongs to the technology table below. A blank cell means MWD is empty for that plant on the sheet.
 
 **4.39** **Matrix** — The same months and the same unit, by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself.
 
@@ -1541,7 +1541,7 @@ Find the words Power BI showed you in the left column.
 | `Mark as date table` will not accept any column | nothing is wrong | skip 2.4 entirely; a monthly table is deliberate and no measure needs it |
 | `dimMetric cannot find table` | `dimCategory` / `dimMetric` / `dimMeasure` were never created | paste those three queries, Close & Apply, then paste the measure again |
 | `Value ₹ Cr cannot be determined. Either the column does not exist, or there is no current row` | either `factInventory` has no `CloseVal` column, or you pasted measures out of order | check `CloseVal` exists in `factInventory`; if it does, paste Appendix B again strictly top to bottom |
-| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 71 from Appendix B, then delete the six old names listed in 3.7 |
+| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 72 from Appendix B, then delete the six old names listed in 3.7 |
 | RM and FG matrices show numbers under `In ₹ Cr` but nothing under `In Days` | the `Days` measure was deleted as an "old name" | paste `Days = [Days of Inventory]` back in; it is in Appendix B |
 | on a card, the number is fine but the wording is cut in half | the card's default text is too big for the space | set **Callout value** → Font size **24**, **General → Title** → Font size **12**, and Height **96** (every card in Part 4 is 96 high). A **Category label**, if your version has one, goes to **10** or off — the title says the same thing |
 | the paintbrush list has a **Callout value** but no **Category label** | you are on the newer Card visual, which has no category label | nothing to fix: the heading comes from **General → Title → Text**, which Part 4 gives you the wording for |
@@ -1579,7 +1579,7 @@ Nothing here is destructive.
    `dimCategory`, `dimMetric`, `dimMeasure`. Then **Close & Apply**.
 2. **Relationships.** Manage relationships must match 2.3 exactly — 11 rows, all Single,
    nothing on `dimMetric` or `dimMeasure`.
-3. **Measures.** Add all 71 from Appendix B top to bottom (adding beside old ones is safe),
+3. **Measures.** Add all 72 from Appendix B top to bottom (adding beside old ones is safe),
    then delete the six old names in 3.7 — keeping `Days`, whose formula you overwrite instead.
 4. **Sorting.** Set the five sort-by columns in 2.5 and 2.6.
 
@@ -2008,8 +2008,21 @@ let
                       "MW/Day","MW Per Day","Plant MWD","MWD Capacity","Capacity MWD",
                       "Daily MW","MW a Day"}, "PlantMWD"}
                   }),
-    Cols    = {"ValuationArea", "PlantName", "PlantSort", "PlantMWD"},
-    Padded  = List.Accumulate(List.Difference(Cols, Table.ColumnNames(Raw)), Raw,
+    // The daily capacity column is the one thing on this sheet whose heading has been typed
+    // several ways, so a heading the alias list missed is caught here: any remaining column
+    // whose name carries "MWD" or "MW/D" is taken as it. Without this a heading like
+    // "MWD (in MW)" reads as no capacity at all and every plant's days of cover goes blank.
+    Norm    = (n as any) as text =>
+                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")),
+                      {" ", ".", "_", "-", "/", "(", ")", ",", "'"})),
+    Taken   = {"ValuationArea", "PlantName", "PlantSort", "PlantMWD"},
+    Spare   = List.Select(Table.ColumnNames(Raw), each not List.Contains(Taken, _)),
+    MWDName = List.First(List.Select(Spare, each Text.Contains(Norm(_), "MWD")), null),
+    Found   = if List.Contains(Table.ColumnNames(Raw), "PlantMWD") or MWDName = null
+              then Raw
+              else Table.RenameColumns(Raw, {{MWDName, "PlantMWD"}}),
+    Cols    = Taken,
+    Padded  = List.Accumulate(List.Difference(Cols, Table.ColumnNames(Found)), Found,
                   (t, c) => Table.AddColumn(t, c, each null)),
     Slim    = Table.SelectColumns(Padded, Cols),
     // the code is text and trimmed, because 1900 read as a number will not join to a text key
@@ -3188,9 +3201,21 @@ Capacity MW = CALCULATE(SUM(dimCapacity[CapacityMW]), dimCapacity[Tech] <> "(All
 Plant MWD = SUM(dimPlant[MWD])
 ```
 
+*days of cover for a plant row*
+
+```
+Plant Days = DIVIDE([MW], CALCULATE(SUM(dimPlant[MWD]), REMOVEFILTERS(dimNature)))
+```
+
+`Plant Days` is the only measure the two **In Days by plant** tables use, and it divides by the
+`MWD` column of **Plant Master** — nothing else. There is deliberately no fallback to the
+`MW Capacity` sheet: that sheet is for technologies, and a plant row that borrowed from it read
+as a figure when it was the wrong denominator. A blank cell here means `MWD` is empty for that
+plant on the sheet, which is a thing you can see and fix; the technology tables and every card
+keep using `Days of Inventory` exactly as before.
+
 ```
 Capacity MW (plant) =
-VAR MWD = CALCULATE(SUM(dimPlant[MWD]), REMOVEFILTERS(dimNature))
 VAR Whole =
     CALCULATE(SUM(dimCapacity[CapacityMW]),
         REMOVEFILTERS(dimNature),
@@ -3200,8 +3225,7 @@ VAR ByTech =
         REMOVEFILTERS(dimNature),
         dimCapacity[Tech] <> "(All)")
 RETURN
-    IF(MWD <> 0 && NOT ISBLANK(MWD), MWD,
-        IF(Whole <> 0 && NOT ISBLANK(Whole), Whole, ByTech))
+    IF(Whole <> 0 && NOT ISBLANK(Whole), Whole, ByTech)
 ```
 
 `MWD` comes first because that is the figure you type per plant on **Plant Master**, and it is
@@ -3230,10 +3254,7 @@ those total rows out entirely, because a technology's own denominator is its own
 
 ```
 Days of Inventory =
-VAR Cap =
-    IF(HASONEVALUE(dimNature[Nature]),
-        IF(ISBLANK([Capacity MW]), [Capacity MW (plant)], [Capacity MW]),
-        [Capacity MW (plant)])
+VAR Cap = IF(ISBLANK([Capacity MW]), [Capacity MW (plant)], [Capacity MW])
 RETURN DIVIDE([MW], Cap)
 ```
 

@@ -10,6 +10,22 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000j", build="50", query="dimPlantMaster",
+         title="Days by plant divides by MWD and by nothing else",
+         why="The plant table\u2019s days of cover still had a path back to the "
+             "<strong>MW Capacity</strong> sheet, and it was taking it \u2014 so the figures "
+             "were technology capacities added together, not your <code>MWD</code>. That table "
+             "now uses a measure of its own, <code>Plant Days</code>, which is MW \u00f7 "
+             "<code>MWD</code> from <strong>Plant Master</strong> with no fallback at all: if a "
+             "plant\u2019s <code>MWD</code> is empty the cell is blank, which you can see and "
+             "fix, rather than quietly wrong. A heading the alias list missed \u2014 "
+             "<code>MWD (in MW)</code> and the like \u2014 is now picked up too. Technology "
+             "Days, MW, Rs Cr, Overview and Summary are untouched.",
+         steps=["Repaste <code>dimPlantMaster</code> from the <strong>Queries</strong> tab, add "
+                "the measure <code>Plant Days</code> from <strong>Measures</strong>, and put it "
+                "in the Values box of <em>Inventory FG by Plant \u2014 In Days</em> in place of "
+                "<code>Days</code>. Or just take the fresh download."],
+         find="", repl=""),
     dict(n="00000000000000000i", build="49", query="factFG",
          title="A cell\u2019s efficiency is the percentage the description ends with",
          why="<code>C-PERC-P-FC-182.20x183.75-10BB-23.50%</code> ends in the characters "
