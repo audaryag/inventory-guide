@@ -2052,7 +2052,7 @@ let
                    {"BOMStdQty", type number}, {"Item", type text},
                    {"AttrMissing", type logical}, {"MW", type number},
                    {"Rate", type number}, {"RateParseFailed", type logical},
-                   {"Mid", type text}, {"Base", type text}, {"INR_WP", type number}}),
+                   {"Mid", type text}, {"Base", type number}, {"INR_WP", type number}}),
     // last line of defence against a blank category: whatever slipped through above is
     // named, so no visual anywhere can show a nameless (Blank) row
     NoNulls  = Table.TransformColumns(Typed, {
@@ -2092,8 +2092,15 @@ let
     // walked once.
     Picked   = Table.Group(OneEach, {"ValuationArea", "Material", "Month", "Category"},
                    {{"Row", each Table.Max(_, "CloseQty"), type record}}),
-    Unused   = Table.ExpandRecordColumn(Table.SelectColumns(Picked, {"Row"}), "Row",
+    Expanded = Table.ExpandRecordColumn(Table.SelectColumns(Picked, {"Row"}), "Row",
                    Table.ColumnNames(OneEach)),
+    // Expanding a record hands every column back as "any", and a whole-number column arriving
+    // as any is read by the model as text - which is what made SUM refuse to add Closing Value
+    // and emptied every visual on the page. The types are put back from the table the rows came
+    // out of, so the column list and the types are the ones stated above and nothing is guessed.
+    Unused   = Table.TransformColumnTypes(Expanded,
+                   List.Transform(Table.ColumnNames(OneEach),
+                       each {_, Type.TableColumn(Value.Type(OneEach), _)})),
     // the column list written out, so what this query hands on is stated rather than inferred
     KeepCols = {"SourceFile","ValuationArea","Material","MatKey","MaterialDesc","FromDate",
                 "ToDate","OpenQty","OpenVal","ReceiptQty","ReceiptVal","IssueQty","IssueVal",

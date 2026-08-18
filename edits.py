@@ -10,6 +10,18 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="000000000000000000f", build="46", query="factInventory",
+         title="\u201cSUM cannot work with values of type String\u201d \u2014 every visual empty",
+         why="Build 45\u2019s one-pass de-duplication expands a record to get the kept row back, "
+             "and expanding a record hands every column over as <em>any</em>. A number arriving "
+             "as <em>any</em> is read by the model as text, so <code>SUM</code> refused to add "
+             "Closing Value and every visual on every page reported an error instead of a "
+             "figure. The types are now put back immediately after the expansion, taken from "
+             "the table the rows came out of. No figure changes \u2014 the same rows, correctly "
+             "typed.",
+         steps=["Repaste <code>factInventory</code> from the <strong>Queries</strong> tab and "
+                "refresh."],
+         find="", repl=""),
     dict(n="000000000000000000e", build="45", query="factRM",
          title="Refresh stopped with \u201cDuplicate initializer named \u2018Attr\u2019\u201d",
          why="Build 44\u2019s buffering added a step called <code>Attr</code> to "
