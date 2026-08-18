@@ -183,8 +183,8 @@ VISUALS = [
       "Vertical (Y) to 14 and 242 exactly, or the card will not sit square inside its box."],
      ),
 
-    ("Overview", "Card", "1900 Jaipur Module",
-     [("Fields", ["Ticker 1900 Rs Cr"])],
+    ("Overview", "Card", "1902 Jaipur Module",
+     [("Fields", ["Ticker 1902 Rs Cr"])],
      (14, 332, 156, 58),
      "Panel figure, sitting inside the white box. It reads the latest month that has data "
      "and ignores every slicer on the page, because stock is a level, not something you "
@@ -201,8 +201,8 @@ VISUALS = [
       "Vertical (Y) to 14 and 332 exactly, or the card will not sit square inside its box."],
      ),
 
-    ("Overview", "Card", "1902 Dholera Module",
-     [("Fields", ["Ticker 1902 Rs Cr"])],
+    ("Overview", "Card", "1900 Dholera Module",
+     [("Fields", ["Ticker 1900 Rs Cr"])],
      (14, 392, 156, 58),
      "Panel figure, sitting inside the white box. It reads the latest month that has data "
      "and ignores every slicer on the page, because stock is a level, not something you "

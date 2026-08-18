@@ -10,6 +10,20 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000h", build="48", query="dimPlant",
+         title="Plant Master decides the plant names \u2014 the code no longer holds a second copy",
+         why="Build 44 swapped the names in the code to 1900 Jaipur / 1902 Dholera Module. Your "
+             "<strong>Plant Master</strong> reads 1900 Dholera Module, so the two disagreed and "
+             "Jaipur and Dholera reported each other\u2019s figures on Summary. The swap is "
+             "reverted, and the cause with it: <code>dimPlant</code> now takes the name from "
+             "Plant Master and only falls back to the built-in pair for a code that sheet does "
+             "not name. One place decides a plant\u2019s name, so it cannot disagree with "
+             "itself again.",
+         steps=["Repaste <code>dimPlant</code> and <code>factTB</code> from the "
+                "<strong>Queries</strong> tab and refresh.",
+                "Summary should read exactly as it did on build 43. If a plant name looks wrong "
+                "now, it is wrong on Plant Master \u2014 correct it there and refresh."],
+         find="", repl=""),
     dict(n="00000000000000000g", build="47", query="",
          title="Summary and FG go back to the build 43 layout",
          why="Build 44 merged each page\u2019s three tables into one and put the months above "
