@@ -280,6 +280,17 @@ for m in re.findall(r"`([A-Z][^`\[\]]{2,30})`", parts.split("# PART 4")[-1]):
             and not any(m in n or n in m for n in mnames):
         note(f"Part 4 mentions the measure {m!r} which Appendix B does not define")
 
+# ---- 6b. two steps with the same name ----------------------------------------------------
+# "Duplicate initializer named 'Attr'" stops the query dead and every query downstream of it
+# with it, and nothing else in this file would have caught it: the code parses, the model
+# builds, and the refresh is where it appears. Top-level steps only - a name inside a nested
+# let or a record belongs to its own scope and may repeat.
+for name in qcode:
+    steps = re.findall(r"^ {4}([A-Za-z_]\w*)\s+=", qcode[name], re.M)
+    for step in {s for s in steps if steps.count(s) > 1}:
+        note(f"query {name}: two steps are both named {step!r} — Power Query stops with "
+             f"\"Duplicate initializer named '{step}'\"")
+
 # ---- 7. query paste order ----------------------------------------------------------------
 seen = []
 REF = re.compile(r"\b(fn\w+|stg\w+|var\w+|dim\w+|fact\w+|qc\w+|pRoot|pVarsFile)\b")

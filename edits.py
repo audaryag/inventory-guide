@@ -10,6 +10,20 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="000000000000000000e", build="45", query="factRM",
+         title="Refresh stopped with \u201cDuplicate initializer named \u2018Attr\u2019\u201d",
+         why="Build 44\u2019s buffering added a step called <code>Attr</code> to "
+             "<code>factRM</code>, which already had one \u2014 Power Query allows a name once "
+             "per query, so it stopped there and took every query that reads it down with it: "
+             "<code>factInventory</code>, <code>dimPlant</code>, <code>dimPlantType</code>. The "
+             "buffered step is now <code>AttrSrc</code>. Nothing else changed and no figure "
+             "moves; the guide now checks every query for a repeated step name so this cannot "
+             "reach a download again.",
+         steps=["Repaste <code>factRM</code> from the <strong>Queries</strong> tab and refresh.",
+                "If you would rather not repaste: Advanced Editor on <code>factRM</code>, and "
+                "rename the first <code>Attr</code> (the <code>Table.Buffer</code> line) and "
+                "its three uses to <code>AttrSrc</code>."],
+         find="", repl=""),
     dict(n="000000000000000000d", build="44", query="dimPlantMaster",
          title="Days by plant divides by MWD on Plant Master",
          why="Days of cover on the plant rows now reads the <code>MWD</code> column you type on "

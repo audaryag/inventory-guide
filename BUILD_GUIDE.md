@@ -1865,8 +1865,8 @@ let
     // plant-and-material key, on the material alone, then on the description - and without
     // this line Power Query re-opens and re-parses the workbook for each of the three, because
     // a merge re-evaluates its right-hand side every time it is asked for.
-    Attr     = Table.Buffer(dimMaterialAttr),
-    Merged   = Table.NestedJoin(Src, {"MatKey"}, Attr, {"MatKey"},
+    AttrSrc  = Table.Buffer(dimMaterialAttr),
+    Merged   = Table.NestedJoin(Src, {"MatKey"}, AttrSrc, {"MatKey"},
                    "attr", JoinKind.LeftOuter),
     Expanded = Table.ExpandTableColumn(Merged, "attr",
                    {"Nature","GroupNature","BOMStdQty","Item"}),
@@ -1874,7 +1874,7 @@ let
     // Second pass on the material alone. Plant and material together is the safer key, but
     // it misses every row when the master sheet has no valuation area column, or records the
     // plant differently from the MB5B export -- and then nothing has a nature at all.
-    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(Attr,
+    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(AttrSrc,
                    {"Material","Nature","GroupNature","BOMStdQty","Item"}), {"Material"})),
     Second   = Table.NestedJoin(Expanded, {"Material"}, ByMat, {"Material"},
                    "attr2", JoinKind.LeftOuter),
@@ -1886,7 +1886,7 @@ let
     // empty, so it cannot overwrite a proper match.
     DescK    = Table.AddColumn(Both, "DescKey",
                    each Text.Upper(Text.Trim(Text.From([MaterialDesc] ?? ""))), type text),
-    ByDesc   = Table.Buffer(Table.Distinct(Table.SelectRows(Table.SelectColumns(Attr,
+    ByDesc   = Table.Buffer(Table.Distinct(Table.SelectRows(Table.SelectColumns(AttrSrc,
                    {"DescKey","Nature","GroupNature","BOMStdQty","Item"}),
                    each [DescKey] <> null and [DescKey] <> ""), {"DescKey"})),
     Third    = Table.NestedJoin(DescK, {"DescKey"}, ByDesc, {"DescKey"},
