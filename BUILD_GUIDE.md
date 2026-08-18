@@ -1997,61 +1997,81 @@ in
 
 ```
 let
-    Raw     = fnVarSheetSafe(
-                  {"Plant Master", "PlantMaster", "Plants", "Plant"},
-                  {
-                    {{"Valuation Area","Val Area","Plant Code","Code","Plant"}, "ValuationArea"},
-                    {{"Plant Name","Name","Description","Plant Description",
-                      "Valuation Area Description"}, "PlantName"},
-                    {{"Sort","Order","Sort Order"}, "PlantSort"},
-                    {{"MWD","MW D","MWD (MW per day)","MW per Day","MW Day","MWPD",
-                      "MW/Day","MW Per Day","Plant MWD","MWD Capacity","Capacity MWD",
-                      "Daily MW","MW a Day"}, "PlantMWD"}
-                  }),
-    // The daily capacity column is the one thing on this sheet whose heading has been typed
-    // several ways, so a heading the alias list missed is caught here: any remaining column
-    // whose name carries "MWD" or "MW/D" is taken as it. Without this a heading like
-    // "MWD (in MW)" reads as no capacity at all and every plant's days of cover goes blank.
-    Norm    = (n as any) as text =>
-                  Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")),
-                      {" ", ".", "_", "-", "/", "(", ")", ",", "'"})),
-    Taken   = {"ValuationArea", "PlantName", "PlantSort", "PlantMWD"},
-    Spare   = List.Select(Table.ColumnNames(Raw), each not List.Contains(Taken, _)),
-    MWDName = List.First(List.Select(Spare, each Text.Contains(Norm(_), "MWD")), null),
-    Found   = if List.Contains(Table.ColumnNames(Raw), "PlantMWD") or MWDName = null
-              then Raw
-              else Table.RenameColumns(Raw, {{MWDName, "PlantMWD"}}),
-    Cols    = Taken,
-    Padded  = List.Accumulate(List.Difference(Cols, Table.ColumnNames(Found)), Found,
-                  (t, c) => Table.AddColumn(t, c, each null)),
-    Slim    = Table.SelectColumns(Padded, Cols),
+    // This sheet is read directly rather than through fnVarSheet, because its headings collide:
+    // "Plant" is both a code and a name, and an alias list that maps two of the sheet's columns
+    // onto one name makes the rename fail - which returned an empty table, and an empty table
+    // is why every plant's days of cover went blank while its name still looked right. Here each
+    // heading is claimed by one target only, in order, and a column already claimed is not
+    // offered again.
+    Norm     = (n as any) as text =>
+                   Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")),
+                       {" ", ".", "_", "-", "/", "(", ")", ",", "'", "%"})),
+    Wb       = try Excel.Workbook(File.Contents(pVarsFile), null, true) otherwise #table({}, {}),
+    Sheets   = try Table.SelectRows(Wb, each [Kind] = "Sheet") otherwise #table({}, {}),
+    Want     = List.Transform({"Plant Master","PlantMaster","Plants","Plant"}, Norm),
+    Hit      = try Table.SelectRows(Sheets, each List.Contains(Want, Norm([Item])))
+               otherwise #table({}, {}),
+    Data     = if Table.RowCount(Hit) = 0 then #table({}, {}) else Hit{0}[Data],
+    Raw      = if Table.RowCount(Hit) = 0 then #table({}, {})
+               else Table.PromoteHeaders(Data, [PromoteAllScalars=true]),
+    Names    = Table.ColumnNames(Raw),
+    // Each target names the headings it will accept, best first. Pick walks that list and takes
+    // the first heading not already claimed, so "Plant" falls to the name only when a plainer
+    // code column exists.
+    Pick     = (want as list, used as list) as nullable text =>
+                   List.First(List.RemoveNulls(List.Transform(want, (w) =>
+                       List.First(List.Select(Names, (n) =>
+                           Norm(n) = Norm(w) and not List.Contains(used, n)), null))), null),
+    // "MWD" is matched loosely as well, so MWD (in MW) or MW/Day counts
+    Loose    = (frag as text, used as list) as nullable text =>
+                   List.First(List.Select(Names, (n) =>
+                       Text.Contains(Norm(n), frag) and not List.Contains(used, n)), null),
+    cArea    = Pick({"Valuation Area","Val Area","Plant Code","Code","Plant"}, {}),
+    cMWD     = let p = Pick({"MWD","MW D","MWD (MW per day)","MW per Day","MW Day","MWPD",
+                             "MW/Day","Plant MWD","MWD Capacity","Capacity MWD","Daily MW"},
+                            {cArea})
+               in  if p <> null then p else Loose("MWD", List.RemoveNulls({cArea})),
+    cSort    = let u = List.RemoveNulls({cArea, cMWD}),
+                   p = Pick({"Sort Order","Sort","Order","Sort No","Sequence"}, u)
+               in  if p <> null then p else Loose("SORT", u),
+    cName    = let u = List.RemoveNulls({cArea, cMWD, cSort})
+               in  Pick({"Plant Name","Name","at","Description","Plant Description",
+                         "Valuation Area Description","Plant"}, u),
+    Renames  = List.RemoveNulls({
+                   if cArea <> null then {cArea, "ValuationArea"} else null,
+                   if cName <> null then {cName, "PlantName"}     else null,
+                   if cSort <> null then {cSort, "PlantSort"}     else null,
+                   if cMWD  <> null then {cMWD,  "PlantMWD"}      else null}),
+    Renamed  = if List.IsEmpty(Renames) then Raw else Table.RenameColumns(Raw, Renames),
+    Cols     = {"ValuationArea", "PlantName", "PlantSort", "PlantMWD"},
+    Padded   = List.Accumulate(List.Difference(Cols, Table.ColumnNames(Renamed)), Renamed,
+                   (t, c) => Table.AddColumn(t, c, each null)),
+    Slim     = Table.SelectColumns(Padded, Cols),
     // the code is text and trimmed, because 1900 read as a number will not join to a text key
-    Keyed   = Table.TransformColumns(Slim, {
-                  {"ValuationArea", each Text.Trim(Text.From(_ ?? "")), type text},
-                  {"PlantName",     each Text.Trim(Text.From(_ ?? "")), type text}}),
-    Real    = Table.SelectRows(Keyed, each [ValuationArea] <> ""),
+    Keyed    = Table.TransformColumns(Slim, {
+                   {"ValuationArea", each Text.Trim(Text.From(_ ?? "")), type text},
+                   {"PlantName",     each Text.Trim(Text.From(_ ?? "")), type text}}),
+    Real     = Table.SelectRows(Keyed, each [ValuationArea] <> ""),
     // the label the whole report shows: the code and the name together, so the slicer, the
     // legends and the ticker cards can never disagree about what a plant is called
-    Label   = Table.AddColumn(Real, "Plant",
-                  each if [PlantName] = "" then [ValuationArea]
-                       else [ValuationArea] & " " & [PlantName], type text),
-    Sorted  = Table.AddColumn(Label, "SortNo",
-                  each try Number.From([PlantSort]) otherwise null, type number),
-    Indexed = Table.AddIndexColumn(Sorted, "Seq", 1, 1, Int64.Type),
-    Order   = Table.AddColumn(Indexed, "PlantSortNo",
-                  each Int64.From([SortNo] ?? [Seq]), Int64.Type),
-    // MWD - the plant's megawatts a day, typed on Plant Master. It is the denominator for
-    // days of cover on the plant rows: days = inventory MW / MWD, nothing else divided in.
-    // A figure typed as "3.6 MW", or with a comma in it, is still a figure: the digits are
-    // taken and the rest ignored, because a denominator that will not parse shows as no days
-    // of cover at all and reads on the page like missing stock.
-    Rate    = Table.AddColumn(Order, "MWD",
-                  each let t = Text.Trim(Text.From([PlantMWD] ?? "")),
-                           v = try Number.From(t)
-                               otherwise (try Number.From(
-                                   Text.Select(t, {"0".."9","."})) otherwise null)
-                       in  if v = null or v = 0 then null else v, type number),
-    Out     = Table.SelectColumns(Rate, {"ValuationArea", "Plant", "PlantSortNo", "MWD"})
+    Label    = Table.AddColumn(Real, "Plant",
+                   each if [PlantName] = "" then [ValuationArea]
+                        else [ValuationArea] & " " & [PlantName], type text),
+    Sorted   = Table.AddColumn(Label, "SortNo",
+                   each try Number.From([PlantSort]) otherwise null, type number),
+    Indexed  = Table.AddIndexColumn(Sorted, "Seq", 1, 1, Int64.Type),
+    Order    = Table.AddColumn(Indexed, "PlantSortNo",
+                   each Int64.From([SortNo] ?? [Seq]), Int64.Type),
+    // MWD - the plant's megawatts a day, typed on Plant Master. It is the denominator for days
+    // of cover on the plant rows: days = inventory MW / MWD, nothing else divided in. A figure
+    // typed as "3.6 MW", or with a comma in it, is still a figure.
+    Rate     = Table.AddColumn(Order, "MWD",
+                   each let t = Text.Trim(Text.From([PlantMWD] ?? "")),
+                            v = try Number.From(t)
+                                otherwise (try Number.From(
+                                    Text.Select(t, {"0".."9","."})) otherwise null)
+                        in  if v = null or v = 0 then null else v, type number),
+    Out      = Table.SelectColumns(Rate, {"ValuationArea", "Plant", "PlantSortNo", "MWD"})
 in
     Out
 ```

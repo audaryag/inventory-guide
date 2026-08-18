@@ -10,6 +10,21 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000k", build="51", query="dimPlantMaster",
+         title="Plant Master was not loading at all \u2014 which is why MWD was blank",
+         why="On that sheet the heading <code>Plant</code> fits both the code column and the name "
+             "column, so the query tried to rename two columns to the same thing, the rename "
+             "failed, and the whole sheet came back empty. Nothing said so, because the plant "
+             "names fell back to the pairs written into the report and still looked right \u2014 "
+             "but <code>MWD</code> was empty, so days of cover by plant had nothing to divide by. "
+             "It now claims each heading once, in order, and reads the sheet directly. The RM "
+             "plant table uses <code>Plant Days</code> too, so both <em>In Days by plant</em> "
+             "tables divide by <code>MWD</code> and by nothing else.",
+         steps=["Repaste <code>dimPlantMaster</code> from the <strong>Queries</strong> tab and "
+                "refresh, or take the fresh download.",
+                "Check <code>dimPlant</code> in Data view: the <code>MWD</code> column should "
+                "now carry your three figures."],
+         find="", repl=""),
     dict(n="00000000000000000j", build="50", query="dimPlantMaster",
          title="Days by plant divides by MWD and by nothing else",
          why="The plant table\u2019s days of cover still had a path back to the "
