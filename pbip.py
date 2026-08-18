@@ -38,7 +38,6 @@ MB5B_COLS = [
     ("Month", T), ("Category", S), ("Nature", S), ("GroupNature", S), ("BOMStdQty", D),
     ("Item", S), ("AttrMissing", B), ("MW Qty", D), ("Rate", D), ("RateParseFailed", B),
     ("Mid", S), ("Base", S), ("INR_WP", D), ("PlantType", S),
-    ("RowsForMaterial", I), ("QtyNotUsed", D),
 ]
 
 # tables that load into the model, with their exact column list

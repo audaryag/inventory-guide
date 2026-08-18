@@ -495,6 +495,17 @@ settings</strong> &rarr; <strong>OK</strong>. Without it Power Query can refuse 
 folders and the refresh stops with <em>&ldquo;may not directly access a data source&rdquo;</em>.</li>
 </ol>
 
+<blockquote><strong>Build 43 &mdash; the same figures, computed once instead of four times:</strong>
+nothing here changes a number. <code>factInventory</code> picked one line per plant, material, month
+and type by sorting the whole table, then de-duplicating it, then grouping it again for the counts,
+then merging that back on &mdash; four passes over fifty thousand rows, and the sort alone has to hold
+all of them in memory. One <code>Table.Group</code> with <code>Table.Max</code> now does it in one
+pass, and the two columns that only fed the deleted diagnostics are gone. <code>factRM</code>,
+<code>factFG</code> and the trial balance also <strong>hold their master sheet in memory</strong>
+rather than re-opening the workbook for every merge &mdash; a merge re-evaluates its right-hand side
+each time it is asked for, which is why a refresh could sit on &ldquo;Merging&rdquo; for twenty
+minutes while the report itself had got smaller.</blockquote>
+
 <blockquote><strong>Build 42 &mdash; four pages, nothing else, and a Nature column that can say
 just RM, FG or CONS:</strong> Detail, Checks and the three diagnostic pages are gone, and with them the
 sixteen <code>qc</code> queries and nine data-quality measures. They were scaffolding: each one made Power

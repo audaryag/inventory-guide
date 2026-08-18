@@ -2047,7 +2047,12 @@ in
 ```
 let
     Src      = stgRM,
-    Merged   = Table.NestedJoin(Src, {"MatKey"}, dimMaterialAttr, {"MatKey"},
+    // The master sheet, read once and held. This query leans on it three times - on the
+    // plant-and-material key, on the material alone, then on the description - and without
+    // this line Power Query re-opens and re-parses the workbook for each of the three, because
+    // a merge re-evaluates its right-hand side every time it is asked for.
+    Attr     = Table.Buffer(dimMaterialAttr),
+    Merged   = Table.NestedJoin(Src, {"MatKey"}, Attr, {"MatKey"},
                    "attr", JoinKind.LeftOuter),
     Expanded = Table.ExpandTableColumn(Merged, "attr",
                    {"Nature","GroupNature","BOMStdQty","Item"}),
@@ -2055,7 +2060,7 @@ let
     // Second pass on the material alone. Plant and material together is the safer key, but
     // it misses every row when the master sheet has no valuation area column, or records the
     // plant differently from the MB5B export -- and then nothing has a nature at all.
-    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(dimMaterialAttr,
+    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(Attr,
                    {"Material","Nature","GroupNature","BOMStdQty","Item"}), {"Material"})),
     Second   = Table.NestedJoin(Expanded, {"Material"}, ByMat, {"Material"},
                    "attr2", JoinKind.LeftOuter),
@@ -2067,7 +2072,7 @@ let
     // empty, so it cannot overwrite a proper match.
     DescK    = Table.AddColumn(Both, "DescKey",
                    each Text.Upper(Text.Trim(Text.From([MaterialDesc] ?? ""))), type text),
-    ByDesc   = Table.Buffer(Table.Distinct(Table.SelectRows(Table.SelectColumns(dimMaterialAttr,
+    ByDesc   = Table.Buffer(Table.Distinct(Table.SelectRows(Table.SelectColumns(Attr,
                    {"DescKey","Nature","GroupNature","BOMStdQty","Item"}),
                    each [DescKey] <> null and [DescKey] <> ""), {"DescKey"})),
     Third    = Table.NestedJoin(DescK, {"DescKey"}, ByDesc, {"DescKey"},
@@ -2112,13 +2117,16 @@ in
 ```
 let
     Src      = stgFG,
-    Merged   = Table.NestedJoin(Src, {"MatKey"}, dimFGAttr, {"MatKey"},
+    // read once and held, for the same reason as factRM: two merges against it, and each one
+    // would otherwise re-open the workbook
+    AttrSrc  = Table.Buffer(dimFGAttr),
+    Merged   = Table.NestedJoin(Src, {"MatKey"}, AttrSrc, {"MatKey"},
                    "attr", JoinKind.LeftOuter),
     Expanded = Table.ExpandTableColumn(Merged, "attr", {"Nature"}),
 
     // Same second pass as factRM: the material on its own, for rows the plant-qualified
     // key missed because the FG Master sheet has no valuation area or writes it differently.
-    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(dimFGAttr,
+    ByMat    = Table.Buffer(Table.Distinct(Table.SelectColumns(AttrSrc,
                    {"Material","Nature"}), {"Material"})),
     Second   = Table.NestedJoin(Expanded, {"Material"}, ByMat, {"Material"},
                    "attr2", JoinKind.LeftOuter),
@@ -2245,30 +2253,22 @@ let
     // a second line for the same four is the same balance arriving twice (a storage-location or
     // special-stock split, or a month re-exported) and adding them multiplies that material's
     // stock. The line kept is the one with the largest closing quantity, which is the whole
-    // balance rather than a part of it. RowsForMaterial and QtyNotUsed carry what the other
-    // lines were and what they held, so qcStockDupes can show every one of them and nothing is
-    // discarded out of sight.
-    ByQty    = Table.Sort(OneEach, {{"CloseQty", Order.Descending}}),
-    OnePer   = Table.Distinct(ByQty, {"ValuationArea", "Material", "Month", "Category"}),
-    Counts   = Table.Group(OneEach, {"ValuationArea", "Material", "Month", "Category"}, {
-                   {"RowsForMaterial", each Table.RowCount(_), Int64.Type},
-                   {"QtyAllLines", each List.Sum(List.Transform([CloseQty], each _ ?? 0)),
-                    type number}}),
-    WithCnt  = Table.ExpandTableColumn(
-                   Table.NestedJoin(OnePer,
-                       {"ValuationArea", "Material", "Month", "Category"},
-                       Counts,
-                       {"ValuationArea", "Material", "Month", "Category"},
-                       "cnt", JoinKind.LeftOuter),
-                   "cnt", {"RowsForMaterial", "QtyAllLines"}),
-    Unused   = Table.AddColumn(WithCnt, "QtyNotUsed",
-                   each try ([QtyAllLines] ?? 0) - ([CloseQty] ?? 0) otherwise null, type number),
+    // balance rather than a part of it.
+    // One grouping pass does it. It used to be a full sort of the table, then a distinct, then
+    // a second grouping for the counts, then a merge back onto the first - four passes over
+    // fifty thousand rows, of which the sort alone holds the whole table in memory and cannot
+    // fold. Table.Max picks the row inside each group as the group is formed, so the table is
+    // walked once.
+    Picked   = Table.Group(OneEach, {"ValuationArea", "Material", "Month", "Category"},
+                   {{"Row", each Table.Max(_, "CloseQty"), type record}}),
+    Unused   = Table.ExpandRecordColumn(Table.SelectColumns(Picked, {"Row"}), "Row",
+                   Table.ColumnNames(OneEach)),
     // the column list written out, so what this query hands on is stated rather than inferred
     KeepCols = {"SourceFile","ValuationArea","Material","MatKey","MaterialDesc","FromDate",
                 "ToDate","OpenQty","OpenVal","ReceiptQty","ReceiptVal","IssueQty","IssueVal",
                 "CloseQty","CloseVal","BaseUOM","SpecialStock","Currency","Month","Category",
                 "Nature","GroupNature","BOMStdQty","Item","AttrMissing","MW","Rate",
-                "RateParseFailed","Mid","Base","INR_WP","RowsForMaterial","QtyNotUsed"},
+                "RateParseFailed","Mid","Base","INR_WP"},
     Collapsed = Table.SelectColumns(Unused, KeepCols),
     // the megawatt column is renamed because Power BI will not let a table hold a column
     // and a measure with the same name, and the report needs the measure to be called MW
@@ -2671,11 +2671,11 @@ let
     // the GL account is the one key the trial balance and TB Master certainly share, so the
     // plant written against a GL on that sheet is read as a code (1905) or as a name
     // (Dholera Cell), in that order, on both of its columns
-    MPlanted = Table.AddColumn(MReal, "MasterPlant",
+    MPlanted = Table.Buffer(Table.AddColumn(MReal, "MasterPlant",
                    each if Anywhere([TBPlant]) <> null then Anywhere([TBPlant])
                         else if Anywhere([Nature]) <> null then Anywhere([Nature])
                         else if ByName([TBPlant]) <> null then ByName([TBPlant])
-                        else ByName([Nature]), type text),
+                        else ByName([Nature]), type text)),
     // The GL account alone cannot name a plant: TB Master lists the same GL against all three
     // plants, so on its own it is a whitelist and nothing more. The pair - GL account AND
     // profit centre - is what identifies one row of that sheet, and only then do its Plant,
