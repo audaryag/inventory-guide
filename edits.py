@@ -10,6 +10,20 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000n", build="54", query="varWorkbook",
+         title="One buffered Variables workbook read instead of hundreds of megabytes per table",
+         why="The refresh window showed the exact fault: <code>dimPlant</code> had read 589 MB "
+             "and <code>dimPlantType</code> 595 MB from a workbook whose useful plant sheet has "
+             "three rows. The plant query was evaluating Plant Master once per plant and per "
+             "field \u2014 name, MWD and Module/Cell \u2014 and the type table evaluated the whole "
+             "thing again. Plant Master is now buffered once inside <code>dimPlant</code>, the "
+             "Module/Cell label reuses the plant name already found, and every Variables query "
+             "takes its sheet from one binary-buffered <code>varWorkbook</code> rather than "
+             "opening and unzipping the file again. No report figure or visual changes.",
+         steps=["Cancel the current refresh and take the fresh download.",
+                "Close the old report before opening it, so its mashup engine releases the "
+                "workbook and memory."],
+         find="", repl=""),
     dict(n="00000000000000000m", build="53", query="dimPlant",
          title="The refresh was making the fact tables run inside the dimensions",
          why="Every table that touches <code>dimPlant</code> was making "

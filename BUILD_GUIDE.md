@@ -43,7 +43,7 @@ fail with a file-lock error. This applies every time you refresh, forever.
 **1.2** Ribbon: **Home** → **Transform data**. The Power Query Editor window opens.
 Everything in Part 1 happens in this window.
 
-### How to add each query (you will repeat this 29 times)
+### How to add each query (you will repeat this 30 times)
 
 1. In Power Query, ribbon: **Home** → **New Source** → **Blank Query**.
 2. Ribbon: **Home** → **Advanced Editor**.
@@ -63,7 +63,8 @@ Everything in Part 1 happens in this window.
 |---|---|---|
 | 1 | `pRoot` | **Paste YOUR folder path** between the quote marks |
 | 2 | `pVarsFile` |  |
-| 3 | `fnCleanMB5B` |  |
+| 3 | `varWorkbook` | opens and buffers Variables and Calculations once |
+| 4 | `fnCleanMB5B` |  |
 | 4 | `stgRM` |  |
 | 5 | `stgFG` |  |
 | 6 | `stgConble` |  |
@@ -110,7 +111,7 @@ If it asks about **credentials**, choose **Organizational** for OneDrive and cli
 right-click the query in the left list and **untick "Enable load"**:
 
 ```
-pRoot, pVarsFile, fnCleanMB5B, stgRM, stgFG, stgConble,
+pRoot, pVarsFile, varWorkbook, fnCleanMB5B, stgRM, stgFG, stgConble,
 fnVarSheet, fnVarSheetSafe, dimPlantMaster, varPlantCodes,
 factRM, factFG, factConble, varConstants, dimMaterialAttr, dimFGAttr,
 fnConstantAsOf, varMWCapacity, factTB_Staged
@@ -126,11 +127,11 @@ dimCategory, dimMetric, dimMeasure, dimPlantType
 
 ### Checkpoint — do not go to Part 2 until all five are true
 
-1. The Queries list on the left of Power Query shows **29** names, and every name in the
+1. The Queries list on the left of Power Query shows **30** names, and every name in the
    table above appears in it, spelled identically. Compare them one by one; a missing one
    is the single most common cause of an error later.
-2. The 19 helper names in step 1.5 are shown in *italics* in that list (that is what
-   "Enable load off" looks like); the other 11 are not italic.
+2. The 20 helper names in step 1.5 are shown in *italics* in that list (that is what
+   "Enable load off" looks like); the other 10 are not italic.
 3. Click `factInventory`: the preview shows rows, and the columns include `CloseVal`,
    `Category`, `Nature`, `Month`, `ValuationArea`, `MW`.
 4. Click `factTB`: it shows rows, `Month` is filled in on every row, and `ValuationArea`
@@ -153,7 +154,7 @@ After **Close & Apply**, the Data pane on the right must list exactly these 10 t
 | "Illegal characters in path" | `pRoot` is not your real path | open the folder in File Explorer, click the address bar, copy it in — keep the quote marks |
 | "Token Literal expected" | a text value lost its quote marks | `pRoot` must be `"C:\...\Inventory Report"`, quotes included |
 | "Not enough elements in the enumeration" | a query assumed more columns than the sheet has | you are on an old version of the query — refresh the guide page and re-copy |
-| "Expression.Syntax Error" right after pasting | the whole appendix went into one query | one query per Blank Query, 29 times |
+| "Expression.Syntax Error" right after pasting | the whole appendix went into one query | one query per Blank Query, 30 times |
 
 Send me the exact error text and I'll tell you the one-line fix.
 
@@ -1800,6 +1801,19 @@ in
     Renamed
 ```
 
+## varWorkbook
+
+> The Variables workbook opened once for the whole refresh. Every master query takes its sheet from this buffered workbook rather than opening and unzipping the same `.xlsx` again.
+
+```
+let
+    Bytes = Binary.Buffer(File.Contents(pVarsFile)),
+    Book  = Excel.Workbook(Bytes, null, true),
+    Out   = Table.Buffer(Book)
+in
+    Out
+```
+
 ## fnVarSheet
 
 > Shared helper. Create this BEFORE dimMaterialAttr, dimFGAttr and varConstants, which all call it.
@@ -1814,7 +1828,7 @@ let
         Norm     = (n as any) as text =>
                        Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")),
                                   {" ", ".", "_", "-", "/", "(", ")", ",", "'"})),
-        Wb       = Excel.Workbook(File.Contents(pVarsFile), null, true),
+        Wb       = varWorkbook,
         Sheets   = Table.SelectRows(Wb, each [Kind] = "Sheet"),
         WantedNm = List.Transform(sheetAliases, Norm),
         Hit      = Table.SelectRows(Sheets, each List.Contains(WantedNm, Norm([Item]))),
@@ -2007,7 +2021,7 @@ let
     Norm     = (n as any) as text =>
                    Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")),
                        {" ", ".", "_", "-", "/", "(", ")", ",", "'", "%"})),
-    Wb       = try Excel.Workbook(File.Contents(pVarsFile), null, true) otherwise #table({}, {}),
+    Wb       = try varWorkbook otherwise #table({}, {}),
     Sheets   = try Table.SelectRows(Wb, each [Kind] = "Sheet") otherwise #table({}, {}),
     Want     = List.Transform({"Plant Master","PlantMaster","Plants","Plant"}, Norm),
     Hit      = try Table.SelectRows(Sheets, each List.Contains(Want, Norm([Item])))
@@ -2377,7 +2391,7 @@ in
 
 ```
 let
-    Wb      = Excel.Workbook(File.Contents(pVarsFile), null, true),
+    Wb      = varWorkbook,
     Sh      = Table.SelectRows(Wb, each [Kind] = "Sheet"),
     Norm    = (n as any) as text =>
                   Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")), {" ",".","_","-","/","(",")"})),
@@ -2862,11 +2876,13 @@ let
             {"1900", "1900 Dholera Module", 2},
             {"1905", "1905 Dholera Cell",   3}
         }),
-    Master   = try dimPlantMaster otherwise #table(
-                   type table [ValuationArea = text, Plant = text, PlantSortNo = Int64.Type], {}),
+    Master   = Table.Buffer(try dimPlantMaster otherwise #table(
+                   type table [ValuationArea = text, Plant = text, PlantSortNo = Int64.Type,
+                               MWD = nullable number], {})),
     // codes the masters name, and codes the files themselves hold - the union of the two, so a
     // plant is reported whether it was declared or merely arrived
-    Named    = try varPlantCodes otherwise {"1900","1902","1905"},
+    Named    = if Table.IsEmpty(Master) then {"1900","1902","1905"}
+               else Master[ValuationArea],
     Seen     = List.Distinct(List.RemoveNulls(
                    List.Transform(Named, each Text.Trim(Text.From(_ ?? ""))))),
     // The plants are the ones Plant Master and TB Master name, and that is the end of it. This
@@ -2905,11 +2921,12 @@ let
     // Module or Cell - the two groups the RM sheet's lower block is built on: the cell plant
     // on one side, the module plants on the other. It is read off the plant's own name, so a
     // plant added to Plant Master falls on the right side without anyone editing this.
-    GroupOf  = (c as text) as text =>
-                   if Text.Contains(Text.Upper(NameOf(c)), "CELL") then "Cell" else "Module",
+    GroupOf  = (label as text) as text =>
+                   if Text.Contains(Text.Upper(label), "CELL") then "Cell" else "Module",
     Built    = Table.FromRecords(List.Transform(Codes, (c) =>
-                   [ValuationArea = c, Plant = NameOf(c), PlantSort = SortOf(c),
-                    MWD = MWDOf(c), PlantGroup = GroupOf(c)]),
+                   let label = NameOf(c) in
+                   [ValuationArea = c, Plant = label, PlantSort = SortOf(c),
+                    MWD = MWDOf(c), PlantGroup = GroupOf(label)]),
                    type table [ValuationArea = text, Plant = text, PlantSort = number,
                                MWD = nullable number, PlantGroup = text]),
     // if nothing has loaded yet, the three known plants still make a table, so the report opens
