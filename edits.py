@@ -10,6 +10,18 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000g", build="47", query="",
+         title="Summary and FG go back to the build 43 layout",
+         why="Build 44 merged each page\u2019s three tables into one and put the months above "
+             "the metrics. That is not the shape of your sheet and it is not the version you "
+             "checked, so both are reverted: <em>Inventory (TB)</em>, <em>Inventory (MB5B)</em> "
+             "and <em>Difference</em> are three master column blocks again with the months "
+             "underneath each, and FG is <em>IN MW</em>, <em>IN CRS</em>, <em>IN DAYS</em> the "
+             "same way. Nothing about the figures changed in either direction \u2014 the "
+             "measures behind those tables were never touched.",
+         steps=["Take the fresh download rather than editing the pages by hand: the positions, "
+                "fonts and filters are all in it."],
+         find="", repl=""),
     dict(n="000000000000000000f", build="46", query="factInventory",
          title="\u201cSUM cannot work with values of type String\u201d \u2014 every visual empty",
          why="Build 45\u2019s one-pass de-duplication expands a record to get the kept row back, "
