@@ -416,7 +416,7 @@ Position: Horizontal 14, Vertical 242, Width 156, Height 58.
 
 | Well | Field |
 |---|---|
-| Fields | `Ticker 1900 Rs Cr` |
+| Fields | `Ticker 1902 Rs Cr` |
 
 Title: `1902 Jaipur Module`
 
@@ -434,9 +434,9 @@ Position: Horizontal 14, Vertical 332, Width 156, Height 58.
 
 | Well | Field |
 |---|---|
-| Fields | `Ticker 1902 Rs Cr` |
+| Fields | `Ticker 1900 Rs Cr` |
 
-Title: `1902 Dholera Module`
+Title: `1900 Dholera Module`
 
 Position: Horizontal 14, Vertical 392, Width 156, Height 58.
 
@@ -2004,7 +2004,9 @@ let
                     {{"Plant Name","Name","Description","Plant Description",
                       "Valuation Area Description"}, "PlantName"},
                     {{"Sort","Order","Sort Order"}, "PlantSort"},
-                    {{"MWD","MW D","MWD (MW per day)","MW per Day","MW Day","MWPD"}, "PlantMWD"}
+                    {{"MWD","MW D","MWD (MW per day)","MW per Day","MW Day","MWPD",
+                      "MW/Day","MW Per Day","Plant MWD","MWD Capacity","Capacity MWD",
+                      "Daily MW","MW a Day"}, "PlantMWD"}
                   }),
     Cols    = {"ValuationArea", "PlantName", "PlantSort", "PlantMWD"},
     Padded  = List.Accumulate(List.Difference(Cols, Table.ColumnNames(Raw)), Raw,
@@ -2027,8 +2029,14 @@ let
                   each Int64.From([SortNo] ?? [Seq]), Int64.Type),
     // MWD - the plant's megawatts a day, typed on Plant Master. It is the denominator for
     // days of cover on the plant rows: days = inventory MW / MWD, nothing else divided in.
+    // A figure typed as "3.6 MW", or with a comma in it, is still a figure: the digits are
+    // taken and the rest ignored, because a denominator that will not parse shows as no days
+    // of cover at all and reads on the page like missing stock.
     Rate    = Table.AddColumn(Order, "MWD",
-                  each let v = try Number.From([PlantMWD]) otherwise null
+                  each let t = Text.Trim(Text.From([PlantMWD] ?? "")),
+                           v = try Number.From(t)
+                               otherwise (try Number.From(
+                                   Text.Select(t, {"0".."9","."})) otherwise null)
                        in  if v = null or v = 0 then null else v, type number),
     Out     = Table.SelectColumns(Rate, {"ValuationArea", "Plant", "PlantSortNo", "MWD"})
 in
@@ -2147,17 +2155,32 @@ let
     Named    = Table.TransformColumns(Flag, {
                    {"Nature", each if _ = null or _ = "" then "Unassigned" else _, type text}}),
 
-    // The last three digits of the material description. For a module they are its wattage
-    // (580, 595); for a cell they are its efficiency in tenths of a percent (235 = 23.5%).
+    // The last three digits of the material description: a module's wattage, 580 or 595.
     RateTxt  = Table.AddColumn(Named, "RateText",
                    each Text.End(Text.Trim([MaterialDesc] ?? ""), 3), type text),
     RateNum  = Table.AddColumn(RateTxt, "RateRaw",
                    each try Number.From(Text.Select([RateText], {"0".."9","."})) otherwise null,
                    type number),
 
+    // A cell's efficiency is the percentage the description ends with, and it is a percentage
+    // written out: "C-PERC-P-FC-182.20x183.75-10BB-23.50%" ends 23.50%, so the efficiency is
+    // 0.235. Reading the last three characters instead gives "50%" -> 50 -> 0.05, a rate of
+    // 1.7 W where the cell is 7.8, which is what left Dholera Cell's megawatts short. The last
+    // hyphen-separated piece is taken, so a longer or shorter description makes no difference,
+    // and a figure already typed as a fraction (0.235) is left as it is.
+    EffCol   = Table.AddColumn(RateNum, "EffFrac",
+                   each let Txt  = Text.Trim(Text.From([MaterialDesc] ?? "")),
+                            Last = List.Last(Text.Split(Txt, "-")),
+                            Num  = try Number.From(Text.Select(Last, {"0".."9","."}))
+                                   otherwise null
+                        in  if Num = null then null
+                            else if Num > 1 then Num / 100
+                            else Num,
+                   type number),
+
     // Mid = MID(desc,13,13)  -- M counts from 0, so the start is 12. On a cell this is the
     // wafer size, written "182.20x183.75".
-    MidCol   = Table.AddColumn(RateNum, "Mid",
+    MidCol   = Table.AddColumn(EffCol, "Mid",
                    each try Text.Middle(Text.Trim([MaterialDesc] ?? ""), 12, 13) otherwise null,
                    type text),
     // Base = LEFT(Mid,6) - the first of the two dimensions, as a number
@@ -2166,17 +2189,15 @@ let
                         otherwise null, type number),
 
     // A module and a cell are rated differently, and the plant is what says which:
-    //   1900, 1902 (modules):  Rate = RIGHT(description,3)                  -> about 580 W
-    //   1905 (cells):          Rate = Base x Base x efficiency / 1000       -> about 7.8 W
-    // Reading a cell's last three digits as its wattage is what put Dholera Cell's MW several
-    // times too high: 235 W where the cell is 7.8 W. The efficiency is those same three digits
-    // as a fraction (235 -> 0.235); a value already written as a fraction is left alone, so
-    // either way of typing it comes out the same.
+    //   1900, 1902 (modules):  Rate = RIGHT(description,3)                     -> about 580 W
+    //   1905 (cells):          Rate = Base x Base x efficiency / 1000          -> about 7.8 W
+    // For the cell that is 182.20 x 182.20 x 0.235 / 1000, the same arithmetic as the FG
+    // Console sheet, and a cell whose description carries no size or no percentage is left
+    // without a rate rather than given a module's.
     Rate     = Table.AddColumn(BaseCol, "Rate",
-                   each if [RateRaw] = null then null
-                        else if Text.Trim(Text.From([ValuationArea] ?? "")) = "1905"
-                        then (let Eff = if [RateRaw] > 1 then [RateRaw] / 1000 else [RateRaw] in
-                              try [Base] * [Base] * Eff / 1000 otherwise null)
+                   each if Text.Trim(Text.From([ValuationArea] ?? "")) = "1905"
+                        then (if [Base] = null or [EffFrac] = null then null
+                              else try [Base] * [Base] * [EffFrac] / 1000 otherwise null)
                         else [RateRaw],
                    type number),
     RateBad  = Table.AddColumn(Rate, "RateParseFailed",
@@ -2192,7 +2213,7 @@ let
                    each if [MW] = null or [MW] = 0 then null
                         else try [CloseVal] / ([MW] * 1000000) otherwise null, type number),
 
-    Cleaned  = Table.RemoveColumns(INRwp, {"RateText", "RateRaw"})
+    Cleaned  = Table.RemoveColumns(INRwp, {"RateText", "RateRaw", "EffFrac"})
 in
     Cleaned
 ```

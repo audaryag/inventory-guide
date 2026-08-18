@@ -10,6 +10,23 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000i", build="49", query="factFG",
+         title="A cell\u2019s efficiency is the percentage the description ends with",
+         why="<code>C-PERC-P-FC-182.20x183.75-10BB-23.50%</code> ends in the characters "
+             "<code>50%</code>, so reading the last three characters gave an efficiency of "
+             "0.05 instead of 0.235 \u2014 a rate of 1.7 W where the cell is 7.8, which left "
+             "Dholera Cell\u2019s megawatts about a fifth of what they should be (and, before "
+             "that, several times too high). The efficiency is now the percentage at the end of "
+             "the description, taken as the last hyphen-separated piece, so 23.50% reads as "
+             "0.235 and the rate is 182.20 \u00d7 182.20 \u00d7 0.235 \u00f7 1000 = 7.80 W, "
+             "the FG Console figure. Modules are untouched: their last three digits are still "
+             "their wattage. Plant Master\u2019s <code>MWD</code> is also read more forgivingly "
+             "\u2014 a cell typed as <code>3.6 MW</code> counts.",
+         steps=["Repaste <code>factFG</code> and <code>dimPlantMaster</code> from the "
+                "<strong>Queries</strong> tab and refresh.",
+                "FG: Dholera Cell\u2019s MW should match the green sheet. Jaipur and Dholera "
+                "Module do not move."],
+         find="", repl=""),
     dict(n="00000000000000000h", build="48", query="dimPlant",
          title="Plant Master decides the plant names \u2014 the code no longer holds a second copy",
          why="Build 44 swapped the names in the code to 1900 Jaipur / 1902 Dholera Module. Your "
