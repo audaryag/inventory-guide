@@ -21,6 +21,39 @@ NOTE = Font(name="Arial", size=10, italic=True, color="4B5A50")
 
 MONTHS = [datetime.date(2026, 3, 31), datetime.date(2026, 4, 30),
           datetime.date(2026, 5, 31), datetime.date(2026, 6, 30)]
+RM_START = datetime.date(2026, 1, 1)
+
+RM_MODULE_COSTS = [
+    ("Module", "Cell Cost", 6.20),
+    ("Module", "Cell Cost-G12R", 6.20),
+    ("Module", "Frame", 1.62),
+    ("Module", "Glass", 2.68),
+    ("Module", "Others", 1.08),
+    ("Module", "Packing Material-M", 0.18),
+    ("Module", "POE", 0.68),
+]
+RM_CELL_COSTS = [
+    ("Cell", "Wafer", 2.11),
+    ("Cell", "Paste", 1.87),
+    ("Cell", "Screens", 0.12),
+    ("Cell", "Gases", 0.07),
+    ("Cell", "Chemical", 0.27),
+    ("Cell", "Packing Material", 0),
+]
+RM_TECH_COSTS = RM_MODULE_COSTS + RM_CELL_COSTS
+RM_PLANT_COSTS = [
+    ("1900", item, value)
+    for _group, item, value in RM_MODULE_COSTS
+    if item != "Cell Cost-G12R"
+] + [
+    ("1902", item, value) for _group, item, value in RM_MODULE_COSTS
+]
+RM_CONSTANTS = [
+    ("Module Production Constant", 13),
+    ("Cell Production Constant", 5.6),
+    ("1900 Plant Variable", 5),
+    ("1902 Plant Variable", 8),
+]
 
 PLANTS = [("1902", "Jaipur Module", 1),
           ("1900", "Dholera Module", 2),
@@ -87,6 +120,19 @@ def readme(wb):
         ("              row with the date it takes effect; do not overwrite. RM_MW_FACTOR is", False),
         ("              needed for RM megawatts and is 580 unless you change it.", False),
         ("", False),
+        ("RM Technology Costs   only the Cost INR/Wp inputs for the Module and Cell component", False),
+        ("              rows. Dates run across the top; add a new dated column when a cost", False),
+        ("              changes. Blank means carry the last value forward; 0 is an intentional", False),
+        ("              zero. Total Module and Total Cell are calculated in Power BI.", False),
+        ("", False),
+        ("RM Plant Costs   separate Cost INR/Wp inputs for 1900 and 1902. They can differ for", False),
+        ("              the same item. Dates and carry-forward work exactly as above.", False),
+        ("", False),
+        ("RM Constants   Module and Cell production constants plus the 1900 and 1902 plant", False),
+        ("              variables (1900 Dholera Module = 5, 1902 Jaipur = 8 initially). Add a", False),
+        ("              dated column when one changes; never type derived totals, inventory", False),
+        ("              values, per-day costs or Days on these sheets.", False),
+        ("", False),
         ("RM Nature     one row per raw-material code: its nature, the group it belongs to", False),
         ("              (Module or Cell, which is what draws the two blocks on the RM page)", False),
         ("              and its BOM standard quantity. Paste your rows under the headings.", False),
@@ -133,6 +179,24 @@ def build(path):
                "editing one rewrites every month it was already used in.")
     ws = wb["Constants"]
     ws["A2"].number_format = "dd-mmm-yy"
+
+    sheet(wb, "RM Technology Costs", ["Plant Group", "Item", RM_START],
+          [16, 28, 14], RM_TECH_COSTS,
+          note="Only type externally supplied Cost INR/Wp values. Add a new dated column to "
+               "the right when a value changes; blank carries forward and 0 is intentional.",
+          dates_from=2)
+
+    sheet(wb, "RM Plant Costs", ["Plant", "Item", RM_START],
+          [12, 28, 14], RM_PLANT_COSTS,
+          note="1900 and 1902 costs are independent. Add a new dated column when a value "
+               "changes; do not type inventory, per-day cost or Days here.",
+          dates_from=2)
+
+    sheet(wb, "RM Constants", ["Constant Name", RM_START],
+          [34, 14], RM_CONSTANTS,
+          note="Only the four externally supplied constants belong here. Add a new dated "
+               "column when one changes; blank carries the prior value forward.",
+          dates_from=1)
 
     sheet(wb, "RM Nature",
           ["Valuation Area", "Material", "Material Description", "Nature",

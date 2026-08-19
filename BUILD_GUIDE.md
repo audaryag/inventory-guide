@@ -43,7 +43,7 @@ fail with a file-lock error. This applies every time you refresh, forever.
 **1.2** Ribbon: **Home** → **Transform data**. The Power Query Editor window opens.
 Everything in Part 1 happens in this window.
 
-### How to add each query (you will repeat this 30 times)
+### How to add each query (you will repeat this 35 times)
 
 1. In Power Query, ribbon: **Home** → **New Source** → **Blank Query**.
 2. Ribbon: **Home** → **Advanced Editor**.
@@ -91,6 +91,11 @@ Everything in Part 1 happens in this window.
 | 28 | `dimMetric` | makes Inventory (TB) / Inventory (MB5B) / Difference into columns |
 | 29 | `dimMeasure` | makes MW / In ₹ Cr / In Days into columns |
 | 30 | `dimPlantType` | one row per plant and type, so Summary needs no expanding |
+| 31 | `varRMTechnologyCosts` | dated RM-by-technology Cost INR/Wp inputs — helper, load off |
+| 32 | `varRMPlantCosts` | separate dated 1900/1902 Cost INR/Wp inputs — helper, load off |
+| 33 | `varRMConstants` | dated Module/Cell and plant variables — helper, load off |
+| 34 | `dimRMTechnologyDaily` | calculated component cost per day by month |
+| 35 | `dimRMPlantDaily` | calculated 1900/1902 item cost per day by month |
 
 **1.4 — Do this before the first refresh; it is not optional.** The report reads two kinds of
 source - the four stock/TB folders and the `Variables and Calculations` workbook - and every nature,
@@ -114,24 +119,26 @@ right-click the query in the left list and **untick "Enable load"**:
 pRoot, pVarsFile, varWorkbook, fnCleanMB5B, stgRM, stgFG, stgConble,
 fnVarSheet, fnVarSheetSafe, dimPlantMaster, varPlantCodes,
 factRM, factFG, factConble, varConstants, dimMaterialAttr, dimFGAttr,
-fnConstantAsOf, varMWCapacity, factTB_Staged
+fnConstantAsOf, varMWCapacity, factTB_Staged,
+varRMTechnologyCosts, varRMPlantCosts, varRMConstants
 ```
 
 Leave these ticked (they become your tables):
 ```
 factInventory, factTB, dimPlant, dimDate, dimNature, dimCapacity,
-dimCategory, dimMetric, dimMeasure, dimPlantType
+dimCategory, dimMetric, dimMeasure, dimPlantType,
+dimRMTechnologyDaily, dimRMPlantDaily
 ```
 
 **1.6** Ribbon: **Home** → **Close & Apply**. Wait for it to load.
 
-### Checkpoint — do not go to Part 2 until all five are true
+### Checkpoint — do not go to Part 2 until all six are true
 
-1. The Queries list on the left of Power Query shows **30** names, and every name in the
+1. The Queries list on the left of Power Query shows **35** names, and every name in the
    table above appears in it, spelled identically. Compare them one by one; a missing one
    is the single most common cause of an error later.
-2. The 20 helper names in step 1.5 are shown in *italics* in that list (that is what
-   "Enable load off" looks like); the other 10 are not italic.
+2. The 23 helper names in step 1.5 are shown in *italics* in that list (that is what
+   "Enable load off" looks like); the other 12 are not italic.
 3. Click `factInventory`: the preview shows rows, and the columns include `CloseVal`,
    `Category`, `Nature`, `Month`, `ValuationArea`, `MW`.
 4. Click `factTB`: it shows rows, `Month` is filled in on every row, and `ValuationArea`
@@ -139,9 +146,11 @@ dimCategory, dimMetric, dimMeasure, dimPlantType
 5. Click `factTB`: `Rule` says how each line was placed. `dropped: no row for this GL
    and profit centre` means that account is missing from `TB Master`, so its money is not
    counted anywhere — add the pair to `TB Master` and refresh.
+6. Click `dimRMTechnologyDaily` and `dimRMPlantDaily`: both show one row per configured
+   item and loaded month, with Cost INR/Wp, the matching constant and PerDayCostCr.
 
-After **Close & Apply**, the Data pane on the right must list exactly these 10 tables:
-`factInventory`, `factTB`, `dimPlant`, `dimDate`, `dimNature`, `dimCapacity`, `dimCategory`, `dimMetric`, `dimMeasure`, `dimPlantType`.
+After **Close & Apply**, the Data pane on the right must list exactly these 12 tables:
+`factInventory`, `factTB`, `dimPlant`, `dimDate`, `dimNature`, `dimCapacity`, `dimCategory`, `dimMetric`, `dimMeasure`, `dimPlantType`, `dimRMTechnologyDaily`, `dimRMPlantDaily`.
 
 ### If something fails here
 
@@ -167,7 +176,7 @@ Send me the exact error text and I'll tell you the one-line fix.
 **2.2** Power BI will have guessed some relationships. **Delete all of them**: click each
 connecting line and press Delete. Cleaner to start blank.
 
-**2.3** Create these 12 relationships. To create one: click and drag the **from** field onto
+**2.3** Create these 14 relationships. To create one: click and drag the **from** field onto
 the **to** field. Then double-click the line and confirm the settings.
 
 | From (the "one" side) | To (the "many" side) | Cardinality | Direction |
@@ -175,6 +184,8 @@ the **to** field. Then double-click the line and confirm the settings.
 | `dimDate[Month]` | `factInventory[Month]` | One to many | Single |
 | `dimDate[Month]` | `factTB[Month]` | One to many | Single |
 | `dimDate[Month]` | `dimCapacity[Month]` | One to many | Single |
+| `dimDate[Month]` | `dimRMTechnologyDaily[Month]` | One to many | Single |
+| `dimDate[Month]` | `dimRMPlantDaily[Month]` | One to many | Single |
 | `dimPlant[ValuationArea]` | `factInventory[ValuationArea]` | One to many | Single |
 | `dimPlant[ValuationArea]` | `factTB[ValuationArea]` | One to many | Single |
 | `dimPlant[ValuationArea]` | `dimCapacity[ValuationArea]` | One to many | Single |
@@ -262,7 +273,7 @@ pasting out of order gives "cannot be determined" on a measure that is perfectly
 ### Checkpoint — do not go to Part 4 until all three are true
 
 1. Type `Value` into the Data pane search box: `Value ₹ Cr` is there, with a calculator icon.
-2. Count the measures (calculator icons) — there must be **72**. Fewer means Appendix B is
+2. Count the measures (calculator icons) — there must be **78**. Fewer means Appendix B is
    not finished; the pages will fail on whichever one is missing.
 3. None of these six old names survive: `Closing Value`, `Inv RM`, `Inv FG`,
    `Inv Consumables`, `TB Value`, `Prev Month`. Delete any you find (right-click → **Delete
@@ -1369,7 +1380,7 @@ Position: Horizontal 192, Vertical 88, Width 529, Height 112.
 |---|---|
 | Rows | `dimPlant[Plant]` |
 | Columns | `dimDate[MonthName]` |
-| Values | `Plant Days` → rename it to **Days** |
+| Values | `RM Plant Days` → rename it to **Days** |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
 Title: `RM Inventory Plant Wise — In Days`
@@ -1382,7 +1393,7 @@ Position: Horizontal 735, Vertical 88, Width 529, Height 112.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
 - Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.
-- Values takes Plant Days, not Days — MW ÷ the MWD column of Plant Master, the same denominator the FG plant table uses and no other.
+- Values takes RM Plant Days. 1900 and 1902 sum item-level Days calculated from their own dated Cost INR/Wp and plant variable; 1905 returns Total Cell Days; the Total row returns the technology Grand Total Days. No FG MWD or MW Capacity value enters this measure.
 - Filters pane → dimCategory[Category] → tick RM only, then In Summary Window → is 1.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
 - In the Visualizations pane click the paintbrush icon, then click 'Values', then 'Font' and set it to Arial, Font size: 9, Colour: #1F2A24.
@@ -1392,9 +1403,9 @@ Position: Horizontal 735, Vertical 88, Width 529, Height 112.
 
 | Well | Field |
 |---|---|
-| Rows | `dimPlant[PlantGroup]`, `factInventory[GroupNature]` |
+| Rows | `dimRMTechnologyDaily[PlantGroup]`, `dimRMTechnologyDaily[Item]` |
 | Columns | `dimDate[MonthName]` |
-| Values | `Inventory Rs Cr` → rename it to **Rs Cr.** |
+| Values | `RM Technology Value ₹ Cr` → rename it to **Rs Cr.** |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
 Title: `RM Inventory by Techno — In Rs Cr`
@@ -1406,7 +1417,7 @@ Position: Horizontal 192, Vertical 208, Width 529, Height 268.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop dimPlant[PlantGroup] and factInventory[GroupNature] in and take dimPlant[Plant] out.
+- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop dimRMTechnologyDaily[PlantGroup] and dimRMTechnologyDaily[Item] in and take dimPlant[Plant] out.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On, so Module/Cell and the nature get a column each with an expander on each group.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total — the two subtotals the old sheet had.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
@@ -1417,9 +1428,9 @@ Position: Horizontal 192, Vertical 208, Width 529, Height 268.
 
 | Well | Field |
 |---|---|
-| Rows | `dimPlant[PlantGroup]`, `factInventory[GroupNature]` |
+| Rows | `dimRMTechnologyDaily[PlantGroup]`, `dimRMTechnologyDaily[Item]` |
 | Columns | `dimDate[MonthName]` |
-| Values | `Plant Days` → rename it to **Days** |
+| Values | `RM Technology Days` → rename it to **Days** |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
 Title: `RM Inventory by Techno — In Days`
@@ -1431,7 +1442,7 @@ Position: Horizontal 735, Vertical 208, Width 529, Height 220.
 - Click 'Row headers' and do the same: Font size 10, Word wrap On if it is offered.
 - Click 'Values' and set Font size to 10.
 - Double-click the line between two column headings to widen a column that is still showing three dots — or drag that line. Column widths are remembered when you save.
-- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop dimPlant[PlantGroup] and factInventory[GroupNature] in and take dimPlant[Plant] out.
+- Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop dimRMTechnologyDaily[PlantGroup] and dimRMTechnologyDaily[Item] in and take dimPlant[Plant] out.
 - In the Visualizations pane click the paintbrush icon, then click 'Row headers', then 'Stepped layout' and set it to Off, +/- icons: On, so Module/Cell and the nature get a column each with an expander on each group.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Row subtotals' and set it to On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total — the two subtotals the old sheet had.
 - In the Visualizations pane click the paintbrush icon, then click 'Subtotals', then 'Column subtotals' and set it to Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.
@@ -1470,8 +1481,8 @@ Position: Horizontal 192, Vertical 484, Width 529, Height 200.
 |---|---|
 | X-axis | `dimDate[MonthName]` |
 | Column legend | `dimPlant[Plant]` |
-| Column y-axis | `Days by Period` |
-| Line y-axis | `RM Days All Plants by Period` |
+| Column y-axis | `RM Plant Days by Period` |
+| Line y-axis | `RM Technology Days by Period` |
 | Filters | `dimCategory[Category]  →  is RM`, `In Summary Window  →  is 1` |
 
 Title: `RM Inventory (Days) by Plant, with Total Days Across All Plants`
@@ -1483,16 +1494,16 @@ Position: Horizontal 735, Vertical 436, Width 529, Height 200.
 - Click 'Y-axis' and set Font size to 9.
 - Click 'Legend' and set Font size to 9 and Position to 'Top center'.
 - Leave 'Data labels' off on this one: numbers printed on every bar overlap as soon as there are more than about six bars.
-- The line comes from RM Days All Plants by Period, which strips the plant filter off both the megawatts and the capacity, so a bar can be tall while the line is calm.
-- Use Days by Period for the bars, not Days. Days is a ratio, so a total column has to average the three month-ends rather than add them, and that is the only difference between the two measures.
+- The line comes from RM Technology Days by Period, the same calculated Grand Total Days as the lower technology table; the bars use RM Plant Days by Period.
+- Use RM Plant Days by Period for the bars and RM Technology Days by Period for the line. Both average only when more than one month is deliberately put in one point; neither adds month-end Days.
 - In the Visualizations pane click the paintbrush icon, then click 'Data labels' and set it to On, Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, Display units: None, Value decimal places: 0, Position: Inside end.
-- Data labels → Apply settings to → Series → RM Days All Plants by Period: Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Value decimal places: 0, Position: Above — dark green on the white card, because this label is not printed on a bar.
+- Data labels → Apply settings to → Series → RM Technology Days by Period: Font: Arial, Font size: 8, Bold: On, Colour: #14532D, Value decimal places: 0, Position: Above — dark green on the white card, because this label is not printed on a bar.
 - In the Visualizations pane click the paintbrush icon, then click 'Lines', then 'Colour: #14532D, Stroke width: 2, Show marker: On, Marker size: 4. Format pane', then 'Lines', then 'Smooth line' and set it to Off, so the shape is honest.
-- In the Visualizations pane click the paintbrush icon, then click 'Legend', then 'Position' and set it to Top center, Font: Arial, Font size: 8. The line appears in the legend as 'RM Days All Plants by Period' — rename it if you like by double-clicking the field in the well and typing 'Total (All Plants)'.
+- In the Visualizations pane click the paintbrush icon, then click 'Legend', then 'Position' and set it to Top center, Font: Arial, Font size: 8. The line appears in the legend as 'RM Technology Days by Period' — rename it if you like by double-clicking the field in the well and typing 'Total (All Plants)'.
 - In the Visualizations pane click the paintbrush icon, then click 'Y-axis' and set it to Off, and Secondary y-axis: Off. Bars and line are both in days on the same scale, so leave 'Align zeros' On if you switch either axis back on, or the line will sit at a misleading height.
 - In the Visualizations pane click the paintbrush icon, then click 'X-axis', then 'Values', then 'Font' and set it to Arial, Font size: 8, Colour: #1F2A24, Concatenate labels: Off.
 - In the Visualizations pane click the paintbrush icon, then click 'General', then 'Title', then 'Font' and set it to Arial, Font size: 12, Colour: #14532D.
-- A plant with no capacity row in the Variables workbook shows blank here, not zero — that is deliberate, a missing denominator is not the same as no stock.
+- A missing effective cost or constant shows blank here, not zero. An intentional zero remains zero input and also produces blank Days because a zero per-day cost cannot be divided into inventory.
 
 ---
 
@@ -1543,7 +1554,7 @@ Find the words Power BI showed you in the left column.
 | `Mark as date table` will not accept any column | nothing is wrong | skip 2.4 entirely; a monthly table is deliberate and no measure needs it |
 | `dimMetric cannot find table` | `dimCategory` / `dimMetric` / `dimMeasure` were never created | paste those three queries, Close & Apply, then paste the measure again |
 | `Value ₹ Cr cannot be determined. Either the column does not exist, or there is no current row` | either `factInventory` has no `CloseVal` column, or you pasted measures out of order | check `CloseVal` exists in `factInventory`; if it does, paste Appendix B again strictly top to bottom |
-| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 72 from Appendix B, then delete the six old names listed in 3.7 |
+| searching `Value` in the Data pane finds nothing | Part 3 was done from an older guide, so the measure is called `Closing Value` | add all 78 from Appendix B, then delete the six old names listed in 3.7 |
 | RM and FG matrices show numbers under `In ₹ Cr` but nothing under `In Days` | the `Days` measure was deleted as an "old name" | paste `Days = [Days of Inventory]` back in; it is in Appendix B |
 | on a card, the number is fine but the wording is cut in half | the card's default text is too big for the space | set **Callout value** → Font size **24**, **General → Title** → Font size **12**, and Height **96** (every card in Part 4 is 96 high). A **Category label**, if your version has one, goes to **10** or off — the title says the same thing |
 | the paintbrush list has a **Callout value** but no **Category label** | you are on the newer Card visual, which has no category label | nothing to fix: the heading comes from **General → Title → Text**, which Part 4 gives you the wording for |
@@ -1581,7 +1592,7 @@ Nothing here is destructive.
    `dimCategory`, `dimMetric`, `dimMeasure`. Then **Close & Apply**.
 2. **Relationships.** Manage relationships must match 2.3 exactly — 11 rows, all Single,
    nothing on `dimMetric` or `dimMeasure`.
-3. **Measures.** Add all 72 from Appendix B top to bottom (adding beside old ones is safe),
+3. **Measures.** Add all 78 from Appendix B top to bottom (adding beside old ones is safe),
    then delete the six old names in 3.7 — keeping `Days`, whose formula you overwrite instead.
 4. **Sorting.** Set the five sort-by columns in 2.5 and 2.6.
 
@@ -2385,6 +2396,130 @@ in
     Keyed
 ```
 
+## varRMTechnologyCosts
+
+> Reads only the externally supplied, effective-dated Cost INR/Wp inputs for the Module and Cell component rows. Dates run across the columns; a blank means unchanged and an intentional zero stays zero. Enable load OFF.
+
+```
+let
+    Norm     = (v as any) as text => Text.Upper(Text.Remove(Text.Trim(Text.From(v ?? "")), {" ",".","_","-","/","(",")"})),
+    Sheets   = Table.SelectRows(varWorkbook, each [Kind] = "Sheet"),
+    Hit      = Table.SelectRows(Sheets, each List.Contains({"RMTECHNOLOGYCOSTS","RMTECHCOSTS","RMTECHNOLOGY"}, Norm([Item]))),
+    Data     = if Table.IsEmpty(Hit) then #table({}, {}) else Hit{0}[Data],
+    Raw      = if Table.IsEmpty(Hit) then #table({}, {}) else Table.PromoteHeaders(Data, [PromoteAllScalars=true]),
+    Names    = Table.ColumnNames(Raw),
+    GroupCol = List.First(List.Select(Names, each List.Contains({"PLANTGROUP","GROUP","TYPE"}, Norm(_))), null),
+    ItemCol  = List.First(List.Select(Names, each List.Contains({"ITEM","COMPONENT","NATURE"}, Norm(_))), null),
+    Fixed    = List.RemoveNulls({GroupCol, ItemCol}),
+    DateCols = List.Select(List.Difference(Names, Fixed), each
+                   (try Date.From(DateTime.FromText(Text.From(_))) otherwise
+                    try Date.FromText(Text.BeforeDelimiter(Text.From(_), " ")) otherwise null) <> null),
+    Kept     = if GroupCol = null or ItemCol = null then #table({}, {})
+               else Table.SelectColumns(Raw, Fixed & DateCols),
+    Named    = if Table.IsEmpty(Kept) then Kept else Table.RenameColumns(Kept, {{GroupCol,"PlantGroup"},{ItemCol,"Item"}}),
+    Long     = if Table.IsEmpty(Named) then #table({}, {})
+               else Table.UnpivotOtherColumns(Named, {"PlantGroup","Item"}, "EffectiveText", "Input"),
+    Dated    = Table.AddColumn(Long, "EffectiveFrom", each
+                   try Date.From(DateTime.FromText(Text.From([EffectiveText])))
+                   otherwise try Date.FromText(Text.BeforeDelimiter(Text.From([EffectiveText]), " "))
+                   otherwise null, type date),
+    Costed   = Table.AddColumn(Dated, "CostINRWp", each
+                   let t = Text.Trim(Text.From([Input] ?? ""))
+                   in  if t = "" then null else if t = "-" then 0
+                       else try Number.From([Input]) otherwise try Number.From(t) otherwise null,
+                   type number),
+    Clean    = Table.SelectRows(Costed, each [EffectiveFrom] <> null and [CostINRWp] <> null
+                   and Text.Trim(Text.From([PlantGroup] ?? "")) <> ""
+                   and Text.Trim(Text.From([Item] ?? "")) <> ""),
+    Out      = Table.TransformColumns(Table.SelectColumns(Clean, {"EffectiveFrom","PlantGroup","Item","CostINRWp"}), {
+                   {"PlantGroup", each Text.Proper(Text.Trim(Text.From(_))), type text},
+                   {"Item", each Text.Trim(Text.From(_)), type text}}),
+    Buffered = Table.Buffer(Out)
+in
+    Buffered
+```
+
+## varRMPlantCosts
+
+> Reads the separate effective-dated Cost INR/Wp inputs for 1900 and 1902. The same item may have a different cost at each plant. Enable load OFF.
+
+```
+let
+    Norm     = (v as any) as text => Text.Upper(Text.Remove(Text.Trim(Text.From(v ?? "")), {" ",".","_","-","/","(",")"})),
+    Sheets   = Table.SelectRows(varWorkbook, each [Kind] = "Sheet"),
+    Hit      = Table.SelectRows(Sheets, each List.Contains({"RMPLANTCOSTS","RMPLANTCOST"}, Norm([Item]))),
+    Data     = if Table.IsEmpty(Hit) then #table({}, {}) else Hit{0}[Data],
+    Raw      = if Table.IsEmpty(Hit) then #table({}, {}) else Table.PromoteHeaders(Data, [PromoteAllScalars=true]),
+    Names    = Table.ColumnNames(Raw),
+    PlantCol = List.First(List.Select(Names, each List.Contains({"PLANT","VALUATIONAREA","PLANTCODE"}, Norm(_))), null),
+    ItemCol  = List.First(List.Select(Names, each List.Contains({"ITEM","COMPONENT","NATURE"}, Norm(_))), null),
+    Fixed    = List.RemoveNulls({PlantCol, ItemCol}),
+    DateCols = List.Select(List.Difference(Names, Fixed), each
+                   (try Date.From(DateTime.FromText(Text.From(_))) otherwise
+                    try Date.FromText(Text.BeforeDelimiter(Text.From(_), " ")) otherwise null) <> null),
+    Kept     = if PlantCol = null or ItemCol = null then #table({}, {})
+               else Table.SelectColumns(Raw, Fixed & DateCols),
+    Named    = if Table.IsEmpty(Kept) then Kept else Table.RenameColumns(Kept, {{PlantCol,"ValuationArea"},{ItemCol,"Item"}}),
+    Long     = if Table.IsEmpty(Named) then #table({}, {})
+               else Table.UnpivotOtherColumns(Named, {"ValuationArea","Item"}, "EffectiveText", "Input"),
+    Dated    = Table.AddColumn(Long, "EffectiveFrom", each
+                   try Date.From(DateTime.FromText(Text.From([EffectiveText])))
+                   otherwise try Date.FromText(Text.BeforeDelimiter(Text.From([EffectiveText]), " "))
+                   otherwise null, type date),
+    Costed   = Table.AddColumn(Dated, "CostINRWp", each
+                   let t = Text.Trim(Text.From([Input] ?? ""))
+                   in  if t = "" then null else if t = "-" then 0
+                       else try Number.From([Input]) otherwise try Number.From(t) otherwise null,
+                   type number),
+    Clean    = Table.SelectRows(Costed, each [EffectiveFrom] <> null and [CostINRWp] <> null
+                   and Text.Trim(Text.From([ValuationArea] ?? "")) <> ""
+                   and Text.Trim(Text.From([Item] ?? "")) <> ""),
+    Out      = Table.TransformColumns(Table.SelectColumns(Clean, {"EffectiveFrom","ValuationArea","Item","CostINRWp"}), {
+                   {"ValuationArea", each Text.Trim(Text.From(_)), type text},
+                   {"Item", each Text.Trim(Text.From(_)), type text}}),
+    Buffered = Table.Buffer(Out)
+in
+    Buffered
+```
+
+## varRMConstants
+
+> Reads the four externally supplied values: Module Production Constant, Cell Production Constant, 1900 Plant Variable and 1902 Plant Variable. Dates run across the columns and the latest value at or before a month applies. Enable load OFF.
+
+```
+let
+    Norm     = (v as any) as text => Text.Upper(Text.Remove(Text.Trim(Text.From(v ?? "")), {" ",".","_","-","/","(",")"})),
+    Sheets   = Table.SelectRows(varWorkbook, each [Kind] = "Sheet"),
+    Hit      = Table.SelectRows(Sheets, each List.Contains({"RMCONSTANTS","RMDAYSCONSTANTS"}, Norm([Item]))),
+    Data     = if Table.IsEmpty(Hit) then #table({}, {}) else Hit{0}[Data],
+    Raw      = if Table.IsEmpty(Hit) then #table({}, {}) else Table.PromoteHeaders(Data, [PromoteAllScalars=true]),
+    Names    = Table.ColumnNames(Raw),
+    NameCol  = List.First(List.Select(Names, each List.Contains({"CONSTANTNAME","CONSTANT","NAME"}, Norm(_))), null),
+    DateCols = if NameCol = null then {} else List.Select(List.RemoveItems(Names, {NameCol}), each
+                   (try Date.From(DateTime.FromText(Text.From(_))) otherwise
+                    try Date.FromText(Text.BeforeDelimiter(Text.From(_), " ")) otherwise null) <> null),
+    Kept     = if NameCol = null then #table({}, {}) else Table.SelectColumns(Raw, {NameCol} & DateCols),
+    Named    = if Table.IsEmpty(Kept) then Kept else Table.RenameColumns(Kept, {{NameCol,"ConstantName"}}),
+    Long     = if Table.IsEmpty(Named) then #table({}, {})
+               else Table.UnpivotOtherColumns(Named, {"ConstantName"}, "EffectiveText", "Input"),
+    Dated    = Table.AddColumn(Long, "EffectiveFrom", each
+                   try Date.From(DateTime.FromText(Text.From([EffectiveText])))
+                   otherwise try Date.FromText(Text.BeforeDelimiter(Text.From([EffectiveText]), " "))
+                   otherwise null, type date),
+    Valued   = Table.AddColumn(Dated, "Value", each
+                   let t = Text.Trim(Text.From([Input] ?? ""))
+                   in  if t = "" then null else if t = "-" then 0
+                       else try Number.From([Input]) otherwise try Number.From(t) otherwise null,
+                   type number),
+    Clean    = Table.SelectRows(Valued, each [EffectiveFrom] <> null and [Value] <> null
+                   and Text.Trim(Text.From([ConstantName] ?? "")) <> ""),
+    Out      = Table.TransformColumns(Table.SelectColumns(Clean, {"EffectiveFrom","ConstantName","Value"}), {
+                   {"ConstantName", each Text.Trim(Text.From(_)), type text}}),
+    Buffered = Table.Buffer(Out)
+in
+    Buffered
+```
+
 ## varMWCapacity
 
 > Reads the MW sheet in whichever of three layouts it is written, and picks by itself. **The one to keep it in** is a date across the top and a plant down the side: an optional first column naming the technology, a column of plant codes, then one column per month, headed with that month's date - a new month is a new column and nothing already typed is touched. It also still reads the long layout (`Effective From | Tech | Valuation Area | MW`) and the original wide one (`Tech` down the side, 1900/1902/1905 across the top). Headers are matched ignoring case, spaces and punctuation. A date column is an *effective from*, so a month with no column keeps the last figure typed before it; an empty cell is left empty rather than read as nought; `-` is nought. Plant codes are forced to text so they join to `dimPlant`. With no technology column the row is the plant's whole capacity, written against `(All)`.
@@ -3076,6 +3211,83 @@ in
 `QuarterSort` in step 2.5 or the slicer lists the quarters alphabetically, which puts Q1 of
 every year together.
 
+## dimRMTechnologyDaily
+
+> One row per month, Module/Cell group and configured component. It carries the latest effective Cost INR/Wp, the matching production constant and the calculated crore-rupees per day. This table powers only the two lower RM matrices.
+
+```
+let
+    Months   = List.Distinct(List.Sort(dimDate[Month])),
+    Combos   = Table.Distinct(Table.SelectColumns(varRMTechnologyCosts, {"PlantGroup","Item"})),
+    Grid     = Table.AddColumn(Combos, "Month", each Months),
+    Expanded = Table.ExpandListColumn(Grid, "Month"),
+    AsOfCost = (g as text, i as text, m as date) as nullable number =>
+                   let rows = Table.SelectRows(varRMTechnologyCosts, each
+                                   [PlantGroup] = g and [Item] = i and [EffectiveFrom] <= m),
+                       sorted = Table.Sort(rows, {{"EffectiveFrom", Order.Descending}})
+                   in if Table.IsEmpty(sorted) then null else sorted{0}[CostINRWp],
+    AsOfConst = (n as text, m as date) as nullable number =>
+                   let rows = Table.SelectRows(varRMConstants, each
+                                   [ConstantName] = n and [EffectiveFrom] <= m),
+                       sorted = Table.Sort(rows, {{"EffectiveFrom", Order.Descending}})
+                   in if Table.IsEmpty(sorted) then null else sorted{0}[Value],
+    Cost     = Table.AddColumn(Expanded, "CostINRWp", each
+                   AsOfCost([PlantGroup], [Item], Date.From([Month])), type number),
+    Named    = Table.AddColumn(Cost, "ConstantName", each
+                   if Text.Upper([PlantGroup]) = "CELL" then "Cell Production Constant"
+                   else "Module Production Constant", type text),
+    Constant = Table.AddColumn(Named, "ProductionConstant", each
+                   AsOfConst([ConstantName], Date.From([Month])), type number),
+    Daily    = Table.AddColumn(Constant, "PerDayCostCr", each
+                   if [CostINRWp] = null or [ProductionConstant] = null then null
+                   else [CostINRWp] * [ProductionConstant] / 10, type number),
+    Out      = Table.TransformColumnTypes(Table.SelectColumns(Daily,
+                   {"Month","PlantGroup","Item","CostINRWp","ProductionConstant","PerDayCostCr"}),
+                   {{"Month", type date}, {"PlantGroup", type text}, {"Item", type text},
+                    {"CostINRWp", type number}, {"ProductionConstant", type number},
+                    {"PerDayCostCr", type number}})
+in
+    Out
+```
+
+## dimRMPlantDaily
+
+> One row per month, plant and configured component for 1900 and 1902. Plant costs and variables are independent and effective-dated. 1905 is deliberately absent: its plant Days is copied from Total Cell Days, exactly as the old sheet did.
+
+```
+let
+    Months   = List.Distinct(List.Sort(dimDate[Month])),
+    Combos   = Table.Distinct(Table.SelectColumns(varRMPlantCosts, {"ValuationArea","Item"})),
+    Grid     = Table.AddColumn(Combos, "Month", each Months),
+    Expanded = Table.ExpandListColumn(Grid, "Month"),
+    AsOfCost = (p as text, i as text, m as date) as nullable number =>
+                   let rows = Table.SelectRows(varRMPlantCosts, each
+                                   [ValuationArea] = p and [Item] = i and [EffectiveFrom] <= m),
+                       sorted = Table.Sort(rows, {{"EffectiveFrom", Order.Descending}})
+                   in if Table.IsEmpty(sorted) then null else sorted{0}[CostINRWp],
+    AsOfConst = (n as text, m as date) as nullable number =>
+                   let rows = Table.SelectRows(varRMConstants, each
+                                   [ConstantName] = n and [EffectiveFrom] <= m),
+                       sorted = Table.Sort(rows, {{"EffectiveFrom", Order.Descending}})
+                   in if Table.IsEmpty(sorted) then null else sorted{0}[Value],
+    Cost     = Table.AddColumn(Expanded, "CostINRWp", each
+                   AsOfCost([ValuationArea], [Item], Date.From([Month])), type number),
+    Named    = Table.AddColumn(Cost, "ConstantName", each
+                   [ValuationArea] & " Plant Variable", type text),
+    Variable = Table.AddColumn(Named, "PlantVariable", each
+                   AsOfConst([ConstantName], Date.From([Month])), type number),
+    Daily    = Table.AddColumn(Variable, "PerDayCostCr", each
+                   if [CostINRWp] = null or [PlantVariable] = null then null
+                   else [CostINRWp] * [PlantVariable] / 10, type number),
+    Out      = Table.TransformColumnTypes(Table.SelectColumns(Daily,
+                   {"Month","ValuationArea","Item","CostINRWp","PlantVariable","PerDayCostCr"}),
+                   {{"Month", type date}, {"ValuationArea", type text}, {"Item", type text},
+                    {"CostINRWp", type number}, {"PlantVariable", type number},
+                    {"PerDayCostCr", type number}})
+in
+    Out
+```
+
 ## dimCapacity
 
 ```
@@ -3250,6 +3462,124 @@ Capacity MW = CALCULATE(SUM(dimCapacity[CapacityMW]), dimCapacity[Tech] <> "(All
 
 ```
 Plant MWD = SUM(dimPlant[MWD])
+```
+
+*RM days from effective-dated cost inputs — used on the RM page only*
+
+```
+RM Technology Value ₹ Cr =
+VAR Groups = VALUES(dimRMTechnologyDaily[PlantGroup])
+VAR Items = VALUES(dimRMTechnologyDaily[Item])
+RETURN
+    CALCULATE(
+        [RM ₹ Cr],
+        TREATAS(Groups, dimPlant[PlantGroup]),
+        TREATAS(Items, factInventory[Item])
+    )
+```
+
+```
+RM Technology Per Day Cost =
+VAR ExpectedRows = COUNTROWS(dimRMTechnologyDaily)
+VAR ConfiguredRows =
+    COUNTROWS(
+        FILTER(
+            dimRMTechnologyDaily,
+            NOT ISBLANK(dimRMTechnologyDaily[CostINRWp])
+                && NOT ISBLANK(dimRMTechnologyDaily[ProductionConstant])
+        )
+    )
+RETURN
+    IF(
+        ExpectedRows = 0 || ConfiguredRows <> ExpectedRows,
+        BLANK(),
+        SUM(dimRMTechnologyDaily[PerDayCostCr])
+    )
+```
+
+```
+RM Technology Days =
+DIVIDE([RM Technology Value ₹ Cr], [RM Technology Per Day Cost])
+```
+
+`RM Technology Days` is a ratio at every level. A component divides its own inventory crore
+value by its own per-day cost. Total Module and Total Cell divide their total inventory by the
+sum of their component per-day costs. The grand total divides all configured RM inventory by
+Module plus Cell per-day cost, which is why the old sheet's March grand total is 16 rather than
+13 + 48. A missing input blanks the affected result; an intentional zero is retained, and
+`DIVIDE` correctly returns blank for a zero denominator.
+
+```
+RM Plant Days =
+VAR PlantCode = SELECTEDVALUE(dimPlant[ValuationArea])
+VAR IsOnePlant = HASONEVALUE(dimPlant[ValuationArea])
+VAR PlantRows =
+    CALCULATETABLE(
+        dimRMPlantDaily,
+        TREATAS({PlantCode}, dimRMPlantDaily[ValuationArea])
+    )
+VAR ExpectedRows = COUNTROWS(PlantRows)
+VAR ConfiguredRows =
+    COUNTROWS(
+        FILTER(
+            PlantRows,
+            NOT ISBLANK(dimRMPlantDaily[CostINRWp])
+                && NOT ISBLANK(dimRMPlantDaily[PlantVariable])
+        )
+    )
+VAR ConfiguredItems =
+    SELECTCOLUMNS(PlantRows, "ConfiguredItem", dimRMPlantDaily[Item])
+VAR ModulePlantValue =
+    CALCULATE(
+        [RM ₹ Cr],
+        REMOVEFILTERS(factInventory[Item]),
+        TREATAS(ConfiguredItems, factInventory[Item])
+    )
+VAR ModulePlantPerDayCost = SUMX(PlantRows, dimRMPlantDaily[PerDayCostCr])
+VAR ModulePlantDays =
+    IF(
+        ExpectedRows = 0 || ConfiguredRows <> ExpectedRows,
+        BLANK(),
+        DIVIDE(ModulePlantValue, ModulePlantPerDayCost)
+    )
+VAR CellPlantDays =
+    CALCULATE(
+        [RM Technology Days],
+        REMOVEFILTERS(dimRMTechnologyDaily[PlantGroup]),
+        REMOVEFILTERS(dimRMTechnologyDaily[Item]),
+        TREATAS({"Cell"}, dimRMTechnologyDaily[PlantGroup])
+    )
+VAR AllPlantsDays =
+    CALCULATE(
+        [RM Technology Days],
+        REMOVEFILTERS(dimPlant),
+        REMOVEFILTERS(dimRMTechnologyDaily[PlantGroup]),
+        REMOVEFILTERS(dimRMTechnologyDaily[Item])
+    )
+RETURN
+    IF(
+        NOT IsOnePlant,
+        AllPlantsDays,
+        IF(PlantCode = "1905", CellPlantDays, ModulePlantDays)
+    )
+```
+
+For 1900 and 1902 this is the old sheet's own arithmetic: add the configured items' inventory
+crore values, add their per-day costs, and divide the one by the other. 1900 has six configured
+items and a plant variable of 5; 1902 has seven and a variable of 8. Adding the individual item
+Days instead would give every component equal weight regardless of its rupees per day, which is
+why March 1900 reads about 15 rather than a far larger figure. 1905 returns Total Cell Days
+exactly, and the Total row returns the same calculated result as the technology Grand Total
+Days rather than the sum of the three plant rows.
+
+```
+RM Plant Days by Period =
+AVERAGEX(VALUES(dimDate[Month]), [RM Plant Days])
+```
+
+```
+RM Technology Days by Period =
+AVERAGEX(VALUES(dimDate[Month]), [RM Technology Days])
 ```
 
 *days of cover for a plant row*

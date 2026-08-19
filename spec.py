@@ -862,13 +862,13 @@ VISUALS = [
      'RM Inventory Plant Wise — In Days',
      [("Rows", ["dimPlant[Plant]"]),
       ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["Plant Days" + AS + "Days"]),
+      ("Values", ["RM Plant Days" + AS + "Days"]),
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "In Summary Window  →  is 1"])],
      (648, 88, 616, 112),
      'Raw material and packing per plant in days of cover, one column per month — the top block of the old RM sheet, which had IN CRS and IN DAYS side by side over the same three plants. MW is left out because an RM megawatt figure is derived from a BOM rather than measured.',
      ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy.',
-      'Values takes Plant Days, not Days — MW ÷ the MWD column of Plant Master, the same denominator the FG plant table uses and no other.',
+      'Values takes RM Plant Days. 1900 and 1902 sum item-level Days calculated from their own dated Cost INR/Wp and plant variable; 1905 returns Total Cell Days; the Total row returns the technology Grand Total Days. No FG MWD or MW Capacity value enters this measure.',
       'Filters pane → dimCategory[Category] → tick RM only, then In Summary Window → is 1.',
       "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
       'Format pane → Values → Font: Arial, Font size: 9, Colour: #1F2A24.',
@@ -876,14 +876,14 @@ VISUALS = [
 
     ("RM", "Matrix",
      'RM Inventory by Techno — In Rs Cr',
-     [("Rows", ["dimPlant[PlantGroup]", "factInventory[GroupNature]"]),
+     [("Rows", ["dimRMTechnologyDaily[PlantGroup]", "dimRMTechnologyDaily[Item]"]),
       ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
+      ("Values", ["RM Technology Value ₹ Cr" + AS + "Rs Cr."]),
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "In Summary Window  →  is 1"])],
      (16, 208, 616, 268),
      'The second block of the old sheet in crore rupees: Module and Cell, each opening into its natures — cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — with a subtotal on each group and a grand total under them.',
-     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop dimPlant[PlantGroup] and factInventory[GroupNature] in and take dimPlant[Plant] out.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop dimRMTechnologyDaily[PlantGroup] and dimRMTechnologyDaily[Item] in and take dimPlant[Plant] out.',
       'Format pane → Row headers → Stepped layout: Off, +/- icons: On, so Module/Cell and the nature get a column each with an expander on each group.',
       "Format pane → Subtotals → Row subtotals: On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total — the two subtotals the old sheet had.",
       "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
@@ -892,14 +892,14 @@ VISUALS = [
 
     ("RM", "Matrix",
      'RM Inventory by Techno — In Days',
-     [("Rows", ["dimPlant[PlantGroup]", "factInventory[GroupNature]"]),
+     [("Rows", ["dimRMTechnologyDaily[PlantGroup]", "dimRMTechnologyDaily[Item]"]),
       ("Columns", ["dimDate[MonthName]"]),
-      ("Values", ["Plant Days" + AS + "Days"]),
+      ("Values", ["RM Technology Days" + AS + "Days"]),
       ("Filters", ["dimCategory[Category]  →  is RM",
                    "In Summary Window  →  is 1"])],
      (648, 208, 616, 220),
      'The second block of the old sheet in days of cover: Module and Cell, each opening into its natures — cell cost, frame, glass, POE, wafer, paste, screens, gases and the rest — with a subtotal on each group and a grand total under them.',
-     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop dimPlant[PlantGroup] and factInventory[GroupNature] in and take dimPlant[Plant] out.',
+     ['Fastest way to build the next block: click this matrix, Ctrl+C, Ctrl+V, then in Values swap the measure. Position, filters and formatting all come with the copy. Then in Rows drop dimRMTechnologyDaily[PlantGroup] and dimRMTechnologyDaily[Item] in and take dimPlant[Plant] out.',
       'Format pane → Row headers → Stepped layout: Off, +/- icons: On, so Module/Cell and the nature get a column each with an expander on each group.',
       "Format pane → Subtotals → Row subtotals: On with 'Per row level' On, so Total Module and Total Cell both appear and not only the grand total — the two subtotals the old sheet had.",
       "Format pane → Subtotals → Column subtotals: Off. Stock is a level, not a flow: a Total column would add March's steel to July's steel, which is the same steel counted twice. Row subtotals: On — that one adds the plants inside a single month, which is a real figure, and it is the Grand Total row the Excel sheet had.",
@@ -933,8 +933,8 @@ VISUALS = [
      "RM Inventory (Days) by Plant, with Total Days across All Plants",
      [("X-axis", ["dimDate[MonthName]"]),
       ("Column legend", ["dimPlant[Plant]"]),
-      ("Column y-axis", ["Days by Period"]),
-      ("Line y-axis", ["RM Days All Plants by Period"]),
+      ("Column y-axis", ["RM Plant Days by Period"]),
+      ("Line y-axis", ["RM Technology Days by Period"]),
       ("Filters", ["dimCategory[Category]  \u2192  is RM",
                    "In Summary Window  \u2192  is 1"])],
      (648, 436, 616, 200),
@@ -945,20 +945,17 @@ VISUALS = [
      "it is one big plant's worth of days, which is the figure to quote for the company. Read "
      "together with the chart beside it, this tells you whether a bigger rupee figure is "
      "actually more stock or just a dearer month.",
-     ["The line comes from RM Days All Plants by Period, which strips the plant filter off "
-      "both the megawatts and the capacity, so a bar can be tall while the line is calm.",
-      "Use Days by Period for the bars, not Days. Days is a ratio, so a total column has to average the three "
-      "month-ends rather than add them, and that is the only difference between the two "
-      "measures.",
+     ["The line comes from RM Technology Days by Period, the same calculated Grand Total Days as the lower technology table; the bars use RM Plant Days by Period.",
+      "Use RM Plant Days by Period for the bars and RM Technology Days by Period for the line. Both average only when more than one month is deliberately put in one point; neither adds month-end Days.",
       "Format pane \u2192 Data labels: On, Font: Arial, Font size: 8, Bold: On, Colour: #FFFFFF, "
       "Display units: None, Value decimal places: 0, Position: Inside end.",
-      "Data labels \u2192 Apply settings to \u2192 Series \u2192 RM Days All Plants by Period: Font: "
+      "Data labels \u2192 Apply settings to \u2192 Series \u2192 RM Technology Days by Period: Font: "
       "Arial, Font size: 8, Bold: On, Colour: #14532D, Value decimal places: 0, Position: "
       "Above \u2014 dark green on the white card, because this label is not printed on a bar.",
       "Format pane \u2192 Lines \u2192 Colour: #14532D, Stroke width: 2, Show marker: On, Marker "
       "size: 4. Format pane \u2192 Lines \u2192 Smooth line: Off, so the shape is honest.",
       "Format pane \u2192 Legend \u2192 Position: Top center, Font: Arial, Font size: 8. The line "
-      "appears in the legend as 'RM Days All Plants by Period' \u2014 rename it if you like by "
+      "appears in the legend as 'RM Technology Days by Period' \u2014 rename it if you like by "
       "double-clicking the field in the well and typing 'Total (All Plants)'.",
       "Format pane \u2192 Y-axis: Off, and Secondary y-axis: Off. Bars and line are both in days "
       "on the same scale, so leave 'Align zeros' On if you switch either axis back on, or the "
@@ -966,8 +963,7 @@ VISUALS = [
       "Format pane \u2192 X-axis \u2192 Values \u2192 Font: Arial, Font "
       "size: 8, Colour: #1F2A24, Concatenate labels: Off.",
       "Format pane \u2192 General \u2192 Title \u2192 Font: Arial, Font size: 12, Colour: #14532D.",
-      "A plant with no capacity row in the Variables workbook shows blank here, not zero \u2014 "
-      "that is deliberate, a missing denominator is not the same as no stock."]),
+      "A missing effective cost or constant shows blank here, not zero. An intentional zero remains zero input and also produces blank Days because a zero per-day cost cannot be divided into inventory."]),
 
     ("Summary", "Line chart", "Days of Inventory by Month, Last 12 Months \u2014 RM, FG and Total",
      [("X-axis", ["dimDate[MonthName]"]),

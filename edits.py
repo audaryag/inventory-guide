@@ -10,6 +10,32 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000o", build="55", query="dimRMTechnologyDaily",
+         title="RM days now come from Cost INR/Wp, as the old RM sheet calculated them",
+         why="RM days were being read off megawatts and a capacity figure, which is not how the "
+             "old sheet worked at all. Its RM days are money: an item’s inventory in crores "
+             "divided by what that item costs per day, and the cost per day is "
+             "<code>Cost INR/Wp × a production constant ÷ 10</code>. The technology block uses "
+             "13 for Module rows and 5.6 for Cell rows, so <code>6.20 × 13 ÷ 10 = 8.06</code> and "
+             "₹30 Cr of cell cost is about 4 days. The plant block uses its own dated cost per "
+             "plant and its own variable — 5 against 1900 Dholera Module, 8 against 1902 Jaipur "
+             "— and a plant’s days is the configured items’ crores over the same items’ cost per "
+             "day, which is why March 1900 reads about 15 rather than the far larger figure that "
+             "adding each item’s own days would give. 1905 Dholera Cell copies Total Cell days "
+             "exactly, and the Total row is the calculated grand total rather than the three "
+             "plant rows added up. Three new sheets in the workbook — <strong>RM Technology "
+             "Costs</strong>, <strong>RM Plant Costs</strong> and <strong>RM Constants</strong> "
+             "— hold only the numbers nothing can work out for itself, with dates across the "
+             "columns: a blank carries the last value forward and a typed 0 stays 0. Overview, "
+             "Summary and every FG figure are untouched.",
+         steps=["Take the fresh download — five new queries and two new tables are involved, so "
+                "repasting one is not enough.",
+                "Copy your existing sheets into the new <strong>Variables and Calculations "
+                "- sheet layout.xlsx</strong>, or add the three RM sheets to the workbook you "
+                "already have; the prefilled costs are the ones visible on your old sheet.",
+                "A missing cost or constant shows blank days rather than a quietly low figure, "
+                "so a gap on those sheets is visible on the page."],
+         find="", repl=""),
     dict(n="00000000000000000n", build="54", query="varWorkbook",
          title="One buffered Variables workbook read instead of hundreds of megabytes per table",
          why="The refresh window showed the exact fault: <code>dimPlant</code> had read 589 MB "

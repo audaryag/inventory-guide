@@ -59,19 +59,27 @@ TABLES = {
                      ("Category", S), ("RowSort", I)],
     "dimMetric": [("Metric", S), ("MetricSort", I)],
     "dimMeasure": [("Measure", S), ("MeasureSort", I)],
+    "dimRMTechnologyDaily": [("Month", T), ("PlantGroup", S), ("Item", S),
+                             ("CostINRWp", D), ("ProductionConstant", D),
+                             ("PerDayCostCr", D)],
+    "dimRMPlantDaily": [("Month", T), ("ValuationArea", S), ("Item", S),
+                        ("CostINRWp", D), ("PlantVariable", D),
+                        ("PerDayCostCr", D)],
 }
 
 # every other query stays a shared expression: helpers, staging, and the diagnostic whose
 # shape depends on the sheet, which a fixed column list could not describe.
 EXPRESSION_ORDER = ["pRoot", "pVarsFile", "varWorkbook", "fnCleanMB5B", "fnVarSheet", "fnVarSheetSafe", "stgRM", "stgFG",
                     "stgConble", "dimPlantMaster", "varPlantCodes", "dimMaterialAttr", "dimFGAttr", "varConstants",
-                    "fnConstantAsOf", "factRM", "factFG", "factConble", "varMWCapacity",
-                    "factTB_Staged"]
+                    "fnConstantAsOf", "factRM", "factFG", "factConble", "varRMTechnologyCosts",
+                    "varRMPlantCosts", "varRMConstants", "varMWCapacity", "factTB_Staged"]
 
 RELATIONSHIPS = [
     ("dimDate", "Month", "factInventory", "Month"),
     ("dimDate", "Month", "factTB", "Month"),
     ("dimDate", "Month", "dimCapacity", "Month"),
+    ("dimDate", "Month", "dimRMTechnologyDaily", "Month"),
+    ("dimDate", "Month", "dimRMPlantDaily", "Month"),
     ("dimPlant", "ValuationArea", "factInventory", "ValuationArea"),
     ("dimPlant", "ValuationArea", "factTB", "ValuationArea"),
     ("dimPlant", "ValuationArea", "dimCapacity", "ValuationArea"),
