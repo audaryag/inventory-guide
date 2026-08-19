@@ -10,6 +10,19 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000t", build="60", query="(report only)",
+         title="Perc Cell belongs to Dholera Cell, so the plant tables keep it",
+         why="Build 59 took <code>Perc Cell</code> off every FG visual, and that emptied "
+             "1905 Dholera Cell in both megawatts and days &mdash; Perc Cell is its finished "
+             "goods, not a stray nature. It is now excluded only from the three by-Techno "
+             "tables and the technology chart, where it does not belong, and kept on the "
+             "by-plant tables, the donut and the days-by-month chart. <code>Unassigned</code> "
+             "stays out everywhere on FG: that one is a material <code>FG Master</code> does "
+             "not cover, and <code>qcAttrMissing</code> on Checks names them.",
+         steps=["On the three <em>by Plant</em> matrices, the donut and the days-by-month "
+                "chart: Filters pane &rarr; <code>dimNature[Nature]</code> &rarr; untick "
+                "<code>Unassigned</code> only, leaving <code>Perc Cell</code> ticked."],
+         find="", repl=""),
     dict(n="00000000000000000s", build="59", query="(report only)",
          title="FG leaves out Unassigned and Perc Cell",
          why="Every FG visual now ignores the two natures that are not module technologies "
