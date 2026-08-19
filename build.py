@@ -466,9 +466,12 @@ one of them. If a route fails, close Power BI, open the next route, and lose not
 tabs stay exactly as they are.</p>
 
 <p><a href="Variables and Calculations.xlsx"><strong>Download Variables and Calculations.xlsx</strong></a>
-&nbsp; the master workbook, on its own and not inside the zip: all six sheets in the shapes the queries read,
+&nbsp; the master workbook, on its own and not inside the zip: every sheet in the shapes the queries read,
 the three plants and <code>RM_MW_FACTOR</code> filled in, <code>MW Capacity</code> as a month per column, and the
-three master sheets as headings for your own rows to be pasted under. Its first tab says what each sheet is.</p>
+three master sheets as headings for your own rows to be pasted under. It also carries the three RM days inputs
+&mdash; <code>RM Technology Costs</code>, <code>RM Plant Costs</code> and <code>RM Constants</code> &mdash; with
+dates across the columns and the values off your old sheet already typed against 01-Jan-2026: a blank carries the
+last value forward and a typed 0 stays 0. Its first tab says what each sheet is.</p>
 
 <p><a href="InventoryReport-pbip.zip"><strong>Download InventoryReport-pbip.zip</strong></a> &nbsp;
 Right-click it &rarr; <strong>Extract All&hellip;</strong> &rarr; put the extracted folder on your
