@@ -10,6 +10,21 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000p", build="56", query="varMWCapacity",
+         title="One dated column on MW Capacity is enough",
+         why="The refresh stopped on <code>dimCapacity</code> saying the MW sheet was none of the "
+             "layouts it recognises, and your sheet is in fact laid out exactly right: "
+             "<code>Techno</code>, <code>Plant</code>, then <code>31-Mar-26</code>. The fault was "
+             "mine \u2014 the query only claimed that layout once it saw <em>two</em> dated "
+             "columns, and a sheet that starts on one month has one. It now claims the layout on "
+             "a single date, so long as plant codes sit underneath it. Nothing else changes: "
+             "each dated column is still an effective-from, a blank still carries the previous "
+             "figure forward, and a dash is still nought.",
+         steps=["Repaste <code>varMWCapacity</code> from the <strong>Queries</strong> tab, or "
+                "take the fresh download.",
+                "Months before your earliest dated column have no capacity by design, so add a "
+                "column headed with the earliest month you want days of cover for."],
+         find="", repl=""),
     dict(n="00000000000000000o", build="55", query="dimRMTechnologyDaily",
          title="RM days now come from Cost INR/Wp, as the old RM sheet calculated them",
          why="RM days were being read off megawatts and a capacity figure, which is not how the "

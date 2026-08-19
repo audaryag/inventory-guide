@@ -2522,7 +2522,7 @@ in
 
 ## varMWCapacity
 
-> Reads the MW sheet in whichever of three layouts it is written, and picks by itself. **The one to keep it in** is a date across the top and a plant down the side: an optional first column naming the technology, a column of plant codes, then one column per month, headed with that month's date - a new month is a new column and nothing already typed is touched. It also still reads the long layout (`Effective From | Tech | Valuation Area | MW`) and the original wide one (`Tech` down the side, 1900/1902/1905 across the top). Headers are matched ignoring case, spaces and punctuation. A date column is an *effective from*, so a month with no column keeps the last figure typed before it; an empty cell is left empty rather than read as nought; `-` is nought. Plant codes are forced to text so they join to `dimPlant`. With no technology column the row is the plant's whole capacity, written against `(All)`.
+> Reads the MW sheet in whichever of three layouts it is written, and picks by itself. **The one to keep it in** is a date across the top and a plant down the side: an optional first column naming the technology, a column of plant codes, then one column per month, headed with that month's date - a new month is a new column and nothing already typed is touched. It also still reads the long layout (`Effective From | Tech | Valuation Area | MW`) and the original wide one (`Tech` down the side, 1900/1902/1905 across the top). Headers are matched ignoring case, spaces and punctuation. One dated column is enough - the sheet is meant to start with a single month and grow a column each time a figure changes. A date column is an *effective from*, so a month with no column keeps the last figure typed before it; an empty cell is left empty rather than read as nought; `-` is nought. Plant codes are forced to text so they join to `dimPlant`. With no technology column the row is the plant's whole capacity, written against `(All)`.
 
 ```
 let
@@ -2566,10 +2566,15 @@ let
                       List.AnyTrue(List.Transform(r, (c) => List.Contains(DateHdr, Norm(c))))), true),
     WideIdx = List.PositionOf(
                   List.Transform(Rows, (r) => List.Count(List.Select(r, IsCode)) >= 2), true),
-    // matrix layout: a header row carrying two or more real dates, plants down the side
-    MtxIdx  = List.PositionOf(
+    // matrix layout: a header row carrying at least one real date, plants down the side.
+    // One dated column is the normal starting point - the sheet grows a column per change -
+    // so the layout is claimed on a single date, and only when plant codes sit underneath it.
+    MtxCand = List.PositionOf(
                   List.Transform(Rows, (r) =>
-                      List.Count(List.RemoveNulls(List.Transform(r, AsDate))) >= 2), true),
+                      List.Count(List.RemoveNulls(List.Transform(r, AsDate))) >= 1), true),
+    MtxCodes = MtxCand >= 0 and List.AnyTrue(List.Transform(List.Skip(Rows, MtxCand + 1),
+                  (r) => List.AnyTrue(List.Transform(r, IsCode)))),
+    MtxIdx  = if MtxCodes then MtxCand else -1,
 
     // ---- long layout: one row per Tech per plant --------------------------------------------
     Long    = let
