@@ -36,7 +36,7 @@ MB5B_COLS = [
     ("ReceiptQty", D), ("ReceiptVal", D), ("IssueQty", D), ("IssueVal", D),
     ("CloseQty", D), ("CloseVal", D), ("BaseUOM", S), ("SpecialStock", S), ("Currency", S),
     ("Month", T), ("Category", S), ("Nature", S), ("GroupNature", S), ("BOMStdQty", D),
-    ("Item", S), ("AttrMissing", B), ("MW Qty", D), ("Rate", D), ("RateParseFailed", B),
+    ("Item", S), ("ItemKey", S), ("AttrMissing", B), ("MW Qty", D), ("Rate", D), ("RateParseFailed", B),
     ("Mid", S), ("Base", D), ("INR_WP", D), ("PlantType", S),
 ]
 
@@ -59,10 +59,10 @@ TABLES = {
                      ("Category", S), ("RowSort", I)],
     "dimMetric": [("Metric", S), ("MetricSort", I)],
     "dimMeasure": [("Measure", S), ("MeasureSort", I)],
-    "dimRMTechnologyDaily": [("Month", T), ("PlantGroup", S), ("Item", S),
+    "dimRMTechnologyDaily": [("Month", T), ("PlantGroup", S), ("Item", S), ("ItemKey", S),
                              ("CostINRWp", D), ("ProductionConstant", D),
                              ("PerDayCostCr", D)],
-    "dimRMPlantDaily": [("Month", T), ("ValuationArea", S), ("Item", S),
+    "dimRMPlantDaily": [("Month", T), ("ValuationArea", S), ("Item", S), ("ItemKey", S),
                         ("CostINRWp", D), ("PlantVariable", D),
                         ("PerDayCostCr", D)],
 }

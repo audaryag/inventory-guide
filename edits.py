@@ -10,6 +10,28 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000r", build="58", query="factInventory",
+         title="A component spelt two ways is now one component, and MW(S) counts as MWD",
+         why="Two things were blank that should not have been. The RM technology table showed "
+             "Module only, and inside Module it was missing <code>Cell Cost-G12R</code> and "
+             "<code>Packing Material-M</code>. The cause was spelling: <code>RM Nature</code> "
+             "says <code>Cell Cost- G12R</code> and the cost sheet says "
+             "<code>Cell Cost-G12R</code>, and to a join those are two different components, so "
+             "the row had no inventory and the matrix dropped it. Both tables now carry an "
+             "<code>ItemKey</code> &mdash; the spelling stripped down to letters and digits "
+             "&mdash; and the RM measures match on that, while the row labels stay exactly as "
+             "you typed them. Second, every plant's FG days of cover was blank because "
+             "<code>Plant Master</code> was headed <code>MW(S)</code> and the query only "
+             "recognised a heading containing MWD. Once the code, name and sort columns are "
+             "claimed, any remaining column that mentions MW is now taken as the megawatts a "
+             "day. No formula changed.",
+         steps=["Repaste <code>factInventory</code>, <code>dimPlantMaster</code>, "
+                "<code>dimRMTechnologyDaily</code> and <code>dimRMPlantDaily</code> from the "
+                "<strong>Queries</strong> tab, and the two RM measures from "
+                "<strong>Measures</strong> &mdash; or take the fresh download.",
+                "A component still missing after this has no inventory tagged to it: fill the "
+                "<code>Item</code> column on <code>RM Nature</code> for those materials."],
+         find="", repl=""),
     dict(n="00000000000000000q", build="57", query="varMonths",
          title="The refresh reads your files once instead of five times",
          why="A refresh was taking half an hour, and almost all of it was the same work done "

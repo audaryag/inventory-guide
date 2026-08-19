@@ -2136,7 +2136,14 @@ let
     cMWD     = let p = Pick({"MWD","MW D","MWD (MW per day)","MW per Day","MW Day","MWPD",
                              "MW/Day","Plant MWD","MWD Capacity","Capacity MWD","Daily MW"},
                             {cArea})
-               in  if p <> null then p else Loose("MWD", List.RemoveNulls({cArea})),
+               in  if p <> null then p else
+                   let l = Loose("MWD", List.RemoveNulls({cArea}))
+                   in  if l <> null then l else
+                       // a heading typed MW(S), MW/S or plain MW is the same column: once the
+                       // code, name and sort columns are claimed, anything left that mentions
+                       // MW is the plant's megawatts a day. A missing match here is what
+                       // silently blanked every plant's days of cover.
+                       Loose("MW", List.RemoveNulls({cArea})),
     cSort    = let u = List.RemoveNulls({cArea, cMWD}),
                    p = Pick({"Sort Order","Sort","Order","Sort No","Sequence"}, u)
                in  if p <> null then p else Loose("SORT", u),
@@ -2424,13 +2431,21 @@ let
     NoNulls  = Table.TransformColumns(Typed, {
                    {"Nature",      each if _ = null or _ = "" then "Unassigned" else _, type text},
                    {"GroupNature", each if _ = null or _ = "" then "Unassigned" else _, type text}}),
+    // The component key. The Item on RM Nature is typed by hand and the same component is
+    // typed twice: "Cell Cost- G12R" on one sheet and "Cell Cost-G12R" on the other are the
+    // same thing to a reader and two different things to a join, which is how a whole block of
+    // the RM technology table went missing. The key strips the spelling down to letters and
+    // digits and the RM matrices match on it, while the row labels stay as typed.
+    Keyed0   = Table.AddColumn(NoNulls, "ItemKey",
+                   each Text.Upper(Text.Remove(Text.Trim(Text.From([Item] ?? "")),
+                       {" ",".","_","-","/","(",")",",","'"})), type text),
     // The report covers the plants Plant Master names, and the trial balance's other plants
     // are deliberately ignored: they are real codes in SAP but no part of this report. A row
     // whose valuation area is blank, or is a code that sheet does not list, is dropped rather
     // than parked on an Unallocated row. qcPlantCodes on Checks lists every code the files
     // contained and what it was worth, so a dropped row is never a silent one.
     Plants   = varPlantCodes,
-    OnePlant = Table.SelectRows(NoNulls,
+    OnePlant = Table.SelectRows(Keyed0,
                    each List.Contains(Plants, Text.Trim(Text.From([ValuationArea] ?? "")))),
     Trimmed  = Table.TransformColumns(OnePlant, {
                    {"ValuationArea", each Text.Trim(Text.From(_)), type text}}),
@@ -2471,7 +2486,7 @@ let
     KeepCols = {"SourceFile","ValuationArea","Material","MatKey","MaterialDesc","FromDate",
                 "ToDate","OpenQty","OpenVal","ReceiptQty","ReceiptVal","IssueQty","IssueVal",
                 "CloseQty","CloseVal","BaseUOM","SpecialStock","Currency","Month","Category",
-                "Nature","GroupNature","BOMStdQty","Item","AttrMissing","MW","Rate",
+                "Nature","GroupNature","BOMStdQty","Item","ItemKey","AttrMissing","MW","Rate",
                 "RateParseFailed","Mid","Base","INR_WP"},
     Collapsed = Table.SelectColumns(Unused, KeepCols),
     // the megawatt column is renamed because Power BI will not let a table hold a column
@@ -3362,9 +3377,16 @@ let
     Daily    = Table.AddColumn(Constant, "PerDayCostCr", each
                    if [CostINRWp] = null or [ProductionConstant] = null then null
                    else [CostINRWp] * [ProductionConstant] / 10, type number),
-    Out      = Table.TransformColumnTypes(Table.SelectColumns(Daily,
-                   {"Month","PlantGroup","Item","CostINRWp","ProductionConstant","PerDayCostCr"}),
+    // the same spelling-proof key factInventory carries, so a component typed with a stray
+    // space on one sheet still meets its inventory
+    Key      = Table.AddColumn(Daily, "ItemKey",
+                   each Text.Upper(Text.Remove(Text.Trim(Text.From([Item] ?? "")),
+                       {" ",".","_","-","/","(",")",",","'"})), type text),
+    Out      = Table.TransformColumnTypes(Table.SelectColumns(Key,
+                   {"Month","PlantGroup","Item","ItemKey","CostINRWp","ProductionConstant",
+                    "PerDayCostCr"}),
                    {{"Month", type date}, {"PlantGroup", type text}, {"Item", type text},
+                    {"ItemKey", type text},
                     {"CostINRWp", type number}, {"ProductionConstant", type number},
                     {"PerDayCostCr", type number}})
 in
@@ -3402,9 +3424,15 @@ let
     Daily    = Table.AddColumn(Variable, "PerDayCostCr", each
                    if [CostINRWp] = null or [PlantVariable] = null then null
                    else [CostINRWp] * [PlantVariable] / 10, type number),
-    Out      = Table.TransformColumnTypes(Table.SelectColumns(Daily,
-                   {"Month","ValuationArea","Item","CostINRWp","PlantVariable","PerDayCostCr"}),
+    // as in dimRMTechnologyDaily: the spelling-proof key the inventory is matched on
+    Key      = Table.AddColumn(Daily, "ItemKey",
+                   each Text.Upper(Text.Remove(Text.Trim(Text.From([Item] ?? "")),
+                       {" ",".","_","-","/","(",")",",","'"})), type text),
+    Out      = Table.TransformColumnTypes(Table.SelectColumns(Key,
+                   {"Month","ValuationArea","Item","ItemKey","CostINRWp","PlantVariable",
+                    "PerDayCostCr"}),
                    {{"Month", type date}, {"ValuationArea", type text}, {"Item", type text},
+                    {"ItemKey", type text},
                     {"CostINRWp", type number}, {"PlantVariable", type number},
                     {"PerDayCostCr", type number}})
 in
@@ -3592,12 +3620,12 @@ Plant MWD = SUM(dimPlant[MWD])
 ```
 RM Technology Value ₹ Cr =
 VAR Groups = VALUES(dimRMTechnologyDaily[PlantGroup])
-VAR Items = VALUES(dimRMTechnologyDaily[Item])
+VAR Items = VALUES(dimRMTechnologyDaily[ItemKey])
 RETURN
     CALCULATE(
         [RM ₹ Cr],
         TREATAS(Groups, dimPlant[PlantGroup]),
-        TREATAS(Items, factInventory[Item])
+        TREATAS(Items, factInventory[ItemKey])
     )
 ```
 
@@ -3651,12 +3679,12 @@ VAR ConfiguredRows =
         )
     )
 VAR ConfiguredItems =
-    SELECTCOLUMNS(PlantRows, "ConfiguredItem", dimRMPlantDaily[Item])
+    SELECTCOLUMNS(PlantRows, "ConfiguredItem", dimRMPlantDaily[ItemKey])
 VAR ModulePlantValue =
     CALCULATE(
         [RM ₹ Cr],
-        REMOVEFILTERS(factInventory[Item]),
-        TREATAS(ConfiguredItems, factInventory[Item])
+        REMOVEFILTERS(factInventory[ItemKey]),
+        TREATAS(ConfiguredItems, factInventory[ItemKey])
     )
 VAR ModulePlantPerDayCost = SUMX(PlantRows, dimRMPlantDaily[PerDayCostCr])
 VAR ModulePlantDays =
