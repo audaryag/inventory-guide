@@ -139,10 +139,11 @@ def readme(wb):
         ("", False),
         ("FG Master     one row per finished-goods code and the technology it is.", False),
         ("", False),
-        ("TB Master     one row per GL account: what it is, and the plant it belongs to. The", False),
-        ("              GL number is the only key the trial balance and this sheet share, so", False),
-        ("              an account with no plant here is an account the report cannot place -", False),
-        ("              write 1902, 1900 or 1905 against it, or the plant's name.", False),
+        ("TB Master     one row per GL account and profit centre: what the account is, the", False),
+        ("              profit centre it was posted to, and the plant that pair belongs to.", False),
+        ("              GL number and profit centre are the keys the trial balance shares with", False),
+        ("              this sheet, so a pair with no plant is money the report cannot place -", False),
+        ("              write 1902, 1900 or 1905 in Plant, and its name in 'at'.", False),
         ("", False),
         ("One habit to keep: close this workbook before refreshing the report.", False),
     ]
@@ -212,11 +213,14 @@ def build(path):
                "MW Capacity, so days of cover can find its capacity.")
 
     sheet(wb, "TB Master",
-          ["GL Account Number", "GL Account Description", "Nature", "Plant", "Sort Order"],
-          [20, 44, 26, 12, 12],
-          note="Plant takes 1902, 1900 or 1905 - or the plant's name. An inventory GL "
-               "with this column empty is one the trial balance cannot place, which is "
-               "what Checks reports as an unresolved profit centre.")
+          ["GL Account Number", "GL Account Description", "Profit Centre",
+           "Profit Centre Description", "Nature", "Plant", "at", "Sort Order"],
+          [20, 44, 18, 34, 14, 12, 22, 12],
+          note="One row per GL account and profit centre pair, which is how the trial "
+               "balance splits one account across plants. Plant takes 1902, 1900 or 1905 "
+               "and 'at' is that plant's name. An inventory GL with Plant empty is one the "
+               "trial balance cannot place, which is what Checks reports as an unresolved "
+               "profit centre.")
 
     wb.save(path)
     return path
