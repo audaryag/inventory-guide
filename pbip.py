@@ -69,10 +69,11 @@ TABLES = {
 
 # every other query stays a shared expression: helpers, staging, and the diagnostic whose
 # shape depends on the sheet, which a fixed column list could not describe.
-EXPRESSION_ORDER = ["pRoot", "pVarsFile", "varWorkbook", "fnCleanMB5B", "fnVarSheet", "fnVarSheetSafe", "stgRM", "stgFG",
+EXPRESSION_ORDER = ["pRoot", "pVarsFile", "varWorkbook", "fnCleanMB5B", "fnVarSheet", "fnVarSheetSafe", "varMonths", "stgRM", "stgFG",
                     "stgConble", "dimPlantMaster", "varPlantCodes", "dimMaterialAttr", "dimFGAttr", "varConstants",
                     "fnConstantAsOf", "factRM", "factFG", "factConble", "varRMTechnologyCosts",
-                    "varRMPlantCosts", "varRMConstants", "varMWCapacity", "factTB_Staged"]
+                    "varRMPlantCosts", "varRMConstants", "varMWCapacity", "varMonthGrid",
+                    "factTB_Staged"]
 
 RELATIONSHIPS = [
     ("dimDate", "Month", "factInventory", "Month"),

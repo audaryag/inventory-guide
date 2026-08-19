@@ -43,7 +43,7 @@ fail with a file-lock error. This applies every time you refresh, forever.
 **1.2** Ribbon: **Home** → **Transform data**. The Power Query Editor window opens.
 Everything in Part 1 happens in this window.
 
-### How to add each query (you will repeat this 35 times)
+### How to add each query (you will repeat this 37 times)
 
 1. In Power Query, ribbon: **Home** → **New Source** → **Blank Query**.
 2. Ribbon: **Home** → **Advanced Editor**.
@@ -65,6 +65,7 @@ Everything in Part 1 happens in this window.
 | 2 | `pVarsFile` |  |
 | 3 | `varWorkbook` | opens and buffers Variables and Calculations once |
 | 4 | `fnCleanMB5B` |  |
+| 4 | `varMonths` | the months in the data, read cheaply — helper, load off |
 | 4 | `stgRM` |  |
 | 5 | `stgFG` |  |
 | 6 | `stgConble` |  |
@@ -94,6 +95,7 @@ Everything in Part 1 happens in this window.
 | 31 | `varRMTechnologyCosts` | dated RM-by-technology Cost INR/Wp inputs — helper, load off |
 | 32 | `varRMPlantCosts` | separate dated 1900/1902 Cost INR/Wp inputs — helper, load off |
 | 33 | `varRMConstants` | dated Module/Cell and plant variables — helper, load off |
+| 33 | `varMonthGrid` | the months the dated sheets are spread over — helper, load off |
 | 34 | `dimRMTechnologyDaily` | calculated component cost per day by month |
 | 35 | `dimRMPlantDaily` | calculated 1900/1902 item cost per day by month |
 
@@ -116,11 +118,11 @@ If it asks about **credentials**, choose **Organizational** for OneDrive and cli
 right-click the query in the left list and **untick "Enable load"**:
 
 ```
-pRoot, pVarsFile, varWorkbook, fnCleanMB5B, stgRM, stgFG, stgConble,
+pRoot, pVarsFile, varWorkbook, fnCleanMB5B, varMonths, stgRM, stgFG, stgConble,
 fnVarSheet, fnVarSheetSafe, dimPlantMaster, varPlantCodes,
 factRM, factFG, factConble, varConstants, dimMaterialAttr, dimFGAttr,
 fnConstantAsOf, varMWCapacity, factTB_Staged,
-varRMTechnologyCosts, varRMPlantCosts, varRMConstants
+varRMTechnologyCosts, varRMPlantCosts, varRMConstants, varMonthGrid
 ```
 
 Leave these ticked (they become your tables):
@@ -134,10 +136,10 @@ dimRMTechnologyDaily, dimRMPlantDaily
 
 ### Checkpoint — do not go to Part 2 until all six are true
 
-1. The Queries list on the left of Power Query shows **35** names, and every name in the
+1. The Queries list on the left of Power Query shows **37** names, and every name in the
    table above appears in it, spelled identically. Compare them one by one; a missing one
    is the single most common cause of an error later.
-2. The 23 helper names in step 1.5 are shown in *italics* in that list (that is what
+2. The 25 helper names in step 1.5 are shown in *italics* in that list (that is what
    "Enable load off" looks like); the other 12 are not italic.
 3. Click `factInventory`: the preview shows rows, and the columns include `CloseVal`,
    `Category`, `Nature`, `Month`, `ValuationArea`, `MW`.
@@ -1812,6 +1814,84 @@ in
     Renamed
 ```
 
+## varMonths
+
+> The months that exist in the data, read the cheap way. `dimDate` used to work its months out from `factInventory` and `factTB_Staged`, which meant every stock file and the whole trial balance were parsed a second time for a list of a dozen dates - and because three other tables reference `dimDate`, that second parse happened four times over. This reads only the From Date column of each stock file, and takes the trial balance's months from the file names, so nothing is cleaned, joined or typed twice. The month set is the same one the facts produce: `Date.StartOfMonth` of the same column, on rows that carry a material.
+
+```
+let
+    Norm     = (n as any) as text =>
+                   Text.Upper(Text.Remove(Text.Trim(Text.From(n ?? "")), {" ",".","_","-","/","(",")"})),
+    // the header row is found in the first few dozen rows, so only those are materialised.
+    // the rest of the sheet is read one column wide instead of twenty-nine.
+    MonthsOf = (content as binary) as list =>
+                   let
+                       Wb       = Excel.Workbook(content, null, true),
+                       Sheets   = Table.SelectRows(Wb, each [Kind] = "Sheet"),
+                       Picked   = try Sheets{[Item = "Sheet1", Kind = "Sheet"]}[Data]
+                                  otherwise Sheets{0}[Data],
+                       Head     = Table.ToRows(Table.FirstN(Picked, 60)),
+                       HdrIdx   = List.PositionOf(
+                                      List.Transform(Head, (r) =>
+                                          List.Contains(List.Transform(r, Norm), "MATERIAL")), true),
+                       Skipped  = if HdrIdx > 0 then Table.Skip(Picked, HdrIdx) else Picked,
+                       Promoted = Table.PromoteHeaders(Skipped, [PromoteAllScalars = true]),
+                       Cols     = Table.ColumnNames(Promoted),
+                       Pick     = (alts as list) as nullable text =>
+                                      let Hits = List.Select(Cols, (c) => List.Contains(alts, Norm(c)))
+                                      in  if List.IsEmpty(Hits) then null else List.First(Hits),
+                       cFrom    = Pick({"FROMDATE"}),
+                       cMat     = Pick({"MATERIAL","MATERIALNO"}),
+                       Two      = if cFrom = null then null
+                                  else Table.SelectColumns(Promoted,
+                                           if cMat = null then {cFrom} else {cFrom, cMat}),
+                       // a Total or subtotal line carries no material, and its stray date must
+                       // not invent a month the facts do not have
+                       Real     = if Two = null then null
+                                  else if cMat = null then Two
+                                  else Table.SelectRows(Two, each
+                                           Text.Trim(Text.From(Record.Field(_, cMat) ?? "")) <> ""),
+                       Dates    = if Real = null then {} else Table.Column(Real, cFrom),
+                       Months   = List.RemoveNulls(List.Transform(Dates,
+                                      (v) => try Date.StartOfMonth(Date.From(v)) otherwise null))
+                   in
+                       List.Distinct(Months),
+    Stock    = (folder as text) as list =>
+                   let
+                       Files = try Folder.Files(pRoot & folder) otherwise #table({}, {}),
+                       Only  = if Table.IsEmpty(Files) then Files
+                               else Table.SelectRows(Files, each
+                                        Text.StartsWith(Text.Lower([Extension]), ".xls")
+                                        and not Text.StartsWith([Name], "~$")
+                                        and not Text.StartsWith([Name], ".")),
+                       Lists = if Table.IsEmpty(Only) then {}
+                               else List.Transform(Only[Content], (c) => try MonthsOf(c) otherwise {})
+                   in
+                       List.Combine(Lists),
+    // the trial balance's month is in its file name - TB_YYYYMM.xlsx - exactly as
+    // factTB_Staged reads it, so those files are not opened here at all
+    TBMonths = let
+                   Files = try Folder.Files(pRoot & "\TB") otherwise #table({}, {}),
+                   Only  = if Table.IsEmpty(Files) then Files
+                           else Table.SelectRows(Files, each
+                                    Text.StartsWith(Text.Lower([Extension]), ".xls")
+                                    and not Text.StartsWith([Name], "~$")
+                                    and not Text.StartsWith([Name], ".")),
+                   Names = if Table.IsEmpty(Only) then {} else Only[Name],
+                   Dates = List.Transform(Names, (n) =>
+                               let digits = Text.Select(n, {"0".."9"}),
+                                   yyyymm = Text.Middle(digits, 0, 6)
+                               in  try #date(Number.From(Text.Start(yyyymm, 4)),
+                                             Number.From(Text.Middle(yyyymm, 4, 2)), 1)
+                                   otherwise null)
+               in
+                   List.RemoveNulls(Dates),
+    All      = List.Combine({Stock("\RM Raw"), Stock("\FG Raw"), Stock("\Consble Raw"), TBMonths}),
+    Out      = List.Buffer(List.Sort(List.Distinct(All)))
+in
+    Out
+```
+
 ## varWorkbook
 
 > The Variables workbook opened once for the whole refresh. Every master query takes its sheet from this buffered workbook rather than opening and unzipping the same `.xlsx` again.
@@ -2180,10 +2260,21 @@ let
                    {"GroupNature", each if _ = null or _ = "" then "Unassigned" else _, type text}}),
     // RM MW = Closing Stock / BOM Std Qty * RM_MW_FACTOR / 10^6
     // (the 580 you had hardcoded, now read from the Constants sheet)
-    MW       = Table.AddColumn(Named, "MW", each
-                   let f = fnConstantAsOf("RM_MW_FACTOR", [Month])
-                   in  try [CloseQty] / [BOMStdQty] * f / 1000000 otherwise null,
-                   type number)
+    // The factor is looked up once per month rather than once per row - it can only change on a
+    // dated Constants row, so every row of a month gets the same number either way - and joined
+    // on. Asking for it per row scanned and sorted the Constants table tens of thousands of
+    // times for an answer that was the same each time.
+    Facs     = Table.Buffer(Table.AddColumn(
+                   Table.Distinct(Table.SelectColumns(Named, {"Month"})), "MWFactor",
+                   each fnConstantAsOf("RM_MW_FACTOR", [Month]), type number)),
+    WithFac  = Table.ExpandTableColumn(
+                   Table.NestedJoin(Named, {"Month"}, Facs, {"Month"}, "fac", JoinKind.LeftOuter),
+                   "fac", {"MWFactor"}),
+    MW       = Table.RemoveColumns(
+                   Table.AddColumn(WithFac, "MW", each
+                       try [CloseQty] / [BOMStdQty] * [MWFactor] / 1000000 otherwise null,
+                       type number),
+                   {"MWFactor"})
 in
     MW
 ```
@@ -2683,6 +2774,29 @@ in
 ```
 
 
+## varMonthGrid
+
+> The months the effective-dated sheets are spread over: MW capacity and the RM costs each hold a value against a date, and one row per month is what lets a matrix show a figure for a month with no column of its own. It runs from the earliest date typed on those sheets to eighteen months past today, and reads no stock file at all - which is the point, because `dimCapacity` and the two RM tables used to take this list from `dimDate` and drag the whole data folder through with it. A month in this grid that the data has no rows for simply goes unused.
+
+```
+let
+    Dates  = List.RemoveNulls(List.Combine({
+                 try varMWCapacity[EffectiveFrom] otherwise {},
+                 try varRMTechnologyCosts[EffectiveFrom] otherwise {},
+                 try varRMPlantCosts[EffectiveFrom] otherwise {},
+                 try varRMConstants[EffectiveFrom] otherwise {}})),
+    First  = if List.IsEmpty(Dates) then Date.StartOfMonth(Date.From(DateTime.LocalNow()))
+             else Date.StartOfMonth(List.Min(Dates)),
+    Last   = Date.StartOfMonth(Date.AddMonths(Date.From(DateTime.LocalNow()), 18)),
+    Span   = (Date.Year(Last) * 12 + Date.Month(Last))
+             - (Date.Year(First) * 12 + Date.Month(First)),
+    Months = if Span < 0 then {First}
+             else List.Transform({0..Span}, (i) => Date.AddMonths(First, i)),
+    Out    = List.Buffer(Months)
+in
+    Out
+```
+
 ## dimNature
 
 > Bridge table. Without it, slicing FG by Nature leaves Capacity MW unfiltered and Days is wrong everywhere except the grand total.
@@ -3179,11 +3293,11 @@ let
     // the months that actually exist in the data: stock files and trial balance. Building the
     // calendar from these, rather than filling in every month between the first and the last,
     // is what keeps months you have not loaded yet out of the slicers.
-    // the trial balance is read inside a try, so a missing or empty TB folder leaves the
-    // calendar to the stock files instead of taking the whole calendar down with it
-    TBM    = try factTB_Staged[Month] otherwise {},
-    Seen   = List.RemoveNulls(List.Combine({factInventory[Month], TBM})),
-    Months = List.Sort(List.Distinct(List.Transform(Seen, Date.StartOfMonth))),
+    // varMonths is where that list is worked out, and it is read there rather than off
+    // factInventory and factTB_Staged: referencing the facts here parsed every stock file and
+    // the whole trial balance a second time, and three other tables reference this calendar,
+    // so that second parse ran four times over. That was most of a long refresh.
+    Months = varMonths,
     T      = Table.TransformColumnTypes(
                  Table.FromList(Months, Splitter.SplitByNothing(), {"Month"}),
                  {{"Month", type date}}),
@@ -3222,7 +3336,9 @@ every year together.
 
 ```
 let
-    Months   = List.Distinct(List.Sort(dimDate[Month])),
+    // the month grid comes from the dated sheets, not from dimDate: referencing the calendar
+    // here pulled the whole stock folder through this table too
+    Months   = varMonthGrid,
     Combos   = Table.Distinct(Table.SelectColumns(varRMTechnologyCosts, {"PlantGroup","Item"})),
     Grid     = Table.AddColumn(Combos, "Month", each Months),
     Expanded = Table.ExpandListColumn(Grid, "Month"),
@@ -3261,7 +3377,9 @@ in
 
 ```
 let
-    Months   = List.Distinct(List.Sort(dimDate[Month])),
+    // as in dimRMTechnologyDaily: the grid is the dated sheets' own months, so no stock file
+    // is opened to build this table
+    Months   = varMonthGrid,
     Combos   = Table.Distinct(Table.SelectColumns(varRMPlantCosts, {"ValuationArea","Item"})),
     Grid     = Table.AddColumn(Combos, "Month", each Months),
     Expanded = Table.ExpandListColumn(Grid, "Month"),
@@ -3297,10 +3415,10 @@ in
 
 ```
 let
-    // the months come from dimDate, which has already worked them out, rather than from
-    // factInventory again - reading the fact table here made the whole stock folder parse a
-    // second time for a list of a dozen dates
-    Months   = List.Distinct(List.Sort(dimDate[Month])),
+    // the months are the grid the dated sheets are spread over. Reading factInventory here
+    // parsed the whole stock folder a second time; reading dimDate did the same thing one step
+    // removed, because the calendar was itself built from the facts.
+    Months   = varMonthGrid,
     Combos   = Table.Distinct(Table.SelectColumns(varMWCapacity, {"Tech","ValuationArea"})),
     Grid     = Table.AddColumn(Combos, "Month", each Months),
     Expanded = Table.ExpandListColumn(Grid, "Month"),

@@ -10,6 +10,28 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000q", build="57", query="varMonths",
+         title="The refresh reads your files once instead of five times",
+         why="A refresh was taking half an hour, and almost all of it was the same work done "
+             "over and over. <code>dimDate</code> worked its month list out by re-reading every "
+             "stock file and the whole trial balance &mdash; and <code>dimCapacity</code>, "
+             "<code>dimRMTechnologyDaily</code> and <code>dimRMPlantDaily</code> each referenced "
+             "<code>dimDate</code>, so that re-read happened four times over, on top of the one "
+             "real pass. Now <code>varMonths</code> gets the months the cheap way: the From Date "
+             "column of each stock file and nothing else, and the trial balance's months off its "
+             "file names, which it already uses. The three effective-dated tables take their "
+             "month grid from <code>varMonthGrid</code>, built from the dates typed on the sheets "
+             "themselves, so they open no stock file at all. <code>factRM</code> also looks the "
+             "MW factor up once a month rather than once a row. Not one figure changes: the "
+             "months are the same months and every formula is untouched. It matters more as you "
+             "add files, because the waste grew with every month you loaded.",
+         steps=["Add <code>varMonths</code> and <code>varMonthGrid</code> from the "
+                "<strong>Queries</strong> tab, with <em>Enable load</em> off, or take the fresh "
+                "download.",
+                "Repaste <code>dimDate</code>, <code>dimCapacity</code>, "
+                "<code>dimRMTechnologyDaily</code>, <code>dimRMPlantDaily</code> and "
+                "<code>factRM</code>."],
+         find="", repl=""),
     dict(n="00000000000000000p", build="56", query="varMWCapacity",
          title="One dated column on MW Capacity is enough",
          why="The refresh stopped on <code>dimCapacity</code> saying the MW sheet was none of the "
