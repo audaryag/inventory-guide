@@ -654,6 +654,7 @@ VISUALS = [
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Inventory MW" + AS + "MW"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
+                   "dimNature[Nature]  →  untick Unassigned, Perc Cell",
                    "In Summary Window  →  is 1"])],
      (16, 88, 408, 112),
      'Finished goods per plant in megawatts, one column per month — the newest March plus the three after it by default. The Excel sheet had this as one wide table with an IN MW block, an IN CRS block and an IN DAYS block; these are those blocks.',
@@ -669,6 +670,7 @@ VISUALS = [
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["dimCategory[Category]  →  is FG",
+                   "dimNature[Nature]  →  untick Unassigned, Perc Cell",
                    "In Summary Window  →  is 1"])],
      (432, 88, 408, 112),
      'Finished goods per plant in crore rupees, one column per month — the newest March plus the three after it by default. The Excel sheet had this as one wide table with an IN MW block, an IN CRS block and an IN DAYS block; these are those blocks.',
@@ -684,6 +686,7 @@ VISUALS = [
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Plant Days" + AS + "Days"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
+                   "dimNature[Nature]  →  untick Unassigned, Perc Cell",
                    "In Summary Window  →  is 1"])],
      (848, 88, 408, 112),
      'Finished goods per plant in days of cover, one column per month — the newest March plus the three after it by default. The Excel sheet had this as one wide table with an IN MW block, an IN CRS block and an IN DAYS block; these are those blocks.',
@@ -699,6 +702,7 @@ VISUALS = [
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Inventory MW" + AS + "MW"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
+                   "dimNature[Nature]  →  untick Unassigned, Perc Cell",
                    "In Summary Window  →  is 1"])],
      (16, 208, 408, 200),
      'The same months and the same unit, by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself.',
@@ -713,6 +717,7 @@ VISUALS = [
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Inventory Rs Cr" + AS + "Rs Cr."]),
       ("Filters", ["dimCategory[Category]  →  is FG",
+                   "dimNature[Nature]  →  untick Unassigned, Perc Cell",
                    "In Summary Window  →  is 1"])],
      (432, 208, 408, 180),
      'The same months and the same unit, by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself.',
@@ -727,6 +732,7 @@ VISUALS = [
       ("Columns", ["dimDate[MonthName]"]),
       ("Values", ["Days" + AS + "Days"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
+                   "dimNature[Nature]  →  untick Unassigned, Perc Cell",
                    "In Summary Window  →  is 1"])],
      (848, 208, 408, 180),
      'The same months and the same unit, by module technology rather than by plant — G12 Perc, G12R Topcon, M10 Perc, M10 Topcon and the rest — which is where a build-up in one technology shows itself.',
@@ -739,7 +745,8 @@ VISUALS = [
      [("X-axis", ["dimNature[Nature]"]),
       ("Column y-axis", ["Latest Month FG ₹ Cr"]),
       ("Line y-axis", ["Latest Month FG MW"]),
-      ("Filters", ["dimCategory[Category]  →  is FG"])],
+      ("Filters", ["dimCategory[Category]  →  is FG",
+                   "dimNature[Nature]  →  untick Unassigned, Perc Cell"])],
      (16, 416, 412, 272),
      "Which technology is holding the finished goods right now, in money as bars and in "
      "megawatts as the line over them. Money is on the bars because every technology has a "
@@ -766,6 +773,7 @@ VISUALS = [
       ("Column y-axis", ["Days"]),
       ("Line y-axis", ["Days vs LM"]),
       ("Filters", ["dimCategory[Category]  →  is FG",
+                   "dimNature[Nature]  →  untick Unassigned, Perc Cell",
                    "In Last 12  →  is 1"])],
      (444, 416, 428, 272),
      "How long the finished goods on hand would last, month by month, with the change on "
@@ -788,12 +796,13 @@ VISUALS = [
 
     ("FG", "Donut chart", "FG Share by Plant (%), Latest Month",
      [("Legend", ["dimPlant[Plant]"]),
-      ("Values", ["Latest Month FG ₹ Cr"])],
+      ("Values", ["Latest Month FG ₹ Cr"]),
+      ("Filters", ["dimNature[Nature]  →  untick Unassigned, Perc Cell"])],
      (888, 416, 376, 272),
      "Where the finished goods are sitting, as a share of the whole. Pinned to the latest "
      "month for the same reason as the bar chart: a share of four added-up months would "
      "mean nothing.",
-     ["Nothing to add in the Filters pane: Latest Month FG ₹ Cr pins the month itself.",
+     ["Filters pane → dimNature[Nature] → untick Unassigned and Perc Cell, so the shares match the tables above. Nothing else: Latest Month FG ₹ Cr pins the month itself.",
       "Format pane → Detail labels → Label contents: Category, percent of total. Font: "
       "Arial, Font size: 9, Colour: #1F2A24, Percentage decimal places: 1 — so the "
       "percentage is printed on each slice and nobody has to hover.",

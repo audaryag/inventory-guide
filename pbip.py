@@ -540,8 +540,9 @@ def parse_spec_filter(text, seq):
     right = right.strip()
     m = FIELD_RE.match(left)
     if m and right.lower().startswith("untick"):
-        return categorical_filter(f"flt{seq}", m.group(1), m.group(2),
-                                  [right.split(None, 1)[1].strip()], exclude=True)
+        # 'untick Unassigned, Perc Cell' takes both out; one name is the common case
+        names = [n.strip() for n in right.split(None, 1)[1].split(",") if n.strip()]
+        return categorical_filter(f"flt{seq}", m.group(1), m.group(2), names, exclude=True)
     if m:
         return categorical_filter(f"flt{seq}", m.group(1), m.group(2),
                                   [right.split(None, 1)[1].strip()])

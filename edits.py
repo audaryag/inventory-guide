@@ -10,6 +10,21 @@ import html
 
 # query name -> why it changed. Order is the order to paste them in.
 EDITS = [
+    dict(n="00000000000000000s", build="59", query="(report only)",
+         title="FG leaves out Unassigned and Perc Cell",
+         why="Every FG visual now ignores the two natures that are not module technologies "
+             "&mdash; <code>Unassigned</code>, meaning a material <code>FG Master</code> does "
+             "not cover, and <code>Perc Cell</code>. They were inflating the plant megawatts, "
+             "and through that the plant days, and they sat on the technology tables as rows "
+             "that mean nothing there. Nothing is excluded by a formula: it is a filter on the "
+             "visual, so the totals recalculate without them rather than subtracting them "
+             "afterwards. RM, Summary and Overview are untouched and still count everything.",
+         steps=["On each FG visual: Filters pane &rarr; <code>dimNature[Nature]</code> &rarr; "
+                "untick <code>Unassigned</code> and <code>Perc Cell</code>. Six matrices, both "
+                "charts and the donut &mdash; or take the fresh download.",
+                "A material landing on Unassigned is a gap in <code>FG Master</code>, not a "
+                "figure to lose: <code>qcAttrMissing</code> on Checks names them."],
+         find="", repl=""),
     dict(n="00000000000000000r", build="58", query="factInventory",
          title="A component spelt two ways is now one component, and MW(S) counts as MWD",
          why="Two things were blank that should not have been. The RM technology table showed "
